@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            \App\Domain\Billing\Repositories\BillingRepositoryInterface::class,
+            \App\Infrastructure\Billing\Persistence\EloquentBillingRepository::class
+        );
     }
 
     /**

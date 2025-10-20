@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Application\{{ context }}\UseCases;
+
+use App\Domain\{{ context }}\Repositories\{{ context }}RepositoryInterface;
+
+class {{ name }}
+{
+    public function __construct(
+    protected {{ context }}RepositoryInterface $repository
+    ) {}
+
+    public function execute(array $data): mixed
+{
+    // TODO: Implement business logic here.
+    // Example:
+    // return $this->repository->create($data);
+
+    return 'UseCase {{ name }} executed successfully.';
+}
+}
