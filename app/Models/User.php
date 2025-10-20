@@ -25,6 +25,8 @@ class User extends Authenticatable
         'provider',
         'provider_id',
         'role',
+        'usage_count',
+        'usage_reset_at',
     ];
 
     /**
