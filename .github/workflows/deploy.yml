@@ -1,0 +1,60 @@
+name: Deploy Pixrup
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, pdo_mysql, intl
+          tools: composer
+      - name: Install dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+      - name: Build assets
+        run: |
+          npm ci
+          npm run build:staging
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_KEY }}
+          script: |
+              cd /var/www/pixrup
+              git pull origin main
+              composer install --no-dev --optimize-autoloader
+              php artisan migrate --force
+              npm run build:staging
+              php artisan config:cache
+              php artisan route:cache
+              php artisan horizon:terminate
+              sudo systemctl restart php8.3-fpm
+
+  deploy-production:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manual deploy to production
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DO_PROD_HOST }}
+          username: ${{ secrets.DO_PROD_USER }}
+          key: ${{ secrets.DO_PROD_KEY }}
+          script: |
+            cd /var/www/pixrup
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+            npm run build:prod
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan horizon:terminate
+            sudo systemctl restart php8.3-fpm
