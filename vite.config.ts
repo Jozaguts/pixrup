@@ -15,6 +15,27 @@ export default defineConfig({
         wayfinder({
             formVariants: true,
         }),
+        VitePWA({
+            registerType: 'autoUpdate',
+            includeAssets: ['favicon.ico', 'robots.txt'],
+            manifest: {
+                name: 'Pixrup',
+                short_name: 'Pixrup',
+                description: 'AI-powered property appraisal & renovation reports',
+                start_url: '/',
+                display: 'standalone',
+                background_color: '#ffffff',
+                theme_color: '#1E3A8A',
+                icons: [
+                    { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+                    { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+                    { src: '/icon-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+                ],
+            },
+            devOptions: {
+                enabled: true,
+            },
+        }),
         vue({
             template: {
                 transformAssetUrls: {
