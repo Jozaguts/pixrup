@@ -2,6 +2,7 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
@@ -81,10 +82,47 @@ import { LoaderCircle } from 'lucide-vue-next';
                     <InputError :message="errors.password_confirmation" />
                 </div>
 
+                <div class="space-y-2">
+                    <div class="flex items-start gap-3">
+                        <Checkbox
+                            id="terms"
+                            name="terms"
+                            :tabindex="5"
+                            required
+                            data-test="terms-checkbox"
+                        />
+                        <Label
+                            for="terms"
+                            class="text-sm leading-6 text-muted-foreground"
+                        >
+                            By signing up you agree to our
+                            <TextLink
+                                href="https://pixrup.com/terms"
+                                class="mx-1 underline underline-offset-4"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                Terms of Service
+                            </TextLink>
+                            and
+                            <TextLink
+                                href="https://pixrup.com/privacy"
+                                class="ml-1 underline underline-offset-4"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                Privacy Policy
+                            </TextLink>
+                            .
+                        </Label>
+                    </div>
+                    <InputError :message="errors.terms" />
+                </div>
+
                 <Button
                     type="submit"
                     class="mt-2 w-full"
-                    tabindex="5"
+                    tabindex="6"
                     :disabled="processing"
                     data-test="register-user-button"
                 >
