@@ -10,6 +10,7 @@ class UserEntity
         public string $name,
         public string $email,
         public ?string $password = null,
+        public ?DateTimeInterface $email_verified_at = null,
         public ?string $provider = null,
         public ?string $provider_id = null,
         public ?string $role = 'user',
