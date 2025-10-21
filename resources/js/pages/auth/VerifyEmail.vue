@@ -1,15 +1,49 @@
 <script setup lang="ts">
 import TextLink from '@/components/TextLink.vue';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import  auth from '@/routes/auth';
+import auth from '@/routes/auth';
 import { send } from '@/routes/verification';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import { LoaderCircle, CheckCircle2, AlertTriangle, Info } from 'lucide-vue-next';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     status?: string;
 }>();
+
+const statusDetails = computed(() => {
+    switch (props.status) {
+        case 'verification-link-sent':
+            return {
+                icon: CheckCircle2,
+                variant: 'default' as const,
+                message:
+                    'We sent a fresh verification link to the email you provided. Please check your inbox.',
+            };
+        case 'already-verified':
+            return {
+                icon: CheckCircle2,
+                variant: 'default' as const,
+                message: 'Your email is already verified. You can continue to the dashboard.',
+            };
+        case 'verification-link-invalid':
+            return {
+                icon: AlertTriangle,
+                variant: 'destructive' as const,
+                message: 'The verification link is invalid or has expired. Request a new one below.',
+            };
+        case 'must-verify-email':
+            return {
+                icon: Info,
+                variant: 'default' as const,
+                message: 'Please verify your email address to access Pixrup.',
+            };
+        default:
+            return null;
+    }
+});
 </script>
 
 <template>
@@ -19,13 +53,14 @@ defineProps<{
     >
         <Head title="Email verification" />
 
-        <div
-            v-if="status === 'verification-link-sent'"
-            class="mb-4 text-center text-sm font-medium text-green-600"
+        <Alert
+            v-if="statusDetails"
+            :variant="statusDetails.variant"
+            class="mb-6 text-left"
         >
-            A new verification link has been sent to the email address you
-            provided during registration.
-        </div>
+            <component :is="statusDetails.icon" />
+            <AlertDescription>{{ statusDetails.message }}</AlertDescription>
+        </Alert>
 
         <Form
             v-bind="send.form()"

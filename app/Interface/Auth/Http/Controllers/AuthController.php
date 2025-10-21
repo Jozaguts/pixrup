@@ -2,9 +2,12 @@
 
 namespace App\Interface\Auth\Http\Controllers;
 
-use App\Application\Auth\UseCases\RegisterUser;
 use App\Application\Auth\UseCases\LoginUser;
+use App\Application\Auth\UseCases\RegisterUser;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class AuthController
@@ -24,12 +27,24 @@ class AuthController
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:8|confirmed',
+            'terms' => 'accepted',
         ]);
 
-        $useCase->execute($request->only('name', 'email', 'password'));
+        $userEntity = $useCase->execute($request->only('name', 'email', 'password'));
 
-        return redirect()->route('dashboard');
+        /** @var \App\Models\User $user */
+        $user = User::findOrFail($userEntity->id);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
+
+        return redirect()->route('verification.notice')->with('status', 'must-verify-email');
     }
 
     public function login(Request $request, LoginUser $useCase): \Illuminate\Http\RedirectResponse
@@ -41,7 +56,13 @@ class AuthController
 
         $useCase->execute($request->only('email', 'password'));
 
-        return redirect()->route('dashboard');
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
+
+        return Auth::user()?->hasVerifiedEmail()
+            ? redirect()->route('dashboard')
+            : redirect()->route('verification.notice')->with('status', 'must-verify-email');
     }
 
     public function logout(): \Illuminate\Http\RedirectResponse

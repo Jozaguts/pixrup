@@ -40,6 +40,7 @@ class EloquentUserRepository implements UserRepositoryInterface
             name: $user->name,
             email: $user->email,
             password: $user->password,
+            email_verified_at: $user->email_verified_at,
             provider: $user->provider,
             provider_id: $user->provider_id,
             role: $user->role,

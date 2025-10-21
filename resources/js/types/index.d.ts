@@ -24,6 +24,10 @@ export type AppPageProps<
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    mustVerifyEmail: boolean;
+    flash: {
+        status?: string | null;
+    };
 };
 
 export interface User {
