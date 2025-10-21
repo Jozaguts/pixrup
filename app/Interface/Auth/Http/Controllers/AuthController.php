@@ -8,7 +8,10 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Inertia;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 
 class AuthController
 {
@@ -52,9 +55,24 @@ class AuthController
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+            'remember' => 'sometimes|boolean',
         ]);
 
-        $useCase->execute($request->only('email', 'password'));
+        $this->ensureIsNotRateLimited($request);
+
+        try {
+            $result = $useCase->execute($request->only('email', 'password', 'remember'));
+        } catch (ValidationException $exception) {
+            RateLimiter::hit($this->throttleKey($request));
+
+            throw $exception;
+        }
+
+        RateLimiter::clear($this->throttleKey($request));
+
+        if ($result === 'two-factor') {
+            return redirect()->route('two-factor.login');
+        }
 
         if ($request->hasSession()) {
             $request->session()->regenerate();
@@ -69,5 +87,23 @@ class AuthController
     {
         auth()->logout();
         return redirect()->route('home');
+    }
+
+    private function ensureIsNotRateLimited(Request $request): void
+    {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
+            return;
+        }
+
+        $seconds = RateLimiter::availableIn($this->throttleKey($request));
+
+        throw ValidationException::withMessages([
+            'email' => trans('auth.throttle', ['seconds' => $seconds]),
+        ])->status(429);
+    }
+
+    private function throttleKey(Request $request): string
+    {
+        return Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
     }
 }

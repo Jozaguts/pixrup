@@ -92,15 +92,13 @@ test('users are rate limited', function () {
     RateLimiter::hit($key, 60);
     RateLimiter::hit($key, 60);
     RateLimiter::hit($key, 60);
-    RateLimiter::hit($key, 60);
-    RateLimiter::hit($key, 60);
+    RateLimiter::hit($key,  60);
+    RateLimiter::hit($key,  60);
 
     $response = $this->post(route('auth.login.store'), [
         'email' => $user->email,
         'password' => 'wrong-password',
-    ], ['Accept' => 'application/json']);
-
+    ])
+        ->dump();
     $response->assertTooManyRequests();
-
-    RateLimiter::clear($key);
 });
