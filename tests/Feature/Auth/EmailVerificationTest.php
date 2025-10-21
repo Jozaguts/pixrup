@@ -43,11 +43,10 @@ test('email is not verified with invalid hash', function () {
     );
 
     $response = $this->actingAs($user)->get($verificationUrl);
-
     Event::assertNotDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
-    $response->assertRedirect(route('verification.notice', absolute: false));
     $response->assertSessionHas('status', 'verification-link-invalid');
+    $response->assertRedirect(route('verification.notice'));
 });
 
 test('email is not verified with invalid user id', function () {

@@ -36,7 +36,11 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (AuthorizationException $exception, Request $request) {
-            if ($request->routeIs('verification.verify')) {
+            if ($request->routeIs('verification.verify') || $request->is('email/verify/*')) {
+                if ($exception->response()) {
+                    return $exception->response();
+                }
+
                 return redirect()->route('verification.notice')->with('status', 'verification-link-invalid');
             }
 
