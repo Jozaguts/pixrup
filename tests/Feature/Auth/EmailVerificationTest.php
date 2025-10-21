@@ -42,10 +42,12 @@ test('email is not verified with invalid hash', function () {
         ['id' => $user->id, 'hash' => sha1('wrong-email')]
     );
 
-    $this->actingAs($user)->get($verificationUrl);
+    $response = $this->actingAs($user)->get($verificationUrl);
 
     Event::assertNotDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+    $response->assertRedirect(route('verification.notice', absolute: false));
+    $response->assertSessionHas('status', 'verification-link-invalid');
 });
 
 test('email is not verified with invalid user id', function () {
@@ -59,10 +61,12 @@ test('email is not verified with invalid user id', function () {
         ['id' => 123, 'hash' => sha1($user->email)]
     );
 
-    $this->actingAs($user)->get($verificationUrl);
+    $response = $this->actingAs($user)->get($verificationUrl);
 
     Event::assertNotDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+    $response->assertRedirect(route('verification.notice', absolute: false));
+    $response->assertSessionHas('status', 'verification-link-invalid');
 });
 
 test('verified user is redirected to dashboard from verification prompt', function () {
