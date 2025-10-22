@@ -83,7 +83,7 @@ const menuItems = computed(() => props.navItems ?? []);
                 href="/"
                 class="text-xl font-extrabold tracking-tight text-slate-900"
             >
-                we
+                Pixrup
             </Link>
 
             <div class="flex items-center gap-2 px-0">
@@ -112,21 +112,8 @@ const menuItems = computed(() => props.navItems ?? []);
                 <div
                     class="flex items-center gap-3 rounded-[12px] bg-white px-4 py-2 shadow-sm"
                 >
-                    <Link
-                        href="/"
-                        class="text-xl font-extrabold tracking-tight text-slate-900"
-                    >
-                        we
-                    </Link>
-
                     <div class="flex items-center gap-1">
-                        <Link
-                            v-if="primaryLink"
-                            :href="primaryLink.href"
-                            class="rounded-[12px] px-4 py-2 text-sm font-semibold text-indigo-600 transition hover:text-indigo-500"
-                        >
-                            {{ primaryLink.label }}
-                        </Link>
+
 
                         <button
                             v-for="item in menuItems"
