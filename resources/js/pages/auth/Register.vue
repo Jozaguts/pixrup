@@ -18,6 +18,28 @@ import { LoaderCircle } from 'lucide-vue-next';
     >
         <Head title="Register" />
 
+        <div class="mb-6">
+            <Button
+                as="a"
+                :href="auth.google.redirect().url"
+                variant="outline"
+                class="flex w-full items-center justify-center gap-3"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    viewBox="0 0 488 512"
+                    aria-hidden="true"
+                >
+                    <path
+                        fill="currentColor"
+                        d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.4 64.9C277.7 80.7 150.2 116.6 150.2 256c0 94.4 76.3 171.1 171.8 171.1 109.6 0 150.6-78.6 157.2-119.5H322v-94.8h166z"
+                    />
+                </svg>
+                Continue with Google
+            </Button>
+        </div>
+
         <Form
             v-bind="auth.register.store()"
             :reset-on-success="['password', 'password_confirmation']"
