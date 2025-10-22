@@ -5,9 +5,11 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Verified;
 use App\Http\Requests\Auth\VerifyEmailRequest as AppVerifyEmailRequest;
 use App\Http\Responses\RedirectAsIntended as AppRedirectAsIntended;
+use App\Http\Responses\PasswordResetResponse as AppPasswordResetResponse;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Contracts\PasswordResetResponse as FortifyPasswordResetResponse;
 use Laravel\Fortify\Http\Responses\RedirectAsIntended as FortifyRedirectAsIntended;
 use Laravel\Fortify\Http\Requests\VerifyEmailRequest as FortifyVerifyEmailRequest;
 
@@ -33,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             FortifyVerifyEmailRequest::class,
             AppVerifyEmailRequest::class,
+        );
+        $this->app->bind(
+            FortifyPasswordResetResponse::class,
+            AppPasswordResetResponse::class,
         );
     }
 
