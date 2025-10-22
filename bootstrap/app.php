@@ -10,6 +10,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -42,6 +43,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return redirect()->route('verification.notice')->with('status', 'verification-link-invalid');
+            }
+
+            return null;
+        });
+
+        $exceptions->render(function (RouteNotFoundException $exception, Request $request) {
+            if (str_contains($exception->getMessage(), 'Route [login]')) {
+                return redirect()->route('auth.login.show');
             }
 
             return null;
