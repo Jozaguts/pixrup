@@ -5,7 +5,7 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
 
 test('registration screen can be rendered', function () {
-    $response = $this->get(route('register'));
+    $response = $this->get(route('auth.register.show'));
 
     $response->assertStatus(200);
 });
@@ -13,7 +13,7 @@ test('registration screen can be rendered', function () {
 test('new users can register', function () {
     Notification::fake();
 
-    $response = $this->post(route('register.store'), [
+    $response = $this->post(route('auth.register.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => 'password',
