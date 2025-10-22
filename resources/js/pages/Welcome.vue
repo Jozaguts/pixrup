@@ -74,7 +74,7 @@ const listings = [
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap"
         />
     </Head>
 
@@ -83,7 +83,7 @@ const listings = [
     >
         <WelcomeBackground />
 
-        <div class="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col">
+        <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
             <WelcomeNavbar
                 :is-authenticated="isAuthenticated"
                 :can-register="props.canRegister"

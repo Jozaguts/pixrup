@@ -73,7 +73,6 @@ const handleTypingComplete = (event: AnimationEvent) => {
     display: flex;
     align-items: center;
     gap: 0.15em;
-    font-family: 'Mona Sans', sans-serif;
     font-size: clamp(62px, 4vw, 140px);
     font-weight: 600;
     letter-spacing: 4px;

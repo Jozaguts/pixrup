@@ -58,7 +58,6 @@ const interactiveStyle = computed(() => ({
 
 <style >
 html, body {
-    font-family: "Darker Grotesque", sans-serif;
     margin: 0;
     padding: 0;
     height: 100%;
