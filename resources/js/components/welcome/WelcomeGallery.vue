@@ -17,10 +17,10 @@ defineProps<{
         <article
             v-for="listing in listings"
             :key="listing.id"
-            class="group flex w-[150px] flex-col items-center rounded-3xl border border-purple-500/60 bg-white/70 p-3 text-center shadow-[0_15px_45px_rgba(92,76,255,0.25)] backdrop-blur"
+            class="group flex w-[150px] flex-col items-center rounded-3xl bg-white/70 p-3 text-center shadow-[0_15px_45px_rgba(92,76,255,0.25)] backdrop-blur"
         >
             <div
-                class="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-purple-400/50"
+                class="relative aspect-[3/4] w-full overflow-hidden rounded-2xl "
             >
                 <img
                     :src="listing.image"
@@ -29,7 +29,7 @@ defineProps<{
                 />
             </div>
             <span
-                class="mt-3 inline-flex rounded-[12px] bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-1 text-xs font-semibold text-white shadow-md"
+                class="mt-3 inline-flex rounded-[12px] bg-[#6E33FF] px-4 py-1 text-xs font-semibold text-white shadow-md"
             >
                 {{ listing.title }}
             </span>

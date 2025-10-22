@@ -8,7 +8,10 @@ import {
     Globe,
     Youtube,
     Music,
+    AlarmClockCheck,
+    Quote,
 } from 'lucide-vue-next';
+import Tiktok from '@/components/ui/icons/tiktok.vue';
 
 interface SocialLink {
     name: string;
@@ -17,13 +20,12 @@ interface SocialLink {
 }
 
 const socialLinks: SocialLink[] = [
-    { name: 'Facebook', href: 'https://facebook.com', icon: Facebook },
-    { name: 'Instagram', href: 'https://instagram.com', icon: Instagram },
-    { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
-    { name: 'Twitter', href: 'https://x.com', icon: Twitter },
-    { name: 'YouTube', href: 'https://youtube.com', icon: Youtube },
-    { name: 'Pinterest', href: 'https://pinterest.com', icon: Globe },
-    { name: 'TikTok', href: 'https://tiktok.com', icon: Music },
+    { name: 'Facebook', href: 'https://facebook.com/fixrup', icon: Facebook },
+    { name: 'LinkedIn', href: 'https://linkedin.com/fixrup', icon: Linkedin },
+    { name: 'Twitter', href: 'https://x.com/fixrup', icon: Twitter },
+    { name: 'TikTok', href: 'https://tiktok.com/fixrup', icon: Tiktok },
+    { name: 'Instagram', href: 'https://instagram.com/fixrup', icon: Instagram },
+    { name: 'YouTube', href: 'https://youtube.com/fixrup', icon: Youtube },
 ];
 </script>
 
@@ -40,7 +42,7 @@ const socialLinks: SocialLink[] = [
                 rel="noreferrer"
                 class="flex h-8 w-8 items-center justify-center rounded-[12px] border border-slate-300/60 bg-white/70 text-slate-700 transition hover:bg-slate-900 hover:text-white"
             >
-                <component :is="link.icon" class="h-4 w-4" />
+                <component :is="link.icon" class="h-4 w-4 " />
             </a>
         </div>
 
