@@ -1,17 +1,21 @@
-@import 'tailwindcss';
+/* app.css */
 
+/* --- Imports from your current setup --- */
+@import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Tailwind v4 content sources (Laravel blade cache + pagination) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
-
+/* Dark variant helper */
 @custom-variant dark (&:is(.dark *));
 
+/* --- Tailwind theme token mapping (from your base file) --- */
 @theme inline {
     --font-sans:
-        Instrument Sans, ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+            Instrument Sans, ui-sans-serif, system-ui, sans-serif,
+            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+            'Noto Color Emoji';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -61,14 +65,7 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+/* --- Tailwind v4 border compatibility (kept) --- */
 @layer base {
     *,
     ::after,
@@ -79,62 +76,84 @@
     }
 }
 
+/* Typography override for body/html (kept) */
 @layer utilities {
     body,
     html {
         --font-sans:
-            'Mona Sans', ui-sans-serif, system-ui, sans-serif,
-            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-            'Noto Color Emoji';
+                'Mona Sans', ui-sans-serif, system-ui, sans-serif,
+                'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+                'Noto Color Emoji';
     }
 }
 
+/* -----------------------------------------------------------------------------
+   BRAND TOKENS
+   - Primary brand: #6e33ff
+   - Foreground: #000000 (strong contrast)
+----------------------------------------------------------------------------- */
+
 :root {
-    --background: hsl(0 0% 100%);
-    --foreground: hsl(0 0% 3.9%);
-    --card: hsl(0 0% 100%);
-    --card-foreground: hsl(0 0% 3.9%);
-    --popover: hsl(0 0% 100%);
-    --popover-foreground: hsl(0 0% 3.9%);
-    --primary: hsl(0 0% 9%);
-    --primary-foreground: hsl(0 0% 98%);
+    --light-dark: red !important;
+    /* --- Brand & core --- */
+    --primary: #6e33ff;            /* brand purple */
+    --primary-foreground: #ffffff;  /* readable over purple */
+    --ring: var(--primary);         /* focus ring uses brand */
+    --foreground: #000000;          /* app black text */
+
+    /* --- Backgrounds / surfaces --- */
+    --background: #e8e8e8;
+    --card: var(--background);
+    --popover: var(--background);
+
+    /* --- Neutral surfaces --- */
     --secondary: hsl(0 0% 92.1%);
-    --secondary-foreground: hsl(0 0% 9%);
+    --secondary-foreground: var(--foreground);
     --muted: hsl(0 0% 96.1%);
     --muted-foreground: hsl(0 0% 45.1%);
     --accent: hsl(0 0% 96.1%);
-    --accent-foreground: hsl(0 0% 9%);
+    --accent-foreground: var(--foreground);
     --destructive: hsl(0 84.2% 60.2%);
     --destructive-foreground: hsl(0 0% 98%);
+
+    /* --- Borders/inputs --- */
     --border: hsl(0 0% 92.8%);
     --input: hsl(0 0% 89.8%);
-    --ring: hsl(0 0% 3.9%);
+
+    /* --- Charts (optional, keep your palette) --- */
     --chart-1: hsl(12 76% 61%);
     --chart-2: hsl(173 58% 39%);
     --chart-3: hsl(197 37% 24%);
     --chart-4: hsl(43 74% 66%);
     --chart-5: hsl(27 87% 67%);
-    --radius: 0.5rem;
+
+    /* --- Radius for general UI (neumo components override to 50px) --- */
+    --radius: 0.75rem;
+
+    /* --- Sidebar --- */
     --sidebar-background: hsl(0 0% 98%);
     --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(0 0% 10%);
-    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-primary: #000000;
+    --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: hsl(0 0% 94%);
     --sidebar-accent-foreground: hsl(0 0% 30%);
     --sidebar-border: hsl(0 0% 91%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+    --sidebar-ring: var(--primary);
     --sidebar: hsl(0 0% 98%);
 }
 
 .dark {
+    /* Keep brand consistent in dark mode */
+    --primary: #6e33ff;
+    --primary-foreground: #ffffff;
+    --ring: var(--primary);
+
+    /* Dark surfaces */
     --background: hsl(0 0% 3.9%);
     --foreground: hsl(0 0% 98%);
     --card: hsl(0 0% 3.9%);
-    --card-foreground: hsl(0 0% 98%);
     --popover: hsl(0 0% 3.9%);
-    --popover-foreground: hsl(0 0% 98%);
-    --primary: hsl(0 0% 98%);
-    --primary-foreground: hsl(0 0% 9%);
+
     --secondary: hsl(0 0% 14.9%);
     --secondary-foreground: hsl(0 0% 98%);
     --muted: hsl(0 0% 16.08%);
@@ -145,28 +164,262 @@
     --destructive-foreground: hsl(0 0% 98%);
     --border: hsl(0 0% 14.9%);
     --input: hsl(0 0% 14.9%);
-    --ring: hsl(0 0% 83.1%);
-    --chart-1: hsl(220 70% 50%);
-    --chart-2: hsl(160 60% 45%);
-    --chart-3: hsl(30 80% 55%);
-    --chart-4: hsl(280 65% 60%);
-    --chart-5: hsl(340 75% 55%);
+
     --sidebar-background: hsl(0 0% 7%);
     --sidebar-foreground: hsl(0 0% 95.9%);
-    --sidebar-primary: hsl(360, 100%, 100%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-primary: #000000;
+    --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: hsl(0 0% 15.9%);
     --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
     --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+    --sidebar-ring: var(--primary);
     --sidebar: hsl(240 5.9% 10%);
 }
 
+/* Base layer: apply mapped tokens to page */
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
+    * { @apply border-border outline-ring/50; }
+    body { @apply bg-background text-foreground; }
+}
+
+/* -----------------------------------------------------------------------------
+   NEUMORPHISM (EXACT SPEC)
+   - Non-active: radius 50px; background #e0e0e0;
+     box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+   - Active/Hover: inset 20px 20px 60px #bebebe, inset -20px -20px 60px #ffffff;
+----------------------------------------------------------------------------- */
+
+/* Global variables for the exact neumorphism look */
+:root {
+    --neu-surface: #e8e8e8;   /* component background (non-active) */
+    --neu-dark:    #c5c5c5;   /* shadow color */
+    --neu-light:   #ffffff;   /* highlight color */
+    --neu-offset:  6px;      /* shadow offset */
+    --neu-blur:    12px;      /* shadow blur */
+    --neu-radius:  8px;      /* exact border radius for neumo components */
+}
+
+.dark {
+    /* Dark mode tuning: keep radius/offset/blur, adjust colors to maintain relief */
+    --neu-surface: #1c2230;
+    --neu-dark:    #0c0f16;
+    --neu-light:   #2a3446;
+}
+
+/* -----------------------------------------------------------------------------
+   NEUMORPHISM UTILITIES (generic + ready-to-use component classes)
+----------------------------------------------------------------------------- */
+@utility shadow-neu-out {
+    /* Raised (non-active) */
+    box-shadow:
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+}
+
+@utility shadow-neu-in {
+    /* Pressed (active/hover) */
+    box-shadow:
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+}
+
+/* Replace the previous .is-pressed that used @apply */
+.is-pressed {
+    /* Use the inset box-shadow directly to avoid @apply on a custom class */
+    box-shadow:
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+}
+@layer utilities {
+    /* --- Generic surface & shadows --- */
+    .neu-surface {
+        /* Base surface for any neumo component */
+        background: var(--neu-surface);
+        border: 1px solid transparent; /* keep outline minimal for clean neumo */
+        border-radius: var(--neu-radius);
+        transition: box-shadow .25s ease, transform .1s ease, background .2s ease, color .2s ease;
     }
-    body {
-        @apply bg-background text-foreground;
+
+    /* Raised (non-active) */
+    .shadow-neu-out {
+        box-shadow:
+                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
     }
+
+    /* Pressed (active/hover) */
+    .shadow-neu-in {
+        box-shadow:
+                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+
+    /* Helper to force pressed state via class */
+    .is-pressed { @apply shadow-neu-in; }
+
+    /* Brand-aligned focus (add with focus-visible if needed) */
+    .neu-focus {
+        outline: none;
+        box-shadow:
+                0 0 0 2px color-mix(in oklab, var(--ring) 100%, transparent),
+                0 0 0 4px color-mix(in oklab, var(--ring) 30%, transparent);
+    }
+
+    /* -----------------------------------------------------------------------------
+       READY COMPONENT STYLES
+       - .neu-btn   : button (raised → pressed on hover/active)
+       - .neu-input : input (raised → pressed on hover/focus for tactile feel)
+       - .neu-card  : container/card (raised; optional pressed on hover)
+       - .neu-switch: switch wrapper (raised → pressed when checked/hovered)
+    ----------------------------------------------------------------------------- */
+
+    /* --- Button --- */
+    .neu-btn {
+        /* Box model */
+        padding: 1em 1.7em;
+        font-size: 18px;
+        border-radius: var(--neu-radius);
+
+        /* Visuals */
+        color: color-mix(in oklab, var(--foreground, #000) 92%, #090909 8%);
+        background: var(--neu-surface);
+        border: 1px solid var(--neu-surface);
+        cursor: pointer;
+        transition: box-shadow .3s ease;
+
+        /* Non-active (raised) */
+        box-shadow:
+                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-btn:hover,
+    .neu-btn:active {
+        color: #666;
+        /* Active/Hover (pressed) */
+        box-shadow:
+                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-btn:focus-visible {
+        /* Brand focus ring + keep outer shape for clarity */
+        outline: none;
+        box-shadow:
+                0 0 0 2px color-mix(in oklab, var(--ring, #6e33ff) 100%, transparent),
+                0 0 0 4px color-mix(in oklab, var(--ring, #6e33ff) 30%, transparent),
+                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-btn:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    /* --- Input --- */
+    .neu-input {
+        border-radius: var(--neu-radius);
+        padding: 0.7em 1em;
+        background: var(--neu-surface);
+        color: var(--foreground, #000);
+        border: 1px solid transparent;
+        transition: box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+
+        /* Non-active (raised) to match spec */
+        box-shadow:
+                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-input::placeholder { color: var(--muted-foreground, #777); }
+    .neu-input:hover,
+    .neu-input:focus,
+    .neu-input:focus-visible {
+        /* Active/Hover (pressed) */
+        box-shadow:
+        inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+        inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+        outline: none;
+    }
+    .neu-input:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    /* --- Card --- */
+    .neu-card {
+        background: var(--neu-surface);
+        border: 1px solid transparent;
+        border-radius: var(--neu-radius);
+        padding: 1rem;
+        transition: box-shadow .25s ease, background .2s ease, border-color .2s ease;
+
+        /* Non-active (raised) */
+        box-shadow:
+                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-card:hover {
+        /* Optional pressed hover for tactile feel */
+        box-shadow:
+                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+
+    /* --- Switch (wrapper + thumb helper) --- */
+    .neu-switch {
+        background: var(--neu-surface);
+        border: 1px solid transparent;
+        border-radius: var(--neu-radius);
+        padding: .4rem;
+        width: 64px;  /* tune to your component */
+        height: 50px; /* consistent with 50px radius */
+        display: inline-flex;
+        align-items: center;
+        transition: box-shadow .2s ease, background .2s ease;
+
+        /* Non-active (raised) */
+        box-shadow:
+                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-switch:hover,
+    .neu-switch[data-state="checked"] {
+        /* Active/Hover (pressed) */
+        box-shadow:
+                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-switch__thumb {
+        /* Thumb with subtle elevation */
+        background: #ffffff;
+        border-radius: 9999px;
+        width: 36px;
+        height: 36px;
+        transform: translateX(0);
+        transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+        box-shadow:
+                3px 3px 6px color-mix(in oklab, #000 20%, transparent),
+                -3px -3px 6px #ffffffcc;
+    }
+    .neu-switch[data-state="checked"] .neu-switch__thumb {
+        transform: translateX(14px);
+        background: color-mix(in oklab, #ffffff 80%, var(--primary, #6e33ff) 20%);
+    }
+}
+
+/* -----------------------------------------------------------------------------
+   QUICK USAGE
+   - Buttons:  class="neu-btn"
+   - Inputs:   class="neu-input"
+   - Cards:    class="neu-card"
+   - Switch:   root class="neu-switch", inner dot class="neu-switch__thumb"
+   - Generic:  combine "neu-surface" + "shadow-neu-out" and add ":hover .shadow-neu-in"
+----------------------------------------------------------------------------- */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    box-shadow: inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+    inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    color:  var(--foreground, #000);
 }
