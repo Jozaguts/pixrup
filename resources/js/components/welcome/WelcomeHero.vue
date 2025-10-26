@@ -53,7 +53,7 @@ const handleTypingComplete = (event: AnimationEvent) => {
                 v-model="query"
                 type="search"
                 placeholder=" Find your fixer in any city"
-                class="h-12 w-full rounded-[12px] border border-white/30 bg-white/95 text-base text-slate-900 placeholder:text-slate-500 focus-visible:ring-0.5 focus-visible:black-400"
+                class="h-12 w-full  text-base text-slate-900 is-pressed"
             />
         </div>
     </section>
