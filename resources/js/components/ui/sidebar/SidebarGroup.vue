@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import  { computed, HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
-</script>
+import { useSidebar } from './utils'
+const {open} = useSidebar()
 
+</script>
 <template>
   <div
     data-slot="sidebar-group"
     data-sidebar="group"
-    :class="cn('relative flex w-full min-w-0 flex-col gap-4 px-4 py-3', props.class)"
+    :class="cn(`relative  pt-4 flex w-full min-w-0 flex-col px-${open ? '3 ':'0'}`, props.class)"
   >
-    <slot />
+    <slot/>
   </div>
 </template>
