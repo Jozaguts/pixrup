@@ -6,6 +6,7 @@ import WelcomeHero from '@/components/welcome/WelcomeHero.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { Button } from '@/components/ui/button';
 
 const props = withDefaults(
     defineProps<{
@@ -94,6 +95,11 @@ const listings = [
             <main class="flex flex-1 flex-col items-center justify-center gap-2">
                 <WelcomeHero />
                 <WelcomeGallery :listings="listings" />
+                <section class="flex flex-col items-center justify-center gap-2">
+                    <p class="text-medium font-bold mt-2 whitespace-nowrap text-[13px] sm:text-[1vw] md:text-[1.5vw] lg:text-[1vw]">Join thousands of agents turning listings into stories.</p>
+                    <button
+                            class="flex w-full lg:max-w-[300px] items-center justify-center p-1 lg:py-3 md:px-2  neu-btn mt-2 is-pressed ">Get stared</button>
+                </section>
             </main>
 
             <WelcomeFooter />

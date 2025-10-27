@@ -12,7 +12,7 @@ defineProps<{
 
 <template>
     <section
-        class="flex w-full flex-wrap items-center justify-center gap-6 py-10 text-white"
+        class="flex w-full flex-wrap items-center justify-center gap-6 py-2 text-white"
     >
         <article
             v-for="listing in listings"

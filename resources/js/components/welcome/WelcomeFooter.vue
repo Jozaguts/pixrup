@@ -31,7 +31,7 @@ const socialLinks: SocialLink[] = [
 
 <template>
     <footer
-        class="flex w-full flex-col items-center justify-between gap-6 border-t border-slate-300/40 py-6 text-xs text-slate-700 md:flex-row"
+        class="flex w-full flex-col items-center justify-between gap-6 border-t border-slate-300/40 pb-3 text-xs text-slate-700 md:flex-row"
     >
         <div class="flex items-center gap-4 text-slate-600">
             <a
