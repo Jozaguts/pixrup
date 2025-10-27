@@ -13,7 +13,7 @@
 /* --- Tailwind theme token mapping (from your base file) --- */
 @theme inline {
     --font-sans:
-            Instrument Sans, ui-sans-serif, system-ui, sans-serif,
+            Mona Sans Helvetica Neue, ui-sans-serif, system-ui, sans-serif,
             'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
             'Noto Color Emoji';
 
@@ -276,7 +276,7 @@
     /* --- Button --- */
     .neu-btn {
         /* Box model */
-        padding: 1em 1.7em;
+        /*padding: 1em 1.7em;*/
         font-size: 18px;
         border-radius: var(--neu-radius);
 
@@ -291,6 +291,9 @@
         box-shadow:
                 var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
                 calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+    }
+    .neu-center-shadow {
+        box-shadow: 0 0 6px var(--neu-dark);
     }
     .neu-btn:hover,
     .neu-btn:active {

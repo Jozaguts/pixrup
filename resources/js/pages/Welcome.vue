@@ -79,11 +79,11 @@ const listings = [
     </Head>
 
     <div
-        class="relative min-h-screen overflow-hidden bg-[#f9f7ff] px-4 font-['Inter',sans-serif] text-slate-900 sm:px-6 lg:px-10"
+        class="relative min-h-screen overflow-hidden  px-4 text-slate-900 sm:px-6 lg:px-10"
     >
         <WelcomeBackground />
 
-        <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
+        <div class="relative  z-10 mx-auto flex min-h-screen w-full flex-col">
             <WelcomeNavbar
                 :is-authenticated="isAuthenticated"
                 :can-register="props.canRegister"
@@ -91,7 +91,7 @@ const listings = [
                 :primary-link="primaryLink"
             />
 
-            <main class="flex flex-1 flex-col items-center justify-center gap-10">
+            <main class="flex flex-1 flex-col items-center justify-center gap-2">
                 <WelcomeHero />
                 <WelcomeGallery :listings="listings" />
             </main>

@@ -12,15 +12,15 @@ defineProps<{
 
 <template>
     <section
-        class="flex w-full max-w-5xl flex-wrap items-center justify-center gap-6 py-10 text-white"
+        class="flex w-full flex-wrap items-center justify-center gap-6 py-10 text-white"
     >
         <article
             v-for="listing in listings"
             :key="listing.id"
-            class="group flex w-[150px] flex-col items-center rounded-3xl bg-white/70 p-3 text-center shadow-[0_15px_45px_rgba(92,76,255,0.25)] backdrop-blur"
+            class="min-w-[150px] neu-surface shadow-neu-in p-4  group flex w-[200px] flex-col items-center  text-center "
         >
             <div
-                class="relative aspect-[3/4] w-full overflow-hidden rounded-2xl "
+                class="relative aspect-[3/4] w-full overflow-hidden  "
             >
                 <img
                     :src="listing.image"
@@ -29,7 +29,7 @@ defineProps<{
                 />
             </div>
             <span
-                class="mt-3 inline-flex rounded-[12px] bg-[#6E33FF] px-4 py-1 text-xs font-semibold text-white shadow-md"
+                class="neu-btn mt-3 inline-flex  px-4 py-1 text-xs font-semibold whitespace-nowrap text-[3vw] sm:text-[2vw] md:text-[1.5vw] lg:text-[1vw]  "
             >
                 {{ listing.title }}
             </span>

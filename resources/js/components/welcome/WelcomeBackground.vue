@@ -81,25 +81,20 @@ html, body {
     justify-content: center;
     align-items: center;
     font-size: 96px;
-    color: white;
+    color: #e8e8e8;
     opacity: 0.8;
     user-select: none;
     text-shadow: 1px 1px rgba(0,0,0,0.1);
 }
 
 :root {
-    --color-bg1: rgb(247, 245, 248);
-    --color-bg2: rgb(254, 254, 255);
+    --color-bg1: #e8e8e8;
+    --color-bg2: #e8e8e8;
     --color1: 18, 113, 255;
     --color2: 221, 74, 255;
     --color3: 100, 220, 255;
     --color4: 200, 50, 50;
     --color5: 180, 180, 50;
-    //--color1: 30, 0, 255;
-    //--color2: 255, 72, 173;
-    //--color3: 140, 0, 215;
-    //--color4: 255, 72, 173;
-    //--color5: 255, 72, 173;
     --color-interactive: 140, 100, 255;
 
     --circle-size: clamp(280px, 70vw, 820px);

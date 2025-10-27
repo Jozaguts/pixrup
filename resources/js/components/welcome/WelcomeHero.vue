@@ -23,7 +23,7 @@ const handleTypingComplete = (event: AnimationEvent) => {
         <div class="typewriter">
             <h1 class="hero-title">
                 <span
-                    class="hero-title__text"
+                    class="hero-title__text whitespace-nowrap text-[4vw] sm:text-[2vw] md:text-[2.5vw] lg:text-[4vw] mt-8 "
                     @animationend="handleTypingComplete"
                 >
                     Turn Any Property Into Potential.
@@ -34,20 +34,14 @@ const handleTypingComplete = (event: AnimationEvent) => {
 
         <p
             v-if="showSubtitle"
-            class="hero-subtitle mb-10 max-w-2xl font-medium text-base leading-relaxed text-black"
+            class="hero-subtitle lg:mb-10 md:mb-10 mb-3 font-medium text-base leading-relaxed text-black whitespace-wrap text-[12px] sm:text-[1vw] md:text-[1.5vw] lg:text-[4vw] "
         >
             Upload. Appraise. Reimagine. Share.
         </p>
 
         <div
-            class="relative mb-16 w-full max-w-xl  px-6 py-4 text-slate-900"
+            class="relative lg:mb-10 md:mb-10 mb-1 w-full max-w-xl  px-6 py-4 text-slate-900"
         >
-            <label
-                for="welcome-query"
-                class="mb-3 block text-sm font-medium text-white/80"
-            >
-
-            </label>
             <Input
                 id="welcome-query"
                 v-model="query"
@@ -71,7 +65,7 @@ const handleTypingComplete = (event: AnimationEvent) => {
 .hero-title {
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.15em;
     font-size: clamp(62px, 4vw, 140px);
     font-weight: 600;
@@ -90,8 +84,8 @@ const handleTypingComplete = (event: AnimationEvent) => {
 
 .hero-title__caret {
     display: inline-block;
-    width: 6px;
-    height: 0.82em;
+    width: 4px;
+    height: calc(1em - 8px);
     background: #6e33ff;
     animation: blink-caret 0.5s step-end infinite;
     animation-delay: 0.6s;
@@ -127,6 +121,12 @@ const handleTypingComplete = (event: AnimationEvent) => {
     .hero-title {
         font-size: clamp(32px, 8vw, 60px);
         letter-spacing: 3px;
+
+    }
+    .hero-title__caret {
+        width: 2px;
+        height: 15px !important;
+
     }
 }
 </style>

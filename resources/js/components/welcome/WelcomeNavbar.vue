@@ -28,14 +28,14 @@ const menuItems = computed(() => props.navItems ?? []);
 </script>
 
 <template>
-    <header class="relative z-20 w-full px-0 pt-4 lg:px-4 lg:pt-6">
+    <header class=" relative z-20 w-full px-0 pt-4 lg:px-4 lg:pt-6">
         <!-- Mobile -->
         <div
-            class="mx-auto flex w-full max-w-5xl items-center justify-between lg:hidden"
+            class=" mx-auto flex w-full max-w-5xl items-center justify-between lg:hidden"
         >
             <Sheet>
                 <SheetTrigger
-                    class="inline-flex h-11 w-11 items-center justify-center rounded-[12px] border border-white/60 bg-white/80 text-slate-900 shadow-lg"
+                    class="neu-surface shadow-neu-out inline-flex h-11 w-11 items-center justify-center text-slate-900"
                 >
                     <Menu class="h-5 w-5" />
                     <span class="sr-only">Toggle navigation</span>
@@ -90,7 +90,7 @@ const menuItems = computed(() => props.navItems ?? []);
                 <Link
                     v-if="props.canRegister && !props.isAuthenticated"
                     :href="auth.register.show()"
-                    class="rounded-[12px] bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-lg transition hover:bg-slate-700"
+                    class=" neu-surface shadow-neu-int dark text-white  bg-slate-900 px-4 py-2 text-sm font-medium "
                 >
                     Sign up
                 </Link>
@@ -110,25 +110,22 @@ const menuItems = computed(() => props.navItems ?? []);
                 class="flex items-center gap-3 rounded-[12px]   px-3 py-2 text-sm "
             >
                 <div
-                    class="flex items-center gap-3 rounded-[12px] bg-white px-4 py-2 shadow-sm"
+                    class="neu-surface shadow-neu-in flex items-center px-4 py-2"
                 >
-                    <div class="flex items-center gap-1">
-
-
+                    <div class=" flex items-center gap-1">
                         <button
                             v-for="item in menuItems"
                             :key="item.label"
                             type="button"
-                            class="inline-flex items-center gap-1 rounded-[12px] px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-100"
+                            class="neu-btn  px-4 py-2  inline-flex items-center gap-1"
                         >
                             {{ item.label }}
-                            <ChevronDown class="h-4 w-4 text-slate-500" />
                         </button>
                     </div>
                 </div>
 
                 <div
-                    class="flex items-center gap-2 rounded-[12px] bg-white px-3 py-2 shadow-sm"
+                    class="neu-surface shadow-neu-in flex items-center gap-2 rounded-[12px]  px-3 py-2 shadow-sm"
                 >
                     <Link
                         v-if="isAuthenticated"
@@ -140,14 +137,14 @@ const menuItems = computed(() => props.navItems ?? []);
                     <template v-else>
                         <Link
                             :href="auth.login.show()"
-                            class="rounded-[12px] border border-slate-900/40 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-900 hover:text-white"
+                            class="neu-btn  px-4 py-2"
                         >
                             Log in
                         </Link>
                         <Link
                             v-if="canRegister"
                             :href="auth.register.show()"
-                            class="rounded-[12px] bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
+                            class="neu-btn px-4 py-2 text-sm font-medium "
                         >
                             Sign up
                         </Link>
