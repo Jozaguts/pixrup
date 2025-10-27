@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
-import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
-import WelcomeHero from '@/components/welcome/WelcomeHero.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
-import { Head, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import { Button } from '@/components/ui/button';
+import AddressSearch, {
+    type AddressSelection,
+} from '@/components/welcome/AddressSearch.vue';
+import ContinueButtons from '@/components/welcome/ContinueButtons.vue';
+import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
+import HeroSection from '@/components/welcome/HeroSection.vue';
+import WorthPreviewModal, {
+    type ComparableProperty,
+} from '@/components/welcome/WorthPreviewModal.vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 const props = withDefaults(
     defineProps<{
@@ -28,7 +34,6 @@ const navItems = [
 ];
 
 const primaryLink = { label: 'Send files', href: '#send' };
-
 const listings = [
     {
         id: 1,
@@ -67,6 +72,98 @@ const listings = [
             'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=400&q=80',
     },
 ];
+const addressQuery = ref('');
+const selectedAddress = ref<AddressSelection | null>(null);
+const estimatedValue = ref<number>();
+const comparableProperties = ref<ComparableProperty[]>([]);
+const isWorthModalOpen = ref(false);
+
+const buildQueryFromSelection = (selection: AddressSelection) => {
+    const query = new URLSearchParams({
+        address: selection.formattedAddress,
+        lat: selection.location.lat.toString(),
+        lng: selection.location.lng.toString(),
+        placeId: selection.placeId,
+    });
+
+    return query.toString();
+};
+
+const navigateToWeb = () => {
+    if (!selectedAddress.value) {
+        return;
+    }
+
+    const destination = isAuthenticated.value ? '/dashboard' : '/register';
+    const query = buildQueryFromSelection(selectedAddress.value);
+
+    router.visit(`${destination}?${query}`);
+};
+
+const createMockPreview = (selection: AddressSelection) => {
+    const rawEstimate =
+        Math.round(
+            (Math.abs(selection.location.lat) +
+                Math.abs(selection.location.lng)) *
+                14000,
+        ) + 225000;
+
+    const estimate = Math.min(Math.max(rawEstimate, 185000), 1750000);
+
+    const [streetSegment = '', citySegment = '', stateSegment = ''] =
+        selection.formattedAddress.split(',');
+
+    const trimmedStreet = streetSegment.trim();
+    const cityState = [citySegment?.trim(), stateSegment?.trim()]
+        .filter(Boolean)
+        .join(', ');
+
+    const numericPortion = Number.parseInt(trimmedStreet, 10);
+    const streetOnly = trimmedStreet.replace(/^\d+\s*/, '').trim();
+
+    const buildComparableStreet = (delta: number, fallback: string) => {
+        if (Number.isNaN(numericPortion) || !streetOnly) {
+            return `${trimmedStreet} ${fallback}`.trim();
+        }
+
+        return `${numericPortion + delta} ${streetOnly}`;
+    };
+
+    const comps: ComparableProperty[] = [
+        {
+            id: `${selection.placeId}-comp-a`,
+            address: `${buildComparableStreet(4, 'Unit A')}${
+                cityState ? ` · ${cityState}` : ''
+            }`,
+            value: Math.round(estimate * 0.97),
+        },
+        {
+            id: `${selection.placeId}-comp-b`,
+            address: `${buildComparableStreet(-3, 'Unit B')}${
+                cityState ? ` · ${cityState}` : ''
+            }`,
+            value: Math.round(estimate * 1.02),
+        },
+    ];
+
+    return { estimate, comps };
+};
+
+const handlePlaceSelected = (selection: AddressSelection) => {
+    addressQuery.value = selection.formattedAddress;
+    selectedAddress.value = selection;
+
+    const preview = createMockPreview(selection);
+    estimatedValue.value = preview.estimate;
+    comparableProperties.value = preview.comps;
+
+    isWorthModalOpen.value = true;
+};
+
+const handleAppraiseFullProperty = () => {
+    isWorthModalOpen.value = false;
+    navigateToWeb();
+};
 </script>
 
 <template>
@@ -80,11 +177,11 @@ const listings = [
     </Head>
 
     <div
-        class="relative min-h-screen overflow-hidden  px-4 text-slate-900 sm:px-6 lg:px-10"
+        class="relative min-h-screen overflow-hidden px-4 text-slate-900 sm:px-6 lg:px-10"
     >
         <WelcomeBackground />
 
-        <div class="relative  z-10 mx-auto flex min-h-screen w-full flex-col">
+        <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
             <WelcomeNavbar
                 :is-authenticated="isAuthenticated"
                 :can-register="props.canRegister"
@@ -92,17 +189,37 @@ const listings = [
                 :primary-link="primaryLink"
             />
 
-            <main class="flex flex-1 flex-col items-center justify-center gap-2">
-                <WelcomeHero />
+            <main
+                class="flex flex-1 flex-col items-center justify-center gap-10 py-2 text-center"
+            >
+                <HeroSection />
+                <AddressSearch
+                    v-model="addressQuery"
+                    @place-selected="handlePlaceSelected"
+                />
+                <p class="text-sm ">
+                    Get a quick PixrWorth Lite estimate before deciding where to continue.
+                </p>
+                <ContinueButtons
+                    :address-data="selectedAddress"
+                    :is-authenticated="isAuthenticated"
+                    @continue-web="isWorthModalOpen = false"
+                    @continue-app="isWorthModalOpen = false"
+                />
                 <WelcomeGallery :listings="listings" />
-                <section class="flex flex-col items-center justify-center gap-2">
-                    <p class="text-medium font-bold mt-2 whitespace-nowrap text-[13px] sm:text-[1vw] md:text-[1.5vw] lg:text-[1vw]">Join thousands of agents turning listings into stories.</p>
-                    <button
-                            class="flex w-full lg:max-w-[300px] items-center justify-center p-1 lg:py-3 md:px-2  neu-btn mt-2 is-pressed ">Get stared</button>
-                </section>
+
             </main>
 
             <WelcomeFooter />
         </div>
+
+        <WorthPreviewModal
+            :open="isWorthModalOpen && Boolean(selectedAddress)"
+            :address="selectedAddress?.formattedAddress"
+            :estimated-value="estimatedValue"
+            :comps="comparableProperties"
+            @update:open="(value) => (isWorthModalOpen = value)"
+            @appraise="handleAppraiseFullProperty"
+        />
     </div>
 </template>
