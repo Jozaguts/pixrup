@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import type { HTMLAttributes, MouseEvent } from 'vue'
 import { cn } from '@/lib/utils'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { type SidebarMenuButtonVariants, sidebarMenuButtonVariants } from '.'
+import { useSidebar } from './utils'
 
 export interface SidebarMenuButtonProps extends PrimitiveProps {
   variant?: SidebarMenuButtonVariants['variant']
@@ -16,6 +17,14 @@ const props = withDefaults(defineProps<SidebarMenuButtonProps>(), {
   variant: 'default',
   size: 'default',
 })
+
+const { isMobile, setOpenMobile } = useSidebar()
+
+const handleClick = (_event: MouseEvent) => {
+  if (isMobile.value) {
+    setOpenMobile(false)
+  }
+}
 </script>
 
 <template>
@@ -28,6 +37,7 @@ const props = withDefaults(defineProps<SidebarMenuButtonProps>(), {
     :as="as"
     :as-child="asChild"
     v-bind="$attrs"
+    @click.capture="handleClick"
   >
     <slot />
   </Primitive>

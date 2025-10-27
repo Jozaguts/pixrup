@@ -26,6 +26,7 @@ const page = usePage();
                     as-child
                     :is-active="urlIsActive(item.href, page.url)"
                     :tooltip="item.title"
+                    class="p-5  "
                 >
                     <Link :href="item.href">
                         <component :is="item.icon" />

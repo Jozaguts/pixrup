@@ -10,7 +10,7 @@ export function detectAppContext() {
     const isInPWA =
         window.matchMedia?.('(display-mode: standalone)')?.matches ?? false;
     const isCapacitor = Boolean(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         (window as any).Capacitor,
     );
     const isMobile = /Android|iPhone|iPad/i.test(

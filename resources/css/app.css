@@ -99,7 +99,7 @@
     --primary: #6e33ff;            /* brand purple */
     --primary-foreground: #ffffff;  /* readable over purple */
     --ring: var(--primary);         /* focus ring uses brand */
-    --foreground: #000000;          /* app black text */
+    --foreground: #1f2933;          /* richer neutral for text */
 
     /* --- Backgrounds / surfaces --- */
     --background: #e8e8e8;
@@ -131,13 +131,13 @@
     --radius: 0.75rem;
 
     /* --- Sidebar --- */
-    --sidebar-background: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: #000000;
+    --sidebar-background: var(--neu-surface);
+    --sidebar-foreground: #6b7280;
+    --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: hsl(0 0% 94%);
-    --sidebar-accent-foreground: hsl(0 0% 30%);
-    --sidebar-border: hsl(0 0% 91%);
+    --sidebar-accent: #eceef7;
+    --sidebar-accent-foreground: #4b5563;
+    --sidebar-border: #dde1ef;
     --sidebar-ring: var(--primary);
     --sidebar: hsl(0 0% 98%);
 }
@@ -165,9 +165,9 @@
     --border: hsl(0 0% 14.9%);
     --input: hsl(0 0% 14.9%);
 
-    --sidebar-background: hsl(0 0% 7%);
-    --sidebar-foreground: hsl(0 0% 95.9%);
-    --sidebar-primary: #000000;
+    --sidebar-background: hsl(240 5% 14%);
+    --sidebar-foreground: hsl(0 0% 95%);
+    --sidebar-primary: #7c4dff;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: hsl(0 0% 15.9%);
     --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
@@ -295,7 +295,7 @@
     .neu-center-shadow {
         box-shadow: 0 0 6px var(--neu-dark);
     }
-    .neu-btn:hover,
+    /*.neu-btn:hover,*/
     .neu-btn:active {
         color: #666;
         /* Active/Hover (pressed) */

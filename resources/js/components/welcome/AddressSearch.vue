@@ -50,7 +50,7 @@ const initializeAutocomplete = async () => {
     const targetElement =
         inputRef.value instanceof HTMLInputElement
             ? inputRef.value
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            :  
               ((inputRef.value as any)?.$el as HTMLInputElement | undefined);
 
     if (!targetElement) {
