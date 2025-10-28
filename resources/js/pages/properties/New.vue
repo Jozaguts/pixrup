@@ -3,6 +3,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import AddressSearch, {
     type AddressSelection,
 } from '@/components/welcome/AddressSearch.vue';
+import propertiesApi from '@/routes/api/properties';
+import propertiesRoutes from '@/routes/properties';
 import type { BreadcrumbItemType } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Capacitor } from '@capacitor/core';
@@ -550,8 +552,8 @@ const goToStep = async (index: number) => {
     }
 };
 
+const submissionError = ref<string | null>(null);
 const isSubmitting = ref(false);
-const submissionError = ref('');
 
 const submitProperty = async () => {
     if (!isSummaryValid.value) {
@@ -570,54 +572,58 @@ const submitProperty = async () => {
         return;
     }
 
+    submissionError.value = null;
+
+    const formData = new FormData();
+    formData.append('address', addressDetails.formattedAddress);
+    formData.append('city', addressDetails.city);
+    formData.append('state', addressDetails.state);
+    formData.append('postal_code', addressDetails.postalCode);
+    formData.append('country', addressDetails.country);
+    formData.append('lat', String(lat));
+    formData.append('lng', String(lng));
+    formData.append('place_id', addressDetails.placeId);
+
+    photoItems.value.forEach((photo, index) => {
+        formData.append(`photos[${index}]`, photo.file, photo.file.name);
+    });
+
+    const { url, method } = propertiesApi.store.post();
+
     try {
         isSubmitting.value = true;
-        submissionError.value = '';
 
-        const formData = new FormData();
-
-        formData.append('address', addressDetails.formattedAddress);
-        formData.append('city', addressDetails.city);
-        formData.append('state', addressDetails.state);
-        formData.append('postal_code', addressDetails.postalCode);
-        formData.append('country', addressDetails.country);
-        formData.append('lat', String(lat));
-        formData.append('lng', String(lng));
-        formData.append('place_id', addressDetails.placeId);
-
-        photoItems.value.forEach((photo, index) => {
-            formData.append(`photos[${index}]`, photo.file, photo.file.name);
-        });
-
-        const response = await fetch('/api/properties', {
-            method: 'POST',
+        const response = await fetch(url, {
+            method,
             body: formData,
             credentials: 'include',
-            headers: { Accept: 'application/json' },
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
         });
 
-        if (!response.ok) {
-            let errorMessage = 'Unable to create the property.';
+        const payload = await response.json().catch(() => null);
 
-            try {
-                const payload = await response.json();
-                errorMessage =
-                    payload?.message ??
-                    payload?.error ??
-                    errorMessage;
-            } catch {
-                // Ignore JSON parsing issues.
-            }
+        if (!response.ok) {
+            const errorMessage =
+                payload?.message ??
+                payload?.error ??
+                'Unable to create the property.';
 
             throw new Error(errorMessage);
         }
 
         sessionStorage.setItem(
             successToastStorageKey,
-            'Property successfully created 🎉',
+            payload?.message ?? 'Property successfully created 🎉',
         );
 
-        router.visit('/dashboard', {
+        const redirectUrl =
+            payload?.redirect ??
+            (payload?.id ? propertiesRoutes.show.url(payload.id) : '/dashboard');
+
+        router.visit(redirectUrl, {
             replace: true,
         });
     } catch (error) {

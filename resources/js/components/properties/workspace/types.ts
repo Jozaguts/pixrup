@@ -17,6 +17,31 @@ export interface WorkspaceModuleMeta {
     last_run_at: string | null;
 }
 
+export type WorthStatusState = 'idle' | 'loading' | 'success' | 'error';
+
+export interface WorthComparable {
+    id: string;
+    address: string;
+    distance: string;
+    price: number;
+    delta: string;
+}
+
+export interface WorthTrendPoint {
+    label: string;
+    value: number;
+}
+
+export interface WorthResult {
+    id: number;
+    value: number;
+    confidence: number | null;
+    comparables: WorthComparable[];
+    trend: WorthTrendPoint[];
+    provider: string;
+    fetched_at: string | null;
+}
+
 export interface PropertyWorkspaceMeta {
     actions?: WorkspaceAction[];
     modules?: Record<string, WorkspaceModuleMeta>;
@@ -61,6 +86,7 @@ export interface PropertyWorkspaceProperty {
     last_updated_human?: string;
     tags?: string[];
     workspace?: PropertyWorkspaceMeta;
+    worth?: WorthResult | null;
 }
 
 export type ModuleId =
