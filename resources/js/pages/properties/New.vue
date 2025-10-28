@@ -3,10 +3,9 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import AddressSearch, {
     type AddressSelection,
 } from '@/components/welcome/AddressSearch.vue';
-import propertiesApi from '@/routes/api/properties';
 import propertiesRoutes from '@/routes/properties';
 import type { BreadcrumbItemType } from '@/types';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { Capacitor } from '@capacitor/core';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import {
@@ -40,6 +39,7 @@ type PhotoItem = {
 };
 
 const successToastStorageKey = 'pixrup:new-property-toast';
+const form = useForm({});
 
 const breadcrumbs: BreadcrumbItemType[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -553,7 +553,7 @@ const goToStep = async (index: number) => {
 };
 
 const submissionError = ref<string | null>(null);
-const isSubmitting = ref(false);
+const isSubmitting = computed(() => form.processing);
 
 const submitProperty = async () => {
     if (!isSummaryValid.value) {
@@ -588,52 +588,29 @@ const submitProperty = async () => {
         formData.append(`photos[${index}]`, photo.file, photo.file.name);
     });
 
-    const { url, method } = propertiesApi.store.post();
+    const storeRoute = propertiesRoutes.store.post();
 
-    try {
-        isSubmitting.value = true;
-
-        const response = await fetch(url, {
-            method,
-            body: formData,
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        });
-
-        const payload = await response.json().catch(() => null);
-
-        if (!response.ok) {
-            const errorMessage =
-                payload?.message ??
-                payload?.error ??
-                'Unable to create the property.';
-
-            throw new Error(errorMessage);
-        }
-
-        sessionStorage.setItem(
-            successToastStorageKey,
-            payload?.message ?? 'Property successfully created 🎉',
-        );
-
-        const redirectUrl =
-            payload?.redirect ??
-            (payload?.id ? propertiesRoutes.show.url(payload.id) : '/dashboard');
-
-        router.visit(redirectUrl, {
-            replace: true,
-        });
-    } catch (error) {
-        submissionError.value =
-            error instanceof Error
-                ? error.message
-                : 'Something went wrong while creating the property.';
-    } finally {
-        isSubmitting.value = false;
-    }
+    form.clearErrors();
+    form.transform(() => formData).submit(storeRoute.method, storeRoute.url, {
+        preserveScroll: true,
+        onSuccess: () => {
+            submissionError.value = null;
+            sessionStorage.setItem(
+                successToastStorageKey,
+                'Property successfully created 🎉',
+            );
+        },
+        onError: (errors) => {
+            const firstError = Object.values(errors ?? {})[0];
+            submissionError.value =
+                typeof firstError === 'string'
+                    ? firstError
+                    : 'Unable to create the property.';
+        },
+        onFinish: () => {
+            form.transform((data) => data);
+        },
+    });
 };
 
 const handleBack = async () => {
@@ -699,7 +676,7 @@ const isNextDisabled = computed(() => {
     <Head title="New Property" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <section
-            class="relative flex min-h-[calc(100vh-8rem)] w-full flex-1 flex-col gap-6 rounded-none bg-[#f4f5fa] px-5 pb-28 pt-6 shadow-none md:mx-auto md:max-w-5xl md:rounded-[32px] md:px-10 md:pb-10 md:pt-10 md:shadow-[24px_24px_48px_rgba(207,213,235,0.6),-24px_-24px_48px_rgba(255,255,255,0.9)] lg:max-w-6xl"
+            class="shadow-neu-in relative flex min-h-[calc(100vh-8rem)] w-full flex-1 flex-col gap-6 rounded-none  px-5 pb-28 pt-6 shadow-none md:mx-auto md:max-w-5xl md:rounded-[32px] md:px-10 md:pb-10 md:pt-10 md:shadow-[24px_24px_48px_rgba(207,213,235,0.6),-24px_-24px_48px_rgba(255,255,255,0.9)] lg:max-w-6xl"
         >
             <header class="flex flex-col gap-6">
                 <div class="flex flex-col gap-2">
@@ -728,7 +705,7 @@ const isNextDisabled = computed(() => {
                             :key="step.id"
                             class="neu-surface shadow-neu-out flex flex-col gap-1 rounded-3xl p-4 transition-all duration-200"
                             :class="{
-                                'bg-white text-[#1f2933] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]':
+                                ' text-[#1f2933] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]':
                                     index === currentStepIndex,
                             }"
                         >
@@ -773,7 +750,7 @@ const isNextDisabled = computed(() => {
                         <div class="flex flex-col gap-3 md:flex-row">
                             <button
                                 type="button"
-                                class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                                class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl  px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
                                 :disabled="addressForm.isLocating"
                                 @click="useCurrentLocation"
                             >
@@ -828,13 +805,13 @@ const isNextDisabled = computed(() => {
                                 </span>
                             </div>
                             <div class="flex flex-wrap gap-4 text-sm text-[#1f2933]">
-                                <span class="rounded-2xl bg-white px-3 py-2 shadow-[6px_6px_16px_rgba(200,206,224,0.45),-6px_-6px_16px_rgba(255,255,255,0.9)]">
+                                <span class="neu-surface rounded-2xl  px-3 py-2 ">
                                     Lat: {{ formatCoordinate(addressDetails.lat) }}
                                 </span>
-                                <span class="rounded-2xl bg-white px-3 py-2 shadow-[6px_6px_16px_rgba(200,206,224,0.45),-6px_-6px_16px_rgba(255,255,255,0.9)]">
+                                <span class=" neu-surface rounded-2xl  px-3 py-2 ">
                                     Lng: {{ formatCoordinate(addressDetails.lng) }}
                                 </span>
-                                <span class="rounded-2xl bg-white px-3 py-2 text-xs uppercase tracking-wide text-[#9ca3af] shadow-[6px_6px_16px_rgba(200,206,224,0.45),-6px_-6px_16px_rgba(255,255,255,0.9)]">
+                                <span class=" neu-surface rounded-2xl  px-3 py-2 text-xs uppercase tracking-wide text-[#9ca3af] ">
                                     Place ID: {{ addressDetails.placeId }}
                                 </span>
                             </div>
@@ -860,7 +837,7 @@ const isNextDisabled = computed(() => {
                     <div class="flex flex-col gap-3 md:flex-row">
                         <button
                             type="button"
-                            class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                            class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl  px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
                             :disabled="isProcessingPhotos"
                             @click="openUploadDialog"
                         >
@@ -915,7 +892,7 @@ const isNextDisabled = computed(() => {
                             <div
                                 v-for="photo in photoItems"
                                 :key="photo.id"
-                                class="relative overflow-hidden rounded-[24px] bg-white shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                                class="relative overflow-hidden rounded-[24px]  shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.9)]"
                             >
                                 <img
                                     :src="photo.previewUrl"
@@ -942,7 +919,7 @@ const isNextDisabled = computed(() => {
 
                         <div
                             v-if="isProcessingPhotos"
-                            class="flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm text-[#6b7280] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                            class="flex items-center justify-center gap-2 rounded-2xl  px-4 py-3 text-sm text-[#6b7280] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]"
                         >
                             <Loader2 class="size-4 animate-spin text-[#7C4DFF]" />
                             Processing images…
@@ -987,7 +964,7 @@ const isNextDisabled = computed(() => {
                         </div>
 
                         <div class="grid gap-3 sm:grid-cols-2">
-                            <div class="flex flex-col gap-2 rounded-3xl bg-white px-4 py-3 text-sm text-[#6b7280] shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.95)]">
+                            <div class="shadow-neu-in  flex flex-col gap-2   px-4 py-3 text-sm text-[#6b7280] ">
                                 <div class="flex items-center gap-2 text-[#1f2933]">
                                     <MapPin class="size-4" />
                                     <span class="font-semibold">Coordinates</span>
@@ -995,7 +972,7 @@ const isNextDisabled = computed(() => {
                                 <span>Lat: {{ formatCoordinate(addressDetails.lat) }}</span>
                                 <span>Lng: {{ formatCoordinate(addressDetails.lng) }}</span>
                             </div>
-                            <div class="flex flex-col gap-2 rounded-3xl bg-white px-4 py-3 text-sm text-[#6b7280] shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.95)]">
+                            <div class=" shadow-neu-in flex flex-col gap-2   px-4 py-3 text-sm text-[#6b7280] s">
                                 <div class="flex items-center gap-2 text-[#1f2933]">
                                     <CalendarDays class="size-4" />
                                     <span class="font-semibold">Created</span>
@@ -1014,7 +991,7 @@ const isNextDisabled = computed(() => {
                                 <div
                                     v-for="photo in photoItems"
                                     :key="photo.id"
-                                    class="overflow-hidden rounded-[24px] bg-white shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                                    class="overflow-hidden shadow-neu-in"
                                 >
                                     <img
                                         :src="photo.previewUrl"
@@ -1057,7 +1034,7 @@ const isNextDisabled = computed(() => {
                 </button>
                 <button
                     type="button"
-                    class="neu-btn relative flex items-center justify-center gap-2 rounded-2xl bg-[#7C4DFF] px-6 py-3 font-semibold text-white shadow-[12px_12px_24px_rgba(78,47,155,0.35),-12px_-12px_24px_rgba(152,117,255,0.45)] transition-all duration-200 hover:shadow-[inset_8px_8px_18px_rgba(78,47,155,0.35),inset_-8px_-8px_18px_rgba(152,117,255,0.35)]"
+                    class="neu-btn relative flex items-center justify-center gap-2  px-6 py-3 font-semibold text-white "
                     :class="{
                         'pointer-events-none opacity-60': isNextDisabled,
                     }"

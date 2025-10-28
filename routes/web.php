@@ -1,12 +1,13 @@
 <?php
-
-
+use App\Http\Controllers\Properties\PropertyController;
+use App\Http\Controllers\Properties\PropertyWorthController;
 use App\Models\Property;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Interface\Auth\Http\Controllers\AuthController;
 use App\Interface\Auth\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canRegister' => Features::enabled(Features::registration()),
@@ -14,112 +15,49 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+    $properties = Property::with('latestWorth')
+        ->latest()
+        ->get()
+        ->map(function (Property $property) {
+            $status = in_array($property->status, ['in-progress', 'ready', 'pending', 'draft'], true)
+                ? $property->status
+                : 'in-progress';
+
+            $addressSegments = collect([
+                $property->address,
+                collect([$property->city, $property->state])->filter()->implode(', '),
+                $property->postal_code,
+                $property->country,
+            ])->filter();
+
+            return [
+                'id' => $property->id,
+                'title' => $property->title ?? $property->address,
+                'address' => $addressSegments->implode(', '),
+                'status' => $status,
+                'estimatedValue' => $property->latestWorth?->value,
+                'progress' => null,
+                'thumbnail' => null,
+                'links' => [
+                    'view' => route('properties.show', $property, absolute: false),
+                    'report' => null,
+                ],
+            ];
+        })
+        ->values();
+
+    return Inertia::render('Dashboard', [
+        'properties' => $properties,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/properties/new', function () {
-    return Inertia::render('properties/New');
-})->middleware(['auth', 'verified'])->name('properties.new');
-
-Route::get('/properties/{property}', function (Property $property) {
-    $property->load('latestWorth');
-
-    $latestWorth = $property->latestWorth;
-
-    $worthPayload = $latestWorth ? [
-        'id' => $latestWorth->id,
-        'value' => $latestWorth->value,
-        'confidence' => $latestWorth->confidence,
-        'comparables' => $latestWorth->comparables,
-        'trend' => $latestWorth->trend,
-        'provider' => $latestWorth->provider,
-        'fetched_at' => optional($latestWorth->fetched_at)->toIso8601String(),
-    ] : null;
-
-    $propertyData = [
-        'id' => $property->id,
-        'title' => $property->title ?? $property->address,
-        'status' => $property->status ?? 'in-progress',
-        'address' => [
-            'line1' => $property->address,
-            'city' => $property->city,
-            'state' => $property->state,
-            'postal_code' => $property->postal_code,
-        ],
-        'owner' => [
-            'name' => 'Workspace Owner',
-            'email' => auth()->user()?->email,
-        ],
-        'summary' => [
-            'bedrooms' => data_get($property->metadata, 'summary.bedrooms'),
-            'bathrooms' => data_get($property->metadata, 'summary.bathrooms'),
-            'livingArea' => data_get($property->metadata, 'summary.livingArea'),
-            'lotSize' => data_get($property->metadata, 'summary.lotSize'),
-            'yearBuilt' => data_get($property->metadata, 'summary.yearBuilt'),
-            'propertyType' => data_get($property->metadata, 'summary.propertyType'),
-        ],
-        'pricing' => [
-            'acquisition' => data_get($property->metadata, 'pricing.acquisition'),
-            'currentEstimate' => $latestWorth?->value,
-            'potentialAfterGlow' => $latestWorth ? round($latestWorth->value * 1.06) : null,
-        ],
-        'last_updated' => optional($property->updated_at)->toIso8601String(),
-        'last_updated_human' => optional($property->updated_at)->diffForHumans(),
-        'tags' => data_get($property->metadata, 'tags', []),
-        'worth' => $worthPayload,
-        'workspace' => [
-            'actions' => [
-                ['id' => 'appraise', 'label' => 'Appraise', 'module' => 'pixrWorth'],
-                ['id' => 'glowUp', 'label' => 'Glow-Up', 'module' => 'pixrGlowUp'],
-                ['id' => 'spyHunt', 'label' => 'SpyHunt', 'module' => 'pixrSpyHunt'],
-                ['id' => 'vision', 'label' => '3D Tour', 'module' => 'pixrVision'],
-                ['id' => 'seal', 'label' => 'Report', 'module' => 'pixrSeal'],
-                ['id' => 'collab', 'label' => 'Collab', 'module' => 'pixrCollab'],
-            ],
-            'modules' => [
-                'overview' => [
-                    'endpoint' => "/api/properties/{$property->id}",
-                    'status' => 'ready',
-                    'last_run_at' => optional($property->updated_at)->toIso8601String(),
-                ],
-                'pixrWorth' => [
-                    'endpoint' => "/api/properties/{$property->id}/worth",
-                    'status' => $latestWorth ? 'ready' : 'needs-action',
-                    'last_run_at' => optional($latestWorth?->fetched_at)->toIso8601String(),
-                ],
-                'pixrGlowUp' => [
-                    'endpoint' => "/api/properties/{$property->id}/glowup/jobs",
-                    'status' => 'ready',
-                    'last_run_at' => now()->subHours(12)->toIso8601String(),
-                ],
-                'pixrSpyHunt' => [
-                    'endpoint' => "/api/properties/{$property->id}/spyhunt",
-                    'status' => 'processing',
-                    'last_run_at' => now()->subMinutes(45)->toIso8601String(),
-                ],
-                'pixrVision' => [
-                    'endpoint' => "/api/properties/{$property->id}/vision",
-                    'status' => 'ready',
-                    'last_run_at' => now()->subDays(5)->toIso8601String(),
-                ],
-                'pixrSeal' => [
-                    'endpoint' => "/api/properties/{$property->id}/report",
-                    'status' => $latestWorth ? 'ready' : 'draft',
-                    'last_run_at' => null,
-                ],
-                'pixrCollab' => [
-                    'endpoint' => "/api/properties/{$property->id}/collab/token",
-                    'status' => 'ready',
-                    'last_run_at' => now()->subMinutes(5)->toIso8601String(),
-                ],
-            ],
-        ],
-    ];
-
-    return Inertia::render('properties/Show', [
-        'property' => $propertyData,
-    ]);
-})->middleware(['auth', 'verified'])->name('properties.show');
+Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
+    Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
+    Route::post('/properties/{property}/worth/fetch', [PropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
+    Route::post('/properties/{property}/worth/report', [PropertyWorthController::class, 'report'])->name('properties.worth.report');
+});
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.store');
@@ -132,5 +70,3 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])->
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 require __DIR__.'/settings.php';
-
-

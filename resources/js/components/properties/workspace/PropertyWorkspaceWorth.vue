@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
-import { useOnline } from '@vueuse/core';
+import { computed } from 'vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import {
     AlertCircle,
     ArrowRight,
@@ -11,12 +11,11 @@ import {
     ShieldCheck,
     TrendingUp,
 } from 'lucide-vue-next';
-import worthRoutes from '@/routes/api/properties/worth';
+import propertiesRoutes from '@/routes/properties';
 import type {
     PropertyWorkspaceProperty,
     WorkspaceModuleMeta,
     WorthComparable,
-    WorthResult,
     WorthStatusState,
 } from './types';
 
@@ -28,7 +27,6 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const online = useOnline();
 const propertyId = computed(() => Number(props.property.id));
 const endpointBadge = computed(() => {
     if (props.meta?.endpoint) {
@@ -36,24 +34,43 @@ const endpointBadge = computed(() => {
     }
 
     return Number.isNaN(propertyId.value)
-        ? '/api/properties/:id/worth'
-        : worthRoutes.fetch.url({ property: propertyId.value });
+        ? '/properties/:id/worth'
+        : `/properties/${propertyId.value}/worth`;
 });
 
-const worth = ref(props.property.worth ?? null);
+const worth = computed(() => props.property.worth ?? null);
 const hasWorth = computed(() => worth.value !== null);
 const comparables = computed<WorthComparable[]>(() => worth.value?.comparables ?? []);
 const trendPoints = computed(() => worth.value?.trend ?? []);
 
-const pendingAction = ref<'fetch' | 'report' | null>(null);
-const errorMessage = ref<string | null>(null);
-const successMessage = ref<string | null>(null);
+const fetchForm = useForm({});
+const reportForm = useForm({});
+const isFetchLoading = computed(() => fetchForm.processing);
+const isReportLoading = computed(() => reportForm.processing);
+const isActionDisabled = computed(
+    () => isFetchLoading.value || isReportLoading.value,
+);
 
-const isFetchLoading = computed(() => pendingAction.value === 'fetch');
-const isActionDisabled = computed(() => pendingAction.value !== null);
+const page = usePage();
+const flashStatus = computed(() => page.props.flash?.status ?? null);
+const successMessage = computed(() => {
+    switch (flashStatus.value) {
+        case 'worth-ready':
+            return 'Appraisal completed successfully 🎯';
+        case 'worth-report':
+            return 'Appraisal added to the report queue.';
+        default:
+            return null;
+    }
+});
+
+const errorMessage = computed(() => {
+    const errors = page.props.errors ?? {};
+    return typeof errors.worth === 'string' ? errors.worth : null;
+});
 
 const state = computed<WorthStatusState>(() => {
-    if (pendingAction.value === 'fetch') {
+    if (isFetchLoading.value || isReportLoading.value) {
         return 'loading';
     }
 
@@ -116,161 +133,33 @@ const showSuccessBanner = computed(
     () => state.value === 'success' && !!successMessage.value,
 );
 
-watch(
-    () => props.property.worth,
-    (value) => {
-        worth.value = value ?? null;
-    },
-);
-
-watch(
-    () => worth.value?.id,
-    (id) => {
-        if (id) {
-            errorMessage.value = null;
-        }
-    },
-);
-
-interface WorthResponse {
-    worth?: WorthResult | null;
-    message?: string;
-}
-
-const requireOnline = (): boolean => {
-    if (!online.value) {
-        errorMessage.value = 'Cannot fetch data offline';
-        return false;
-    }
-
-    return true;
-};
-
-const requestJson = async (url: string, method: string): Promise<WorthResponse> => {
-    const response = await fetch(url, {
-        method,
-        credentials: 'include',
-        headers: {
-            Accept: 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-        },
-    });
-
-    const payload = (await response.json().catch(() => ({}))) as WorthResponse;
-
-    if (!response.ok) {
-        const message =
-            typeof payload?.message === 'string'
-                ? payload.message
-                : 'Could not retrieve data.';
-
-        throw new Error(message);
-    }
-
-    return payload;
-};
-
-const handleFetch = async () => {
-    if (pendingAction.value || Number.isNaN(propertyId.value)) {
-        return;
-    }
-
-    if (!requireOnline()) {
-        return;
-    }
-
-    pendingAction.value = 'fetch';
-    errorMessage.value = null;
-    successMessage.value = null;
-
-    try {
-        const { url, method } = worthRoutes.fetch.post({ property: propertyId.value });
-        const payload = await requestJson(url, method);
-
-        if (Object.prototype.hasOwnProperty.call(payload, 'worth')) {
-            worth.value = payload.worth ?? null;
-        }
-
-        successMessage.value =
-            typeof payload.message === 'string'
-                ? payload.message
-                : 'Appraisal completed successfully 🎯';
-    } catch (error) {
-        errorMessage.value =
-            error instanceof Error ? error.message : 'Could not retrieve data.';
-    } finally {
-        pendingAction.value = null;
-    }
-};
-
 const handleRetry = () => {
     handleFetch();
 };
 
-const handleAddToReport = async () => {
-    if (pendingAction.value || Number.isNaN(propertyId.value)) {
+const handleFetch = () => {
+    if (isActionDisabled.value || Number.isNaN(propertyId.value)) {
         return;
     }
 
-    if (!worth.value) {
-        errorMessage.value = 'Generate an appraisal before adding it to the report.';
-        return;
-    }
+    const route = propertiesRoutes.worth.fetch.post({ property: propertyId.value });
 
-    if (!requireOnline()) {
-        return;
-    }
-
-    pendingAction.value = 'report';
-    errorMessage.value = null;
-    successMessage.value = null;
-
-    try {
-        const { url, method } = worthRoutes.report.post({ property: propertyId.value });
-        const payload = await requestJson(url, method);
-
-        successMessage.value =
-            typeof payload.message === 'string'
-                ? payload.message
-                : 'Appraisal added to the report queue.';
-    } catch (error) {
-        errorMessage.value =
-            error instanceof Error
-                ? error.message
-                : 'Unable to add the appraisal to the report.';
-    } finally {
-        pendingAction.value = null;
-    }
+    fetchForm.submit(route.method, route.url, {
+        preserveScroll: true,
+    });
 };
 
-const loadWorth = async () => {
-    if (hasWorth.value || Number.isNaN(propertyId.value)) {
+const handleAddToReport = () => {
+    if (isActionDisabled.value || Number.isNaN(propertyId.value) || !hasWorth.value) {
         return;
     }
 
-    pendingAction.value = 'fetch';
-    errorMessage.value = null;
+    const route = propertiesRoutes.worth.report.post({ property: propertyId.value });
 
-    try {
-        const { url, method } = worthRoutes.show.get({ property: propertyId.value });
-        const payload = await requestJson(url, method);
-
-        if (Object.prototype.hasOwnProperty.call(payload, 'worth')) {
-            worth.value = payload.worth ?? null;
-        }
-    } catch (error) {
-        errorMessage.value =
-            error instanceof Error ? error.message : 'Could not retrieve data.';
-    } finally {
-        pendingAction.value = null;
-    }
+    reportForm.submit(route.method, route.url, {
+        preserveScroll: true,
+    });
 };
-
-onMounted(() => {
-    if (!props.property.worth && props.meta?.status === 'ready') {
-        void loadWorth();
-    }
-});
 </script>
 
 <template>

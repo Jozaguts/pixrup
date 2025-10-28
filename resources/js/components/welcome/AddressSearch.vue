@@ -196,6 +196,7 @@ defineExpose({
             autocomplete="off"
             autocapitalize="off"
             spellcheck="false"
+            class="is-pressed"
             :class="inputClasses"
         />
         <p v-if="errorMessage" class="text-sm text-red-500">

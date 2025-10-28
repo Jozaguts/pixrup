@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { Building2, CheckCircle2, Compass, Home, MapPin, Plus, TrendingUp, X } from 'lucide-vue-next';
 
 type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
@@ -250,6 +250,7 @@ const visitLink = (link?: string) => {
 
 const successToastStorageKey = 'pixrup:new-property-toast';
 const propertyToastMessage = ref('');
+const flashStatus = computed(() => page.props.flash?.status ?? null);
 
 onMounted(() => {
     if (typeof window === 'undefined') {
@@ -263,6 +264,16 @@ onMounted(() => {
         window.sessionStorage.removeItem(successToastStorageKey);
     }
 });
+
+watch(
+    flashStatus,
+    (status) => {
+        if (status === 'property-created') {
+            propertyToastMessage.value = 'Property successfully created 🎉';
+        }
+    },
+    { immediate: true },
+);
 
 const dismissPropertyToast = () => {
     propertyToastMessage.value = '';
