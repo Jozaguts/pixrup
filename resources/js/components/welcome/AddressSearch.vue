@@ -2,6 +2,7 @@
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { Input } from '@/components/ui/input';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import type { PropType } from 'vue';
 
 type AddressLocation = {
     lat: number;
@@ -12,6 +13,10 @@ export type AddressSelection = {
     formattedAddress: string;
     placeId: string;
     location: AddressLocation;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
 };
 
 const emit = defineEmits<{
@@ -20,6 +25,13 @@ const emit = defineEmits<{
 }>();
 
 const modelValue = defineModel<string>({ default: '' });
+
+const props = defineProps({
+    variant: {
+        type: String as PropType<'default' | 'neumorphic'>,
+        default: 'default',
+    },
+});
 
 const inputRef = ref<InstanceType<typeof Input> | HTMLInputElement | null>(null);
 const isLoading = ref(false);
@@ -31,6 +43,14 @@ let placeListener: google.maps.MapsEventListener | undefined;
 const placeholder = computed(() =>
     isLoading.value ? 'Loading Google Places…' : 'Search an address…',
 );
+
+const inputClasses = computed(() => {
+    if (props.variant === 'neumorphic') {
+        return 'neu-input h-14 w-full rounded-[12px] border-0 bg-[#f4f5fa] px-5 text-base text-[#1f2933] shadow-neu-out focus-visible:outline-none focus-visible:ring-0';
+    }
+
+    return 'h-14 w-full rounded-xl border border-slate-200 bg-white text-base text-slate-900 shadow-sm focus-visible:ring-2 focus-visible:ring-purple-500';
+});
 
 const initializeAutocomplete = async () => {
     if (typeof window === 'undefined' || import.meta.env.SSR) {
@@ -68,7 +88,12 @@ const initializeAutocomplete = async () => {
 
         autocomplete = new Autocomplete(targetElement, {
             types: ['address'],
-            fields: ['formatted_address', 'geometry', 'place_id'],
+            fields: [
+                'formatted_address',
+                'geometry',
+                'place_id',
+                'address_components',
+            ],
         });
 
         placeListener = autocomplete.addListener('place_changed', () => {
@@ -82,6 +107,7 @@ const initializeAutocomplete = async () => {
                 place.formatted_address ?? modelValue.value ?? '';
             const placeId = place.place_id ?? '';
             const location = place.geometry?.location;
+            const components = place.address_components ?? [];
 
             if (!location || !formattedAddress || !placeId) {
                 const message =
@@ -93,6 +119,23 @@ const initializeAutocomplete = async () => {
 
             errorMessage.value = '';
 
+            const findComponent = (
+                types: string[],
+            ): google.maps.GeocoderAddressComponent | undefined =>
+                components.find((component) =>
+                    types.every((type) => component.types.includes(type)),
+                );
+
+            const cityComponent =
+                findComponent(['locality']) ??
+                findComponent(['postal_town']) ??
+                findComponent(['administrative_area_level_2']);
+            const stateComponent =
+                findComponent(['administrative_area_level_1']) ??
+                findComponent(['administrative_area_level_2']);
+            const postalCodeComponent = findComponent(['postal_code']);
+            const countryComponent = findComponent(['country']);
+
             emit('place-selected', {
                 formattedAddress,
                 placeId,
@@ -100,6 +143,10 @@ const initializeAutocomplete = async () => {
                     lat: location.lat(),
                     lng: location.lng(),
                 },
+                city: cityComponent?.long_name,
+                state: stateComponent?.short_name ?? stateComponent?.long_name,
+                postalCode: postalCodeComponent?.long_name,
+                country: countryComponent?.long_name,
             });
         });
     } catch (error) {
@@ -123,6 +170,17 @@ onBeforeUnmount(() => {
     placeListener = undefined;
     autocomplete = null;
 });
+
+defineExpose({
+    focus: () => {
+        const targetElement =
+            inputRef.value instanceof HTMLInputElement
+                ? inputRef.value
+                : ((inputRef.value as any)?.$el as HTMLInputElement | undefined);
+
+        targetElement?.focus();
+    },
+});
 </script>
 
 <template>
@@ -138,7 +196,7 @@ onBeforeUnmount(() => {
             autocomplete="off"
             autocapitalize="off"
             spellcheck="false"
-            class="h-14 w-full rounded-xl border border-slate-200 bg-white text-base text-slate-900 shadow-sm focus-visible:ring-2 focus-visible:ring-purple-500"
+            :class="inputClasses"
         />
         <p v-if="errorMessage" class="text-sm text-red-500">
             {{ errorMessage }}

@@ -3,8 +3,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import { Building2, Compass, Home, MapPin, Plus, TrendingUp } from 'lucide-vue-next';
+import { computed, onMounted, ref } from 'vue';
+import { Building2, CheckCircle2, Compass, Home, MapPin, Plus, TrendingUp, X } from 'lucide-vue-next';
 
 type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
 
@@ -247,12 +247,54 @@ const visitLink = (link?: string) => {
 
     router.visit(link);
 };
+
+const successToastStorageKey = 'pixrup:new-property-toast';
+const propertyToastMessage = ref('');
+
+onMounted(() => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    const stored = window.sessionStorage.getItem(successToastStorageKey);
+
+    if (stored) {
+        propertyToastMessage.value = stored;
+        window.sessionStorage.removeItem(successToastStorageKey);
+    }
+});
+
+const dismissPropertyToast = () => {
+    propertyToastMessage.value = '';
+};
 </script>
 
 <template>
     <Head title="Dashboard" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-col gap-6 text-[#1f2933]">
+            <Transition name="fade-slide">
+                <div
+                    v-if="propertyToastMessage"
+                    class="neu-surface shadow-neu-out flex flex-col gap-3 rounded-[24px] bg-[#f4f5fa] px-5 py-4 text-sm text-[#1f2933] md:flex-row md:items-center md:justify-between"
+                >
+                    <div class="flex items-center gap-3 text-[#1f2933]">
+                        <CheckCircle2 class="size-5 text-[#1fbf75]" />
+                        <span class="font-semibold">
+                            {{ propertyToastMessage }}
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        class="neu-btn inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-xs font-semibold text-[#6b7280] transition-all hover:text-[#1f2933]"
+                        @click="dismissPropertyToast"
+                    >
+                        <X class="size-4" />
+                        Dismiss
+                    </button>
+                </div>
+            </Transition>
+
             <section
                 class="neu-surface shadow-neu-out flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 md:flex-row md:items-center md:justify-between md:gap-10"
             >
@@ -517,3 +559,18 @@ const visitLink = (link?: string) => {
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(6px);
+}
+</style>
