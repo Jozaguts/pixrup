@@ -147,9 +147,6 @@ const propertyStatus = computed(() => {
     return statusTokens[statusKey] ?? statusTokens['in-progress'];
 });
 
-const headerShadow =
-    'shadow-[20px_20px_60px_#e1e1e1,-20px_-20px_60px_#ffffff]';
-
 const pillShadow =
     'shadow-[12px_12px_30px_rgba(209,209,224,0.8),-12px_-12px_30px_rgba(255,255,255,0.9)]';
 
@@ -251,12 +248,12 @@ const moduleStatusLabel = (id: ModuleId) => {
     <AppLayout>
         <Head :title="props.property.title ?? 'Property Workspace'" />
 
-        <div class="min-h-screen bg-[#f4f5fa] pb-16 pt-10">
-            <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+        <div class="shadow-neu-in min-h-screen  pb-16 pt-10">
+            <div class="mx-auto flex shadow-neu-in max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
                 <section
                     :class="[
-                        'relative overflow-hidden rounded-[32px] bg-white px-6 py-8 sm:px-8 md:px-10',
-                        headerShadow,
+                        'relative overflow-hidden  px-6 py-8 sm:px-8 md:px-10',
+
                     ]"
                 >
                     <div class="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
@@ -321,7 +318,7 @@ const moduleStatusLabel = (id: ModuleId) => {
                                     v-for="action in actionButtons"
                                     :key="action.id"
                                     type="button"
-                                    class="flex items-center justify-center gap-2 rounded-[20px] border border-white/40 bg-[#f4f5fa] px-5 py-3 text-sm font-semibold text-[#5746b9] transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-[#7c4dff]/50"
+                                    class="neu-btn flex items-center justify-center gap-2 border border-white/40  px-5 py-3 text-sm font-semibold  transition-all duration-200 ease-out focus:outline-none "
                                     :class="[pillShadow, hoverInset]"
                                     @click="handleAction(action)"
                                 >
@@ -333,7 +330,7 @@ const moduleStatusLabel = (id: ModuleId) => {
                                 <div
                                     v-for="metric in headerMetricCards"
                                     :key="metric.id"
-                                    class="flex items-center gap-3 rounded-[20px] bg-[#f4f5fa] px-4 py-3 text-sm text-gray-600 shadow-[inset_6px_6px_16px_rgba(201,201,214,0.65),inset_-6px_-6px_16px_rgba(255,255,255,0.9)]"
+                                    class="neu-btn flex items-center gap-3 rounded-[20px]  px-4 py-3 text-sm text-gray-600"
                                 >
                                     <component :is="metric.icon" class="h-5 w-5 text-[#7c4dff]" />
                                     <div>
