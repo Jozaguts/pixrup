@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetTrigger,
-} from '@/components/ui/sheet';
 import auth from '@/routes/auth';
 import { dashboard } from '@/routes';
-import { Link } from '@inertiajs/vue3';
-import { ChevronDown, Menu } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
 
 interface NavItem {
     label: string;
@@ -17,140 +11,159 @@ interface NavItem {
     external?: boolean;
 }
 
-const props = defineProps<{
-    isAuthenticated: boolean;
-    canRegister: boolean;
-    navItems?: NavItem[];
-    primaryLink?: NavItem;
-}>();
+const props = withDefaults(
+    defineProps<{
+        isAuthenticated: boolean;
+        canRegister: boolean;
+        navItems?: NavItem[];
+        primaryLink?: NavItem;
+    }>(),
+    {
+        navItems: () => [],
+    },
+);
 
 const menuItems = computed(() => props.navItems ?? []);
+const isMobileMenuOpen = ref(false);
+
+const largeLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url).href;
+const compactLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url)
+    .href;
+
+const toggleMobileMenu = () => {
+    isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
+
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false;
+};
+
+watch(isMobileMenuOpen, (isOpen) => {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    document.body.classList.toggle('overflow-hidden', isOpen);
+});
+
+onBeforeUnmount(() => {
+    if (typeof document !== 'undefined') {
+        document.body.classList.remove('overflow-hidden');
+    }
+});
+
+const page = usePage();
+watch(
+    () => page.url,
+    () => {
+        closeMobileMenu();
+    },
+);
+
+const resolvePrimaryCta = computed<NavItem>(() => {
+    if (props.isAuthenticated) {
+        return {
+            label: 'Dashboard',
+            href: dashboard(),
+            external: false,
+        };
+    }
+
+    if (props.primaryLink) {
+        return props.primaryLink as NavItem;
+    }
+
+    if (props.canRegister) {
+        return {
+            label: 'Get started',
+            href: auth.register.show(),
+            external: false,
+        };
+    }
+
+    return {
+        label: 'Log in',
+        href: auth.login.show(),
+        external: false,
+    };
+});
 </script>
 
 <template>
-    <header class=" relative z-20 w-full px-0 pt-4 lg:px-4 lg:pt-6">
-        <!-- Mobile -->
+    <header>
         <div
-            class=" mx-auto flex w-full max-w-5xl items-center justify-between lg:hidden"
-        >
-            <Sheet>
-                <SheetTrigger
-                    class="neu-surface shadow-neu-out inline-flex h-11 w-11 items-center justify-center text-slate-900"
-                >
-                    <Menu class="h-5 w-5" />
-                    <span class="sr-only">Toggle navigation</span>
-                </SheetTrigger>
-                <SheetContent
-                    side="top"
-                    class="mx-auto mt-4 w-[92%] max-w-sm rounded-[12px] border-none bg-white/95 p-6 text-slate-900 shadow-2xl"
-                >
-                    <nav class="space-y-4">
-                        <div v-if="primaryLink">
-                            <SheetClose as-child>
-                                <Link
-                                    :href="primaryLink.href"
-                                    class="block text-base font-semibold text-indigo-600"
-                                >
-                                    {{ primaryLink.label }}
-                                </Link>
-                            </SheetClose>
-                        </div>
+            class="header-one fixed left-1/2 top-6 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-slate-900/70">
+            <div>
+                <Link href="/">
+                    <span class="sr-only">Home</span>
+                    <figure class="lg:max-w-[50px] lg:block hidden">
+                        <img :src="largeLogo" alt="Pixrup" class="dark:invert" />
+                    </figure>
+                    <figure class="max-w-[44px] lg:hidden block">
+                        <img
+                            :src="compactLogo"
+                            alt="Pixrup"
+                            class="w-full dark:hidden block"
+                        />
+                        <img
+                            :src="compactLogo"
+                            alt="Pixrup"
+                            class="w-full dark:block hidden invert"
+                        />
+                    </figure>
+                </Link>
+            </div>
 
-                        <div
-                            v-for="item in menuItems"
-                            :key="item.label"
-                            class="flex items-center justify-between rounded-[12px] px-1 py-2 text-base font-medium text-slate-900"
+            <nav class="hidden xl:flex items-center">
+                <ul class="flex items-center gap-1">
+                    <li
+                        v-for="item in menuItems"
+                        :key="item.label"
+                        class="relative cursor-pointer py-2.5"
+                    >
+                        <component
+                            :is="item.external ? 'a' : Link"
+                            :href="item.href"
+                            class="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+                            @click="closeMobileMenu"
                         >
-                            <SheetClose as-child>
-                                <Link :href="item.href">{{ item.label }}</Link>
-                            </SheetClose>
-                            <ChevronDown class="h-4 w-4 text-slate-500" />
-                        </div>
+                            <span>{{ item.label }}</span>
+                        </component>
+                    </li>
+                </ul>
+            </nav>
 
-                        <SheetClose v-if="!isAuthenticated" as-child>
-                            <Link
-                                :href="auth.login.show()"
-                                class="block rounded-[12px] px-1 py-2 text-base font-medium text-slate-900"
-                            >
-                                Log in
-                            </Link>
-                        </SheetClose>
-                    </nav>
-                </SheetContent>
-            </Sheet>
-
-            <Link
-                href="/"
-                class="text-xl font-extrabold tracking-tight text-slate-900"
-            >
-                Pixrup
-            </Link>
-
-            <div class="flex items-center gap-2 px-0">
-                <Link
-                    v-if="props.canRegister && !props.isAuthenticated"
-                    :href="auth.register.show()"
-                    class=" neu-surface shadow-neu-int dark text-white  bg-slate-900 px-4 py-2 text-sm font-medium "
+            <div class="xl:flex hidden items-center justify-center">
+                <component
+                    :is="resolvePrimaryCta.external ? 'a' : Link"
+                    :href="resolvePrimaryCta.href"
+                    class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
                 >
-                    Sign up
-                </Link>
-                <Link
-                    v-else
-                    :href="dashboard()"
-                    class="rounded-[12px] bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-lg transition hover:bg-slate-700"
+                    <span>{{ resolvePrimaryCta.label }}</span>
+                </component>
+            </div>
+
+            <div class="xl:hidden block">
+                <button
+                    class="flex size-12 flex-col items-center justify-center gap-[5px] rounded-full bg-white/80 text-slate-900 shadow-md transition hover:bg-white"
+                    type="button"
+                    @click="toggleMobileMenu"
                 >
-                    Dashboard
-                </Link>
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="block h-0.5 w-6 bg-slate-900"></span>
+                    <span class="block h-0.5 w-6 bg-slate-900"></span>
+                    <span class="block h-0.5 w-6 bg-slate-900"></span>
+                </button>
             </div>
         </div>
 
-        <!-- Desktop -->
-        <div class="hidden w-full justify-end px-4 lg:flex">
-            <nav
-                class="flex items-center gap-3 rounded-[12px]   px-3 py-2 text-sm "
-            >
-                <div
-                    class="neu-surface shadow-neu-in flex items-center px-4 py-2"
-                >
-                    <div class=" flex items-center gap-1">
-                        <button
-                            v-for="item in menuItems"
-                            :key="item.label"
-                            type="button"
-                            class="neu-btn  px-4 py-2  inline-flex items-center gap-1"
-                        >
-                            {{ item.label }}
-                        </button>
-                    </div>
-                </div>
-
-                <div
-                    class="neu-surface shadow-neu-in flex items-center gap-2 rounded-[12px]  px-3 py-2 shadow-sm"
-                >
-                    <Link
-                        v-if="isAuthenticated"
-                        :href="dashboard()"
-                        class="rounded-[12px] border border-slate-900/60 px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-900 hover:text-white"
-                    >
-                        Dashboard
-                    </Link>
-                    <template v-else>
-                        <Link
-                            :href="auth.login.show()"
-                            class="neu-btn  px-4 py-2"
-                        >
-                            Log in
-                        </Link>
-                        <Link
-                            v-if="canRegister"
-                            :href="auth.register.show()"
-                            class="neu-btn px-4 py-2 text-sm font-medium "
-                        >
-                            Sign up
-                        </Link>
-                    </template>
-                </div>
-            </nav>
-        </div>
+        <WelcomeMobileMenu
+            :open="isMobileMenuOpen"
+            :nav-items="menuItems"
+            :is-authenticated="props.isAuthenticated"
+            :can-register="props.canRegister"
+            :primary-link="props.primaryLink"
+            @close="closeMobileMenu"
+        />
     </header>
 </template>

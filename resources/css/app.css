@@ -222,6 +222,10 @@
             inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
             inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
 }
+@utility neu-bg-surface-color{
+    background-color: var(--neu-surface);
+    transition: box-shadow .25s ease, transform .1s ease, background .2s ease, color .2s ease;
+}
 
 /* Replace the previous .is-pressed that used @apply */
 .is-pressed {
@@ -408,6 +412,40 @@
         transform: translateX(14px);
         background: color-mix(in oklab, #ffffff 80%, var(--primary, #6e33ff) 20%);
     }
+    .neu-checkbox {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 1.3em;
+        width: 1.3em;
+        background-color: var(--neu-surface);
+        border-radius: 100%;
+        box-shadow: 3px 3px 5px #c5c5c5,
+        -3px -3px 5px #ffffff;
+        transition-duration: 0.5s;
+    }
+    input:checked.neu-checkbox {
+        box-shadow: inset 3px 3px 5px #c5c5c5,
+        inset -3px -3px 5px #ffffff;
+    }
+    .neu-checkbox:after {
+        content: "";
+        position: absolute;
+        opacity: 0;
+    }
+    input:checked ~ .neu-checkbox:after {
+        opacity: 1;
+    }
+    .neu-checkbox:after {
+        left: 0.45em;
+        top: 0.25em;
+        width: 0.25em;
+        height: 0.5em;
+        border: solid darkgray;
+        border-width: 0 0.15em 0.15em 0;
+        transform: rotate(45deg);
+    }
+
 }
 
 /* -----------------------------------------------------------------------------

@@ -147,11 +147,7 @@ const propertyStatus = computed(() => {
     return statusTokens[statusKey] ?? statusTokens['in-progress'];
 });
 
-const pillShadow =
-    'shadow-[12px_12px_30px_rgba(209,209,224,0.8),-12px_-12px_30px_rgba(255,255,255,0.9)]';
 
-const hoverInset =
-    'hover:shadow-[inset_10px_10px_25px_rgba(209,209,224,0.8),inset_-10px_-10px_25px_rgba(255,255,255,0.9)]';
 
 const activateModule = (id: ModuleId) => {
     activeModuleId.value = id;
@@ -318,8 +314,7 @@ const moduleStatusLabel = (id: ModuleId) => {
                                     v-for="action in actionButtons"
                                     :key="action.id"
                                     type="button"
-                                    class="neu-btn flex items-center justify-center gap-2 border border-white/40  px-5 py-3 text-sm font-semibold  transition-all duration-200 ease-out focus:outline-none "
-                                    :class="[pillShadow, hoverInset]"
+                                    class="neu-btn  shadow-neu-out flex items-center justify-center gap-2 border border-white/40  px-5 py-3 text-sm font-semibold  transition-all duration-200 ease-out focus:outline-none "
                                     @click="handleAction(action)"
                                 >
                                     <span>{{ action.label }}</span>
@@ -346,16 +341,16 @@ const moduleStatusLabel = (id: ModuleId) => {
                 </section>
 
                 <nav
-                    class="relative overflow-hidden rounded-[24px] bg-[#f4f5fa] px-3 py-4"
+                    class="relative overflow-hidden rounded-[24px] neu-bg-surface-color shadow-neu-in px-3 py-4"
                     role="tablist"
                     aria-label="Pixrup modules"
                 >
                     <div class="flex items-center justify-between gap-4">
-                        <div class="h-[2px] flex-1 rounded-full bg-gradient-to-r from-[#dedff5] via-[#e8e9fb] to-[#ffffff]/80" />
+                        <div class="h-[2px] flex-1 rounded-full " />
                     </div>
 
-                    <div class="mt-4 flex gap-3 overflow-x-auto pb-2">
-                        <button
+                    <div class="mt-4  neu-bg-surface-color flex gap-3 overflow-x-auto pb-2">
+                        <div
                             v-for="module in modules"
                             :key="module.id"
                             type="button"
@@ -363,19 +358,14 @@ const moduleStatusLabel = (id: ModuleId) => {
                             :aria-selected="module.id === activeModuleId"
                             :aria-controls="`module-${module.id}`"
                             :tabindex="module.id === activeModuleId ? 0 : -1"
-                            class="group flex min-w-[180px] flex-col items-start gap-2 rounded-[20px] border border-transparent bg-[#f4f5fa] px-4 py-4 text-left transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7c4dff]/50"
-                            :class="[
-                                module.id === activeModuleId
-                                    ? 'shadow-[inset_10px_10px_24px_rgba(183,186,205,0.55),inset_-10px_-10px_24px_rgba(255,255,255,0.95)]'
-                                    : pillShadow,
-                                hoverInset,
-                            ]"
+                            class="neu-btn group  flex min-w-[180px] flex-col items-start gap-2   px-4 py-4 text-left neu-center-shadow"
+                            :class="[module.id === activeModuleId ? 'is-pressed': '']"
                             @click="activateModule(module.id)"
                         >
-                            <div class="flex w-full items-center justify-between gap-3">
+                            <div class="flex w-full items-start justify-between gap-3 flex-col">
                                 <div class="flex items-center gap-3">
                                     <span
-                                        class="flex h-10 w-10 items-center justify-center rounded-[14px] bg-white text-[#7c4dff] shadow-[6px_6px_16px_rgba(200,200,216,0.55),-6px_-6px_16px_rgba(255,255,255,0.9)]"
+                                        class="flex h-10 w-10 items-center justify-center rounded-[14px] neu-surface shadow-neu-out text-[#7c4dff]"
                                     >
                                         <component :is="module.icon" class="h-5 w-5" />
                                     </span>
@@ -400,7 +390,7 @@ const moduleStatusLabel = (id: ModuleId) => {
                             <p class="line-clamp-2 text-[13px] leading-snug text-gray-500">
                                 {{ module.description }}
                             </p>
-                        </button>
+                        </div>
                     </div>
                 </nav>
 
@@ -408,7 +398,7 @@ const moduleStatusLabel = (id: ModuleId) => {
                     :id="`module-${activeModule.id}`"
                     role="tabpanel"
                     :aria-labelledby="`tab-${activeModule.id}`"
-                    class="relative min-h-[420px] rounded-[32px] bg-[#f4f5fa] p-6 shadow-[inset_16px_16px_36px_rgba(198,201,220,0.6),inset_-16px_-16px_36px_rgba(255,255,255,0.92)] sm:p-8"
+                    class="relative min-h-[420px] rounded-[32px]  neu-surface shadow-neu-in sm:p-8"
                 >
                     <KeepAlive>
                         <component

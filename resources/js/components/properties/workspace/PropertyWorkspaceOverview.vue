@@ -100,7 +100,7 @@ const eventItems = computed(() => [
 
 <template>
     <div class="flex flex-col gap-6 text-[#1f2937]">
-        <header class="flex flex-col gap-4 rounded-[28px] bg-white/90 p-6 shadow-[10px_10px_30px_rgba(208,209,224,0.45),-10px_-10px_30px_rgba(255,255,255,0.95)]">
+        <header class="flex flex-col gap-4 rounded-[28px]  p-6 ">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 class="text-lg font-semibold tracking-tight">Workspace Overview</h2>
@@ -118,7 +118,7 @@ const eventItems = computed(() => [
                 <div
                     v-for="card in cards"
                     :key="card.id"
-                    class="flex items-center gap-3 rounded-[20px] bg-[#f4f5fa] px-4 py-5 shadow-[inset_8px_8px_18px_rgba(201,203,217,0.6),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                    class="flex items-center gap-3 rounded-[20px] px-4 py-5 shadow-[inset_8px_8px_18px_rgba(201,203,217,0.6),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
                 >
                     <component :is="card.icon" class="h-5 w-5 text-[#7c4dff]" />
                     <div>
@@ -130,7 +130,7 @@ const eventItems = computed(() => [
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
-            <article class="flex flex-col gap-5 rounded-[28px] bg-white p-6 shadow-[10px_10px_30px_rgba(205,207,222,0.45),-10px_-10px_30px_rgba(255,255,255,0.95)]">
+            <article class="flex flex-col gap-5 rounded-[28px]  p-6 neu-surface shadow-neu-out">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Key Investment Signals</h3>
@@ -142,19 +142,19 @@ const eventItems = computed(() => [
                 </header>
 
                 <ul class="space-y-4 text-sm text-gray-600">
-                    <li class="rounded-[18px] bg-[#f7f8fe] p-4 shadow-[inset_10px_10px_20px_rgba(197,200,222,0.55),inset_-10px_-10px_20px_rgba(255,255,255,0.9)]">
+                    <li class="rounded-[18px]  p-4  neu-surface shadow-neu-in">
                         PixrWorth signals potential 4.9% appreciation in the next 90 days compared to the ZIP median.
                     </li>
-                    <li class="rounded-[18px] bg-[#f7f8fe] p-4 shadow-[inset_10px_10px_20px_rgba(197,200,222,0.55),inset_-10px_-10px_20px_rgba(255,255,255,0.9)]">
+                    <li class="rounded-[18px]  p-4  neu-surface shadow-neu-in">
                         Glow-Up scenario #2 increases ARV by $68K with minimal structural changes and quick cosmetic upgrades.
                     </li>
-                    <li class="rounded-[18px] bg-[#f7f8fe] p-4 shadow-[inset_10px_10px_20px_rgba(197,200,222,0.55),inset_-10px_-10px_20px_rgba(255,255,255,0.9)]">
+                    <li class="rounded-[18px] p-4 neu-surface shadow-neu-in">
                         SpyHunt flagged two competing listings going under contract within 7 days — move fast on staging.
                     </li>
                 </ul>
             </article>
 
-            <aside class="flex flex-col gap-4 rounded-[28px] bg-white p-6 shadow-[10px_10px_30px_rgba(205,207,222,0.45),-10px_-10px_30px_rgba(255,255,255,0.95)]">
+            <aside class="flex flex-col gap-4 rounded-[28px] neu-surface shadow-neu-out  p-6">
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Recent Activity</h3>
                     <Activity class="h-5 w-5 text-[#7c4dff]" />
@@ -163,7 +163,7 @@ const eventItems = computed(() => [
                     <li
                         v-for="event in eventItems"
                         :key="event.id"
-                        class="rounded-[18px] bg-[#f4f5fa] p-4 shadow-[inset_8px_8px_18px_rgba(201,203,217,0.6),inset_-8px_-8px_18px_rgba(255,255,255,0.92)]"
+                        class=" p-4 neu-surface shadow-neu-in"
                     >
                         <p class="text-xs uppercase tracking-[0.3em] text-gray-400">{{ event.timestamp }}</p>
                         <p class="mt-1 font-semibold text-[#1f2937]">{{ event.title }}</p>

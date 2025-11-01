@@ -53,7 +53,7 @@ const messages = computed(() => [
 
 <template>
     <div class="flex flex-col gap-6 text-[#1f2937]">
-        <header class="flex flex-col gap-4 rounded-[28px] bg-white p-6 shadow-[10px_10px_28px_rgba(206,208,223,0.45),-10px_-10px_28px_rgba(255,255,255,0.94)]">
+        <header class="flex flex-col gap-4 p-6 neu-surface shadow-neu-out ">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 class="text-lg font-semibold">PixrCollab Channel</h2>
@@ -62,7 +62,7 @@ const messages = computed(() => [
                     </p>
                 </div>
                 <span
-                    class="hidden items-center gap-2 rounded-full bg-[#f7f4ff] px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#7c4dff] shadow-[4px_4px_12px_rgba(186,162,255,0.3),-4px_-4px_12px_rgba(255,255,255,0.95)] sm:inline-flex"
+                    class="hidden items-center gap-2 rounded-full  px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#7c4dff]  sm:inline-flex"
                 >
                     API
                     <span class="font-medium">{{ endpointBadge }}</span>
@@ -71,7 +71,7 @@ const messages = computed(() => [
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-            <article class="flex flex-col gap-5 rounded-[28px] bg-white p-6 shadow-[10px_10px_28px_rgba(206,208,223,0.45),-10px_-10px_28px_rgba(255,255,255,0.94)]">
+            <article class="flex flex-col gap-5 neu-surface shadow-neu-out p-6">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Live Thread</h3>
@@ -80,11 +80,11 @@ const messages = computed(() => [
                     <Wifi class="h-5 w-5 text-[#7c4dff]" />
                 </header>
 
-                <div class="flex flex-col gap-4 rounded-[24px] bg-[#f7f8fe] p-5 shadow-[inset_12px_12px_26px_rgba(201,203,217,0.6),inset_-12px_-12px_26px_rgba(255,255,255,0.92)]">
+                <div class="flex flex-col gap-4 p-5 neu-surface shadow-neu-out">
                     <article
                         v-for="message in messages"
                         :key="message.id"
-                        class="rounded-[18px] bg-white px-4 py-3 text-sm text-gray-600 shadow-[6px_6px_16px_rgba(200,200,216,0.45),-6px_-6px_16px_rgba(255,255,255,0.95)]"
+                        class="p-5 neu-surface shadow-neu-in text-sm text-gray-600"
                     >
                         <header class="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-gray-400">
                             <span>{{ message.author }}</span>
@@ -98,7 +98,7 @@ const messages = computed(() => [
                     <textarea
                         rows="3"
                         placeholder="Drop an update or @mention a collaborator"
-                        class="rounded-[22px] border border-transparent bg-[#f4f5fa] px-4 py-3 text-sm text-gray-600 shadow-[inset_12px_12px_26px_rgba(199,202,220,0.6),inset_-12px_-12px_26px_rgba(255,255,255,0.92)] focus:border-[#7c4dff]/40 focus:outline-none focus:ring-2 focus:ring-[#7c4dff]/40"
+                        class="px-4 py-3 neu-surface shadow-neu-in text-sm text-gray-600"
                     />
                     <button
                         type="button"
@@ -110,7 +110,7 @@ const messages = computed(() => [
                 </form>
             </article>
 
-            <aside class="flex flex-col gap-5 rounded-[28px] bg-white p-6 shadow-[10px_10px_28px_rgba(206,208,223,0.45),-10px_-10px_28px_rgba(255,255,255,0.94)]">
+            <aside class="flex flex-col gap-5 rounded-[28px] neu-surface shadow-neu-out p-6">
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Participants</h3>
                     <Users class="h-5 w-5 text-[#7c4dff]" />
@@ -120,7 +120,7 @@ const messages = computed(() => [
                     <li
                         v-for="participant in participants"
                         :key="participant.id"
-                        class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(199,202,220,0.6),inset_-8px_-8px_18px_rgba(255,255,255,0.92)]"
+                        class="flex items-center justify-between px-4 py-3 neu-surface shadow-neu-in text-sm text-gray-600"
                     >
                         <div>
                             <p class="font-semibold text-[#1f2937]">{{ participant.name }}</p>
@@ -134,7 +134,7 @@ const messages = computed(() => [
                     </li>
                 </ul>
 
-                <div class="rounded-[20px] bg-[#f7f4ff] p-4 text-sm text-[#7c4dff] shadow-[6px_6px_16px_rgba(186,162,255,0.4),-6px_-6px_16px_rgba(255,255,255,0.95)]">
+                <div class="p-4 neu-surface shadow-neu-out">
                     <div class="flex items-center gap-2">
                         <MessageCircle class="h-4 w-4" />
                         Connect this channel to PixrSeal comment threads automatically.
