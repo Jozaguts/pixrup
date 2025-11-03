@@ -178,7 +178,7 @@ const handleAppraiseFullProperty = () => {
     <div
         class="relative min-h-screen overflow-hidden px-4 text-slate-900 sm:px-6 lg:px-10"
     >
-        <div class=" hidden md:block lg-block bg-[url('../images/Robot.png')] top-0 right-0 bg-no-repeat bg-center bg-contain z-10 w-[40vw] h-full absolute"></div>
+        <div class=" hidden md:block lg-block bg-[url('../images/Robot.png')] top-0 right-0 bg-no-repeat bg-top mt-[5rem] bg-contain z-10 w-[30vw] h-full absolute "></div>
         <WelcomeBackground />
 
         <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
@@ -197,9 +197,6 @@ const handleAppraiseFullProperty = () => {
                     v-model="addressQuery"
                     @place-selected="handlePlaceSelected"
                 />
-                <p class="text-sm ">
-                    Get a quick PixrWorth Lite estimate before deciding where to continue.
-                </p>
                 <ContinueButtons
                     :address-data="selectedAddress"
                     :is-authenticated="isAuthenticated"
