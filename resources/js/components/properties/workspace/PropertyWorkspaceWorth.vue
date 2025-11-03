@@ -4,18 +4,24 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import {
     AlertCircle,
     ArrowRight,
-    DollarSign,
+    Gauge,
     LineChart,
     Loader2,
     RefreshCw,
     ShieldCheck,
-    TrendingUp,
 } from 'lucide-vue-next';
 import propertiesRoutes from '@/routes/properties';
+import CardValuation from './worth/CardValuation.vue';
+import ComparablesTable from './worth/ComparablesTable.vue';
+import PropertyDetails from './worth/PropertyDetails.vue';
+import AnalyticsChart from './worth/AnalyticsChart.vue';
+import RentalValueCard from './worth/RentalValueCard.vue';
+import { usePlanUsage } from '@/composables/usePlanUsage';
 import type {
     PropertyWorkspaceProperty,
     WorkspaceModuleMeta,
     WorthComparable,
+    WorthTrendPoint,
     WorthStatusState,
 } from './types';
 
@@ -28,6 +34,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const propertyId = computed(() => Number(props.property.id));
+
 const endpointBadge = computed(() => {
     if (props.meta?.endpoint) {
         return props.meta.endpoint;
@@ -39,22 +46,85 @@ const endpointBadge = computed(() => {
 });
 
 const worth = computed(() => props.property.worth ?? null);
-const hasWorth = computed(() => worth.value !== null);
-const comparables = computed<WorthComparable[]>(
-    () => worth.value?.comparables ?? [],
+const hasWorth = computed(
+    () => worth.value !== null && worth.value !== undefined,
 );
-const trendPoints = computed(() => worth.value?.trend ?? []);
+
+const comparables = computed<WorthComparable[]>(() => {
+    const raw = (worth.value?.comparables ?? []) as Array<
+        Partial<WorthComparable> & {
+            price?: number | null;
+            distance?: string | number | null;
+        }
+    >;
+
+    return raw.map((item, index) => {
+        const salePrice =
+            item.sale_price !== undefined && item.sale_price !== null
+                ? item.sale_price
+                : item.price ?? null;
+
+        const rawDistance =
+            item.distance_miles !== undefined && item.distance_miles !== null
+                ? item.distance_miles
+                : item.distance ?? null;
+
+        const parsedDistance =
+            typeof rawDistance === 'number'
+                ? rawDistance
+                : typeof rawDistance === 'string'
+                ? Number.parseFloat(rawDistance)
+                : null;
+
+        return {
+            id: item.id ?? `comp-${index}`,
+            address: item.address ?? 'Unknown address',
+            sale_price:
+                typeof salePrice === 'number' && Number.isFinite(salePrice)
+                    ? salePrice
+                    : null,
+            sale_date: item.sale_date ?? null,
+            distance_miles: Number.isFinite(parsedDistance)
+                ? Number(parsedDistance)
+                : null,
+            delta: item.delta ?? null,
+        };
+    });
+});
+
+const hasComparables = computed(() =>
+    comparables.value.some((comp) => comp.sale_price !== null),
+);
+
+const trendPoints = computed<WorthTrendPoint[]>(
+    () => worth.value?.trend ?? [],
+);
+const hasTrend = computed(() => trendPoints.value.length > 0);
 
 const fetchForm = useForm({});
 const reportForm = useForm({});
 const isFetchLoading = computed(() => fetchForm.processing);
 const isReportLoading = computed(() => reportForm.processing);
-const isActionDisabled = computed(
+const isBusy = computed(
     () => isFetchLoading.value || isReportLoading.value,
 );
 
+const {
+    usage,
+    remaining,
+    limitExceeded: isUsageLimitReached,
+    percentUsed,
+    usageLabel,
+    helperCopy,
+} = usePlanUsage();
+
+const usageMeterStyle = computed(() => ({
+    width: `${Math.min(100, Math.max(0, percentUsed.value))}%`,
+}));
+
 const page = usePage();
 const flashStatus = computed(() => page.props.flash?.status ?? null);
+
 const successMessage = computed(() => {
     switch (flashStatus.value) {
         case 'worth-ready':
@@ -66,18 +136,74 @@ const successMessage = computed(() => {
     }
 });
 
+const errors = computed(() => page.props.errors ?? {});
 const errorMessage = computed(() => {
-    const errors = page.props.errors ?? {};
-    return typeof errors.worth === 'string' ? errors.worth : null;
+    const error = errors.value?.worth;
+    if (typeof error === 'string' && error.trim().length > 0) {
+        return error;
+    }
+
+    return null;
+});
+
+const errorDisplayMessage = computed(
+    () =>
+        errorMessage.value ??
+        'We couldn’t retrieve data. Please try again later.',
+);
+
+const fetchedAt = computed(
+    () => worth.value?.fetched_at ?? worth.value?.cached_at ?? null,
+);
+
+const lastFetchedLabel = computed(() => {
+    if (!fetchedAt.value) {
+        return null;
+    }
+
+    const date = new Date(fetchedAt.value);
+
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+
+    return date.toLocaleString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+});
+
+const STALE_THRESHOLD_HOURS = 12;
+const isStale = computed(() => {
+    if (!fetchedAt.value) {
+        return false;
+    }
+
+    const time = new Date(fetchedAt.value).getTime();
+
+    if (Number.isNaN(time)) {
+        return false;
+    }
+
+    const diffHours = (Date.now() - time) / (1000 * 60 * 60);
+
+    return diffHours >= STALE_THRESHOLD_HOURS;
 });
 
 const state = computed<WorthStatusState>(() => {
-    if (isFetchLoading.value || isReportLoading.value) {
+    if (isBusy.value) {
         return 'loading';
     }
 
     if (!hasWorth.value && errorMessage.value) {
         return 'error';
+    }
+
+    if (hasWorth.value && isStale.value) {
+        return 'cached';
     }
 
     if (hasWorth.value) {
@@ -87,60 +213,72 @@ const state = computed<WorthStatusState>(() => {
     return 'idle';
 });
 
-const formattedValue = computed(() =>
-    worth.value?.value
-        ? `$${Intl.NumberFormat('en-US').format(worth.value.value)}`
-        : '—',
-);
-
-const confidenceLabel = computed(() =>
-    worth.value?.confidence !== undefined && worth.value?.confidence !== null
-        ? `${worth.value.confidence}%`
-        : '—',
-);
-
-const deltaAfterGlow = computed(() => {
-    const currentEstimate = worth.value?.value ?? null;
-    const projected = currentEstimate ? currentEstimate * 1.06 : null;
-
-    if (!currentEstimate || !projected) {
-        return {
-            label: '—',
-            projected: '—',
-        };
-    }
-
-    const diff = ((projected - currentEstimate) / currentEstimate) * 100;
-
-    return {
-        label: `${diff.toFixed(1)}%`,
-        projected: `$${Intl.NumberFormat('en-US').format(Math.round(projected))}`,
-    };
-});
-
 const stateTitle = computed(() => {
     switch (state.value) {
         case 'loading':
             return 'Fetching valuation…';
-        case 'error':
-            return 'Could not retrieve data.';
+        case 'cached':
+            return 'Cached appraisal';
         case 'success':
             return 'Appraisal ready';
+        case 'error':
+            return 'Something went wrong';
         default:
-            return 'No appraisal yet';
+            return 'No valuation yet';
+    }
+});
+
+const stateSubtitle = computed(() => {
+    switch (state.value) {
+        case 'loading':
+            return 'Pulling comps and calibrating valuation in real time.';
+        case 'cached':
+            return 'Refresh to pull the latest market movement and pricing confidence.';
+        case 'success':
+            return 'Review the latest valuation, comparables, and market trendlines.';
+        case 'error':
+            return errorDisplayMessage.value;
+        default:
+            return 'No valuation yet — click “Fetch Valuation” to get started.';
     }
 });
 
 const showSuccessBanner = computed(
-    () => state.value === 'success' && !!successMessage.value,
+    () =>
+        (state.value === 'success' || state.value === 'cached') &&
+        !!successMessage.value,
 );
 
-const handleRetry = () => {
-    handleFetch();
-};
+const isFetchDisabled = computed(
+    () =>
+        isBusy.value ||
+        isUsageLimitReached.value ||
+        Number.isNaN(propertyId.value),
+);
+
+const isReportDisabled = computed(
+    () =>
+        isBusy.value ||
+        !hasWorth.value ||
+        Number.isNaN(propertyId.value),
+);
+
+const upgradeHref = '/settings/billing';
+
+const confidence = computed(() => worth.value?.confidence ?? null);
+const valueLow = computed(() => worth.value?.value_low ?? null);
+const valueHigh = computed(() => worth.value?.value_high ?? null);
+const rentalValue = computed(() => worth.value?.rental_value ?? null);
+
+const hasRentalValue = computed(
+    () =>
+        rentalValue.value !== null &&
+        rentalValue.value !== undefined &&
+        rentalValue.value > 0,
+);
 
 const handleFetch = () => {
-    if (isActionDisabled.value || Number.isNaN(propertyId.value)) {
+    if (isFetchDisabled.value) {
         return;
     }
 
@@ -153,12 +291,12 @@ const handleFetch = () => {
     });
 };
 
+const handleRetry = () => {
+    handleFetch();
+};
+
 const handleAddToReport = () => {
-    if (
-        isActionDisabled.value ||
-        Number.isNaN(propertyId.value) ||
-        !hasWorth.value
-    ) {
+    if (isReportDisabled.value) {
         return;
     }
 
@@ -170,17 +308,50 @@ const handleAddToReport = () => {
         preserveScroll: true,
     });
 };
+
+const moduleStatus = computed(() => props.meta?.status ?? state.value);
+
+const moduleStatusLabel = computed(() => {
+    if (!moduleStatus.value) {
+        return 'Unknown';
+    }
+
+    return moduleStatus.value
+        .toString()
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+});
+
+const propertySummary = computed(() => props.property.summary ?? {});
+
+const subjectDetails = computed(() => ({
+    beds: propertySummary.value?.bedrooms ?? null,
+    baths: propertySummary.value?.bathrooms ?? null,
+    sqft: propertySummary.value?.livingArea ?? null,
+    yearBuilt: propertySummary.value?.yearBuilt ?? null,
+}));
+
+const comparablesCount = computed(() => comparables.value.length);
+const trendCount = computed(() => trendPoints.value.length);
+
+const idleCallout = computed(() =>
+    isUsageLimitReached.value
+        ? 'Usage limit reached — upgrade your plan to fetch a fresh valuation.'
+        : 'No valuation yet — click “Fetch Valuation” to pull the latest data.',
+);
 </script>
 
 <template>
     <div class="flex flex-col gap-6 text-[#0d0d12]">
-        <header class="neu-surface flex flex-col gap-4 p-6 ">
+        <header
+            class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 transition-all duration-200 ease-in-out"
+        >
             <div
-                class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
+                class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"
             >
                 <div class="space-y-2">
                     <p
-                        class="text-xs tracking-[0.28em] text-[#7C4DFF] uppercase"
+                        class="text-xs tracking-[0.28em] text-[#7c4dff] uppercase"
                     >
                         AI Appraisal
                     </p>
@@ -190,13 +361,13 @@ const handleAddToReport = () => {
                         Instant property valuation and market confidence.
                     </h2>
                     <p class="text-sm text-[#6b7280]">
-                        Fetch live AVM data, comps, and confidence scores with a
-                        single click.
+                        Fetch live AVM data, comps, and confidence scores with
+                        a single click.
                     </p>
                 </div>
 
                 <div
-                    class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3"
+                    class="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end lg:max-w-sm"
                 >
                     <span
                         class="neu-surface neu-center-shadow inline-flex items-center gap-2 self-start rounded-full px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase shadow-neu-out"
@@ -207,18 +378,15 @@ const handleAddToReport = () => {
 
                     <button
                         type="button"
-                        :disabled="isActionDisabled"
-                        class="neu-center-shadow inline-flex items-center gap-2 rounded-[18px] bg-[#7c4dff] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        :disabled="isFetchDisabled"
+                        class="neu-center-shadow inline-flex items-center justify-center gap-2 rounded-[18px] bg-[#7c4dff] px-5 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
                         @click="handleFetch"
                     >
                         <component
                             :is="isFetchLoading ? Loader2 : RefreshCw"
-                            :class="[
-                                'h-4 w-4',
-                                { 'animate-spin': isFetchLoading },
-                            ]"
+                            :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
                         />
-                        Fetch Valuation
+                        {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
                     </button>
                 </div>
             </div>
@@ -226,27 +394,75 @@ const handleAddToReport = () => {
             <transition name="fade">
                 <div
                     v-if="showSuccessBanner"
-                    class="neu-surface flex items-center gap-3 rounded-[20px] px-4 py-3 text-sm text-[#0d0d12] shadow-neu-out"
+                    class="neu-surface flex items-center gap-3 rounded-[20px] bg-white px-4 py-3 text-sm text-[#0d0d12] shadow-neu-out"
                 >
                     <ShieldCheck class="h-5 w-5 text-[#1dbf7a]" />
                     <span>{{ successMessage }}</span>
                 </div>
             </transition>
+
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,320px)_1fr]">
+                <div
+                    class="flex flex-col gap-3 rounded-[22px] bg-[#f4f5fa] p-4 text-xs text-[#6b7280] shadow-[inset_12px_12px_28px_rgba(210,212,226,0.55),inset_-12px_-12px_28px_rgba(255,255,255,0.95)]"
+                >
+                    <div
+                        class="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.3em]"
+                    >
+                        <span>Plan usage</span>
+                        <span class="inline-flex items-center gap-2">
+                            <Gauge class="h-4 w-4 text-[#7c4dff]" />
+                            {{ usageLabel }}
+                        </span>
+                    </div>
+                    <div
+                        class="h-2 rounded-full bg-white shadow-[inset_6px_6px_12px_rgba(204,206,214,0.5),inset_-6px_-6px_12px_rgba(255,255,255,0.95)]"
+                    >
+                        <div
+                            class="h-full rounded-full bg-gradient-to-r from-[#7c4dff] to-[#16b1ff]"
+                            :style="usageMeterStyle"
+                        />
+                    </div>
+                    <p class="text-xs text-[#6b7280]">
+                        {{ helperCopy }}
+                    </p>
+                    <a
+                        v-if="isUsageLimitReached"
+                        :href="upgradeHref"
+                        class="inline-flex items-center justify-center gap-2 self-start rounded-[16px] bg-white px-4 py-2 text-xs font-semibold text-[#7c4dff] shadow-[8px_8px_20px_rgba(210,212,226,0.5),-8px_-8px_20px_rgba(255,255,255,0.95)] transition-all duration-200 ease-in-out hover:shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                    >
+                        Upgrade plan
+                        <ArrowRight class="h-4 w-4" />
+                    </a>
+                </div>
+
+                <div
+                    v-if="lastFetchedLabel"
+                    class="rounded-[22px] bg-white px-4 py-3 text-sm text-[#6b7280] shadow-[12px_12px_28px_rgba(210,212,226,0.45),-12px_-12px_28px_rgba(255,255,255,0.95)]"
+                >
+                    Last fetched on {{ lastFetchedLabel }}
+                </div>
+            </div>
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.55fr_1fr]">
-            <article class="neu-surface flex flex-col gap-4 p-6 ">
-                <header class="flex items-center justify-between">
+            <article
+                class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 text-sm text-[#0d0d12]"
+            >
+                <header
+                    class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between"
+                >
                     <div>
                         <h3 class="text-lg font-semibold text-[#0d0d12]">
                             {{ stateTitle }}
                         </h3>
                         <p class="text-sm text-[#6b7280]">
-                            {{
-                                hasWorth
-                                    ? 'Review the latest market signals for this property.'
-                                    : 'No appraisal yet — click “Fetch Valuation”.'
-                            }}
+                            {{ stateSubtitle }}
+                        </p>
+                        <p
+                            v-if="state === 'cached' && lastFetchedLabel"
+                            class="mt-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#f59e0b]"
+                        >
+                            Cached — refresh recommended
                         </p>
                     </div>
                     <LineChart class="h-6 w-6 text-[#7c4dff]" />
@@ -263,13 +479,11 @@ const handleAddToReport = () => {
 
                 <div
                     v-else-if="state === 'error'"
-                    class="flex flex-col gap-4 rounded-[24px] neu-bg-surface-color p-6 text-[#9a1b1b] shadow-[12px_12px_28px_rgba(244,200,200,0.55),-12px_-12px_28px_rgba(255,255,255,0.95)]"
+                    class="flex flex-col gap-4 rounded-[24px] bg-[#fff5f5] p-6 text-[#9a1b1b] shadow-[12px_12px_28px_rgba(244,200,200,0.55),-12px_-12px_28px_rgba(255,255,255,0.95)]"
                 >
                     <div class="flex items-center gap-3 text-sm">
                         <AlertCircle class="h-5 w-5" />
-                        <span>{{
-                            errorMessage ?? 'Could not retrieve data.'
-                        }}</span>
+                        <span>{{ errorDisplayMessage }}</span>
                     </div>
 
                     <button
@@ -282,160 +496,45 @@ const handleAddToReport = () => {
                     </button>
                 </div>
 
-                <div v-else-if="hasWorth" class="space-y-5">
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <div
-                            class=" p-6 shadow-neu-out neu-surface"
-                        >
-                            <div
-                                class="flex items-center gap-2 text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                            >
-                                <DollarSign class="h-4 w-4 text-[#7c4dff]" />
-                                Estimated Value
-                            </div>
-                            <p
-                                class="mt-3 text-4xl font-semibold text-[#7c4dff]"
-                            >
-                                {{ formattedValue }}
-                            </p>
-                            <p class="mt-2 text-sm text-[#6b7280]">
-                                Last updated
-                                {{
-                                    worth?.fetched_at
-                                        ? new Date(
-                                              worth.fetched_at,
-                                          ).toLocaleString()
-                                        : 'just now'
-                                }}
-                            </p>
-                        </div>
+                <template v-else-if="state === 'success' || state === 'cached'">
+                    <div class="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+                        <CardValuation
+                            :value="worth?.value ?? null"
+                            :value-low="valueLow"
+                            :value-high="valueHigh"
+                            :confidence="confidence"
+                            :fetched-at="fetchedAt"
+                            :is-stale="state === 'cached'"
+                        />
 
+                        <RentalValueCard
+                            v-if="hasRentalValue"
+                            :rental-value="rentalValue"
+                        />
                         <div
-                            class="p-6 neu-surface shadow-neu-out"
+                            v-else
+                            class="neu-surface shadow-neu-out flex flex-col justify-center gap-2 rounded-[26px] p-6 text-sm text-[#6b7280]"
                         >
-                            <div
-                                class="flex items-center gap-2 text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                            >
-                                <ShieldCheck class="h-4 w-4 text-[#1dbf7a]" />
-                                Confidence
-                            </div>
-                            <p
-                                class="mt-3 text-4xl font-semibold text-[#0d0d12]"
-                            >
-                                {{ confidenceLabel }}
+                            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280]">
+                                Rental value
                             </p>
-                            <p class="mt-2 text-sm text-[#6b7280]">
-                                Based on {{ comparables.length }} nearby
-                                comparables in the last 90 days.
+                            <p class="text-base text-[#0d0d12]">
+                                Rental projections are not available yet. Fetch
+                                a fresh valuation or add rental data to unlock
+                                this card.
                             </p>
                         </div>
                     </div>
+
+                    <AnalyticsChart v-if="hasTrend" :points="trendPoints" />
+
+                    <ComparablesTable
+                        :comparables="comparables"
+                        :is-loading="false"
+                    />
 
                     <div
-                        class="grid gap-4 p-6 neu-surface shadow-neu-out md:grid-cols-[1.1fr_1fr]"
-                    >
-                        <div class="space-y-3">
-                            <div
-                                class="flex items-center gap-3 text-sm font-semibold text-[#0d0d12]"
-                            >
-                                <TrendingUp class="h-5 w-5 text-[#7c4dff]" />
-                                Market trend (90 days)
-                            </div>
-
-                            <div class="grid h-32 grid-cols-6 items-end gap-2">
-                                <div
-                                    v-for="point in trendPoints"
-                                    :key="point.label"
-                                    class="flex flex-col items-center justify-end gap-2 text-xs text-[#6b7280]"
-                                >
-                                    <div
-                                        class="w-full rounded-full bg-gradient-to-b from-[#7c4dff] to-[#b298ff] shadow-[4px_8px_16px_rgba(124,77,255,0.35)]"
-                                        :style="{
-                                            height: `${Math.max(14, (point.value / (trendPoints[0]?.value ?? 1)) * 36)}px`,
-                                        }"
-                                    />
-                                    <span class="tracking-wide uppercase">
-                                        {{ point.label }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            class="flex flex-col justify-between gap-4 p-5 neu-surface shadow-neu-out text-sm text-[#6b7280]"
-                        >
-                            <div>
-                                <p
-                                    class="text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                                >
-                                    Post Glow-Up
-                                </p>
-                                <p
-                                    class="mt-2 text-2xl font-semibold text-[#0d0d12]"
-                                >
-                                    {{ deltaAfterGlow.projected }}
-                                </p>
-                                <p class="mt-1 text-sm text-[#1dbf7a]">
-                                    {{ deltaAfterGlow.label }} potential uplift
-                                </p>
-                            </div>
-                            <div>
-                                <p
-                                    class="text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                                >
-                                    Provider
-                                </p>
-                                <p
-                                    class="mt-1 font-semibold text-[#0d0d12] capitalize"
-                                >
-                                    {{ worth?.provider }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-base font-semibold text-[#0d0d12]">
-                                Top Comparables
-                            </h4>
-                            <span
-                                class="text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                            >
-                                Last 90 days
-                            </span>
-                        </div>
-
-                        <ul class="grid gap-3 md:grid-cols-3">
-                            <li
-                                v-for="comp in comparables"
-                                :key="comp.id"
-                                class="p-4 neu-surface shadow-neu-out text-sm text-[#0d0d12]"
-                            >
-                                <p class="font-semibold text-[#0d0d12]">
-                                    {{ comp.address }}
-                                </p>
-                                <p
-                                    class="mt-1 text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                                >
-                                    {{ comp.distance }}
-                                </p>
-                                <p class="mt-1 text-sm text-[#7c4dff]">
-                                    ${{
-                                        Intl.NumberFormat('en-US').format(
-                                            comp.price,
-                                        )
-                                    }}
-                                </p>
-                                <p class="mt-1 text-xs text-[#1dbf7a]">
-                                    {{ comp.delta }} vs. subject
-                                </p>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div
-                        class="flex flex-col gap-3 p-5 neu-surface shadow-neu-out"
+                        class="flex flex-col gap-3 rounded-[22px] bg-[#f4f5fa] p-5 text-sm text-[#6b7280] shadow-[inset_10px_10px_24px_rgba(210,212,226,0.55),inset_-10px_-10px_24px_rgba(255,255,255,0.95)]"
                     >
                         <p class="text-sm text-[#5b21b6]">
                             Sync this valuation with PixrSeal to include comps
@@ -444,68 +543,110 @@ const handleAddToReport = () => {
 
                         <button
                             type="button"
-                            :disabled="isActionDisabled || !hasWorth"
-                            class="neu-btn inline-flex items-center gap-2 self-start   px-4 py-2 text-sm font-semibold text-[#7c4dff] disabled:opacity-60"
+                            :disabled="isReportDisabled"
+                            class="neu-btn inline-flex items-center gap-2 self-start px-4 py-2 text-sm font-semibold text-[#7c4dff] transition-all duration-200 ease-in-out disabled:opacity-60"
                             @click="handleAddToReport"
                         >
-                            Add to Report
+                            Add to report
                             <ArrowRight class="h-4 w-4" />
                         </button>
                     </div>
+                </template>
+
+                <div
+                    v-else
+                    class="flex flex-col gap-3 rounded-[24px] bg-[#f4f5fa] p-6 text-sm text-[#6b7280] shadow-[inset_12px_12px_30px_rgba(210,212,226,0.6),inset_-12px_-12px_30px_rgba(255,255,255,0.92)]"
+                >
+                    <p class="text-base font-semibold text-[#0d0d12]">
+                        No valuation yet
+                    </p>
+                    <p>
+                        {{ idleCallout }}
+                    </p>
+                    <button
+                        type="button"
+                        :disabled="isFetchDisabled"
+                        class="inline-flex items-center gap-2 self-start rounded-[16px] bg-white px-4 py-2 text-sm font-semibold text-[#7c4dff] shadow-[8px_8px_20px_rgba(210,212,226,0.6),-8px_-8px_20px_rgba(255,255,255,0.95)] transition hover:shadow-[inset_8px_8px_18px_rgba(210,212,226,0.55),inset_-8px_-8px_18px_rgba(255,255,255,0.92)] disabled:cursor-not-allowed disabled:opacity-60"
+                        @click="handleFetch"
+                    >
+                        Fetch valuation
+                        <ArrowRight class="h-4 w-4" />
+                    </button>
                 </div>
             </article>
 
-            <aside
-                class="flex flex-col gap-4 neu-surface  p-6"
-            >
-                <header class="flex items-center justify-between">
-                    <h3 class="text-base font-semibold text-[#0d0d12]">
-                        Module Signals
-                    </h3>
-                    <RefreshCw class="h-5 w-5 text-[#7c4dff]" />
-                </header>
+            <aside class="flex flex-col gap-4">
+                <section
+                    class="neu-surface flex flex-col gap-4 rounded-[28px] p-6"
+                >
+                    <header class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold text-[#0d0d12]">
+                            Module signals
+                        </h3>
+                        <RefreshCw class="h-5 w-5 text-[#7c4dff]" />
+                    </header>
+
+                    <ul class="grid gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280]">
+                        <li
+                            class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        >
+                            <span>Status</span>
+                            <span class="text-[#7c4dff]">{{ moduleStatusLabel }}</span>
+                        </li>
+                        <li
+                            class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        >
+                            <span>Local state</span>
+                            <span class="text-[#0d0d12]">{{ state }}</span>
+                        </li>
+                        <li
+                            class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        >
+                            <span>Comparables</span>
+                            <span class="text-[#0d0d12]">{{ comparablesCount }}</span>
+                        </li>
+                        <li
+                            class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        >
+                            <span>Trend points</span>
+                            <span class="text-[#0d0d12]">{{ trendCount }}</span>
+                        </li>
+                        <li
+                            class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        >
+                            <span>Plan remaining</span>
+                            <span class="text-[#0d0d12]">
+                                {{ remaining }} / {{ usage.total }}
+                            </span>
+                        </li>
+                        <li
+                            v-if="lastFetchedLabel"
+                            class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        >
+                            <span>Last fetched</span>
+                            <span class="text-[#0d0d12]">{{ lastFetchedLabel }}</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <PropertyDetails
+                    :beds="subjectDetails.beds"
+                    :baths="subjectDetails.baths"
+                    :sqft="subjectDetails.sqft"
+                    :year-built="subjectDetails.yearBuilt"
+                />
 
                 <div
-                    class="neu-surface  shadow-neu-out  p-4 text-sm text-[#6b7280]"
+                    v-if="!hasComparables && state === 'success'"
+                    class="rounded-[26px] bg-[#fffdf5] p-5 text-sm text-[#92400e] shadow-[12px_12px_28px_rgba(240,213,166,0.45),-12px_-12px_28px_rgba(255,250,232,0.95)]"
                 >
-                    <p>
-                        The appraisal updates dashboards, investor summaries,
-                        and downstream PixrSeal sections once ready.
-                    </p>
-                </div>
-
-                <div
-                    class="grid gap-3 neu-surface  shadow-neu-out  p-5 "
-                >
-                    <div
-                        class="flex items-center justify-between text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                    >
-                        <span>Status</span>
-                        <span class="font-semibold text-[#7c4dff]">
-                            {{ state }}
-                        </span>
-                    </div>
-                    <div
-                        class="flex items-center justify-between text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                    >
-                        <span>Comparables</span>
-                        <span class="font-semibold text-[#0d0d12]">
-                            {{ comparables.length }}
-                        </span>
-                    </div>
-                    <div
-                        class="flex items-center justify-between text-xs tracking-[0.3em] text-[#6b7280] uppercase"
-                    >
-                        <span>Trend points</span>
-                        <span class="font-semibold text-[#0d0d12]">
-                            {{ trendPoints.length }}
-                        </span>
-                    </div>
+                    Valuation delivered, but comparables are pending. Refresh in
+                    a few minutes to load nearby sales data.
                 </div>
 
                 <div
                     v-if="errorMessage && state !== 'loading'"
-                    class="rounded-[20px] bg-[#fff5f5] p-4 text-sm text-[#9a1b1b] shadow-[8px_8px_22px_rgba(244,200,200,0.55),-8px_-8px_22px_rgba(255,255,255,0.93)]"
+                    class="rounded-[26px] bg-[#fff5f5] p-4 text-sm text-[#9a1b1b] shadow-[8px_8px_22px_rgba(244,200,200,0.55),-8px_-8px_22px_rgba(255,255,255,0.93)]"
                 >
                     {{ errorMessage }}
                 </div>

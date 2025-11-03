@@ -17,14 +17,20 @@ export interface WorkspaceModuleMeta {
     last_run_at: string | null;
 }
 
-export type WorthStatusState = 'idle' | 'loading' | 'success' | 'error';
+export type WorthStatusState =
+    | 'idle'
+    | 'loading'
+    | 'success'
+    | 'error'
+    | 'cached';
 
 export interface WorthComparable {
     id: string;
     address: string;
-    distance: string;
-    price: number;
-    delta: string;
+    sale_price: number | null;
+    sale_date: string | null;
+    distance_miles: number | null;
+    delta?: string | null;
 }
 
 export interface WorthTrendPoint {
@@ -34,12 +40,16 @@ export interface WorthTrendPoint {
 
 export interface WorthResult {
     id: number;
-    value: number;
+    value: number | null;
+    value_low?: number | null;
+    value_high?: number | null;
     confidence: number | null;
     comparables: WorthComparable[];
     trend: WorthTrendPoint[];
-    provider: string;
+    provider: string | null;
     fetched_at: string | null;
+    cached_at?: string | null;
+    rental_value?: number | null;
 }
 
 export interface PropertyWorkspaceMeta {
