@@ -343,7 +343,7 @@ const dismissPropertyToast = () => {
                 >
                     <div class="flex flex-col gap-4">
                         <div
-                            class="neu-surface shadow-neu-in flex flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-5"
+                            class="neu-surface  flex flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-5"
                         >
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3">
@@ -396,7 +396,7 @@ const dismissPropertyToast = () => {
                         </div>
 
                         <p
-                            class="rounded-2xl border border-transparent bg-white/70 px-4 py-3 text-sm shadow-[inset_6px_6px_18px_rgba(193,199,216,0.35),inset_-6px_-6px_18px_rgba(255,255,255,0.8)]"
+                            class="px-4 py-3 text-sm"
                             :class="{
                                 'text-[#1f2933]': usageState === 'success',
                                 'text-[#9A6B00]': usageState === 'warning',
@@ -408,14 +408,14 @@ const dismissPropertyToast = () => {
                     </div>
 
                     <div
-                        class="neu-surface shadow-neu-in flex flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-5"
+                        class="neu-surface  flex flex-col gap-4 rounded-[24px]  p-5"
                     >
                         <h3 class="text-sm font-semibold uppercase tracking-wide text-[#6b7280]">
                             Quick actions
                         </h3>
                         <button
                             type="button"
-                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl bg-white/90 px-4 py-3 text-sm font-semibold text-[#7C4DFF] transition-colors hover:text-[#5c35c4]"
+                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl  px-4 py-3 text-sm font-semibold text-[#7C4DFF] transition-colors hover:text-[#5c35c4]"
                             @click="openNewPropertyWizard"
                         >
                             <Plus class="size-4" />
@@ -423,7 +423,7 @@ const dismissPropertyToast = () => {
                         </button>
                         <button
                             type="button"
-                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl bg-white/90 px-4 py-3 text-sm font-semibold text-[#1f2933] transition-colors hover:text-[#111827]"
+                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl  px-4 py-3 text-sm font-semibold text-[#1f2933] transition-colors hover:text-[#111827]"
                             @click="visitLink('/billing')"
                         >
                             <Compass class="size-4" />
@@ -437,7 +437,7 @@ const dismissPropertyToast = () => {
             </section>
 
             <section
-                class="neu-surface shadow-neu-out flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6"
+                class="neu-surface shadow-neu-out flex flex-col gap-6 rounded-[28px]  p-6"
             >
                 <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -451,7 +451,7 @@ const dismissPropertyToast = () => {
 
                     <span
                         v-if="isUsingMockData"
-                        class="rounded-full bg-white/80 px-4 py-2 text-xs text-[#9CA3AF] shadow-[inset_4px_4px_12px_rgba(193,199,216,0.35),inset_-4px_-4px_12px_rgba(255,255,255,0.85)]"
+                        class="rounded-full  px-4 py-2 text-xs text-[#9CA3AF] shadow-[inset_4px_4px_12px_rgba(193,199,216,0.35),inset_-4px_-4px_12px_rgba(255,255,255,0.85)]"
                     >
                         Preview data shown — connect API to replace.
                     </span>
@@ -461,7 +461,7 @@ const dismissPropertyToast = () => {
                     <article
                         v-for="property in resolvedProperties"
                         :key="property.id"
-                        class="neu-surface shadow-neu-out group flex h-full flex-col overflow-hidden rounded-[24px] bg-[#f4f5fa] transition-all duration-200 hover:shadow-neu-in"
+                        class="neu-surface  group flex h-full flex-col overflow-hidden "
                     >
                         <div class="relative aspect-[16/10] overflow-hidden">
                             <img

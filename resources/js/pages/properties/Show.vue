@@ -16,6 +16,8 @@ import {
     Gauge,
     Home,
 } from 'lucide-vue-next';
+import { dashboard } from '@/routes';
+import propertiesRoutes from '@/routes/properties';
 import PropertyWorkspaceOverview from '@/components/properties/workspace/PropertyWorkspaceOverview.vue';
 import PropertyWorkspaceWorth from '@/components/properties/workspace/PropertyWorkspaceWorth.vue';
 import PropertyWorkspaceGlowUp from '@/components/properties/workspace/PropertyWorkspaceGlowUp.vue';
@@ -23,6 +25,8 @@ import PropertyWorkspaceSpyHunt from '@/components/properties/workspace/Property
 import PropertyWorkspaceVision from '@/components/properties/workspace/PropertyWorkspaceVision.vue';
 import PropertyWorkspaceSeal from '@/components/properties/workspace/PropertyWorkspaceSeal.vue';
 import PropertyWorkspaceCollab from '@/components/properties/workspace/PropertyWorkspaceCollab.vue';
+import type { BreadcrumbItem } from '@/types';
+
 import type {
     ModuleId,
     PropertyWorkspaceProperty,
@@ -114,6 +118,8 @@ const actionButtons = computed<WorkspaceAction[]>(
     () => props.property.workspace?.actions ?? [],
 );
 
+const propertyId = computed(() => props.property.id);
+
 const statusTokens: Record<string, { label: string; badge: string; dot: string }> = {
     'in-progress': {
         label: 'In Progress',
@@ -141,6 +147,27 @@ const statusTokens: Record<string, { label: string; badge: string; dot: string }
         dot: 'bg-[#EA5455]',
     },
 };
+const propertyDisplayName = computed(() => {
+    const fallbackId = propertyId.value ? `Property #${propertyId.value}` : 'Property';
+    return props.property.title?.trim()?.length
+        ? props.property.title
+        : composedAddress.value ?? fallbackId;
+});
+const breadcrumbs = computed<BreadcrumbItem[]>(() => {
+    const id = propertyId.value;
+    const fallbackHref = dashboard.url();
+    const propertyHref = id ? propertiesRoutes.show.url({ property: id }) : fallbackHref;
+    return [
+        {
+            title: 'Dashboard',
+            href: fallbackHref,
+        },
+        {
+            title: propertyDisplayName.value,
+            href: propertyHref,
+        },
+    ];
+});
 
 const propertyStatus = computed(() => {
     const statusKey = (props.property.status ?? 'in-progress').toString();
@@ -241,11 +268,11 @@ const moduleStatusLabel = (id: ModuleId) => {
 </script>
 
 <template>
-    <AppLayout>
+    <AppLayout :breadcrumbs="breadcrumbs">
         <Head :title="props.property.title ?? 'Property Workspace'" />
 
-        <div class="shadow-neu-in min-h-screen  pb-16 pt-10">
-            <div class="mx-auto flex shadow-neu-in max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+        <div class=" min-h-screen  pb-16 pt-10">
+            <div class="mx-auto flex shadow-neu-out neu-center-shadow max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
                 <section
                     :class="[
                         'relative overflow-hidden  px-6 py-8 sm:px-8 md:px-10',
@@ -340,59 +367,59 @@ const moduleStatusLabel = (id: ModuleId) => {
                     </div>
                 </section>
 
-                <nav
-                    class="relative overflow-hidden rounded-[24px] neu-bg-surface-color shadow-neu-in px-3 py-4"
-                    role="tablist"
-                    aria-label="Pixrup modules"
-                >
-                    <div class="flex items-center justify-between gap-4">
-                        <div class="h-[2px] flex-1 rounded-full " />
-                    </div>
+<!--                <nav-->
+<!--                    class="relative overflow-hidden rounded-[24px] neu-bg-surface-color shadow-neu-in px-3 py-4"-->
+<!--                    role="tablist"-->
+<!--                    aria-label="Pixrup modules"-->
+<!--                >-->
+<!--                    <div class="flex items-center justify-between gap-4">-->
+<!--                        <div class="h-[2px] flex-1 rounded-full " />-->
+<!--                    </div>-->
 
-                    <div class="mt-4  neu-bg-surface-color flex gap-3 overflow-x-auto pb-2">
-                        <div
-                            v-for="module in modules"
-                            :key="module.id"
-                            type="button"
-                            role="tab"
-                            :aria-selected="module.id === activeModuleId"
-                            :aria-controls="`module-${module.id}`"
-                            :tabindex="module.id === activeModuleId ? 0 : -1"
-                            class="neu-btn group  flex min-w-[180px] flex-col items-start gap-2   px-4 py-4 text-left neu-center-shadow"
-                            :class="[module.id === activeModuleId ? 'is-pressed': '']"
-                            @click="activateModule(module.id)"
-                        >
-                            <div class="flex w-full items-start justify-between gap-3 flex-col">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="flex h-10 w-10 items-center justify-center rounded-[14px] neu-surface shadow-neu-out text-[#7c4dff]"
-                                    >
-                                        <component :is="module.icon" class="h-5 w-5" />
-                                    </span>
-                                    <div>
-                                        <p class="text-sm font-semibold text-[#1f2937]">
-                                            {{ module.label }}
-                                        </p>
-                                        <p class="text-xs uppercase tracking-[0.3em] text-gray-400">
-                                            {{ module.subtitle }}
-                                        </p>
-                                    </div>
-                                </div>
+<!--                    <div class="mt-4  neu-bg-surface-color flex gap-3 overflow-x-auto pb-2">-->
+<!--                        <div-->
+<!--                            v-for="module in modules"-->
+<!--                            :key="module.id"-->
+<!--                            type="button"-->
+<!--                            role="tab"-->
+<!--                            :aria-selected="module.id === activeModuleId"-->
+<!--                            :aria-controls="`module-${module.id}`"-->
+<!--                            :tabindex="module.id === activeModuleId ? 0 : -1"-->
+<!--                            class="neu-btn group  flex min-w-[180px] flex-col items-start gap-2   px-4 py-4 text-left neu-center-shadow"-->
+<!--                            :class="[module.id === activeModuleId ? 'is-pressed': '']"-->
+<!--                            @click="activateModule(module.id)"-->
+<!--                        >-->
+<!--                            <div class="flex w-full items-start justify-between gap-3 flex-col">-->
+<!--                                <div class="flex items-center gap-3">-->
+<!--                                    <span-->
+<!--                                        class="flex h-10 w-10 items-center justify-center rounded-[14px] neu-surface shadow-neu-out text-[#7c4dff]"-->
+<!--                                    >-->
+<!--                                        <component :is="module.icon" class="h-5 w-5" />-->
+<!--                                    </span>-->
+<!--                                    <div>-->
+<!--                                        <p class="text-sm font-semibold text-[#1f2937]">-->
+<!--                                            {{ module.label }}-->
+<!--                                        </p>-->
+<!--                                        <p class="text-xs uppercase tracking-[0.3em] text-gray-400">-->
+<!--                                            {{ module.subtitle }}-->
+<!--                                        </p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
-                                <span
-                                    v-if="moduleStatusLabel(module.id)"
-                                    class="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#7c4dff]"
-                                >
-                                    {{ moduleStatusLabel(module.id) }}
-                                </span>
-                            </div>
+<!--                                <span-->
+<!--                                    v-if="moduleStatusLabel(module.id)"-->
+<!--                                    class="rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#7c4dff]"-->
+<!--                                >-->
+<!--                                    {{ moduleStatusLabel(module.id) }}-->
+<!--                                </span>-->
+<!--                            </div>-->
 
-                            <p class="line-clamp-2 text-[13px] leading-snug text-gray-500">
-                                {{ module.description }}
-                            </p>
-                        </div>
-                    </div>
-                </nav>
+<!--                            <p class="line-clamp-2 text-[13px] leading-snug text-gray-500">-->
+<!--                                {{ module.description }}-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </nav>-->
 
                 <section
                     :id="`module-${activeModule.id}`"

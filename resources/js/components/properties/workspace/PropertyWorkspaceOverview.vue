@@ -118,7 +118,7 @@ const eventItems = computed(() => [
                 <div
                     v-for="card in cards"
                     :key="card.id"
-                    class="flex items-center gap-3 rounded-[20px] px-4 py-5 shadow-[inset_8px_8px_18px_rgba(201,203,217,0.6),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                    class="flex items-center gap-3  px-4 py-5 "
                 >
                     <component :is="card.icon" class="h-5 w-5 text-[#7c4dff]" />
                     <div>
@@ -130,7 +130,7 @@ const eventItems = computed(() => [
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
-            <article class="flex flex-col gap-5 rounded-[28px]  p-6 neu-surface shadow-neu-out">
+            <article class="flex flex-col gap-5 rounded-[28px]  p-6 neu-surface neu-shadow-center">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Key Investment Signals</h3>
@@ -142,13 +142,13 @@ const eventItems = computed(() => [
                 </header>
 
                 <ul class="space-y-4 text-sm text-gray-600">
-                    <li class="rounded-[18px]  p-4  neu-surface shadow-neu-in">
+                    <li class="rounded-[18px]  p-4  neu-surface">
                         PixrWorth signals potential 4.9% appreciation in the next 90 days compared to the ZIP median.
                     </li>
-                    <li class="rounded-[18px]  p-4  neu-surface shadow-neu-in">
+                    <li class="rounded-[18px]  p-4  neu-surface">
                         Glow-Up scenario #2 increases ARV by $68K with minimal structural changes and quick cosmetic upgrades.
                     </li>
-                    <li class="rounded-[18px] p-4 neu-surface shadow-neu-in">
+                    <li class="rounded-[18px] p-4 neu-surface ">
                         SpyHunt flagged two competing listings going under contract within 7 days — move fast on staging.
                     </li>
                 </ul>
