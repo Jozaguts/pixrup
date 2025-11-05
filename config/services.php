@@ -40,4 +40,8 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'appraisal' => [
+        'provider' => env('APPRAISAL_PROVIDER', 'mock'),
+    ],
+
 ];

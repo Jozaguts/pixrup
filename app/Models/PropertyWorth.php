@@ -13,6 +13,8 @@ class PropertyWorth extends Model
     protected $fillable = [
         'property_id',
         'value',
+        'value_low',
+        'value_high',
         'confidence',
         'comparables',
         'trend',
@@ -22,7 +24,9 @@ class PropertyWorth extends Model
 
     protected $casts = [
         'value' => 'float',
-        'confidence' => 'integer',
+        'value_low' => 'float',
+        'value_high' => 'float',
+        'confidence' => 'float',
         'comparables' => 'array',
         'trend' => 'array',
         'fetched_at' => 'datetime',

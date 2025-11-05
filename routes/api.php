@@ -1,3 +1,3 @@
 <?php
 
-// API routes can be registered here when needed.
+// API routes are intentionally unused for PixrWorth; interactions are handled via web routes and Inertia.
