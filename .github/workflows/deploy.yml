@@ -2,16 +2,36 @@ name: Deploy Pixrup
 
 on:
   push:
-    branches:
-      - main
-      - stg
+    branches: [main, stg]
 
 jobs:
   deploy:
-    environment: ${{ github.ref_name == 'main' && 'production' || 'stg' }}
+    # Run only the row that matches the current branch
+    if: github.ref_name == matrix.branch
     runs-on: ubuntu-latest
+    environment: ${{ matrix.env }}   # Usa los Environment (stg / production) de GitHub
+    strategy:
+      matrix:
+        include:
+          - branch: stg
+            env: stg
+            deploy_path: /var/www/pixrup-stg
+            php_fpm: php8.3-fpm
+            build_cmd: npm run build:staging
+            app_name: pixrup_stg
+            app_url: https://stg.pixrup.com
+          - branch: main
+            env: production
+            deploy_path: /var/www/pixrup-prod
+            php_fpm: php8.3-fpm
+            build_cmd: npm run build:prod
+            app_name: pixrup
+            app_url: https://pixrup.com
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -19,40 +39,44 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy Laravel App
+      - name: Deploy
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ vars.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
             trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
 
-            cd "${{ vars.DEPLOY_PATH }}"
-            echo "🌱 Deploying ${{ vars.APP_NAME }} on ${{ vars.APP_URL }}"
+            cd "${{ matrix.deploy_path }}"
+            echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
             git fetch --prune
-            git checkout ${{ vars.BRANCH }}
-            git pull --ff-only origin ${{ vars.BRANCH }}
+            git checkout ${{ github.ref_name }}
+            git pull --ff-only origin ${{ github.ref_name }}
 
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
 
             echo "⚙️ Building frontend"
             npm ci
-            ${{ vars.BUILD_CMD }}
+            ${{ matrix.build_cmd }}
 
             echo "🔧 Generating .env"
             rm -f .env.new
             {
-              echo "APP_NAME=${{ vars.APP_NAME }}"
+              echo "APP_NAME=${{ matrix.app_name }}"
               if [ "${{ github.ref_name }}" = "main" ]; then
                 echo "APP_ENV=production"
                 echo "APP_DEBUG=false"
+                echo "REDIS_DB=0"
+                echo "REDIS_CACHE_DB=1"
               else
+                echo "REDIS_DB=2"
+                echo "REDIS_CACHE_DB=3"
                 echo "APP_ENV=staging"
                 echo "APP_DEBUG=true"
                 echo "TELESCOPE_ENABLED=${{ vars.TELESCOPE_ENABLED || 'true' }}"
                 echo "TELESCOPE_PATH=${{ vars.TELESCOPE_PATH || 'telescope' }}"
                 echo "HORIZON_PATH=${{ vars.HORIZON_PATH || 'horizon' }}"
               fi
-              echo "APP_URL=${{ vars.APP_URL }}"
+              echo "APP_URL=${{ matrix.app_url }}"
               echo
               echo "LOG_CHANNEL=stack"
               echo "LOG_LEVEL=debug"
@@ -71,7 +95,7 @@ jobs:
               echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
             } > .env.new
 
-            # Preserve existing APP_KEY if present
+            # Preserve APP_KEY
             if [ -f .env ] && grep -q '^APP_KEY=' .env; then
               grep '^APP_KEY=' .env >> .env.new
             fi
@@ -89,12 +113,13 @@ jobs:
               echo "🔍 Enabling Telescope and Horizon (staging)"
               php artisan telescope:publish --ansi || true
               php artisan horizon:terminate || true
-              sudo systemctl restart ${{ vars.PHP_FPM_SERVICE }}
+              sudo systemctl restart horizon-stg
+              sudo systemctl restart ${{ matrix.php_fpm }}
               php artisan horizon:status || true
             else
               echo "🧱 Production mode — Horizon/Telescope disabled"
-              php artisan horizon:terminate || true
-              sudo systemctl restart ${{ vars.PHP_FPM_SERVICE }}
+              sudo systemctl restart horizon-prod
+              sudo systemctl restart ${{ matrix.php_fpm }}
             fi
 
             echo "✅ Deploy completed successfully!"
