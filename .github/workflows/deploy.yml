@@ -6,15 +6,13 @@ on:
 
 jobs:
   deploy:
-    # Run only the row that matches the current branch
-    if: github.ref_name == matrix.branch
     runs-on: ubuntu-latest
-    environment: ${{ matrix.env }}   # Usa los Environment (stg / production) de GitHub
+    environment: ${{ matrix.env }}
     strategy:
       matrix:
         include:
           - branch: stg
-            env: stg
+            env: staging
             deploy_path: /var/www/pixrup-stg
             php_fpm: php8.3-fpm
             build_cmd: npm run build:staging
@@ -28,8 +26,11 @@ jobs:
             app_name: pixrup
             app_url: https://pixrup.com
 
+    # ✅ esta es la forma correcta de filtrar por rama
+    if: contains(fromJson('["main","stg"]'), github.ref_name)
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup SSH
@@ -48,8 +49,8 @@ jobs:
             cd "${{ matrix.deploy_path }}"
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
             git fetch --prune
-            git checkout ${{ github.ref_name }}
-            git pull --ff-only origin ${{ github.ref_name }}
+            git checkout ${{ matrix.branch }}
+            git pull --ff-only origin ${{ matrix.branch }}
 
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
@@ -62,19 +63,19 @@ jobs:
             rm -f .env.new
             {
               echo "APP_NAME=${{ matrix.app_name }}"
-              if [ "${{ github.ref_name }}" = "main" ]; then
+              if [ "${{ matrix.branch }}" = "main" ]; then
                 echo "APP_ENV=production"
                 echo "APP_DEBUG=false"
                 echo "REDIS_DB=0"
                 echo "REDIS_CACHE_DB=1"
               else
-                echo "REDIS_DB=2"
-                echo "REDIS_CACHE_DB=3"
                 echo "APP_ENV=staging"
                 echo "APP_DEBUG=true"
-                echo "TELESCOPE_ENABLED=${{ vars.TELESCOPE_ENABLED || 'true' }}"
-                echo "TELESCOPE_PATH=${{ vars.TELESCOPE_PATH || 'telescope' }}"
-                echo "HORIZON_PATH=${{ vars.HORIZON_PATH || 'horizon' }}"
+                echo "REDIS_DB=2"
+                echo "REDIS_CACHE_DB=3"
+                echo "TELESCOPE_ENABLED=true"
+                echo "TELESCOPE_PATH=telescope"
+                echo "HORIZON_PATH=horizon"
               fi
               echo "APP_URL=${{ matrix.app_url }}"
               echo
@@ -109,18 +110,15 @@ jobs:
             php artisan view:cache
             php artisan storage:link 2>/dev/null || true
 
-            if [ "${{ github.ref_name }}" = "stg" ]; then
-              echo "🔍 Enabling Telescope and Horizon (staging)"
-              php artisan telescope:publish --ansi || true
-              php artisan horizon:terminate || true
+            if [ "${{ matrix.branch }}" = "stg" ]; then
+              echo "🔍 Restarting Horizon (staging)"
               sudo systemctl restart horizon-stg
-              sudo systemctl restart ${{ matrix.php_fpm }}
-              php artisan horizon:status || true
             else
-              echo "🧱 Production mode — Horizon/Telescope disabled"
+              echo "🧱 Restarting Horizon (production)"
               sudo systemctl restart horizon-prod
-              sudo systemctl restart ${{ matrix.php_fpm }}
             fi
+
+            sudo systemctl restart ${{ matrix.php_fpm }}
 
             echo "✅ Deploy completed successfully!"
           EOF
