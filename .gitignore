@@ -26,3 +26,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/resources/theme/
+!/.env.production
+!/.env.staging
+!/.env.testing
