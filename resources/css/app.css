@@ -3,6 +3,7 @@
 /* --- Imports from your current setup --- */
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import './home-page-33.css';
 
 /* Tailwind v4 content sources (Laravel blade cache + pagination) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

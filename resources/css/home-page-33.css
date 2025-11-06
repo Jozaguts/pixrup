@@ -1,0 +1,21 @@
+@import './theme/variables.css';
+@import './theme/icon-font.css';
+@import './theme/common.css';
+@import './theme/badge.css';
+@import './theme/button.css';
+
+/* Ensure stack cards layout works even if Tailwind @apply is skipped */
+@layer components {
+    .stack-cards {
+        position: relative;
+        --stack-cards-gap: 24px;
+    }
+
+    .stack-cards__item {
+        position: sticky;
+        top: 7rem; /* tailwind top-28 */
+        transform-origin: top;
+        overflow: hidden;
+        will-change: transform;
+    }
+}
