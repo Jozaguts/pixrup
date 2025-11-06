@@ -1,102 +1,101 @@
-#name: Deploy Pixrup
-#
-#on:
-#  push:
-#    branches:
-#      - main
-#      - stg
-#
-#jobs:
-#  deploy:
-#    environment: ${{ github.ref_name == 'main' && 'production' || 'stg' }}
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Setup SSH
-#        run: |
-#          mkdir -p ~/.ssh
-#          echo "${{ secrets.DO_KEY }}" > ~/.ssh/id_ed25519
-#          chmod 600 ~/.ssh/id_ed25519
-#          ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
-#
-#      - name: Deploy Laravel App
-#        run: |
-#          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ vars.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
-#            set -Eeuo pipefail
-#            trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
-#
-#            cd "${{ vars.DEPLOY_PATH }}"
-#            echo "🌱 Deploying ${{ vars.APP_NAME }} on ${{ vars.APP_URL }}"
-#            git fetch --prune
-#            git checkout ${{ vars.BRANCH }}
-#            git pull --ff-only origin ${{ vars.BRANCH }}
-#
-#            echo "🧩 Updating dependencies"
-#            composer install --no-dev --prefer-dist --optimize-autoloader
-#
-#            echo "⚙️ Building frontend"
-#            npm ci
-#            ${{ vars.BUILD_CMD }}
-#
-#            echo "🔧 Generating .env"
-#            rm -f .env.new
-#            {
-#              echo "APP_NAME=${{ vars.APP_NAME }}"
-#              if [ "${{ github.ref_name }}" = "main" ]; then
-#                echo "APP_ENV=production"
-#                echo "APP_DEBUG=false"
-#              else
-#                echo "APP_ENV=staging"
-#                echo "APP_DEBUG=true"
-#                echo "TELESCOPE_ENABLED=${{ vars.TELESCOPE_ENABLED || 'true' }}"
-#                echo "TELESCOPE_PATH=${{ vars.TELESCOPE_PATH || 'telescope' }}"
-#                echo "HORIZON_PATH=${{ vars.HORIZON_PATH || 'horizon' }}"
-#              fi
-#              echo "APP_URL=${{ vars.APP_URL }}"
-#              echo
-#              echo "LOG_CHANNEL=stack"
-#              echo "LOG_LEVEL=debug"
-#              echo
-#              echo "DB_CONNECTION=mysql"
-#              echo "DB_HOST=${{ secrets.DB_HOST }}"
-#              echo "DB_PORT=3306"
-#              echo "DB_DATABASE=${{ secrets.DB_DATABASE }}"
-#              echo "DB_USERNAME=${{ secrets.DB_USERNAME }}"
-#              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
-#              echo
-#              echo "GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}"
-#              echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}"
-#              echo "GOOGLE_REDIRECT_URI=${{ vars.GOOGLE_REDIRECT_URI }}"
-#              echo "VITE_GOOGLE_MAPS_KEY=${{ secrets.VITE_GOOGLE_MAPS_KEY }}"
-#              echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
-#            } > .env.new
-#
-#            # Preservar APP_KEY si existe
-#            if [ -f .env ] && grep -q '^APP_KEY=' .env; then
-#              grep '^APP_KEY=' .env >> .env.new
-#            fi
-#            mv .env.new .env
-#
-#            php artisan key:generate --force || true
-#
-#            echo "🚀 Running migrations and caches"
-#            php artisan migrate --force
-#            php artisan config:cache
-#            php artisan route:cache
-#            php artisan view:cache
-#            php artisan storage:link 2>/dev/null || true
-#
-#            if [ "${{ github.ref_name }}" = "stg" ]; then
-#              echo "🔍 Enabling Telescope and Horizon (staging)"
-#              php artisan telescope:publish --ansi || true
-#              php artisan horizon:terminate || true
-#              sudo systemctl restart ${{ vars.PHP_FPM_SERVICE }}
-#              php artisan horizon:status || true
-#            else
-#              echo "🧱 Production mode — Horizon/Telescope disabled"
-#              php artisan horizon:terminate || true
-#              sudo systemctl restart ${{ vars.PHP_FPM_SERVICE }}
-#            fi
-#
-#            echo "✅ Deploy completed successfully!"
-#          EOF
+name: Deploy Pixrup
+
+on:
+  push:
+    branches:
+      - main
+      - stg
+
+jobs:
+  deploy:
+    environment: ${{ github.ref_name == 'main' && 'production' || 'stg' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DO_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Laravel App
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ vars.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            set -Eeuo pipefail
+            trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
+
+            cd "${{ vars.DEPLOY_PATH }}"
+            echo "🌱 Deploying ${{ vars.APP_NAME }} on ${{ vars.APP_URL }}"
+            git fetch --prune
+            git checkout ${{ vars.BRANCH }}
+            git pull --ff-only origin ${{ vars.BRANCH }}
+
+            echo "🧩 Updating dependencies"
+            composer install --no-dev --prefer-dist --optimize-autoloader
+
+            echo "⚙️ Building frontend"
+            npm ci
+            ${{ vars.BUILD_CMD }}
+
+            echo "🔧 Generating .env"
+            rm -f .env.new
+            {
+              echo "APP_NAME=${{ vars.APP_NAME }}"
+              if [ "${{ github.ref_name }}" = "main" ]; then
+                echo "APP_ENV=production"
+                echo "APP_DEBUG=false"
+              else
+                echo "APP_ENV=staging"
+                echo "APP_DEBUG=true"
+                echo "TELESCOPE_ENABLED=${{ vars.TELESCOPE_ENABLED || 'true' }}"
+                echo "TELESCOPE_PATH=${{ vars.TELESCOPE_PATH || 'telescope' }}"
+                echo "HORIZON_PATH=${{ vars.HORIZON_PATH || 'horizon' }}"
+              fi
+              echo "APP_URL=${{ vars.APP_URL }}"
+              echo
+              echo "LOG_CHANNEL=stack"
+              echo "LOG_LEVEL=debug"
+              echo
+              echo "DB_CONNECTION=mysql"
+              echo "DB_HOST=${{ secrets.DB_HOST }}"
+              echo "DB_PORT=3306"
+              echo "DB_DATABASE=${{ secrets.DB_DATABASE }}"
+              echo "DB_USERNAME=${{ secrets.DB_USERNAME }}"
+              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
+              echo
+              echo "GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}"
+              echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}"
+              echo "GOOGLE_REDIRECT_URI=${{ vars.GOOGLE_REDIRECT_URI }}"
+              echo "VITE_GOOGLE_MAPS_KEY=${{ secrets.VITE_GOOGLE_MAPS_KEY }}"
+              echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
+            } > .env.new
+
+            # Preserve existing APP_KEY if present
+            if [ -f .env ] && grep -q '^APP_KEY=' .env; then
+              grep '^APP_KEY=' .env >> .env.new
+            fi
+            mv .env.new .env
+            php artisan key:generate --force || true
+
+            echo "🚀 Running migrations and caches"
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan storage:link 2>/dev/null || true
+
+            if [ "${{ github.ref_name }}" = "stg" ]; then
+              echo "🔍 Enabling Telescope and Horizon (staging)"
+              php artisan telescope:publish --ansi || true
+              php artisan horizon:terminate || true
+              sudo systemctl restart ${{ vars.PHP_FPM_SERVICE }}
+              php artisan horizon:status || true
+            else
+              echo "🧱 Production mode — Horizon/Telescope disabled"
+              php artisan horizon:terminate || true
+              sudo systemctl restart ${{ vars.PHP_FPM_SERVICE }}
+            fi
+
+            echo "✅ Deploy completed successfully!"
+          EOF
