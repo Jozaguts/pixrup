@@ -93,7 +93,7 @@ const handleContinueInApp = () => {
 </script>
 
 <template>
-    <div class="flex w-full flex-col gap-3 sm:flex-row sm:justify-center max-w-xl ">
+    <div class="flex w-full flex-col gap-3 sm:flex-row sm:justify-center max-w-xl mb-40 ">
         <Button
             size="lg"
             class="h-12 flex-1 min-w-[200px] is-pressed"
