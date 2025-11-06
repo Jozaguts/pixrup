@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import auth from '@/routes/auth';
 import { dashboard } from '@/routes';
+import auth from '@/routes/auth';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -61,9 +61,7 @@ const handleClose = () => {
 <template>
     <div
         class="xl:hidden"
-        :class="[
-            open ? 'pointer-events-auto' : 'pointer-events-none',
-        ]"
+        :class="[open ? 'pointer-events-auto' : 'pointer-events-none']"
     >
         <div
             class="fixed inset-0 z-[998] bg-slate-900/40 backdrop-blur-sm transition-opacity duration-100"
@@ -87,7 +85,7 @@ const handleClose = () => {
                             <img
                                 :src="compactLogo"
                                 alt="Pixrup"
-                                class="hidden w-full dark:block invert"
+                                class="hidden w-full invert dark:block"
                             />
                         </figure>
                     </Link>

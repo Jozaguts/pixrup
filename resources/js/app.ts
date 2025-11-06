@@ -1,14 +1,17 @@
-import '../css/app.css';
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
+import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
-import './lib/http';
 import { gsap, ScrollTrigger } from './lib/gsap';
+import './lib/http';
 import { ensureSpringer } from './lib/vendor/springer';
-import { ensureStackCards, requestStackCardsUpdate } from './lib/vendor/stackCards';
+import {
+    ensureStackCards,
+    requestStackCardsUpdate,
+} from './lib/vendor/stackCards';
 
 window.gsap = gsap;
 window.ScrollTrigger = ScrollTrigger;

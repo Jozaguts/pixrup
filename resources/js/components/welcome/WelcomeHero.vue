@@ -17,13 +17,13 @@ const handleTypingComplete = (event: AnimationEvent) => {
 
 <template>
     <section
-        class="flex w-full  flex-col items-center text-center max-w text-white"
-        v-auto-animate="{duration: 400}"
+        class="max-w flex w-full flex-col items-center text-center text-white"
+        v-auto-animate="{ duration: 400 }"
     >
         <div class="typewriter">
             <h1 class="hero-title">
                 <span
-                    class="hero-title__text whitespace-nowrap text-[4vw] sm:text-[2vw] md:text-[2.5vw] lg:text-[4vw] mt-8 "
+                    class="hero-title__text mt-8 text-[4vw] whitespace-nowrap sm:text-[2vw] md:text-[2.5vw] lg:text-[4vw]"
                     @animationend="handleTypingComplete"
                 >
                     Turn Any Property Into Potential.
@@ -34,20 +34,20 @@ const handleTypingComplete = (event: AnimationEvent) => {
 
         <p
             v-if="showSubtitle"
-            class="hero-subtitle lg:mb-10 md:mb-10 mb-3 font-medium text-base leading-relaxed text-black whitespace-wrap text-[12px] sm:text-[1vw] md:text-[1.5vw] lg:text-[4vw] "
+            class="hero-subtitle whitespace-wrap mb-3 text-base text-[12px] leading-relaxed font-medium text-black sm:text-[1vw] md:mb-10 md:text-[1.5vw] lg:mb-10 lg:text-[4vw]"
         >
             Upload. Appraise. Reimagine. Share.
         </p>
 
         <div
-            class="relative lg:mb-10 md:mb-10 mb-1 w-full max-w-xl  px-6 py-4 text-slate-900"
+            class="relative mb-1 w-full max-w-xl px-6 py-4 text-slate-900 md:mb-10 lg:mb-10"
         >
             <Input
                 id="welcome-query"
                 v-model="query"
                 type="search"
                 placeholder=" Find your fixer in any city"
-                class="h-12 w-full  text-base text-slate-900 is-pressed"
+                class="is-pressed h-12 w-full text-base text-slate-900"
             />
         </div>
     </section>
@@ -92,7 +92,9 @@ const handleTypingComplete = (event: AnimationEvent) => {
 }
 
 .hero-subtitle {
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
     opacity: 1;
     transform: translateY(0);
     font-size: 35px;
@@ -121,12 +123,10 @@ const handleTypingComplete = (event: AnimationEvent) => {
     .hero-title {
         font-size: clamp(32px, 8vw, 60px);
         letter-spacing: 3px;
-
     }
     .hero-title__caret {
         width: 2px;
         height: 15px !important;
-
     }
 }
 </style>

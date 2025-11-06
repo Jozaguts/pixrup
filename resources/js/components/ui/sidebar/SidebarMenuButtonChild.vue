@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes, MouseEvent } from 'vue'
+import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { type SidebarMenuButtonVariants, sidebarMenuButtonVariants } from '.'
@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<SidebarMenuButtonProps>(), {
 
 const { isMobile, setOpenMobile } = useSidebar()
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const handleClick = (_event: MouseEvent) => {
   if (isMobile.value) {
     setOpenMobile(false)

@@ -2,8 +2,8 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SidebarInset } from '@/components/ui/sidebar';
 import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import { AlertTriangle, CheckCircle2, Info } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface Props {
     variant?: 'header' | 'sidebar';
@@ -27,7 +27,8 @@ const statusDetails = computed(() => {
             return {
                 icon: AlertTriangle,
                 variant: 'destructive' as const,
-                message: 'The verification link is invalid or expired. Please request a new one.',
+                message:
+                    'The verification link is invalid or expired. Please request a new one.',
             };
         case 'verification-link-sent':
             return {

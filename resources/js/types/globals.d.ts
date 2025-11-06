@@ -32,7 +32,12 @@ declare global {
         ensureSpringer: typeof import('../lib/vendor/springer').ensureSpringer;
         ensureStackCards: typeof import('../lib/vendor/stackCards').ensureStackCards;
         requestStackCardsUpdate: typeof import('../lib/vendor/stackCards').requestStackCardsUpdate;
-        Springer?: { default: (tension?: number, friction?: number) => (t: number) => number };
+        Springer?: {
+            default: (
+                tension?: number,
+                friction?: number,
+            ) => (t: number) => number;
+        };
         __stackCardsReady?: boolean;
     }
 }

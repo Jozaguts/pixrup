@@ -6,7 +6,12 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { send } from '@/routes/verification';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle, CheckCircle2, AlertTriangle, Info } from 'lucide-vue-next';
+import {
+    AlertTriangle,
+    CheckCircle2,
+    Info,
+    LoaderCircle,
+} from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -26,13 +31,15 @@ const statusDetails = computed(() => {
             return {
                 icon: CheckCircle2,
                 variant: 'default' as const,
-                message: 'Your email is already verified. You can continue to the dashboard.',
+                message:
+                    'Your email is already verified. You can continue to the dashboard.',
             };
         case 'verification-link-invalid':
             return {
                 icon: AlertTriangle,
                 variant: 'destructive' as const,
-                message: 'The verification link is invalid or has expired. Request a new one below.',
+                message:
+                    'The verification link is invalid or has expired. Request a new one below.',
             };
         case 'must-verify-email':
             return {

@@ -1,15 +1,7 @@
 <script setup lang="ts">
+import { MessageCircle, Send, Users, Wifi } from 'lucide-vue-next';
 import { computed } from 'vue';
-import {
-    MessageCircle,
-    Send,
-    Users,
-    Wifi,
-} from 'lucide-vue-next';
-import type {
-    PropertyWorkspaceProperty,
-    WorkspaceModuleMeta,
-} from './types';
+import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -53,16 +45,19 @@ const messages = computed(() => [
 
 <template>
     <div class="flex flex-col gap-6 text-[#1f2937]">
-        <header class="flex flex-col gap-4 p-6 neu-surface shadow-neu-out ">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <header class="neu-surface flex flex-col gap-4 p-6 shadow-neu-out">
+            <div
+                class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+            >
                 <div>
                     <h2 class="text-lg font-semibold">PixrCollab Channel</h2>
                     <p class="text-sm text-gray-500">
-                        Real-time workspace chat, synced with Glow-Up, Worth, and Seal updates.
+                        Real-time workspace chat, synced with Glow-Up, Worth,
+                        and Seal updates.
                     </p>
                 </div>
                 <span
-                    class="hidden items-center gap-2 rounded-full  px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#7c4dff]  sm:inline-flex"
+                    class="hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase sm:inline-flex"
                 >
                     API
                     <span class="font-medium">{{ endpointBadge }}</span>
@@ -71,26 +66,33 @@ const messages = computed(() => [
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-            <article class="flex flex-col gap-5 neu-surface shadow-neu-out p-6">
+            <article class="neu-surface flex flex-col gap-5 p-6 shadow-neu-out">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Live Thread</h3>
-                        <p class="text-sm text-gray-500">Firebase channel with read receipts and presence out-of-the-box.</p>
+                        <p class="text-sm text-gray-500">
+                            Firebase channel with read receipts and presence
+                            out-of-the-box.
+                        </p>
                     </div>
                     <Wifi class="h-5 w-5 text-[#7c4dff]" />
                 </header>
 
-                <div class="flex flex-col gap-4 p-5 neu-surface shadow-neu-out">
+                <div class="neu-surface flex flex-col gap-4 p-5 shadow-neu-out">
                     <article
                         v-for="message in messages"
                         :key="message.id"
-                        class="p-5 neu-surface shadow-neu-in text-sm text-gray-600"
+                        class="neu-surface p-5 text-sm text-gray-600 shadow-neu-in"
                     >
-                        <header class="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-gray-400">
+                        <header
+                            class="flex items-center justify-between text-xs tracking-[0.3em] text-gray-400 uppercase"
+                        >
                             <span>{{ message.author }}</span>
                             <span>{{ message.timestamp }}</span>
                         </header>
-                        <p class="mt-2 text-sm text-[#1f2937]">{{ message.body }}</p>
+                        <p class="mt-2 text-sm text-[#1f2937]">
+                            {{ message.body }}
+                        </p>
                     </article>
                 </div>
 
@@ -98,11 +100,11 @@ const messages = computed(() => [
                     <textarea
                         rows="3"
                         placeholder="Drop an update or @mention a collaborator"
-                        class="px-4 py-3 neu-surface shadow-neu-in text-sm text-gray-600"
+                        class="neu-surface px-4 py-3 text-sm text-gray-600 shadow-neu-in"
                     />
                     <button
                         type="button"
-                        class="inline-flex items-center gap-2 self-end rounded-[18px] bg-[#7c4dff] px-4 py-2 text-sm font-semibold text-white shadow-[8px_8px_18px_rgba(108,72,219,0.45),-6px_-6px_18px_rgba(212,199,255,0.4)] transition hover:shadow-[inset_6px_6px_16px_rgba(86,55,176,0.6),inset_-6px_-6px_16px_rgba(158,132,255,0.6)] focus:outline-none focus:ring-2 focus:ring-[#7c4dff]/60"
+                        class="inline-flex items-center gap-2 self-end rounded-[18px] bg-[#7c4dff] px-4 py-2 text-sm font-semibold text-white shadow-[8px_8px_18px_rgba(108,72,219,0.45),-6px_-6px_18px_rgba(212,199,255,0.4)] transition hover:shadow-[inset_6px_6px_16px_rgba(86,55,176,0.6),inset_-6px_-6px_16px_rgba(158,132,255,0.6)] focus:ring-2 focus:ring-[#7c4dff]/60 focus:outline-none"
                     >
                         <Send class="h-4 w-4" />
                         Send update
@@ -110,7 +112,9 @@ const messages = computed(() => [
                 </form>
             </article>
 
-            <aside class="flex flex-col gap-5 rounded-[28px] neu-surface shadow-neu-out p-6">
+            <aside
+                class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 shadow-neu-out"
+            >
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Participants</h3>
                     <Users class="h-5 w-5 text-[#7c4dff]" />
@@ -120,24 +124,31 @@ const messages = computed(() => [
                     <li
                         v-for="participant in participants"
                         :key="participant.id"
-                        class="flex items-center justify-between px-4 py-3 neu-surface shadow-neu-in text-sm text-gray-600"
+                        class="neu-surface flex items-center justify-between px-4 py-3 text-sm text-gray-600 shadow-neu-in"
                     >
                         <div>
-                            <p class="font-semibold text-[#1f2937]">{{ participant.name }}</p>
-                            <p class="text-xs uppercase tracking-[0.3em] text-gray-400">{{ participant.role }}</p>
+                            <p class="font-semibold text-[#1f2937]">
+                                {{ participant.name }}
+                            </p>
+                            <p
+                                class="text-xs tracking-[0.3em] text-gray-400 uppercase"
+                            >
+                                {{ participant.role }}
+                            </p>
                         </div>
                         <span
-                            class="rounded-full bg-[#7c4dff]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#7c4dff]"
+                            class="rounded-full bg-[#7c4dff]/10 px-3 py-1 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase"
                         >
                             {{ participant.status }}
                         </span>
                     </li>
                 </ul>
 
-                <div class="p-4 neu-surface shadow-neu-out">
+                <div class="neu-surface p-4 shadow-neu-out">
                     <div class="flex items-center gap-2">
                         <MessageCircle class="h-4 w-4" />
-                        Connect this channel to PixrSeal comment threads automatically.
+                        Connect this channel to PixrSeal comment threads
+                        automatically.
                     </div>
                 </div>
             </aside>

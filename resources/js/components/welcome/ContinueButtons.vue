@@ -93,10 +93,12 @@ const handleContinueInApp = () => {
 </script>
 
 <template>
-    <div class="flex w-full flex-col gap-3 sm:flex-row sm:justify-center max-w-xl mb-40 ">
+    <div
+        class="mb-40 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center"
+    >
         <Button
             size="lg"
-            class="h-12 flex-1 min-w-[200px] is-pressed"
+            class="is-pressed h-12 min-w-[200px] flex-1"
             @click="handleContinueOnWeb"
         >
             Continue on Web
@@ -104,7 +106,7 @@ const handleContinueInApp = () => {
         <Button
             variant="secondary"
             size="lg"
-            class="h-12 flex-1 min-w-[200px]"
+            class="h-12 min-w-[200px] flex-1"
             :disabled="!hasSelection"
             @click="handleContinueInApp"
         >

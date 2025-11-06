@@ -1,78 +1,82 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Head, useForm, usePage } from '@inertiajs/vue3'
-import { Loader2, RefreshCw, TrendingUp, AlertTriangle } from 'lucide-vue-next'
-import AppLayout from '@/layouts/AppLayout.vue'
-import propertiesRoutes from '@/routes/properties'
-import { fetch as fetchWorth } from '@/actions/App/Interface/Appraisal/Http/Controllers/PropertyWorthController'
-import { Button } from '@/components/ui/button'
-import type { BreadcrumbItem } from '@/types'
+import { fetch as fetchWorth } from '@/actions/App/Interface/Appraisal/Http/Controllers/PropertyWorthController';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/AppLayout.vue';
+import propertiesRoutes from '@/routes/properties';
+import type { BreadcrumbItem } from '@/types';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { AlertTriangle, Loader2, RefreshCw, TrendingUp } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 /**
  * Props supplied by the backend PixrWorth controller.
  */
 interface Props {
     property: {
-        id: number
-        title?: string | null
-        address?: string | null
-        city?: string | null
-        state?: string | null
-        postal_code?: string | null
-        country?: string | null
-    }
-    worth?: WorthPayload | null
+        id: number;
+        title?: string | null;
+        address?: string | null;
+        city?: string | null;
+        state?: string | null;
+        postal_code?: string | null;
+        country?: string | null;
+    };
+    worth?: WorthPayload | null;
 }
 
 /**
  * Representation of comparable sale entries returned by PixrWorth.
  */
 interface WorthComparable {
-    address?: string | null
-    sale_price?: number | null
-    distance_miles?: number | null
+    address?: string | null;
+    sale_price?: number | null;
+    distance_miles?: number | null;
 }
 
 /**
  * Normalized valuation payload returned from the backend.
  */
 interface WorthPayload {
-    value: number
-    value_low: number
-    value_high: number
-    confidence: number
-    comparables: WorthComparable[]
-    fetched_at: string
-    cached_at?: string | null
-    provider: string
+    value: number;
+    value_low: number;
+    value_high: number;
+    confidence: number;
+    comparables: WorthComparable[];
+    fetched_at: string;
+    cached_at?: string | null;
+    provider: string;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
-type ViewState = 'idle' | 'loading' | 'success' | 'cached' | 'error'
+type ViewState = 'idle' | 'loading' | 'success' | 'cached' | 'error';
 
-const page = usePage<{ errors?: Record<string, string> | undefined }>()
+const page = usePage<{ errors?: Record<string, string> | undefined }>();
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: 0,
-})
+});
 
-const worth = computed<WorthPayload | null>(() => props.worth ?? null)
-const property = computed<Props['property']>(() => props.property)
-const worthErrors = computed<Record<string, string>>(() => page.props.errors ?? {})
-const errorMessage = computed(() => worthErrors.value?.worth ?? '')
-const propertyId = computed(() => property.value?.id ?? null)
+const worth = computed<WorthPayload | null>(() => props.worth ?? null);
+const property = computed<Props['property']>(() => props.property);
+const worthErrors = computed<Record<string, string>>(
+    () => page.props.errors ?? {},
+);
+const errorMessage = computed(() => worthErrors.value?.worth ?? '');
+const propertyId = computed(() => property.value?.id ?? null);
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => {
-    const id = propertyId.value
+    const id = propertyId.value;
     const title =
         property.value?.title ??
         property.value?.address ??
-        (id ? `Property #${id}` : 'Property')
+        (id ? `Property #${id}` : 'Property');
 
-    const propertyHref = id ? propertiesRoutes.show.url({ property: id }) : '/properties'
+    const propertyHref = id
+        ? propertiesRoutes.show.url({ property: id })
+        : '/properties';
 
     return [
         {
@@ -81,14 +85,16 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => {
         },
         {
             title: 'PixrWorth appraisal',
-            href: id ? propertiesRoutes.worth.fetch.url({ property: id }) : propertyHref,
+            href: id
+                ? propertiesRoutes.worth.fetch.url({ property: id })
+                : propertyHref,
         },
-    ]
-})
+    ];
+});
 
 const form = useForm({
     property_id: propertyId.value,
-})
+});
 
 /**
  * Description: Trigger valuation fetch for the current property via Wayfinder action.
@@ -98,16 +104,16 @@ const form = useForm({
  */
 const handleFetch = (): void => {
     if (propertyId.value === null || form.processing) {
-        return
+        return;
     }
 
-    const route = fetchWorth({ property: propertyId.value })
+    const route = fetchWorth({ property: propertyId.value });
 
     form.submit(route.method, route.url, {
         preserveState: true,
         preserveScroll: true,
-    })
-}
+    });
+};
 
 /**
  * Description: Format numeric value as US currency for UI display.
@@ -117,11 +123,11 @@ const handleFetch = (): void => {
  */
 const formatCurrency = (value: number | null | undefined): string => {
     if (value === null || value === undefined || Number.isNaN(Number(value))) {
-        return '—'
+        return '—';
     }
 
-    return currencyFormatter.format(value)
-}
+    return currencyFormatter.format(value);
+};
 
 /**
  * Description: Format ISO timestamp for presentation.
@@ -131,26 +137,32 @@ const formatCurrency = (value: number | null | undefined): string => {
  */
 const formatTimestamp = (timestamp?: string | null): string | null => {
     if (!timestamp) {
-        return null
+        return null;
     }
 
-    const date = new Date(timestamp)
+    const date = new Date(timestamp);
 
     if (Number.isNaN(date.getTime())) {
-        return null
+        return null;
     }
 
-    return date.toLocaleString()
-}
+    return date.toLocaleString();
+};
 
-const fetchedAtLabel = computed(() => formatTimestamp(worth.value?.fetched_at))
-const cachedAtLabel = computed(() => formatTimestamp(worth.value?.cached_at ?? null))
+const fetchedAtLabel = computed(() => formatTimestamp(worth.value?.fetched_at));
+const cachedAtLabel = computed(() =>
+    formatTimestamp(worth.value?.cached_at ?? null),
+);
 
-const comparables = computed<WorthComparable[]>(() => worth.value?.comparables ?? [])
-const hasComparables = computed(() => comparables.value.length > 0)
+const comparables = computed<WorthComparable[]>(
+    () => worth.value?.comparables ?? [],
+);
+const hasComparables = computed(() => comparables.value.length > 0);
 
-const isCached = computed(() => worth.value !== null && !!worth.value.cached_at)
-const hasWorth = computed(() => worth.value !== null)
+const isCached = computed(
+    () => worth.value !== null && !!worth.value.cached_at,
+);
+const hasWorth = computed(() => worth.value !== null);
 
 /**
  * Description: Determine UI state for the valuation view.
@@ -160,53 +172,68 @@ const hasWorth = computed(() => worth.value !== null)
  */
 const viewState = computed<ViewState>(() => {
     if (form.processing) {
-        return 'loading'
+        return 'loading';
     }
 
     if (!hasWorth.value && errorMessage.value) {
-        return 'error'
+        return 'error';
     }
 
     if (hasWorth.value && isCached.value) {
-        return 'cached'
+        return 'cached';
     }
 
     if (hasWorth.value) {
-        return 'success'
+        return 'success';
     }
 
-    return 'idle'
-})
+    return 'idle';
+});
 
 const confidencePercent = computed(() => {
     if (!worth.value) {
-        return null
+        return null;
     }
 
-    return Math.round(worth.value.confidence * 100)
-})
+    return Math.round(worth.value.confidence * 100);
+});
 
-const pageTitle = computed(() => property.value?.title ?? 'PixrWorth appraisal')
+const pageTitle = computed(
+    () => property.value?.title ?? 'PixrWorth appraisal',
+);
 
 const composedAddress = computed(() => {
     if (!property.value) {
-        return null
+        return null;
     }
 
-    const segments = [property.value.address, property.value.city, property.value.state]
+    const segments = [
+        property.value.address,
+        property.value.city,
+        property.value.state,
+    ]
         .filter((segment) => segment && segment.length > 0)
-        .join(', ')
+        .join(', ');
 
     if (property.value.postal_code) {
-        return [segments, property.value.postal_code].filter(Boolean).join(' ')
+        return [segments, property.value.postal_code].filter(Boolean).join(' ');
     }
 
-    return segments || null
-})
+    return segments || null;
+});
 
-const showCachedBanner = computed(() => viewState.value === 'cached' && cachedAtLabel.value && fetchedAtLabel.value)
-const showSuccess = computed(() => viewState.value === 'success' || viewState.value === 'cached')
-const isFetchDisabled = computed(() => form.processing || propertyId.value === null)
+const showCachedBanner = computed(
+    () =>
+        viewState.value === 'cached' &&
+        cachedAtLabel.value &&
+        fetchedAtLabel.value,
+);
+const showSuccess = computed(
+    () => viewState.value === 'success' || viewState.value === 'cached',
+);
+const isFetchDisabled = computed(
+    () => form.processing || propertyId.value === null,
+);
 </script>
 
 <template>
@@ -214,15 +241,22 @@ const isFetchDisabled = computed(() => form.processing || propertyId.value === n
         <Head title="PixrWorth appraisal" />
 
         <div class="mx-auto flex max-w-4xl flex-col gap-6 py-8">
-            <section class="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <section
+                class="rounded-2xl border border-border bg-card p-6 shadow-sm"
+            >
                 <div class="flex flex-col gap-2">
                     <h1 class="text-2xl font-semibold text-foreground">
                         {{ pageTitle }}
                     </h1>
-                    <p v-if="composedAddress" class="text-sm text-muted-foreground">
+                    <p
+                        v-if="composedAddress"
+                        class="text-sm text-muted-foreground"
+                    >
                         {{ composedAddress }}
                     </p>
-                    <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                    <p
+                        class="text-xs tracking-wide text-muted-foreground uppercase"
+                    >
                         Provider: {{ worth?.provider ?? 'mock' }}
                     </p>
                 </div>
@@ -234,11 +268,17 @@ const isFetchDisabled = computed(() => form.processing || propertyId.value === n
                         @click="handleFetch"
                         class="inline-flex items-center gap-2"
                     >
-                        <Loader2 v-if="form.processing" class="h-4 w-4 animate-spin" />
+                        <Loader2
+                            v-if="form.processing"
+                            class="h-4 w-4 animate-spin"
+                        />
                         <RefreshCw v-else class="h-4 w-4" />
                         <span>Fetch valuation</span>
                     </Button>
-                    <span v-if="fetchedAtLabel" class="text-sm text-muted-foreground">
+                    <span
+                        v-if="fetchedAtLabel"
+                        class="text-sm text-muted-foreground"
+                    >
                         Last fetched: {{ fetchedAtLabel }}
                     </span>
                 </div>
@@ -263,12 +303,15 @@ const isFetchDisabled = computed(() => form.processing || propertyId.value === n
                 v-else-if="viewState === 'idle'"
                 class="rounded-2xl border border-dashed border-border bg-muted/20 p-6 text-center"
             >
-                <TrendingUp class="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+                <TrendingUp
+                    class="mx-auto mb-4 h-10 w-10 text-muted-foreground"
+                />
                 <h2 class="text-lg font-semibold text-foreground">
                     No valuation yet
                 </h2>
                 <p class="mt-2 text-sm text-muted-foreground">
-                    Kick off your first PixrWorth appraisal to unlock comps and confidence scores.
+                    Kick off your first PixrWorth appraisal to unlock comps and
+                    confidence scores.
                 </p>
             </section>
 
@@ -279,62 +322,90 @@ const isFetchDisabled = computed(() => form.processing || propertyId.value === n
                 <div class="flex flex-col items-center gap-3 text-center">
                     <AlertTriangle class="h-8 w-8 text-destructive" />
                     <p class="text-sm text-destructive">
-                        {{ errorMessage || 'Unable to fetch valuation. Please try again later.' }}
+                        {{
+                            errorMessage ||
+                            'Unable to fetch valuation. Please try again later.'
+                        }}
                     </p>
-                    <Button type="button" variant="outline" @click="handleFetch">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        @click="handleFetch"
+                    >
                         Retry fetch
                     </Button>
                 </div>
             </section>
 
-            <section
-                v-else-if="showSuccess"
-                class="space-y-4"
-            >
+            <section v-else-if="showSuccess" class="space-y-4">
                 <div
                     v-if="showCachedBanner"
                     class="rounded-xl border border-border bg-muted/30 p-4 text-sm text-muted-foreground"
                 >
-                    Cached valuation served from {{ cachedAtLabel }} — market data last refreshed
-                    {{ fetchedAtLabel }}.
+                    Cached valuation served from {{ cachedAtLabel }} — market
+                    data last refreshed {{ fetchedAtLabel }}.
                 </div>
 
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <div class="rounded-2xl border border-border bg-card p-4 shadow-sm">
-                        <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                <div
+                    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+                >
+                    <div
+                        class="rounded-2xl border border-border bg-card p-4 shadow-sm"
+                    >
+                        <p
+                            class="text-xs tracking-wide text-muted-foreground uppercase"
+                        >
                             Estimated value
                         </p>
                         <p class="mt-2 text-2xl font-semibold text-foreground">
                             {{ formatCurrency(worth?.value ?? null) }}
                         </p>
                     </div>
-                    <div class="rounded-2xl border border-border bg-card p-4 shadow-sm">
-                        <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                    <div
+                        class="rounded-2xl border border-border bg-card p-4 shadow-sm"
+                    >
+                        <p
+                            class="text-xs tracking-wide text-muted-foreground uppercase"
+                        >
                             Low range
                         </p>
                         <p class="mt-2 text-xl font-semibold text-foreground">
                             {{ formatCurrency(worth?.value_low ?? null) }}
                         </p>
                     </div>
-                    <div class="rounded-2xl border border-border bg-card p-4 shadow-sm">
-                        <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                    <div
+                        class="rounded-2xl border border-border bg-card p-4 shadow-sm"
+                    >
+                        <p
+                            class="text-xs tracking-wide text-muted-foreground uppercase"
+                        >
                             High range
                         </p>
                         <p class="mt-2 text-xl font-semibold text-foreground">
                             {{ formatCurrency(worth?.value_high ?? null) }}
                         </p>
                     </div>
-                    <div class="rounded-2xl border border-border bg-card p-4 shadow-sm">
-                        <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                    <div
+                        class="rounded-2xl border border-border bg-card p-4 shadow-sm"
+                    >
+                        <p
+                            class="text-xs tracking-wide text-muted-foreground uppercase"
+                        >
                             Confidence
                         </p>
                         <p class="mt-2 text-xl font-semibold text-foreground">
-                            {{ confidencePercent !== null ? confidencePercent + '%' : '—' }}
+                            {{
+                                confidencePercent !== null
+                                    ? confidencePercent + '%'
+                                    : '—'
+                            }}
                         </p>
                     </div>
                 </div>
 
-                <div class="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <div
+                    class="rounded-2xl border border-border bg-card p-6 shadow-sm"
+                >
                     <h3 class="text-base font-semibold text-foreground">
                         Comparable sales
                     </h3>
@@ -342,7 +413,10 @@ const isFetchDisabled = computed(() => form.processing || propertyId.value === n
                         Nearby transactions calibrating this valuation snapshot.
                     </p>
 
-                    <div v-if="hasComparables" class="mt-4 divide-y divide-border">
+                    <div
+                        v-if="hasComparables"
+                        class="mt-4 divide-y divide-border"
+                    >
                         <div
                             v-for="(comparable, index) in comparables"
                             :key="index"
@@ -350,14 +424,25 @@ const isFetchDisabled = computed(() => form.processing || propertyId.value === n
                         >
                             <div>
                                 <p class="text-sm font-medium text-foreground">
-                                    {{ comparable.address ?? 'Unknown address' }}
+                                    {{
+                                        comparable.address ?? 'Unknown address'
+                                    }}
                                 </p>
                             </div>
                             <div class="text-sm text-muted-foreground">
-                                {{ formatCurrency(comparable.sale_price ?? null) }}
+                                {{
+                                    formatCurrency(
+                                        comparable.sale_price ?? null,
+                                    )
+                                }}
                             </div>
                             <div class="text-sm text-muted-foreground">
-                                {{ comparable.distance_miles ? comparable.distance_miles.toFixed(2) + ' mi' : 'n/a' }}
+                                {{
+                                    comparable.distance_miles
+                                        ? comparable.distance_miles.toFixed(2) +
+                                          ' mi'
+                                        : 'n/a'
+                                }}
                             </div>
                         </div>
                     </div>

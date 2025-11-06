@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { usePlanUsage } from '@/composables/usePlanUsage';
+import propertiesRoutes from '@/routes/properties';
 import { useForm, usePage } from '@inertiajs/vue3';
 import {
     AlertCircle,
@@ -10,20 +11,19 @@ import {
     RefreshCw,
     ShieldCheck,
 } from 'lucide-vue-next';
-import propertiesRoutes from '@/routes/properties';
-import CardValuation from './worth/CardValuation.vue';
-import ComparablesTable from './worth/ComparablesTable.vue';
-import PropertyDetails from './worth/PropertyDetails.vue';
-import AnalyticsChart from './worth/AnalyticsChart.vue';
-import RentalValueCard from './worth/RentalValueCard.vue';
-import { usePlanUsage } from '@/composables/usePlanUsage';
+import { computed } from 'vue';
 import type {
     PropertyWorkspaceProperty,
     WorkspaceModuleMeta,
     WorthComparable,
-    WorthTrendPoint,
     WorthStatusState,
+    WorthTrendPoint,
 } from './types';
+import AnalyticsChart from './worth/AnalyticsChart.vue';
+import CardValuation from './worth/CardValuation.vue';
+import ComparablesTable from './worth/ComparablesTable.vue';
+import PropertyDetails from './worth/PropertyDetails.vue';
+import RentalValueCard from './worth/RentalValueCard.vue';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -62,19 +62,19 @@ const comparables = computed<WorthComparable[]>(() => {
         const salePrice =
             item.sale_price !== undefined && item.sale_price !== null
                 ? item.sale_price
-                : item.price ?? null;
+                : (item.price ?? null);
 
         const rawDistance =
             item.distance_miles !== undefined && item.distance_miles !== null
                 ? item.distance_miles
-                : item.distance ?? null;
+                : (item.distance ?? null);
 
         const parsedDistance =
             typeof rawDistance === 'number'
                 ? rawDistance
                 : typeof rawDistance === 'string'
-                ? Number.parseFloat(rawDistance)
-                : null;
+                  ? Number.parseFloat(rawDistance)
+                  : null;
 
         return {
             id: item.id ?? `comp-${index}`,
@@ -96,18 +96,14 @@ const hasComparables = computed(() =>
     comparables.value.some((comp) => comp.sale_price !== null),
 );
 
-const trendPoints = computed<WorthTrendPoint[]>(
-    () => worth.value?.trend ?? [],
-);
+const trendPoints = computed<WorthTrendPoint[]>(() => worth.value?.trend ?? []);
 const hasTrend = computed(() => trendPoints.value.length > 0);
 
 const fetchForm = useForm({});
 const reportForm = useForm({});
 const isFetchLoading = computed(() => fetchForm.processing);
 const isReportLoading = computed(() => reportForm.processing);
-const isBusy = computed(
-    () => isFetchLoading.value || isReportLoading.value,
-);
+const isBusy = computed(() => isFetchLoading.value || isReportLoading.value);
 
 const {
     usage,
@@ -257,10 +253,7 @@ const isFetchDisabled = computed(
 );
 
 const isReportDisabled = computed(
-    () =>
-        isBusy.value ||
-        !hasWorth.value ||
-        Number.isNaN(propertyId.value),
+    () => isBusy.value || !hasWorth.value || Number.isNaN(propertyId.value),
 );
 
 const upgradeHref = '/settings/billing';
@@ -361,8 +354,8 @@ const idleCallout = computed(() =>
                         Instant property valuation and market confidence.
                     </h2>
                     <p class="text-sm text-[#6b7280]">
-                        Fetch live AVM data, comps, and confidence scores with
-                        a single click.
+                        Fetch live AVM data, comps, and confidence scores with a
+                        single click.
                     </p>
                 </div>
 
@@ -384,9 +377,16 @@ const idleCallout = computed(() =>
                     >
                         <component
                             :is="isFetchLoading ? Loader2 : RefreshCw"
-                            :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
+                            :class="[
+                                'h-4 w-4',
+                                { 'animate-spin': isFetchLoading },
+                            ]"
                         />
-                        {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
+                        {{
+                            isUsageLimitReached
+                                ? 'Limit reached'
+                                : 'Fetch valuation'
+                        }}
                     </button>
                 </div>
             </div>
@@ -401,12 +401,14 @@ const idleCallout = computed(() =>
                 </div>
             </transition>
 
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,320px)_1fr]">
+            <div
+                class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,320px)_1fr]"
+            >
                 <div
                     class="flex flex-col gap-3 rounded-[22px] bg-[#f4f5fa] p-4 text-xs text-[#6b7280] shadow-[inset_12px_12px_28px_rgba(210,212,226,0.55),inset_-12px_-12px_28px_rgba(255,255,255,0.95)]"
                 >
                     <div
-                        class="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.3em]"
+                        class="flex items-center justify-between text-xs font-semibold tracking-[0.3em] uppercase"
                     >
                         <span>Plan usage</span>
                         <span class="inline-flex items-center gap-2">
@@ -460,7 +462,7 @@ const idleCallout = computed(() =>
                         </p>
                         <p
                             v-if="state === 'cached' && lastFetchedLabel"
-                            class="mt-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#f59e0b]"
+                            class="mt-2 text-xs font-semibold tracking-[0.28em] text-[#f59e0b] uppercase"
                         >
                             Cached — refresh recommended
                         </p>
@@ -513,9 +515,11 @@ const idleCallout = computed(() =>
                         />
                         <div
                             v-else
-                            class="neu-surface shadow-neu-out flex flex-col justify-center gap-2 rounded-[26px] p-6 text-sm text-[#6b7280]"
+                            class="neu-surface flex flex-col justify-center gap-2 rounded-[26px] p-6 text-sm text-[#6b7280] shadow-neu-out"
                         >
-                            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280]">
+                            <p
+                                class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+                            >
                                 Rental value
                             </p>
                             <p class="text-base text-[#0d0d12]">
@@ -586,12 +590,16 @@ const idleCallout = computed(() =>
                         <RefreshCw class="h-5 w-5 text-[#7c4dff]" />
                     </header>
 
-                    <ul class="grid gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280]">
+                    <ul
+                        class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+                    >
                         <li
                             class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
                         >
                             <span>Status</span>
-                            <span class="text-[#7c4dff]">{{ moduleStatusLabel }}</span>
+                            <span class="text-[#7c4dff]">{{
+                                moduleStatusLabel
+                            }}</span>
                         </li>
                         <li
                             class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
@@ -603,7 +611,9 @@ const idleCallout = computed(() =>
                             class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
                         >
                             <span>Comparables</span>
-                            <span class="text-[#0d0d12]">{{ comparablesCount }}</span>
+                            <span class="text-[#0d0d12]">{{
+                                comparablesCount
+                            }}</span>
                         </li>
                         <li
                             class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
@@ -624,7 +634,9 @@ const idleCallout = computed(() =>
                             class="flex items-center justify-between rounded-[18px] bg-[#f4f5fa] px-4 py-3 shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
                         >
                             <span>Last fetched</span>
-                            <span class="text-[#0d0d12]">{{ lastFetchedLabel }}</span>
+                            <span class="text-[#0d0d12]">{{
+                                lastFetchedLabel
+                            }}</span>
                         </li>
                     </ul>
                 </section>

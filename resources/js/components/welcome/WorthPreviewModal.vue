@@ -1,19 +1,13 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogFooter,
-    DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { computed } from 'vue';
 
 export type ComparableProperty = {
@@ -62,7 +56,9 @@ const handleOpenChange = (value: boolean) => {
                 <CardHeader
                     class="border-b border-slate-100 bg-gradient-to-b from-slate-50 to-white px-6 py-5"
                 >
-                    <DialogTitle class="text-left text-lg font-semibold text-slate-900">
+                    <DialogTitle
+                        class="text-left text-lg font-semibold text-slate-900"
+                    >
                         {{ props.address }}
                     </DialogTitle>
                     <DialogDescription class="text-left text-sm text-slate-500">
@@ -72,19 +68,24 @@ const handleOpenChange = (value: boolean) => {
 
                 <CardContent class="grid gap-6 px-6 py-6">
                     <section class="grid gap-1.5">
-                        <p class="text-xs font-medium uppercase tracking-wide text-slate-500">
+                        <p
+                            class="text-xs font-medium tracking-wide text-slate-500 uppercase"
+                        >
                             Estimated Value
                         </p>
                         <p class="text-3xl font-semibold text-slate-900">
                             {{ formattedEstimate ?? 'Coming soon' }}
                         </p>
                         <p class="text-sm text-slate-500">
-                            Estimated using recent sales nearby. Connect HouseCanary for live data.
+                            Estimated using recent sales nearby. Connect
+                            HouseCanary for live data.
                         </p>
                     </section>
 
                     <section class="grid gap-3">
-                        <p class="text-xs font-medium uppercase tracking-wide text-slate-500">
+                        <p
+                            class="text-xs font-medium tracking-wide text-slate-500 uppercase"
+                        >
                             Comparable Properties
                         </p>
 
@@ -94,20 +95,28 @@ const handleOpenChange = (value: boolean) => {
                                 :key="comp.id"
                                 class="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-700"
                             >
-                                <span class="font-medium">{{ comp.address }}</span>
+                                <span class="font-medium">{{
+                                    comp.address
+                                }}</span>
                                 <span class="font-semibold text-slate-900">
                                     {{ currencyFormatter.format(comp.value) }}
                                 </span>
                             </li>
                         </ul>
 
-                        <p v-if="displayComps.length === 0" class="text-sm text-slate-500">
-                            Comparable properties will appear here when available.
+                        <p
+                            v-if="displayComps.length === 0"
+                            class="text-sm text-slate-500"
+                        >
+                            Comparable properties will appear here when
+                            available.
                         </p>
                     </section>
                 </CardContent>
 
-                <DialogFooter class="flex flex-col gap-2 border-t border-slate-100 bg-slate-50 px-6 py-4">
+                <DialogFooter
+                    class="flex flex-col gap-2 border-t border-slate-100 bg-slate-50 px-6 py-4"
+                >
                     <Button class="w-full" size="lg" @click="emit('appraise')">
                         Appraise Full Property
                     </Button>

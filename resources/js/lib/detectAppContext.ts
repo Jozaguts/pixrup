@@ -9,10 +9,7 @@ export function detectAppContext() {
 
     const isInPWA =
         window.matchMedia?.('(display-mode: standalone)')?.matches ?? false;
-    const isCapacitor = Boolean(
-         
-        (window as any).Capacitor,
-    );
+    const isCapacitor = Boolean((window as any).Capacitor);
     const isMobile = /Android|iPhone|iPad/i.test(
         typeof navigator !== 'undefined' ? navigator.userAgent : '',
     );

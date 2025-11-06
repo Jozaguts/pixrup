@@ -10,9 +10,9 @@ const http = axios.create({
 
 const csrfToken =
     typeof window !== 'undefined'
-        ? document
+        ? (document
               .querySelector('meta[name="csrf-token"]')
-              ?.getAttribute('content') ?? ''
+              ?.getAttribute('content') ?? '')
         : '';
 
 if (csrfToken) {

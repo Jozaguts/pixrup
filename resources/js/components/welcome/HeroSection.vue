@@ -61,18 +61,26 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <section class="flex w-full flex-col items-center gap-4 text-center text-slate-900">
-        <h1 class="mt-40 flex max-w-3xl items-baseline text-4xl font-semibold leading-tight sm:text-5xl lg:text-5xl">
+    <section
+        class="flex w-full flex-col items-center gap-4 text-center text-slate-900"
+    >
+        <h1
+            class="mt-40 flex max-w-3xl items-baseline text-4xl leading-tight font-semibold sm:text-5xl lg:text-5xl"
+        >
             <span ref="textEl" class="hero-title__text">{{ heroText }}</span>
             <span
                 ref="caretEl"
                 aria-hidden="true"
                 class="hero-title__caret"
                 v-show="caretVisible"
-            >|</span>
+                >|</span
+            >
         </h1>
         <div v-auto-animate="{ duration: 400 }">
-            <p v-if="showSubtitle" class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl">
+            <p
+                v-if="showSubtitle"
+                class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl"
+            >
                 Upload. Appraise. Reimagine. Share.
             </p>
         </div>

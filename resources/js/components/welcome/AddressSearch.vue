@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { Input } from '@/components/ui/input';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import type { PropType } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 type AddressLocation = {
     lat: number;
@@ -33,7 +33,9 @@ const props = defineProps({
     },
 });
 
-const inputRef = ref<InstanceType<typeof Input> | HTMLInputElement | null>(null);
+const inputRef = ref<InstanceType<typeof Input> | HTMLInputElement | null>(
+    null,
+);
 const isLoading = ref(false);
 const errorMessage = ref('');
 
@@ -70,8 +72,7 @@ const initializeAutocomplete = async () => {
     const targetElement =
         inputRef.value instanceof HTMLInputElement
             ? inputRef.value
-            :  
-              ((inputRef.value as any)?.$el as HTMLInputElement | undefined);
+            : ((inputRef.value as any)?.$el as HTMLInputElement | undefined);
 
     if (!targetElement) {
         return;
@@ -176,7 +177,9 @@ defineExpose({
         const targetElement =
             inputRef.value instanceof HTMLInputElement
                 ? inputRef.value
-                : ((inputRef.value as any)?.$el as HTMLInputElement | undefined);
+                : ((inputRef.value as any)?.$el as
+                      | HTMLInputElement
+                      | undefined);
 
         targetElement?.focus();
     },
@@ -185,7 +188,9 @@ defineExpose({
 
 <template>
     <div class="flex w-full max-w-xl flex-col gap-2">
-        <label class="sr-only" for="address-search">Search for an address</label>
+        <label class="sr-only" for="address-search"
+            >Search for an address</label
+        >
         <Input
             id="address-search"
             ref="inputRef"

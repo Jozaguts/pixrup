@@ -3,8 +3,17 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import type { AppPageProps, BreadcrumbItem, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
+import {
+    Building2,
+    CheckCircle2,
+    Compass,
+    Home,
+    MapPin,
+    Plus,
+    TrendingUp,
+    X,
+} from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
-import { Building2, CheckCircle2, Compass, Home, MapPin, Plus, TrendingUp, X } from 'lucide-vue-next';
 
 type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
 
@@ -287,7 +296,7 @@ const dismissPropertyToast = () => {
             <Transition name="fade-slide">
                 <div
                     v-if="propertyToastMessage"
-                    class="neu-surface shadow-neu-out flex flex-col gap-3 rounded-[24px] bg-[#f4f5fa] px-5 py-4 text-sm text-[#1f2933] md:flex-row md:items-center md:justify-between"
+                    class="neu-surface flex flex-col gap-3 rounded-[24px] bg-[#f4f5fa] px-5 py-4 text-sm text-[#1f2933] shadow-neu-out md:flex-row md:items-center md:justify-between"
                 >
                     <div class="flex items-center gap-3 text-[#1f2933]">
                         <CheckCircle2 class="size-5 text-[#1fbf75]" />
@@ -307,10 +316,12 @@ const dismissPropertyToast = () => {
             </Transition>
 
             <section
-                class="neu-surface shadow-neu-out flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 md:flex-row md:items-center md:justify-between md:gap-10"
+                class="neu-surface flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:flex-row md:items-center md:justify-between md:gap-10"
             >
                 <div class="flex flex-col gap-2">
-                    <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
+                    <h1
+                        class="text-2xl font-semibold tracking-tight md:text-3xl"
+                    >
                         Welcome back, {{ firstName }} 👋
                     </h1>
                     <p class="text-sm text-[#6b7280] md:text-base">
@@ -320,7 +331,7 @@ const dismissPropertyToast = () => {
 
                 <button
                     type="button"
-                    class="group relative inline-flex items-center gap-2 rounded-2xl bg-[#7C4DFF] px-5 py-3 font-semibold text-white shadow-[12px_12px_24px_rgba(78,47,155,0.35),-12px_-12px_24px_rgba(152,117,255,0.45)] transition-all duration-200 ease-out hover:shadow-[inset_8px_8px_18px_rgba(78,47,155,0.35),inset_-8px_-8px_18px_rgba(152,117,255,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#7C4DFF] focus-visible:ring-offset-[#f4f5fa]"
+                    class="group relative inline-flex items-center gap-2 rounded-2xl bg-[#7C4DFF] px-5 py-3 font-semibold text-white shadow-[12px_12px_24px_rgba(78,47,155,0.35),-12px_-12px_24px_rgba(152,117,255,0.45)] transition-all duration-200 ease-out hover:shadow-[inset_8px_8px_18px_rgba(78,47,155,0.35),inset_-8px_-8px_18px_rgba(152,117,255,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C4DFF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f5fa]"
                     @click="openNewPropertyWizard"
                 >
                     <Plus class="size-5" />
@@ -329,12 +340,13 @@ const dismissPropertyToast = () => {
             </section>
 
             <section
-                class="neu-surface shadow-neu-out flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6"
+                class="neu-surface flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out"
             >
                 <header class="flex flex-col gap-2">
                     <h2 class="text-lg font-semibold md:text-xl">Plan usage</h2>
                     <p class="text-sm text-[#6b7280]">
-                        Keeping track of your plan ensures you always have room to grow.
+                        Keeping track of your plan ensures you always have room
+                        to grow.
                     </p>
                 </header>
 
@@ -343,9 +355,11 @@ const dismissPropertyToast = () => {
                 >
                     <div class="flex flex-col gap-4">
                         <div
-                            class="neu-surface  flex flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-5"
+                            class="neu-surface flex flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-5"
                         >
-                            <div class="flex items-center justify-between gap-3">
+                            <div
+                                class="flex items-center justify-between gap-3"
+                            >
                                 <div class="flex items-center gap-3">
                                     <div
                                         class="flex size-12 items-center justify-center rounded-2xl bg-white/80 text-[#7C4DFF] shadow-[6px_6px_16px_rgba(200,206,224,0.4),-6px_-6px_16px_rgba(255,255,255,0.8)]"
@@ -353,7 +367,9 @@ const dismissPropertyToast = () => {
                                         <TrendingUp class="size-5" />
                                     </div>
                                     <div>
-                                        <p class="text-xs uppercase tracking-wide text-[#9CA3AF]">
+                                        <p
+                                            class="text-xs tracking-wide text-[#9CA3AF] uppercase"
+                                        >
                                             Current plan
                                         </p>
                                         <p class="font-semibold text-[#3f3f46]">
@@ -362,10 +378,12 @@ const dismissPropertyToast = () => {
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-xs uppercase tracking-wide text-[#9CA3AF]">
+                                    <p
+                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
+                                    >
                                         Usage this month
                                     </p>
-                                    <p class="font-semibold text-lg">
+                                    <p class="text-lg font-semibold">
                                         {{ usageCount }} / {{ usageLimit }}
                                     </p>
                                 </div>
@@ -381,13 +399,17 @@ const dismissPropertyToast = () => {
                                         :style="{ width: `${usagePercent}%` }"
                                     />
                                 </div>
-                                <div class="flex items-center justify-between text-xs text-[#6b7280]">
+                                <div
+                                    class="flex items-center justify-between text-xs text-[#6b7280]"
+                                >
                                     <span>{{ usagePercent }}% used</span>
                                     <span>
                                         Resets
                                         {{
                                             user?.usage_reset_at
-                                                ? new Date(user.usage_reset_at).toLocaleDateString()
+                                                ? new Date(
+                                                      user.usage_reset_at,
+                                                  ).toLocaleDateString()
                                                 : 'monthly'
                                         }}
                                     </span>
@@ -408,14 +430,16 @@ const dismissPropertyToast = () => {
                     </div>
 
                     <div
-                        class="neu-surface  flex flex-col gap-4 rounded-[24px]  p-5"
+                        class="neu-surface flex flex-col gap-4 rounded-[24px] p-5"
                     >
-                        <h3 class="text-sm font-semibold uppercase tracking-wide text-[#6b7280]">
+                        <h3
+                            class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase"
+                        >
                             Quick actions
                         </h3>
                         <button
                             type="button"
-                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl  px-4 py-3 text-sm font-semibold text-[#7C4DFF] transition-colors hover:text-[#5c35c4]"
+                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold text-[#7C4DFF] transition-colors hover:text-[#5c35c4]"
                             @click="openNewPropertyWizard"
                         >
                             <Plus class="size-4" />
@@ -423,45 +447,52 @@ const dismissPropertyToast = () => {
                         </button>
                         <button
                             type="button"
-                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl  px-4 py-3 text-sm font-semibold text-[#1f2933] transition-colors hover:text-[#111827]"
+                            class="neu-btn flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold text-[#1f2933] transition-colors hover:text-[#111827]"
                             @click="visitLink('/billing')"
                         >
                             <Compass class="size-4" />
                             Explore plans
                         </button>
                         <p class="text-xs text-[#94a3b8]">
-                            These shortcuts stay at hand so you can act quickly as soon as you land.
+                            These shortcuts stay at hand so you can act quickly
+                            as soon as you land.
                         </p>
                     </div>
                 </div>
             </section>
 
             <section
-                class="neu-surface shadow-neu-out flex flex-col gap-6 rounded-[28px]  p-6"
+                class="neu-surface flex flex-col gap-6 rounded-[28px] p-6 shadow-neu-out"
             >
-                <header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <header
+                    class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+                >
                     <div>
                         <h2 class="text-lg font-semibold md:text-xl">
                             Your properties
                         </h2>
                         <p class="text-sm text-[#6b7280]">
-                            Track status, values, and jump back into each project.
+                            Track status, values, and jump back into each
+                            project.
                         </p>
                     </div>
 
                     <span
                         v-if="isUsingMockData"
-                        class="rounded-full  px-4 py-2 text-xs text-[#9CA3AF] shadow-[inset_4px_4px_12px_rgba(193,199,216,0.35),inset_-4px_-4px_12px_rgba(255,255,255,0.85)]"
+                        class="rounded-full px-4 py-2 text-xs text-[#9CA3AF] shadow-[inset_4px_4px_12px_rgba(193,199,216,0.35),inset_-4px_-4px_12px_rgba(255,255,255,0.85)]"
                     >
                         Preview data shown — connect API to replace.
                     </span>
                 </header>
 
-                <div v-if="hasProperties" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div
+                    v-if="hasProperties"
+                    class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+                >
                     <article
                         v-for="property in resolvedProperties"
                         :key="property.id"
-                        class="neu-surface  group flex h-full flex-col overflow-hidden "
+                        class="neu-surface group flex h-full flex-col overflow-hidden"
                     >
                         <div class="relative aspect-[16/10] overflow-hidden">
                             <img
@@ -478,12 +509,16 @@ const dismissPropertyToast = () => {
                             </div>
 
                             <div
-                                class="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
-                                :class="statusStyles[property.status].badgeClass"
+                                class="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
+                                :class="
+                                    statusStyles[property.status].badgeClass
+                                "
                             >
                                 <span
                                     class="size-2 rounded-full"
-                                    :class="statusStyles[property.status].dotClass"
+                                    :class="
+                                        statusStyles[property.status].dotClass
+                                    "
                                 />
                                 {{ statusStyles[property.status].label }}
                             </div>
@@ -491,29 +526,43 @@ const dismissPropertyToast = () => {
 
                         <div class="flex flex-1 flex-col gap-4 p-5">
                             <div class="flex flex-col gap-2">
-                                <h3 class="text-base font-semibold text-[#1f2933]">
+                                <h3
+                                    class="text-base font-semibold text-[#1f2933]"
+                                >
                                     {{ property.title }}
                                 </h3>
-                                <p class="flex items-center gap-2 text-sm text-[#6b7280]">
+                                <p
+                                    class="flex items-center gap-2 text-sm text-[#6b7280]"
+                                >
                                     <MapPin class="size-4 text-[#7C4DFF]" />
                                     <span>{{ property.address }}</span>
                                 </p>
                             </div>
 
-                            <div class="flex flex-wrap items-center gap-4 text-sm text-[#475569]">
+                            <div
+                                class="flex flex-wrap items-center gap-4 text-sm text-[#475569]"
+                            >
                                 <div class="flex flex-col">
-                                    <span class="text-xs uppercase tracking-wide text-[#9CA3AF]">
+                                    <span
+                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
+                                    >
                                         Estimated value
                                     </span>
                                     <span class="font-semibold">
-                                        {{ formatCurrency(property.estimatedValue) }}
+                                        {{
+                                            formatCurrency(
+                                                property.estimatedValue,
+                                            )
+                                        }}
                                     </span>
                                 </div>
                                 <div
                                     v-if="property.progress != null"
                                     class="flex flex-col"
                                 >
-                                    <span class="text-xs uppercase tracking-wide text-[#9CA3AF]">
+                                    <span
+                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
+                                    >
                                         Progress
                                     </span>
                                     <span class="font-semibold">
@@ -544,9 +593,11 @@ const dismissPropertyToast = () => {
 
                 <div
                     v-else
-                    class="neu-surface shadow-neu-in flex flex-col items-center justify-center gap-4 rounded-[28px] bg-[#f4f5fa] p-12 text-center"
+                    class="neu-surface flex flex-col items-center justify-center gap-4 rounded-[28px] bg-[#f4f5fa] p-12 text-center shadow-neu-in"
                 >
-                    <div class="flex size-16 items-center justify-center rounded-3xl bg-white/90 text-[#7C4DFF] shadow-[8px_8px_20px_rgba(193,199,216,0.35),-8px_-8px_20px_rgba(255,255,255,0.8)]">
+                    <div
+                        class="flex size-16 items-center justify-center rounded-3xl bg-white/90 text-[#7C4DFF] shadow-[8px_8px_20px_rgba(193,199,216,0.35),-8px_-8px_20px_rgba(255,255,255,0.8)]"
+                    >
                         <Building2 class="size-8" />
                     </div>
                     <div class="space-y-2">
@@ -554,7 +605,8 @@ const dismissPropertyToast = () => {
                             You haven’t added any properties yet.
                         </h3>
                         <p class="text-sm text-[#6b7280]">
-                            Start by adding your first property to unlock tailored dashboards and reports.
+                            Start by adding your first property to unlock
+                            tailored dashboards and reports.
                         </p>
                     </div>
                     <button

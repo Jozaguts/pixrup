@@ -72,10 +72,14 @@ const statusLabel = computed(() =>
 
 <template>
     <section
-        class="neu-surface shadow-neu-out flex flex-col gap-4 rounded-[26px] p-6 transition-all duration-200 ease-in-out"
+        class="neu-surface flex flex-col gap-4 rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
     >
-        <header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-xs font-semibold tracking-[0.32em] uppercase text-[#7c4dff]">
+        <header
+            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+        >
+            <p
+                class="text-xs font-semibold tracking-[0.32em] text-[#7c4dff] uppercase"
+            >
                 Valuation
             </p>
             <span
@@ -99,7 +103,9 @@ const statusLabel = computed(() =>
             </p>
         </div>
 
-        <footer class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <footer
+            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+        >
             <p class="text-sm text-[#6b7280]">
                 {{ fetchedCopy }}
             </p>

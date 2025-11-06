@@ -1,6 +1,6 @@
-import { computed, reactive, readonly } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 import type { AppPageProps } from '@/types';
+import { usePage } from '@inertiajs/vue3';
+import { computed, reactive, readonly } from 'vue';
 
 interface PlanUsagePayload {
     total?: number | null;
@@ -24,7 +24,7 @@ export const usePlanUsage = () => {
     const initialUsed =
         payload.used ??
         payload.consumption ??
-        (initialTotal - (payload.remaining ?? initialTotal));
+        initialTotal - (payload.remaining ?? initialTotal);
 
     const usage = reactive({
         total: Math.max(0, initialTotal),
@@ -33,9 +33,7 @@ export const usePlanUsage = () => {
         lastRefreshAt: payload.last_refresh_at ?? null,
     });
 
-    const remaining = computed(() =>
-        Math.max(0, usage.total - usage.used),
-    );
+    const remaining = computed(() => Math.max(0, usage.total - usage.used));
 
     const limitExceeded = computed(() => remaining.value <= 0);
 
@@ -44,15 +42,11 @@ export const usePlanUsage = () => {
             return 0;
         }
 
-        return Math.min(
-            100,
-            Math.round((usage.used / usage.total) * 100),
-        );
+        return Math.min(100, Math.round((usage.used / usage.total) * 100));
     });
 
     const usageLabel = computed(
-        () =>
-            `${remaining.value} remaining / ${usage.total} total appraisals`,
+        () => `${remaining.value} remaining / ${usage.total} total appraisals`,
     );
 
     const helperCopy = computed(() =>

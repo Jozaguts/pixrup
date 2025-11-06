@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import NavUser from '@/components/NavUser.vue';
 import AppLogo from '@/components/AppLogo.vue';
+import NavUser from '@/components/NavUser.vue';
+import CardIcon from '@/components/ui/icons/card.vue';
+import LayoutDashboard from '@/components/ui/icons/dashboard.vue';
+import GraduationCap from '@/components/ui/icons/graduation-cap.vue';
+import Home from '@/components/ui/icons/properties.vue';
+import ReportsIcon from '@/components/ui/icons/reports.vue';
+import SupportIcon from '@/components/ui/icons/support.vue';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarSeparator,
 } from '@/components/ui/sidebar';
+import { urlIsActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
 import { edit as editProfile } from '@/routes/profile';
-import { urlIsActive } from '@/lib/utils';
 import type { AppPageProps, NavItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { User} from 'lucide-vue-next';
-import CardIcon from '@/components/ui/icons/card.vue'
-import LayoutDashboard from '@/components/ui/icons/dashboard.vue'
-import Home from '@/components/ui/icons/properties.vue'
-import ReportsIcon from '@/components/ui/icons/reports.vue'
-import GraduationCap from '@/components/ui/icons/graduation-cap.vue'
-import SupportIcon from '@/components/ui/icons/support.vue'
+import { User } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 type ExtendedPageProps = AppPageProps<{
@@ -142,12 +141,14 @@ const handleLogout = () => {
             <template v-for="(group, index) in navGroups" :key="group.key">
                 <SidebarGroup>
                     <SidebarMenu>
-                        <SidebarMenuItem v-for="item in group.items" :key="item.title">
+                        <SidebarMenuItem
+                            v-for="item in group.items"
+                            :key="item.title"
+                        >
                             <SidebarMenuButton
                                 as-child
                                 :is-active="item.isActive"
                                 :tooltip="item.title"
-
                             >
                                 <Link
                                     :href="item.href"

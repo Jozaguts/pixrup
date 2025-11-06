@@ -14,9 +14,9 @@
 /* --- Tailwind theme token mapping (from your base file) --- */
 @theme inline {
     --font-sans:
-            Mona Sans Helvetica Neue, ui-sans-serif, system-ui, sans-serif,
-            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-            'Noto Color Emoji';
+        Mona Sans Helvetica Neue, ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -82,9 +82,9 @@
     body,
     html {
         --font-sans:
-                'Mona Sans', ui-sans-serif, system-ui, sans-serif,
-                'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-                'Noto Color Emoji';
+            'Mona Sans', ui-sans-serif, system-ui, sans-serif,
+            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+            'Noto Color Emoji';
     }
 }
 
@@ -97,10 +97,10 @@
 :root {
     --light-dark: red !important;
     /* --- Brand & core --- */
-    --primary: #6e33ff;            /* brand purple */
-    --primary-foreground: #ffffff;  /* readable over purple */
-    --ring: var(--primary);         /* focus ring uses brand */
-    --foreground: #1f2933;          /* richer neutral for text */
+    --primary: #6e33ff; /* brand purple */
+    --primary-foreground: #ffffff; /* readable over purple */
+    --ring: var(--primary); /* focus ring uses brand */
+    --foreground: #1f2933; /* richer neutral for text */
 
     /* --- Backgrounds / surfaces --- */
     --background: #e8e8e8;
@@ -179,8 +179,12 @@
 
 /* Base layer: apply mapped tokens to page */
 @layer base {
-    * { @apply border-border outline-ring/50; }
-    body { @apply bg-background text-foreground; }
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 
 /* -----------------------------------------------------------------------------
@@ -192,19 +196,19 @@
 
 /* Global variables for the exact neumorphism look */
 :root {
-    --neu-surface: #e8e8e8;   /* component background (non-active) */
-    --neu-dark:    #c5c5c5;   /* shadow color */
-    --neu-light:   #ffffff;   /* highlight color */
-    --neu-offset:  6px;      /* shadow offset */
-    --neu-blur:    12px;      /* shadow blur */
-    --neu-radius:  8px;      /* exact border radius for neumo components */
+    --neu-surface: #e8e8e8; /* component background (non-active) */
+    --neu-dark: #c5c5c5; /* shadow color */
+    --neu-light: #ffffff; /* highlight color */
+    --neu-offset: 6px; /* shadow offset */
+    --neu-blur: 12px; /* shadow blur */
+    --neu-radius: 8px; /* exact border radius for neumo components */
 }
 
 .dark {
     /* Dark mode tuning: keep radius/offset/blur, adjust colors to maintain relief */
     --neu-surface: #1c2230;
-    --neu-dark:    #0c0f16;
-    --neu-light:   #2a3446;
+    --neu-dark: #0c0f16;
+    --neu-light: #2a3446;
 }
 
 /* -----------------------------------------------------------------------------
@@ -213,27 +217,36 @@
 @utility shadow-neu-out {
     /* Raised (non-active) */
     box-shadow:
-            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+        var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+        calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+            var(--neu-blur) var(--neu-light);
 }
 
 @utility shadow-neu-in {
     /* Pressed (active/hover) */
     box-shadow:
-            inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+        inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+            var(--neu-dark),
+        inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+            var(--neu-blur) var(--neu-light);
 }
-@utility neu-bg-surface-color{
+@utility neu-bg-surface-color {
     background-color: var(--neu-surface);
-    transition: box-shadow .25s ease, transform .1s ease, background .2s ease, color .2s ease;
+    transition:
+        box-shadow 0.25s ease,
+        transform 0.1s ease,
+        background 0.2s ease,
+        color 0.2s ease;
 }
 
 /* Replace the previous .is-pressed that used @apply */
 .is-pressed {
     /* Use the inset box-shadow directly to avoid @apply on a custom class */
     box-shadow:
-            inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+        inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+            var(--neu-dark),
+        inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+            var(--neu-blur) var(--neu-light);
 }
 @layer utilities {
     /* --- Generic surface & shadows --- */
@@ -242,32 +255,41 @@
         background: var(--neu-surface);
         border: 1px solid transparent; /* keep outline minimal for clean neumo */
         border-radius: var(--neu-radius);
-        transition: box-shadow .25s ease, transform .1s ease, background .2s ease, color .2s ease;
+        transition:
+            box-shadow 0.25s ease,
+            transform 0.1s ease,
+            background 0.2s ease,
+            color 0.2s ease;
     }
 
     /* Raised (non-active) */
     .shadow-neu-out {
         box-shadow:
-                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
 
     /* Pressed (active/hover) */
     .shadow-neu-in {
         box-shadow:
-                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+                var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
 
     /* Helper to force pressed state via class */
-    .is-pressed { @apply shadow-neu-in; }
+    .is-pressed {
+        @apply shadow-neu-in;
+    }
 
     /* Brand-aligned focus (add with focus-visible if needed) */
     .neu-focus {
         outline: none;
         box-shadow:
-                0 0 0 2px color-mix(in oklab, var(--ring) 100%, transparent),
-                0 0 0 4px color-mix(in oklab, var(--ring) 30%, transparent);
+            0 0 0 2px color-mix(in oklab, var(--ring) 100%, transparent),
+            0 0 0 4px color-mix(in oklab, var(--ring) 30%, transparent);
     }
 
     /* -----------------------------------------------------------------------------
@@ -290,12 +312,13 @@
         background: var(--neu-surface);
         border: 1px solid var(--neu-surface);
         cursor: pointer;
-        transition: box-shadow .3s ease;
+        transition: box-shadow 0.3s ease;
 
         /* Non-active (raised) */
         box-shadow:
-                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
     .neu-center-shadow {
         box-shadow: 0 0 6px var(--neu-dark);
@@ -305,20 +328,24 @@
         color: #666;
         /* Active/Hover (pressed) */
         box-shadow:
-                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+                var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
     .neu-btn:focus-visible {
         /* Brand focus ring + keep outer shape for clarity */
         outline: none;
         box-shadow:
-                0 0 0 2px color-mix(in oklab, var(--ring, #6e33ff) 100%, transparent),
-                0 0 0 4px color-mix(in oklab, var(--ring, #6e33ff) 30%, transparent),
-                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            0 0 0 2px
+                color-mix(in oklab, var(--ring, #6e33ff) 100%, transparent),
+            0 0 0 4px color-mix(in oklab, var(--ring, #6e33ff) 30%, transparent),
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
     .neu-btn:disabled {
-        opacity: .6;
+        opacity: 0.6;
         cursor: not-allowed;
         box-shadow: none;
     }
@@ -330,25 +357,34 @@
         background: var(--neu-surface);
         color: var(--foreground, #000);
         border: 1px solid transparent;
-        transition: box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+        transition:
+            box-shadow 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease;
 
         /* Non-active (raised) to match spec */
         box-shadow:
-                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
-    .neu-input::placeholder { color: var(--muted-foreground, #777); }
+    .neu-input::placeholder {
+        color: var(--muted-foreground, #777);
+    }
     .neu-input:hover,
     .neu-input:focus,
     .neu-input:focus-visible {
         /* Active/Hover (pressed) */
         box-shadow:
-        inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-        inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+                var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
         outline: none;
     }
     .neu-input:disabled {
-        opacity: .6;
+        opacity: 0.6;
         cursor: not-allowed;
         box-shadow: none;
     }
@@ -359,18 +395,24 @@
         border: 1px solid transparent;
         border-radius: var(--neu-radius);
         padding: 1rem;
-        transition: box-shadow .25s ease, background .2s ease, border-color .2s ease;
+        transition:
+            box-shadow 0.25s ease,
+            background 0.2s ease,
+            border-color 0.2s ease;
 
         /* Non-active (raised) */
         box-shadow:
-                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
     .neu-card:hover {
         /* Optional pressed hover for tactile feel */
         box-shadow:
-                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+                var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
 
     /* --- Switch (wrapper + thumb helper) --- */
@@ -378,24 +420,29 @@
         background: var(--neu-surface);
         border: 1px solid transparent;
         border-radius: var(--neu-radius);
-        padding: .4rem;
-        width: 64px;  /* tune to your component */
+        padding: 0.4rem;
+        width: 64px; /* tune to your component */
         height: 50px; /* consistent with 50px radius */
         display: inline-flex;
         align-items: center;
-        transition: box-shadow .2s ease, background .2s ease;
+        transition:
+            box-shadow 0.2s ease,
+            background 0.2s ease;
 
         /* Non-active (raised) */
         box-shadow:
-                var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+            calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
     .neu-switch:hover,
-    .neu-switch[data-state="checked"] {
+    .neu-switch[data-state='checked'] {
         /* Active/Hover (pressed) */
         box-shadow:
-                inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-                inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+                var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+                var(--neu-blur) var(--neu-light);
     }
     .neu-switch__thumb {
         /* Thumb with subtle elevation */
@@ -404,14 +451,21 @@
         width: 36px;
         height: 36px;
         transform: translateX(0);
-        transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
         box-shadow:
-                3px 3px 6px color-mix(in oklab, #000 20%, transparent),
-                -3px -3px 6px #ffffffcc;
+            3px 3px 6px color-mix(in oklab, #000 20%, transparent),
+            -3px -3px 6px #ffffffcc;
     }
-    .neu-switch[data-state="checked"] .neu-switch__thumb {
+    .neu-switch[data-state='checked'] .neu-switch__thumb {
         transform: translateX(14px);
-        background: color-mix(in oklab, #ffffff 80%, var(--primary, #6e33ff) 20%);
+        background: color-mix(
+            in oklab,
+            #ffffff 80%,
+            var(--primary, #6e33ff) 20%
+        );
     }
     .neu-checkbox {
         position: relative;
@@ -421,16 +475,18 @@
         width: 1.3em;
         background-color: var(--neu-surface);
         border-radius: 100%;
-        box-shadow: 3px 3px 5px #c5c5c5,
-        -3px -3px 5px #ffffff;
+        box-shadow:
+            3px 3px 5px #c5c5c5,
+            -3px -3px 5px #ffffff;
         transition-duration: 0.5s;
     }
     input:checked.neu-checkbox {
-        box-shadow: inset 3px 3px 5px #c5c5c5,
-        inset -3px -3px 5px #ffffff;
+        box-shadow:
+            inset 3px 3px 5px #c5c5c5,
+            inset -3px -3px 5px #ffffff;
     }
     .neu-checkbox:after {
-        content: "";
+        content: '';
         position: absolute;
         opacity: 0;
     }
@@ -446,7 +502,6 @@
         border-width: 0 0.15em 0.15em 0;
         transform: rotate(45deg);
     }
-
 }
 
 /* -----------------------------------------------------------------------------
@@ -461,7 +516,10 @@
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-    box-shadow: inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
-    inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1) var(--neu-blur) var(--neu-light);
-    color:  var(--foreground, #000);
+    box-shadow:
+        inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+            var(--neu-dark),
+        inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+            var(--neu-blur) var(--neu-light);
+    color: var(--foreground, #000);
 }

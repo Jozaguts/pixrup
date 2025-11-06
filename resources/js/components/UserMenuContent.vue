@@ -6,12 +6,12 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import auth from '@/routes/auth'
+import LogOutIcon from '@/components/ui/icons/logout.vue';
+import SettingsIcon from '@/components/ui/icons/settings.vue';
+import auth from '@/routes/auth';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
-import SettingsIcon from '@/components/ui/icons/settings.vue'
-import LogOutIcon from '@/components/ui/icons/logout.vue'
 interface Props {
     user: User;
 }
@@ -25,14 +25,21 @@ defineProps<Props>();
 
 <template>
     <DropdownMenuLabel class="p-0 font-normal">
-        <div class="neu-btn is-pressed flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+        <div
+            class="neu-btn is-pressed flex items-center gap-2 px-1 py-1.5 text-left text-sm"
+        >
             <UserInfo :user="user" :show-email="true" />
         </div>
     </DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <Link class="block w-full neu-btn" :href="edit()" prefetch as="button">
+            <Link
+                class="neu-btn block w-full"
+                :href="edit()"
+                prefetch
+                as="button"
+            >
                 <SettingsIcon class="mr-2 h-4 w-4" />
                 Settings
             </Link>
@@ -41,7 +48,7 @@ defineProps<Props>();
     <DropdownMenuSeparator />
     <DropdownMenuItem :as-child="true">
         <Link
-            class="block w-full neu-btn"
+            class="neu-btn block w-full"
             :href="auth.logout()"
             @click="handleLogout"
             as="button"

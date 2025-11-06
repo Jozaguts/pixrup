@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import auth from '@/routes/auth';
 import { dashboard } from '@/routes';
+import auth from '@/routes/auth';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
@@ -26,7 +26,8 @@ const props = withDefaults(
 const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
-const largeLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url).href;
+const largeLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url)
+    .href;
 const compactLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url)
     .href;
 
@@ -92,29 +93,34 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 <template>
     <header>
         <div
-            class="header-one fixed left-1/2 top-6 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-slate-900/70">
+            class="header-one fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-slate-900/70"
+        >
             <div>
                 <Link href="/">
                     <span class="sr-only">Home</span>
-                    <figure class="lg:max-w-[50px] lg:block hidden">
-                        <img :src="largeLogo" alt="Pixrup" class="dark:invert" />
+                    <figure class="hidden lg:block lg:max-w-[50px]">
+                        <img
+                            :src="largeLogo"
+                            alt="Pixrup"
+                            class="dark:invert"
+                        />
                     </figure>
-                    <figure class="max-w-[44px] lg:hidden block">
+                    <figure class="block max-w-[44px] lg:hidden">
                         <img
                             :src="compactLogo"
                             alt="Pixrup"
-                            class="w-full dark:hidden block"
+                            class="block w-full dark:hidden"
                         />
                         <img
                             :src="compactLogo"
                             alt="Pixrup"
-                            class="w-full dark:block hidden invert"
+                            class="hidden w-full invert dark:block"
                         />
                     </figure>
                 </Link>
             </div>
 
-            <nav class="hidden xl:flex items-center">
+            <nav class="hidden items-center xl:flex">
                 <ul class="flex items-center gap-1">
                     <li
                         v-for="item in menuItems"
@@ -133,7 +139,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                 </ul>
             </nav>
 
-            <div class="xl:flex hidden items-center justify-center">
+            <div class="hidden items-center justify-center xl:flex">
                 <component
                     :is="resolvePrimaryCta.external ? 'a' : Link"
                     :href="resolvePrimaryCta.href"
@@ -143,7 +149,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                 </component>
             </div>
 
-            <div class="xl:hidden block">
+            <div class="block xl:hidden">
                 <button
                     class="flex size-12 flex-col items-center justify-center gap-[5px] rounded-full bg-white/80 text-slate-900 shadow-md transition hover:bg-white"
                     type="button"

@@ -20,9 +20,7 @@ const details = computed(() => [
         id: 'beds',
         label: 'Beds',
         value:
-            props.beds !== null && props.beds !== undefined
-                ? props.beds
-                : '—',
+            props.beds !== null && props.beds !== undefined ? props.beds : '—',
     },
     {
         id: 'baths',
@@ -55,10 +53,12 @@ const details = computed(() => [
 
 <template>
     <section
-        class="neu-surface shadow-neu-out flex flex-col gap-4 rounded-[26px] p-6 transition-all duration-200 ease-in-out"
+        class="neu-surface flex flex-col gap-4 rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
     >
         <header>
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280]">
+            <p
+                class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+            >
                 Property details
             </p>
             <h3 class="mt-1 text-lg font-semibold text-[#0d0d12]">
@@ -72,7 +72,7 @@ const details = computed(() => [
                 :key="detail.id"
                 class="rounded-[18px] bg-[#f4f5fa] px-4 py-3 text-sm text-[#6b7280] shadow-[inset_8px_8px_18px_rgba(210,212,226,0.55),inset_-8px_-8px_18px_rgba(255,255,255,0.95)]"
             >
-                <dt class="text-xs uppercase tracking-[0.28em] text-[#9ca3af]">
+                <dt class="text-xs tracking-[0.28em] text-[#9ca3af] uppercase">
                     {{ detail.label }}
                 </dt>
                 <dd class="mt-1 text-base font-semibold text-[#0d0d12]">

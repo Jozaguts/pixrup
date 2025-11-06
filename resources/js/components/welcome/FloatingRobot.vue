@@ -12,7 +12,7 @@ onMounted(() => {
     gsap.fromTo(
         bgRef.value,
         { y: 40, opacity: 0, scale: 0.95 },
-        { y: 0, opacity: 1, scale: 1, duration: 1.25, ease: 'power3.out' }
+        { y: 0, opacity: 1, scale: 1, duration: 1.25, ease: 'power3.out' },
     );
 });
 
@@ -25,6 +25,6 @@ onBeforeUnmount(() => {
 <template>
     <div
         ref="bgRef"
-        class="hidden md:block lg:block bg-[url('../images/Robot.png')] top-0 right-0 bg-no-repeat bg-top mt-[5rem] bg-contain z-10 w-[30vw] h-full absolute pointer-events-none"
+        class="pointer-events-none absolute top-0 right-0 z-10 mt-[5rem] hidden h-full w-[30vw] bg-[url('../images/Robot.png')] bg-contain bg-top bg-no-repeat md:block lg:block"
     />
 </template>

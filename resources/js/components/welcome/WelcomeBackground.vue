@@ -3,7 +3,11 @@
         <svg xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <filter id="goo">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                    <feGaussianBlur
+                        in="SourceGraphic"
+                        stdDeviation="10"
+                        result="blur"
+                    />
                     <feColorMatrix
                         in="blur"
                         mode="matrix"
@@ -26,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
 import { useMouse, useRafFn } from '@vueuse/core';
+import { computed, onMounted, ref } from 'vue';
 
 const { x, y } = useMouse();
 
@@ -56,8 +60,9 @@ const interactiveStyle = computed(() => ({
 }));
 </script>
 
-<style >
-html, body {
+<style>
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -84,7 +89,7 @@ html, body {
     color: #e8e8e8;
     opacity: 0.8;
     user-select: none;
-    text-shadow: 1px 1px rgba(0,0,0,0.1);
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 :root {
@@ -141,7 +146,6 @@ html, body {
     }
 }
 
-
 .gradient-bg {
     position: fixed;
     inset: 0;
@@ -160,16 +164,20 @@ html, body {
         height: 0;
     }
 
-
     .gradients-container {
-        filter: url(#goo) blur(90px) ;
+        filter: url(#goo) blur(90px);
         width: 100%;
         height: 100%;
     }
 
     .g1 {
         position: absolute;
-        background: radial-gradient(circle at center, rgba(var(--color1), 0.8) 0, rgba(var(--color1), 0) 50%) no-repeat;
+        background: radial-gradient(
+                circle at center,
+                rgba(var(--color1), 0.8) 0,
+                rgba(var(--color1), 0) 50%
+            )
+            no-repeat;
         mix-blend-mode: var(--blending);
 
         width: var(--circle-size);
@@ -185,7 +193,12 @@ html, body {
 
     .g2 {
         position: absolute;
-        background: radial-gradient(circle at center, rgba(var(--color2), 0.8) 0, rgba(var(--color2), 0) 50%) no-repeat;
+        background: radial-gradient(
+                circle at center,
+                rgba(var(--color2), 0.8) 0,
+                rgba(var(--color2), 0) 50%
+            )
+            no-repeat;
         mix-blend-mode: var(--blending);
 
         width: var(--circle-size);
@@ -201,7 +214,12 @@ html, body {
 
     .g3 {
         position: absolute;
-        background: radial-gradient(circle at center, rgba(var(--color3), 0.8) 0, rgba(var(--color3), 0) 50%) no-repeat;
+        background: radial-gradient(
+                circle at center,
+                rgba(var(--color3), 0.8) 0,
+                rgba(var(--color3), 0) 50%
+            )
+            no-repeat;
         mix-blend-mode: var(--blending);
 
         width: var(--circle-size);
@@ -217,7 +235,12 @@ html, body {
 
     .g4 {
         position: absolute;
-        background: radial-gradient(circle at center, rgba(var(--color4), 0.8) 0, rgba(var(--color4), 0) 50%) no-repeat;
+        background: radial-gradient(
+                circle at center,
+                rgba(var(--color4), 0.8) 0,
+                rgba(var(--color4), 0) 50%
+            )
+            no-repeat;
         mix-blend-mode: var(--blending);
 
         width: var(--circle-size);
@@ -233,7 +256,12 @@ html, body {
 
     .g5 {
         position: absolute;
-        background: radial-gradient(circle at center, rgba(var(--color5), 0.8) 0, rgba(var(--color5), 0) 50%) no-repeat;
+        background: radial-gradient(
+                circle at center,
+                rgba(var(--color5), 0.8) 0,
+                rgba(var(--color5), 0) 50%
+            )
+            no-repeat;
         mix-blend-mode: var(--blending);
 
         width: calc(var(--circle-size) * 1.6);
@@ -241,7 +269,8 @@ html, body {
         top: calc(50% - (var(--circle-size) * 0.8));
         left: calc(50% - (var(--circle-size) * 0.8));
 
-        transform-origin: calc(50% - var(--orbit-x-wide)) calc(50% + var(--orbit-y-large));
+        transform-origin: calc(50% - var(--orbit-x-wide))
+            calc(50% + var(--orbit-y-large));
         animation: moveInCircle 24s ease-in-out infinite;
 
         opacity: 1;
@@ -249,7 +278,12 @@ html, body {
 
     .interactive {
         position: absolute;
-        background: radial-gradient(circle at center, rgba(var(--color-interactive), 0.8) 0, rgba(var(--color-interactive), 0) 50%) no-repeat;
+        background: radial-gradient(
+                circle at center,
+                rgba(var(--color-interactive), 0.8) 0,
+                rgba(var(--color-interactive), 0) 50%
+            )
+            no-repeat;
         mix-blend-mode: var(--blending);
 
         width: 100%;
@@ -309,5 +343,4 @@ html, body {
         }
     }
 }
-
 </style>

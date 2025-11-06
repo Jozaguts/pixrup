@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
 import AddressSearch, {
     type AddressSelection,
 } from '@/components/welcome/AddressSearch.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
 import propertiesRoutes from '@/routes/properties';
 import type { BreadcrumbItemType } from '@/types';
-import { Head, useForm } from '@inertiajs/vue3';
 import { Capacitor } from '@capacitor/core';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
+import { Head, useForm } from '@inertiajs/vue3';
 import {
     CalendarDays,
     Camera as CameraIcon,
@@ -244,7 +244,8 @@ const useCurrentLocation = async () => {
         const parts = extractAddressParts(result.address_components ?? []);
 
         const placeId =
-            result.place_id ?? `geo-${latitude.toFixed(5)}-${longitude.toFixed(5)}`;
+            result.place_id ??
+            `geo-${latitude.toFixed(5)}-${longitude.toFixed(5)}`;
 
         const selection: AddressSelection = {
             formattedAddress: result.formatted_address ?? addressForm.query,
@@ -500,9 +501,7 @@ const removePhoto = (id: string) => {
 };
 
 onBeforeUnmount(() => {
-    photoItems.value.forEach((item) =>
-        URL.revokeObjectURL(item.previewUrl),
-    );
+    photoItems.value.forEach((item) => URL.revokeObjectURL(item.previewUrl));
 });
 
 const isAddressStepValid = computed(
@@ -625,8 +624,7 @@ const handleNext = async () => {
     switch (currentStep.value.id) {
         case 'address': {
             if (!isAddressStepValid.value) {
-                addressForm.error =
-                    'Select a valid address before continuing.';
+                addressForm.error = 'Select a valid address before continuing.';
                 return;
             }
 
@@ -676,40 +674,50 @@ const isNextDisabled = computed(() => {
     <Head title="New Property" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <section
-            class="shadow-neu-in relative flex min-h-[calc(100vh-8rem)] w-full flex-1 flex-col gap-6 rounded-none  px-5 pb-28 pt-6 shadow-none md:mx-auto md:max-w-5xl md:rounded-[32px] md:px-10 md:pb-10 md:pt-10 md:shadow-[24px_24px_48px_rgba(207,213,235,0.6),-24px_-24px_48px_rgba(255,255,255,0.9)] lg:max-w-6xl"
+            class="relative flex min-h-[calc(100vh-8rem)] w-full flex-1 flex-col gap-6 rounded-none px-5 pt-6 pb-28 shadow-none shadow-neu-in md:mx-auto md:max-w-5xl md:rounded-[32px] md:px-10 md:pt-10 md:pb-10 md:shadow-[24px_24px_48px_rgba(207,213,235,0.6),-24px_-24px_48px_rgba(255,255,255,0.9)] lg:max-w-6xl"
         >
             <header class="flex flex-col gap-6">
                 <div class="flex flex-col gap-2">
-                    <p class="text-xs uppercase tracking-wide text-[#9ca3af] md:text-sm">
+                    <p
+                        class="text-xs tracking-wide text-[#9ca3af] uppercase md:text-sm"
+                    >
                         Guided wizard
                     </p>
-                    <h1 class="text-3xl font-semibold tracking-tight text-[#1f2933] md:text-4xl">
+                    <h1
+                        class="text-3xl font-semibold tracking-tight text-[#1f2933] md:text-4xl"
+                    >
                         Create a new property
                     </h1>
                     <p class="text-sm text-[#6b7280] md:text-base">
-                        Complete the three-step flow to add a property with accurate location,
-                        rich media, and validated data.
+                        Complete the three-step flow to add a property with
+                        accurate location, rich media, and validated data.
                     </p>
                 </div>
 
                 <div class="flex flex-col gap-4">
-                    <div class="neu-surface shadow-neu-in relative h-2 w-full rounded-full">
+                    <div
+                        class="neu-surface relative h-2 w-full rounded-full shadow-neu-in"
+                    >
                         <div
                             class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#7C4DFF] via-[#a68dff] to-[#7C4DFF] transition-[width]"
                             :style="{ width: `${progressPercent}%` }"
                         />
                     </div>
-                    <div class="grid gap-3 text-sm text-[#6b7280] md:grid-cols-3 md:gap-4">
+                    <div
+                        class="grid gap-3 text-sm text-[#6b7280] md:grid-cols-3 md:gap-4"
+                    >
                         <article
                             v-for="(step, index) in steps"
                             :key="step.id"
-                            class="neu-surface shadow-neu-out flex flex-col gap-1 rounded-3xl p-4 transition-all duration-200"
+                            class="neu-surface flex flex-col gap-1 rounded-3xl p-4 shadow-neu-out transition-all duration-200"
                             :class="{
-                                ' text-[#1f2933] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]':
+                                'text-[#1f2933] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]':
                                     index === currentStepIndex,
                             }"
                         >
-                            <span class="text-xs font-semibold uppercase tracking-wide text-[#9ca3af]">
+                            <span
+                                class="text-xs font-semibold tracking-wide text-[#9ca3af] uppercase"
+                            >
                                 Step {{ index + 1 }}
                             </span>
                             <span class="text-base font-semibold">
@@ -727,15 +735,18 @@ const isNextDisabled = computed(() => {
                 <section
                     v-if="currentStep.id === 'address'"
                     key="address-step"
-                    class="neu-surface shadow-neu-out flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 md:p-10"
+                    class="neu-surface flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
                 >
                     <div class="flex flex-col gap-2">
-                        <h2 class="text-2xl font-semibold text-[#1f2933] md:text-3xl">
+                        <h2
+                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                        >
                             Step 1 — Address
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Busca la propiedad con Google Places o usa tu ubicación actual para obtener
-                            todos los datos automáticamente.
+                            Busca la propiedad con Google Places o usa tu
+                            ubicación actual para obtener todos los datos
+                            automáticamente.
                         </p>
                     </div>
 
@@ -750,7 +761,7 @@ const isNextDisabled = computed(() => {
                         <div class="flex flex-col gap-3 md:flex-row">
                             <button
                                 type="button"
-                                class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl  px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                                class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
                                 :disabled="addressForm.isLocating"
                                 @click="useCurrentLocation"
                             >
@@ -762,7 +773,10 @@ const isNextDisabled = computed(() => {
                                 }}
                             </button>
                         </div>
-                        <p v-if="addressForm.error" class="text-sm text-[#B91C1C]">
+                        <p
+                            v-if="addressForm.error"
+                            class="text-sm text-[#B91C1C]"
+                        >
                             {{ addressForm.error }}
                         </p>
                     </div>
@@ -772,9 +786,11 @@ const isNextDisabled = computed(() => {
                         class="grid gap-4 md:grid-cols-2"
                     >
                         <div
-                            class="neu-surface shadow-neu-in flex flex-col gap-1 rounded-3xl bg-[#f4f5fa] p-5"
+                            class="neu-surface flex flex-col gap-1 rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
                         >
-                            <span class="text-xs uppercase tracking-wide text-[#9ca3af]">
+                            <span
+                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
+                            >
                                 Address
                             </span>
                             <p class="font-semibold text-[#1f2933]">
@@ -782,9 +798,11 @@ const isNextDisabled = computed(() => {
                             </p>
                         </div>
                         <div
-                            class="neu-surface shadow-neu-in flex flex-col gap-2 rounded-3xl bg-[#f4f5fa] p-5"
+                            class="neu-surface flex flex-col gap-2 rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
                         >
-                            <span class="text-xs uppercase tracking-wide text-[#9ca3af]">
+                            <span
+                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
+                            >
                                 City & State
                             </span>
                             <p class="font-semibold text-[#1f2933]">
@@ -792,26 +810,35 @@ const isNextDisabled = computed(() => {
                                 {{ addressDetails.state || '—' }}
                             </p>
                             <p class="text-xs text-[#9ca3af]">
-                                {{ addressDetails.country || 'Country not available' }}
+                                {{
+                                    addressDetails.country ||
+                                    'Country not available'
+                                }}
                             </p>
                         </div>
                         <div
-                            class="neu-surface shadow-neu-in flex flex-col gap-3 rounded-3xl bg-[#f4f5fa] p-5 md:col-span-2"
+                            class="neu-surface flex flex-col gap-3 rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in md:col-span-2"
                         >
                             <div class="flex items-center gap-2 text-[#6b7280]">
                                 <Globe class="size-4" />
-                                <span class="text-xs uppercase tracking-wide">
+                                <span class="text-xs tracking-wide uppercase">
                                     Coordinates
                                 </span>
                             </div>
-                            <div class="flex flex-wrap gap-4 text-sm text-[#1f2933]">
-                                <span class="neu-surface rounded-2xl  px-3 py-2 ">
-                                    Lat: {{ formatCoordinate(addressDetails.lat) }}
+                            <div
+                                class="flex flex-wrap gap-4 text-sm text-[#1f2933]"
+                            >
+                                <span class="neu-surface rounded-2xl px-3 py-2">
+                                    Lat:
+                                    {{ formatCoordinate(addressDetails.lat) }}
                                 </span>
-                                <span class=" neu-surface rounded-2xl  px-3 py-2 ">
-                                    Lng: {{ formatCoordinate(addressDetails.lng) }}
+                                <span class="neu-surface rounded-2xl px-3 py-2">
+                                    Lng:
+                                    {{ formatCoordinate(addressDetails.lng) }}
                                 </span>
-                                <span class=" neu-surface rounded-2xl  px-3 py-2 text-xs uppercase tracking-wide text-[#9ca3af] ">
+                                <span
+                                    class="neu-surface rounded-2xl px-3 py-2 text-xs tracking-wide text-[#9ca3af] uppercase"
+                                >
                                     Place ID: {{ addressDetails.placeId }}
                                 </span>
                             </div>
@@ -822,22 +849,25 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else-if="currentStep.id === 'photos'"
                     key="photos-step"
-                    class="neu-surface shadow-neu-out flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 md:p-10"
+                    class="neu-surface flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
                 >
                     <div class="flex flex-col gap-2">
-                        <h2 class="text-2xl font-semibold text-[#1f2933] md:text-3xl">
+                        <h2
+                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                        >
                             Step 2 — Photos
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Sube imágenes nítidas o toma fotos desde tu dispositivo. Comprimimos
-                            automáticamente cada archivo para mantenerlo ligero.
+                            Sube imágenes nítidas o toma fotos desde tu
+                            dispositivo. Comprimimos automáticamente cada
+                            archivo para mantenerlo ligero.
                         </p>
                     </div>
 
                     <div class="flex flex-col gap-3 md:flex-row">
                         <button
                             type="button"
-                            class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl  px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                            class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
                             :disabled="isProcessingPhotos"
                             @click="openUploadDialog"
                         >
@@ -873,7 +903,7 @@ const isNextDisabled = computed(() => {
                     />
 
                     <div
-                        class="neu-surface shadow-neu-in flex flex-1 flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-6"
+                        class="neu-surface flex flex-1 flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-6 shadow-neu-in"
                     >
                         <div
                             v-if="!photoItems.length && !isProcessingPhotos"
@@ -881,7 +911,8 @@ const isNextDisabled = computed(() => {
                         >
                             <ImageIcon class="size-8" />
                             <p class="text-sm md:text-base">
-                                Agrega fotos para mostrar tu propiedad. Recomendamos planos amplios con buena luz.
+                                Agrega fotos para mostrar tu propiedad.
+                                Recomendamos planos amplios con buena luz.
                             </p>
                         </div>
 
@@ -892,19 +923,25 @@ const isNextDisabled = computed(() => {
                             <div
                                 v-for="photo in photoItems"
                                 :key="photo.id"
-                                class="relative overflow-hidden rounded-[24px]  shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                                class="relative overflow-hidden rounded-[24px] shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.9)]"
                             >
                                 <img
                                     :src="photo.previewUrl"
                                     :alt="photo.name"
                                     class="h-48 w-full rounded-t-[24px] object-cover"
                                 />
-                                <div class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]">
+                                <div
+                                    class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]"
+                                >
                                     <div class="flex flex-col">
-                                        <span class="font-semibold text-[#1f2933]">
+                                        <span
+                                            class="font-semibold text-[#1f2933]"
+                                        >
                                             {{ photo.name }}
                                         </span>
-                                        <span>{{ formatFileSize(photo.size) }}</span>
+                                        <span>{{
+                                            formatFileSize(photo.size)
+                                        }}</span>
                                     </div>
                                     <button
                                         type="button"
@@ -919,9 +956,11 @@ const isNextDisabled = computed(() => {
 
                         <div
                             v-if="isProcessingPhotos"
-                            class="flex items-center justify-center gap-2 rounded-2xl  px-4 py-3 text-sm text-[#6b7280] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                            class="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm text-[#6b7280] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]"
                         >
-                            <Loader2 class="size-4 animate-spin text-[#7C4DFF]" />
+                            <Loader2
+                                class="size-4 animate-spin text-[#7C4DFF]"
+                            />
                             Processing images…
                         </div>
                     </div>
@@ -934,23 +973,28 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else
                     key="summary-step"
-                    class="neu-surface shadow-neu-out flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 md:p-10"
+                    class="neu-surface flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
                 >
                     <div class="flex flex-col gap-2">
-                        <h2 class="text-2xl font-semibold text-[#1f2933] md:text-3xl">
+                        <h2
+                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                        >
                             Step 3 — Confirmation
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Revisa la información antes de crear la propiedad. Si necesitas ajustar algo,
-                            vuelve a los pasos anteriores sin perder tus datos.
+                            Revisa la información antes de crear la propiedad.
+                            Si necesitas ajustar algo, vuelve a los pasos
+                            anteriores sin perder tus datos.
                         </p>
                     </div>
 
                     <div
-                        class="neu-surface shadow-neu-in flex flex-col gap-5 rounded-[28px] bg-[#f4f5fa] p-6 md:p-8"
+                        class="neu-surface flex flex-col gap-5 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-in md:p-8"
                     >
                         <div class="flex flex-col gap-3">
-                            <span class="text-xs uppercase tracking-wide text-[#9ca3af]">
+                            <span
+                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
+                            >
                                 Address
                             </span>
                             <p class="text-lg font-semibold text-[#1f2933]">
@@ -959,21 +1003,45 @@ const isNextDisabled = computed(() => {
                             <p class="text-sm text-[#6b7280]">
                                 {{ addressDetails.city || '—' }},
                                 {{ addressDetails.state || '—' }}
-                                {{ addressDetails.postalCode ? `· ${addressDetails.postalCode}` : '' }}
+                                {{
+                                    addressDetails.postalCode
+                                        ? `· ${addressDetails.postalCode}`
+                                        : ''
+                                }}
                             </p>
                         </div>
 
                         <div class="grid gap-3 sm:grid-cols-2">
-                            <div class="shadow-neu-in  flex flex-col gap-2   px-4 py-3 text-sm text-[#6b7280] ">
-                                <div class="flex items-center gap-2 text-[#1f2933]">
+                            <div
+                                class="flex flex-col gap-2 px-4 py-3 text-sm text-[#6b7280] shadow-neu-in"
+                            >
+                                <div
+                                    class="flex items-center gap-2 text-[#1f2933]"
+                                >
                                     <MapPin class="size-4" />
-                                    <span class="font-semibold">Coordinates</span>
+                                    <span class="font-semibold"
+                                        >Coordinates</span
+                                    >
                                 </div>
-                                <span>Lat: {{ formatCoordinate(addressDetails.lat) }}</span>
-                                <span>Lng: {{ formatCoordinate(addressDetails.lng) }}</span>
+                                <span
+                                    >Lat:
+                                    {{
+                                        formatCoordinate(addressDetails.lat)
+                                    }}</span
+                                >
+                                <span
+                                    >Lng:
+                                    {{
+                                        formatCoordinate(addressDetails.lng)
+                                    }}</span
+                                >
                             </div>
-                            <div class=" shadow-neu-in flex flex-col gap-2   px-4 py-3 text-sm text-[#6b7280] s">
-                                <div class="flex items-center gap-2 text-[#1f2933]">
+                            <div
+                                class="s flex flex-col gap-2 px-4 py-3 text-sm text-[#6b7280] shadow-neu-in"
+                            >
+                                <div
+                                    class="flex items-center gap-2 text-[#1f2933]"
+                                >
                                     <CalendarDays class="size-4" />
                                     <span class="font-semibold">Created</span>
                                 </div>
@@ -982,7 +1050,9 @@ const isNextDisabled = computed(() => {
                         </div>
 
                         <div class="flex flex-col gap-3">
-                            <span class="text-xs uppercase tracking-wide text-[#9ca3af]">
+                            <span
+                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
+                            >
                                 Photos
                             </span>
                             <div
@@ -998,11 +1068,17 @@ const isNextDisabled = computed(() => {
                                         :alt="photo.name"
                                         class="h-36 w-full object-cover"
                                     />
-                                    <div class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]">
-                                        <span class="font-semibold text-[#1f2933]">
+                                    <div
+                                        class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]"
+                                    >
+                                        <span
+                                            class="font-semibold text-[#1f2933]"
+                                        >
                                             {{ photo.name }}
                                         </span>
-                                        <span>{{ formatFileSize(photo.size) }}</span>
+                                        <span>{{
+                                            formatFileSize(photo.size)
+                                        }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1019,7 +1095,7 @@ const isNextDisabled = computed(() => {
             </Transition>
 
             <div
-                class="fixed bottom-6 left-6 right-6 z-20 flex flex-col gap-3 rounded-[28px] bg-[#f4f5fa]/95 p-4 backdrop-blur md:static md:flex-row md:items-center md:justify-between md:bg-transparent md:p-0 md:backdrop-blur-none"
+                class="fixed right-6 bottom-6 left-6 z-20 flex flex-col gap-3 rounded-[28px] bg-[#f4f5fa]/95 p-4 backdrop-blur md:static md:flex-row md:items-center md:justify-between md:bg-transparent md:p-0 md:backdrop-blur-none"
             >
                 <button
                     type="button"
@@ -1034,7 +1110,7 @@ const isNextDisabled = computed(() => {
                 </button>
                 <button
                     type="button"
-                    class="neu-btn relative flex items-center justify-center gap-2  px-6 py-3 font-semibold text-white "
+                    class="neu-btn relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white"
                     :class="{
                         'pointer-events-none opacity-60': isNextDisabled,
                     }"

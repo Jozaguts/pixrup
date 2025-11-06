@@ -35,11 +35,13 @@ const normalized = computed(() => {
 
 <template>
     <section
-        class="neu-surface shadow-neu-out flex flex-col gap-4 rounded-[26px] p-6 transition-all duration-200 ease-in-out"
+        class="neu-surface flex flex-col gap-4 rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
     >
         <header class="flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#6b7280]">
+                <p
+                    class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+                >
                     Analytics
                 </p>
                 <h3 class="text-lg font-semibold text-[#0d0d12]">
@@ -55,7 +57,7 @@ const normalized = computed(() => {
             <div
                 v-for="point in normalized"
                 :key="point.id"
-                class="flex flex-col items-center justify-end gap-3 text-xs uppercase tracking-[0.2em] text-[#6b7280]"
+                class="flex flex-col items-center justify-end gap-3 text-xs tracking-[0.2em] text-[#6b7280] uppercase"
             >
                 <div
                     class="w-full rounded-full bg-gradient-to-b from-[#7c4dff] to-[#16b1ff] shadow-[4px_8px_18px_rgba(124,77,255,0.25)] transition-all duration-200 ease-in-out"
