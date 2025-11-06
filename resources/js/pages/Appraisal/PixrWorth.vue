@@ -4,7 +4,7 @@ import { Head, useForm, usePage } from '@inertiajs/vue3'
 import { Loader2, RefreshCw, TrendingUp, AlertTriangle } from 'lucide-vue-next'
 import AppLayout from '@/layouts/AppLayout.vue'
 import propertiesRoutes from '@/routes/properties'
-import { fetch as fetchWorth } from '@/actions/Interface/Appraisal/Controllers/PropertyWorthController'
+import { fetch as fetchWorth } from '@/actions/App/Interface/Appraisal/Http/Controllers/PropertyWorthController'
 import { Button } from '@/components/ui/button'
 import type { BreadcrumbItem } from '@/types'
 
