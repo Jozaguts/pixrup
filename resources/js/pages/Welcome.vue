@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FloatingRobot from '@/components/welcome/FloatingRobot.vue';
 import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
@@ -178,7 +179,7 @@ const handleAppraiseFullProperty = () => {
     <div
         class="relative min-h-screen  px-4 text-slate-900 sm:px-6 lg:px-10"
     >
-        <div class=" hidden md:block lg-block bg-[url('../images/Robot.png')] top-0 right-0 bg-no-repeat bg-top mt-[5rem] bg-contain z-10 w-[30vw] h-full absolute "></div>
+        <FloatingRobot />
         <WelcomeBackground />
 
         <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
