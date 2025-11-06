@@ -26,9 +26,9 @@ const props = withDefaults(
 const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
-const largeLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url)
+const largeLogo = new URL('../../../images/pixrup-2.svg', import.meta.url)
     .href;
-const compactLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url)
+const compactLogo = new URL('../../../images/pixrup-2.svg', import.meta.url)
     .href;
 
 const toggleMobileMenu = () => {

@@ -67,7 +67,6 @@ body {
     padding: 0;
     height: 100%;
     width: 100%;
-    overflow-x: hidden;
     overscroll-behavior-x: none;
 }
 
