@@ -63,6 +63,10 @@ class AppServiceProvider extends ServiceProvider
             FortifyPasswordResetResponse::class,
             AppPasswordResetResponse::class,
         );
+        if ($this->app->environment(['local', 'staging']) && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(\App\Providers\TelescopeServiceProvider::class);
+        }
     }
 
     /**
