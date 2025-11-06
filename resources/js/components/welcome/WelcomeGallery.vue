@@ -6,6 +6,8 @@ interface ListingCard {
     id: number | string;
     title: string;
     image: string;
+    headline: string;
+    description: string;
 }
 
 defineProps<{
@@ -18,30 +20,6 @@ onMounted(async () => {
 </script>
 
 <template>
-<!--    <section-->
-<!--        class="flex w-full flex-wrap items-center justify-center gap-6 py-2 text-white mt-10"-->
-<!--    >-->
-<!--        <article-->
-<!--            v-for="listing in listings"-->
-<!--            :key="listing.id"-->
-<!--            class="min-w-[150px] max-w-[170px] neu-surface shadow-neu-in p-4  group flex sm:w-[200px]  flex-col items-center  text-center "-->
-<!--        >-->
-<!--            <div-->
-<!--                class="relative aspect-[3/4] w-full overflow-hidden  "-->
-<!--            >-->
-<!--                <img-->
-<!--                    :src="listing.image"-->
-<!--                    :alt="listing.title"-->
-<!--                    class="h-full w-full object-cover transition duration-300 group-hover:scale-105"-->
-<!--                />-->
-<!--            </div>-->
-<!--            <span-->
-<!--                class="neu-btn mt-3 inline-flex  px-4 py-1 text-xs font-semibold whitespace-nowrap text-[3vw] sm:text-[2vw] md:text-[1.5vw] lg:text-[1vw]  "-->
-<!--            >-->
-<!--                {{ listing.title }}-->
-<!--            </span>-->
-<!--        </article>-->
-<!--    </section>-->
     <section
         class="pt-14 md:pt-16 lg:pt-[88px] xl:pt-[100px] pb-[220px] sm:pb-14 md:pb-16 lg:pb-[88px] xl:pb-[100px]"
     >
@@ -51,12 +29,11 @@ onMounted(async () => {
             >
                 <!-- Left: Intro -->
                 <div class="lg:sticky lg:top-28">
-                    <span data-ns-animate data-delay="0.1" class="badge badge-cyan mb-5">Services overview</span>
+                    <span data-ns-animate data-delay="0.1" class="neu-btn neu-center-shadow badge badge-cyan mb-5">Pixrup overview</span>
                     <div class="space-y-2 md:max-w-[595px] mb-14">
-                        <h2 data-ns-animate data-delay="0.2">Our performance-focused services.</h2>
+                        <h2 data-ns-animate data-delay="0.2">  AI-powered creation, built for speed.</h2>
                         <p data-ns-animate data-delay="0.3" class="max-w-[512px]">
-                            Smart, secure, and designed for simplicity—NextSaaS empowers you to take control
-                            effortlessly.
+                            Pixrup helps you generate, transform, and deliver on-brand content in minutes—secure, collaborative, and PWA-ready for any team.
                         </p>
                     </div>
                     <div>
@@ -64,110 +41,42 @@ onMounted(async () => {
                             data-ns-animate
                             data-delay="0.4"
                             href="./our-services-page-01.html"
-                            class="btn btn-secondary hover:btn-white dark:btn-transparent btn-md"
+                            class="neu-btn neu-center-shadow btn btn-secondary dark:btn-transparent btn-md hover:bg-primary hover:text-white"
                         >
-                            <span>View full-service breakdown.</span>
+                            <span>Explore all features</span>
                         </a>
                     </div>
                 </div>
                 <!-- Right: Features List -->
                 <div class="w-full max-w-xl stack-cards js-stack-cards">
-                    <div
-                        class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5  neu-surface shadow-neu-out neu-center-shadow dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 z-0"
-                    >
-                        <div class="inline-block">
-                            <span class="ns-shape-25 text-[52px] text-secondary dark:text-accent"> </span>
+                    <div v-for="listing in listings" :key="listing.id"
+                         class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5  neu-surface shadow-neu-out neu-center-shadow dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 z-0 relative flex flex-col md:flex-row w-full my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96">
+                        <div class="relative p-2.5 md:w-2/5 shrink-0 overflow-hidden">
+                            <img
+                                :src="listing.image"
+                                :alt="listing.title"
+                                class="h-full w-full rounded-md md:rounded-lg object-cover" />
                         </div>
-                        <div>
-                            <h3 class="text-heading-5">SEO</h3>
-                            <p>Enhance visibility, authority, and important keyword rankings.</p>
+                            <div class="p-6">
+                                <div class="mb-4 rounded-full bg-primary-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-30 text-center">   {{ listing.title }}</div>
+                                <h4 class="mb-2 text-slate-800 text-xl font-semibold">
+                                    {{listing.headline}}
+                                </h4>
+                                <p class="mb-8 text-slate-600 leading-normal font-light">
+                                    {{listing.description}}
+                                </p>
+                                <div>
+                                    <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
+                                        Learn More
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </a>
+                                </div>
                         </div>
-                    </div>
-                    <div
-                        class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5 neu-surface shadow-neu-out neu-center-shadow  dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 relative overflow-hidden z-0"
-                    >
-                        <div class="inline-block">
-                            <span class="ns-shape-19 text-[52px] text-secondary dark:text-accent"> </span>
+                            </div>
+                            </div>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-heading-5">SEM</h3>
-                            <p>Data-optimized campaigns designed to attract ready-to-buy audiences.</p>
-                        </div>
-                    </div>
-                    <div
-                        class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5 neu-surface shadow-neu-out neu-center-shadow  dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 relative overflow-hidden z-0"
-                    >
-                        <div class="inline-block">
-                            <span class="ns-shape-17 text-[52px] text-secondary dark:text-accent"> </span>
-                        </div>
-                        <div>
-                            <h3 class="text-heading-5">Email marketing & automation</h3>
-                            <p>Nurture leads and convert subscribers with timely campaigns.</p>
-                        </div>
-                    </div>
-                    <div
-                        class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5 neu-surface shadow-neu-out neu-center-shadow  dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 relative overflow-hidden z-0"
-                    >
-                        <div class="inline-block">
-                            <span class="ns-shape-34 text-[52px] text-secondary dark:text-accent"> </span>
-                        </div>
-                        <div>
-                            <h3 class="text-heading-5">Link building & authority outreach .</h3>
-                            <p>Secure high-quality backlinks that enhance your SEO</p>
-                        </div>
-                    </div>
-                    <div
-                        class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5 neu-surface shadow-neu-out neu-center-shadow  dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 relative overflow-hidden z-0"
-                    >
-          <span class="inline-block">
-            <svg
-                width="52"
-                height="52"
-                viewBox="0 0 52 52"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                  d="M47.6693 13.4643L26.0026 0.953125L4.33594 13.4643M47.6693 13.4643L26.0026 25.6406M47.6693 13.4643V18.1908L43.1449 20.8227M26.0026 50.998L47.6693 38.1518V33.1116M26.0026 50.998L4.33594 38.1518V33.1116M26.0026 50.998V46.0505M4.33594 13.4643L26.0026 25.6406M4.33594 13.4643V18.1908L8.86032 20.8227M26.0026 25.6406V30.7947M26.0026 30.7947L8.86032 20.8227M26.0026 30.7947L43.1449 20.8227M26.0026 35.8919L47.6693 23.0099M26.0026 35.8919L4.33594 23.0099M26.0026 35.8919V40.9533M47.6693 23.0099V27.9218L43.1449 30.573M47.6693 23.0099L43.1449 20.8227M4.33594 23.0099V27.9218L8.86032 30.573M4.33594 23.0099L8.86032 20.8227M26.0026 40.9533L8.86032 30.573M26.0026 40.9533L43.1449 30.573M26.0026 46.0505L47.6693 33.1116M26.0026 46.0505L4.33594 33.1116M47.6693 33.1116L43.1449 30.573M4.33594 33.1116L8.86032 30.573"
-                  stroke="black"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="stroke-black dark:stroke-accent"
-              />
-            </svg>
-          </span>
-                        <div>
-                            <h3 class="text-heading-5">Local SEO & google business optimization</h3>
-                            <p>Help local customers discover you—first, fast, and frequently.</p>
-                        </div>
-                    </div>
-                    <div
-                        class="stack-cards__item js-stack-cards__item border border-stroke-4/50 dark:border-stroke-5 bg-background-2 dark:bg-background-8 min-h-[170px] rounded-[20px] space-y-4 p-8 relative overflow-hidden z-0"
-                    >
-          <span class="inline-block">
-            <svg
-                width="52"
-                height="52"
-                viewBox="0 0 52 52"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                  d="M47.6693 13.4781L26.0026 0.953125L17.317 5.97407M47.6693 13.4781V38.528L26.0026 51.0529M47.6693 13.4781L38.9367 18.5261M26.0026 51.0529V26.003M26.0026 51.0529L17.317 46.032V40.6548M4.33594 13.4781V38.528L12.7853 43.4123M4.33594 13.4781L26.0026 26.003M4.33594 13.4781L12.7853 8.59371L17.317 11.2247M26.0026 26.003L34.4051 21.1458M12.7853 43.4123V29.1393L17.317 32.0697V40.6548M12.7853 43.4123L17.317 40.6548M38.9367 33.6746V18.5261M38.9367 33.6746L34.4051 36.4632V31.0714M38.9367 33.6746L34.4051 31.0714M38.9367 18.5261L17.317 5.97407M34.4051 21.1458V31.0714M34.4051 21.1458L17.317 11.2247M17.317 5.97407V11.2247"
-                  stroke=""
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="stroke-black dark:stroke-accent"
-              />
-            </svg>
-          </span>
-                        <div>
-                            <h3 class="text-heading-5">Analytics & conversion optimization</h3>
-                            <p>Collect data to convert clicks into customers & optimize every dollar spent.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                    </section>
 </template>

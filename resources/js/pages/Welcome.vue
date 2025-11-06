@@ -38,40 +38,47 @@ const listings = [
     {
         id: 1,
         title: 'Pix Worth',
-        image:
-            'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400&q=80',
+        headline: 'Real value, instantly.',
+        description: 'Get accurate property estimates with real local comparables ready for your report.'
     },
     {
         id: 2,
         title: 'Pix Transform',
-        image:
-            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+        headline: 'AI makeovers that sell.',
+        description: 'Upload a photo, try different styles, and generate stunning “before & after” renders in seconds.'
     },
     {
         id: 3,
         title: 'Pix Treasure',
-        image:
-            'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=400&q=80',
+        headline: 'Find hidden opportunities.',
+        description: 'Explore $/sqft, recent sales, and local trends on a map to spot undervalued properties fast.'
     },
     {
         id: 4,
         title: 'Pix Closer',
-        image:
-            'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=400&q=80',
+        headline: 'Close deals faster, together.',
+        description: 'Collaborate with teammates in real time — comments, mentions, and shared files in one place.'
     },
     {
         id: 5,
         title: 'Pix AiVision',
-        image:
-            'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80',
+        headline: 'Immersive 3D tours.',
+        description: 'Embed Matterport links seamlessly and let your clients explore properties in full detail.'
     },
     {
         id: 6,
         title: 'Pix Seal',
-        image:
-            'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=400&q=80',
+        image: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=400&q=80',
+        headline: 'Branded PDF reports.',
+        description: 'Generate sleek, professional PDFs with your logo and colors — ready to share or print instantly.'
     },
-];
+]
+
 const addressQuery = ref('');
 const selectedAddress = ref<AddressSelection | null>(null);
 const estimatedValue = ref<number>();
