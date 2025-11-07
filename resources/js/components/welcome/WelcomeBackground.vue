@@ -109,6 +109,19 @@ body {
     --blending: hard-light;
 }
 
+:root.dark,
+html.dark {
+    --color-bg1: #212121;
+    --color-bg2: #0b1120;
+    --color1: 56, 189, 248;
+    --color2: 139, 92, 246;
+    --color3: 248, 113, 113;
+    --color4: 59, 130, 246;
+    --color5: 16, 185, 129;
+    --color-interactive: 236, 72, 153;
+    --blending: screen;
+}
+
 @keyframes moveInCircle {
     0% {
         transform: rotate(0deg);

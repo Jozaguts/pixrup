@@ -7,50 +7,84 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ matrix.env }}
     strategy:
       matrix:
         include:
-          - branch: stg
-            env: staging
-            deploy_path: /var/www/pixrup-stg
-            php_fpm: php8.3-fpm
-            build_cmd: npm run build:staging
-            app_name: pixrup_stg
-            app_url: https://stg.pixrup.com
           - branch: main
             env: production
-            deploy_path: /var/www/pixrup-prod
-            php_fpm: php8.3-fpm
-            build_cmd: npm run build:prod
             app_name: pixrup
             app_url: https://pixrup.com
+            deploy_path: /var/www/pixrup-prod
+            build_cmd: npm run build:prod
+            php_fpm: php8.3-fpm
+          - branch: stg
+            env: stg
+            app_name: pixrup_stg
+            app_url: https://stg.pixrup.com
+            deploy_path: /var/www/pixrup-stg
+            build_cmd: npm run build:staging
+            php_fpm: php8.3-fpm
 
-    # ✅ esta es la forma correcta de filtrar por rama
-    if: contains(fromJson('["main","stg"]'), github.ref_name)
+    environment: ${{ matrix.env }}
 
     steps:
-      - name: Checkout code
+      - name: 🧩 Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH
+      - name: 🔐 Setup SSH
         run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
-          echo "${{ secrets.DO_KEY }}" > ~/.ssh/id_ed25519
+          echo "📦 DO_KEY base64 length: $(echo "${{ secrets.DO_KEY }}" | tr -d '\n' | wc -c) chars"
+          echo "${{ secrets.DO_KEY }}" | base64 -d > ~/.ssh/id_ed25519
+          if [[ ! -s ~/.ssh/id_ed25519 ]]; then
+            echo "❌ SSH private key file is empty after decoding"
+            exit 1
+          fi
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+          echo "✅ SSH private key decoded and ready"
 
-      - name: Deploy
+      - name: 📜 SSH Debug Logs
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ vars.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+          set -euo pipefail
+          echo "📂 ~/.ssh directory listing:"
+          ls -al ~/.ssh
+          echo "📏 id_ed25519 size: $(wc -c < ~/.ssh/id_ed25519) bytes"
+          echo "🔒 id_ed25519 permissions: $(stat --format '%a' ~/.ssh/id_ed25519)"
+          ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
+          echo "🔖 Public key fingerprint (MD5):"
+          ssh-keygen -l -E md5 -f ~/.ssh/id_ed25519.pub
+          echo "🔖 Public key fingerprint (SHA256):"
+          ssh-keygen -l -f ~/.ssh/id_ed25519.pub
+          echo "🌐 known_hosts entry for ${{ secrets.DO_HOST }}:"
+          if grep "${{ secrets.DO_HOST }}" ~/.ssh/known_hosts; then
+            echo "✅ Host found in known_hosts"
+          else
+            echo "⚠️ Host not found in known_hosts"
+          fi
+          rm -f ~/.ssh/id_ed25519.pub
+
+      - name: 🔍 Test SSH Connection
+        run: |
+          ssh -v -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
+
+      - name: 🚀 Deploy Laravel App
+        run: |
+          if [ "${{ github.ref_name }}" != "${{ matrix.branch }}" ]; then
+            echo "Skipping deploy: current branch (${{ github.ref_name }}) != matrix branch (${{ matrix.branch }})"
+            exit 0
+          fi
+
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
             trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
 
             cd "${{ matrix.deploy_path }}"
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
             git fetch --prune
-            git checkout ${{ matrix.branch }}
-            git pull --ff-only origin ${{ matrix.branch }}
+            git checkout ${{ github.ref_name }}
+            git pull --ff-only origin ${{ github.ref_name }}
 
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
@@ -63,7 +97,7 @@ jobs:
             rm -f .env.new
             {
               echo "APP_NAME=${{ matrix.app_name }}"
-              if [ "${{ matrix.branch }}" = "main" ]; then
+              if [ "${{ github.ref_name }}" = "main" ]; then
                 echo "APP_ENV=production"
                 echo "APP_DEBUG=false"
                 echo "REDIS_DB=0"
@@ -96,7 +130,6 @@ jobs:
               echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
             } > .env.new
 
-            # Preserve APP_KEY
             if [ -f .env ] && grep -q '^APP_KEY=' .env; then
               grep '^APP_KEY=' .env >> .env.new
             fi
@@ -110,15 +143,15 @@ jobs:
             php artisan view:cache
             php artisan storage:link 2>/dev/null || true
 
-            if [ "${{ matrix.branch }}" = "stg" ]; then
-              echo "🔍 Restarting Horizon (staging)"
+            if [ "${{ github.ref_name }}" = "stg" ]; then
+              echo "🔍 Enabling Telescope and Horizon (staging)"
+              php artisan telescope:publish --ansi || true
               sudo systemctl restart horizon-stg
             else
-              echo "🧱 Restarting Horizon (production)"
+              echo "🧱 Production mode — Horizon worker active"
               sudo systemctl restart horizon-prod
             fi
 
             sudo systemctl restart ${{ matrix.php_fpm }}
-
             echo "✅ Deploy completed successfully!"
           EOF

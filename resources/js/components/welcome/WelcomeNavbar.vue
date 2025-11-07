@@ -93,7 +93,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 <template>
     <header>
         <div
-            class="header-one fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-slate-900/70"
+            class="header-one fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-[#1f252f]"
         >
             <div>
                 <Link href="/">
@@ -102,7 +102,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                         <img
                             :src="largeLogo"
                             alt="Pixrup"
-                            class="dark:invert"
+                            class="dark"
                         />
                     </figure>
                     <figure class="block max-w-[44px] lg:hidden">
@@ -130,7 +130,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                         <component
                             :is="item.external ? 'a' : Link"
                             :href="item.href"
-                            class="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+                            class="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-slate-600 dark:text-[#fcfcfc]"
                             @click="closeMobileMenu"
                         >
                             <span>{{ item.label }}</span>
