@@ -34,10 +34,10 @@ jobs:
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
-          printf "%s" "${{ secrets.DO_KEY }}" | sed 's/\\n/\n/g' > ~/.ssh/id_ed25519
+          echo "${{ secrets.DO_KEY }}" | base64 -d > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
-          echo "✅ SSH key written and permissions set"
+          echo "✅ SSH private key decoded and ready"
 
       - name: 🔍 Test SSH Connection
         run: |
