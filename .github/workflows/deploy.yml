@@ -26,9 +26,9 @@ jobs:
             build_cmd: npm run build:staging
             php_fpm: php8.3-fpm
 
-    # Ejecutar solo cuando la rama coincide
-    if: github.ref_name == matrix.branch
     environment: ${{ matrix.env }}
+    # 👇 esta es la forma correcta de usar matrix en una condición de job
+    if: ${{ github.ref_name == matrix.branch }}
 
     steps:
       - name: 🧩 Checkout
@@ -41,14 +41,6 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 🗄️ Backup database before deploy
-        run: |
-          TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << EOF
-            mkdir -p /var/backups/pixrup
-            mysqldump -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} ${{ secrets.DB_DATABASE }} > /var/backups/pixrup/${{ matrix.env }}_\${TIMESTAMP}.sql
-          EOF
-
       - name: 🚀 Deploy Laravel App
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
@@ -57,7 +49,6 @@ jobs:
 
             cd "${{ matrix.deploy_path }}"
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
-
             git fetch --prune
             git checkout ${{ github.ref_name }}
             git pull --ff-only origin ${{ github.ref_name }}
@@ -79,10 +70,10 @@ jobs:
                 echo "REDIS_DB=0"
                 echo "REDIS_CACHE_DB=1"
               else
-                echo "REDIS_DB=2"
-                echo "REDIS_CACHE_DB=3"
                 echo "APP_ENV=staging"
                 echo "APP_DEBUG=true"
+                echo "REDIS_DB=2"
+                echo "REDIS_CACHE_DB=3"
                 echo "TELESCOPE_ENABLED=true"
                 echo "TELESCOPE_PATH=telescope"
                 echo "HORIZON_PATH=horizon"
@@ -98,11 +89,6 @@ jobs:
               echo "DB_DATABASE=${{ secrets.DB_DATABASE }}"
               echo "DB_USERNAME=${{ secrets.DB_USERNAME }}"
               echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
-              echo
-              echo "REDIS_HOST=127.0.0.1"
-              echo "REDIS_PORT=6379"
-              echo "REDIS_DB=${{ matrix.branch == 'main' && '0' || '2' }}"
-              echo "REDIS_CACHE_DB=${{ matrix.branch == 'main' && '1' || '3' }}"
               echo
               echo "GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}"
               echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}"
@@ -135,20 +121,5 @@ jobs:
             fi
 
             sudo systemctl restart ${{ matrix.php_fpm }}
-
             echo "✅ Deploy completed successfully!"
           EOF
-
-      - name: 🩺 Health check
-        run: |
-          echo "Verifying that ${{ matrix.app_url }} is live..."
-          curl -fsS -o /dev/null ${{ matrix.app_url }}
-
-      - name: 📣 Notify success
-        if: success()
-        run: |
-          echo "✅ Deployment successful for ${{ matrix.env }}"
-          # Optional: send webhook notification (Slack, Discord, etc.)
-          # curl -X POST -H 'Content-type: application/json' \
-          #      --data '{"text": "✅ Pixrup deployed successfully to '${{ matrix.env }}'."}' \
-          #      ${{ secrets.SLACK_WEBHOOK_URL }}
