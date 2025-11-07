@@ -1,4 +1,3 @@
-# .github/workflows/deploy.yml
 name: Deploy Pixrup
 
 on:
@@ -27,8 +26,6 @@ jobs:
             php_fpm: php8.3-fpm
 
     environment: ${{ matrix.env }}
-    # 👇 esta es la forma correcta de usar matrix en una condición de job
-    if: ${{ github.ref_name == matrix.branch }}
 
     steps:
       - name: 🧩 Checkout
@@ -37,12 +34,23 @@ jobs:
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DO_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.DO_KEY }}" | tr -d '\r' | awk '{gsub(/\\n/,"\n")}1' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
 
+      - name: 🔍 Test SSH Connection
+        continue-on-error: true
+        run: |
+          echo "Testing SSH access..."
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
+
       - name: 🚀 Deploy Laravel App
         run: |
+          if [ "${{ github.ref_name }}" != "${{ matrix.branch }}" ]; then
+            echo "Skipping deploy: current branch (${{ github.ref_name }}) != matrix branch (${{ matrix.branch }})"
+            exit 0
+          fi
+
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
             trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
@@ -97,7 +105,6 @@ jobs:
               echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
             } > .env.new
 
-            # Preserve existing APP_KEY if present
             if [ -f .env ] && grep -q '^APP_KEY=' .env; then
               grep '^APP_KEY=' .env >> .env.new
             fi
@@ -116,7 +123,7 @@ jobs:
               php artisan telescope:publish --ansi || true
               sudo systemctl restart horizon-stg
             else
-              echo "🧱 Production mode — Horizon worker active"
+              echo "🧱 Production mode — Horizon worker active 2"
               sudo systemctl restart horizon-prod
             fi
 
