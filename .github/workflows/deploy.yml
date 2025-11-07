@@ -28,18 +28,18 @@ jobs:
     environment: ${{ matrix.env }}
 
     steps:
-      - name: 🔍 Test SSH Connection
-      - run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
       - name: 🧩 Checkout
         uses: actions/checkout@v4
-
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DO_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 🔍 Test SSH Connection
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
 
       - name: 🚀 Deploy Laravel App
         if: ${{ github.ref_name == matrix.branch }}
