@@ -148,7 +148,7 @@ jobs:
               php artisan telescope:publish --ansi || true
               sudo systemctl restart horizon-stg
             else
-              echo "🧱 Production mode — Horizon worker active 2"
+              echo "🧱 Production mode — Horizon worker active"
               sudo systemctl restart horizon-prod
             fi
 
