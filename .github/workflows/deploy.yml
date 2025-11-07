@@ -28,6 +28,9 @@ jobs:
     environment: ${{ matrix.env }}
 
     steps:
+      - name: 🔍 Test SSH Connection
+      - run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
       - name: 🧩 Checkout
         uses: actions/checkout@v4
 
