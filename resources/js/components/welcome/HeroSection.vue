@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
         <div v-auto-animate="{ duration: 400 }">
             <p
                 v-if="showSubtitle"
-                class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl"
+                class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl dark:text-[#fcfcfc]/60"
             >
                 Upload. Appraise. Reimagine. Share.
             </p>
@@ -88,6 +88,9 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.dark .hero-title__text{
+    color: #fcfcfc
+}
 .hero-title__text {
     display: inline-block;
     white-space: nowrap;
