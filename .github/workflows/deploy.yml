@@ -1,3 +1,4 @@
+# .github/workflows/deploy.yml
 name: Deploy Pixrup
 
 on:
@@ -26,10 +27,13 @@ jobs:
             php_fpm: php8.3-fpm
 
     environment: ${{ matrix.env }}
+    # 👇 esta es la forma correcta de usar matrix en una condición de job
+    if: ${{ github.ref_name == matrix.branch }}
 
     steps:
       - name: 🧩 Checkout
         uses: actions/checkout@v4
+
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -37,12 +41,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
 
-      - name: 🔍 Test SSH Connection
-        run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
-
       - name: 🚀 Deploy Laravel App
-        if: ${{ github.ref_name == matrix.branch }}
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
@@ -98,6 +97,7 @@ jobs:
               echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
             } > .env.new
 
+            # Preserve existing APP_KEY if present
             if [ -f .env ] && grep -q '^APP_KEY=' .env; then
               grep '^APP_KEY=' .env >> .env.new
             fi
