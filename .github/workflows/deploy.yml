@@ -33,11 +33,37 @@ jobs:
 
       - name: 🔐 Setup SSH
         run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
+          echo "📦 DO_KEY base64 length: $(echo "${{ secrets.DO_KEY }}" | tr -d '\n' | wc -c) chars"
           echo "${{ secrets.DO_KEY }}" | base64 -d > ~/.ssh/id_ed25519
+          if [[ ! -s ~/.ssh/id_ed25519 ]]; then
+            echo "❌ SSH private key file is empty after decoding"
+            exit 1
+          fi
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
           echo "✅ SSH private key decoded and ready"
+
+      - name: 📜 SSH Debug Logs
+        run: |
+          set -euo pipefail
+          echo "📂 ~/.ssh directory listing:"
+          ls -al ~/.ssh
+          echo "📏 id_ed25519 size: $(wc -c < ~/.ssh/id_ed25519) bytes"
+          echo "🔒 id_ed25519 permissions: $(stat --format '%a' ~/.ssh/id_ed25519)"
+          ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
+          echo "🔖 Public key fingerprint (MD5):"
+          ssh-keygen -l -E md5 -f ~/.ssh/id_ed25519.pub
+          echo "🔖 Public key fingerprint (SHA256):"
+          ssh-keygen -l -f ~/.ssh/id_ed25519.pub
+          echo "🌐 known_hosts entry for ${{ secrets.DO_HOST }}:"
+          if grep "${{ secrets.DO_HOST }}" ~/.ssh/known_hosts; then
+            echo "✅ Host found in known_hosts"
+          else
+            echo "⚠️ Host not found in known_hosts"
+          fi
+          rm -f ~/.ssh/id_ed25519.pub
 
       - name: 🔍 Test SSH Connection
         run: |
