@@ -9,6 +9,7 @@ import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import WorthPreviewModal, {
     type ComparableProperty,
 } from '@/components/welcome/WorthPreviewModal.vue';
@@ -178,7 +179,6 @@ const handleAppraiseFullProperty = () => {
     navigateToWeb();
 };
 </script>
-
 <template>
     <Head title="Welcome">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -229,5 +229,6 @@ const handleAppraiseFullProperty = () => {
             @update:open="(value) => (isWorthModalOpen = value)"
             @appraise="handleAppraiseFullProperty"
         />
+        <ThemeToggle />
     </div>
 </template>
