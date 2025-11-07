@@ -34,9 +34,10 @@ jobs:
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DO_KEY }}" | tr -d '\r' | awk '{gsub(/\\n/,"\n")}1' > ~/.ssh/id_ed25519
+          printf "%s" "${{ secrets.DO_KEY }}" | sed 's/\\n/\n/g' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+          echo "✅ SSH key written and permissions set"
 
       - name: 🔍 Test SSH Connection
         continue-on-error: true
