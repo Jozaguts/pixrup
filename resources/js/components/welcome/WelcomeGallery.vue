@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { initHomePage33Animations } from '@/lib/homePage33Animations';
+import { Button } from '@/components/ui/button';
 import { nextTick, onMounted } from 'vue';
 
 interface ListingCard {
@@ -32,10 +33,10 @@ onMounted(async () => {
                     <span
                         data-ns-animate
                         data-delay="0.1"
-                        class="neu-btn neu-center-shadow mb-5 badge badge-cyan"
+                        class="mb-5 p-4 text-primary text-3xl inline-block font-bold"
                         >Pixrup overview</span
                     >
-                    <div class="mb-14 space-y-2 md:max-w-[595px]">
+                    <div class="mb-14 space-y-2 md:max-w-[595px] text-slate-800 dark:text-white">
                         <h2 data-ns-animate data-delay="0.2">
                             AI-powered creation, built for speed.
                         </h2>
@@ -49,23 +50,13 @@ onMounted(async () => {
                             and PWA-ready for any team.
                         </p>
                     </div>
-                    <div>
-                        <a
-                            data-ns-animate
-                            data-delay="0.4"
-                            href="./our-services-page-01.html"
-                            class="neu-btn neu-center-shadow btn btn-md btn-secondary hover:bg-primary hover:text-white dark:btn-transparent"
-                        >
-                            <span>Explore all features</span>
-                        </a>
-                    </div>
                 </div>
                 <!-- Right: Features List -->
                 <div class="stack-cards js-stack-cards w-full max-w-xl">
                     <div
                         v-for="listing in listings"
                         :key="listing.id"
-                        class="stack-cards__item js-stack-cards__item neu-surface neu-center-shadow relative z-0 my-6 flex min-h-[170px] w-96 w-full flex-col space-y-4 rounded-[20px] rounded-lg border border-slate-200 border-stroke-4/50 bg-white p-8 shadow-sm shadow-neu-out md:flex-row dark:border-stroke-5 dark:bg-background-8"
+                        class="stack-cards__item js-stack-cards__item neu-surface relative z-0 my-6 flex min-h-[170px]  flex-col space-y-4  rounded-[12px]  p-8 shadow-sm shadow-neu-out md:flex-row dark:border-stroke-5 "
                     >
                         <div
                             class="relative shrink-0 overflow-hidden p-2.5 md:w-2/5"
@@ -78,24 +69,24 @@ onMounted(async () => {
                         </div>
                         <div class="p-6">
                             <div
-                                class="mb-4 w-30 rounded-full border border-transparent bg-primary-600 px-2.5 py-0.5 text-center text-xs text-white shadow-sm transition-all"
+                                class="mb-4 w-30 rounded-full border border-transparent bg-primary-600 px-4 py-2 text-center text-xs text-white shadow-sm transition-all"
                             >
                                 {{ listing.title }}
                             </div>
                             <h4
-                                class="mb-2 text-xl font-semibold text-slate-800"
+                                class="mb-2 text-xl font-semibold text-slate-800 dark:text-white"
                             >
                                 {{ listing.headline }}
                             </h4>
                             <p
-                                class="mb-8 leading-normal font-light text-slate-600"
+                                class="mb-8 leading-normal font-light text-slate-800 dark:text-white/90"
                             >
                                 {{ listing.description }}
                             </p>
                             <div>
                                 <a
                                     href="#"
-                                    class="flex items-center text-sm font-semibold text-slate-800 hover:underline"
+                                    class="flex items-center text-sm font-semibold text-slate-800 hover:underline dark:text-white"
                                 >
                                     Learn More
                                     <svg

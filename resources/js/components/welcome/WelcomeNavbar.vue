@@ -93,7 +93,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 <template>
     <header>
         <div
-            class="header-one fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-[#1f252f]"
+            class="navbar fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-[#1f252f]"
         >
             <div>
                 <Link href="/">

@@ -98,7 +98,7 @@ const handleContinueInApp = () => {
     >
         <Button
             size="lg"
-            class="is-pressed h-12 min-w-[200px] flex-1"
+            class="h-12 min-w-[200px] flex-1 text-slate-800 dark:text-white"
             @click="handleContinueOnWeb"
         >
             Continue on Web

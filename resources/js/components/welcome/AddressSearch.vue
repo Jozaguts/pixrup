@@ -46,14 +46,6 @@ const placeholder = computed(() =>
     isLoading.value ? 'Loading Google Places…' : 'Search an address…',
 );
 
-const inputClasses = computed(() => {
-    if (props.variant === 'neumorphic') {
-        return 'neu-input h-14 w-full rounded-[12px] border-0 bg-[#f4f5fa] px-5 text-base text-[#1f2933] shadow-neu-out focus-visible:outline-none focus-visible:ring-0';
-    }
-
-    return 'h-14 w-full rounded-xl border border-slate-200 bg-white text-base text-slate-900 shadow-sm focus-visible:ring-2 focus-visible:ring-purple-500';
-});
-
 const initializeAutocomplete = async () => {
     if (typeof window === 'undefined' || import.meta.env.SSR) {
         return;
@@ -201,8 +193,7 @@ defineExpose({
             autocomplete="off"
             autocapitalize="off"
             spellcheck="false"
-            class="is-pressed"
-            :class="inputClasses"
+            class="py-4"
         />
         <p v-if="errorMessage" class="text-sm text-red-500">
             {{ errorMessage }}
