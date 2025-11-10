@@ -7,6 +7,7 @@ import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
 import { gsap, ScrollTrigger } from './lib/gsap';
 import './lib/http';
+import './lib/echo';
 import { ensureSpringer } from './lib/vendor/springer';
 import {
     ensureStackCards,
