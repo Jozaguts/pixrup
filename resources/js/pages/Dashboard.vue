@@ -38,9 +38,8 @@ type DashboardPageProps = AppPageProps<{
 type DashboardUser = User & {
     plan?: string | null;
     plan_tier?: string | null;
-    usage_limit?: number | null;
-    usage_count?: number | null;
-    usage_reset_at?: string | null;
+    property_usage_limit?: number | null;
+    property_usage_count?: number | null;
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -95,13 +94,14 @@ const mockProperties: DashboardProperty[] = [
 ];
 
 const planDefinitions = {
-    free: { name: 'Free', limit: 3 },
-    starter: { name: 'Starter', limit: 5 },
-    pro: { name: 'Professional', limit: 20 },
-    professional: { name: 'Professional', limit: 20 },
+    free: { name: 'Free', limit: 1 },
+    micro: { name: 'Micro', limit: 5 },
+    starter: { name: 'Starter', limit: 12 },
+    pro: { name: 'Professional', limit: 25 },
+    professional: { name: 'Professional', limit: 25 },
     business: { name: 'Business', limit: 50 },
     premium: { name: 'Premium', limit: 80 },
-    enterprise: { name: 'Enterprise', limit: 150 },
+    enterprise: { name: 'Enterprise', limit: null },
 } as const;
 
 const statusStyles: Record<
@@ -157,7 +157,10 @@ const formatTitle = (value: string) =>
 const planDetails = computed(() => {
     const key = planKey.value;
     const preset = planDefinitions[key as keyof typeof planDefinitions];
-    const usageLimit = user.value?.usage_limit ?? preset?.limit ?? 20;
+    const limitFromUser = user.value?.property_usage_limit;
+    const fallbackLimit =
+        preset?.limit === undefined ? 20 : preset?.limit ?? null;
+    const usageLimit = limitFromUser ?? fallbackLimit;
 
     return {
         label: preset?.name ?? formatTitle(key),
@@ -165,9 +168,23 @@ const planDetails = computed(() => {
     };
 });
 
-const usageCount = computed(() => user.value?.usage_count ?? 0);
+const usageCount = computed(() => user.value?.property_usage_count ?? 0);
 
-const usageLimit = computed(() => planDetails.value.limit || 1);
+const usageLimit = computed(() => planDetails.value.limit ?? null);
+
+const usageLimitLabel = computed(() => {
+    const limit = usageLimit.value;
+    return limit == null ? 'Unlimited' : `${limit}`;
+});
+
+const remainingSlots = computed(() => {
+    const limit = usageLimit.value;
+    if (!limit) {
+        return null;
+    }
+
+    return Math.max(limit - usageCount.value, 0);
+});
 
 const usagePercent = computed(() => {
     const limit = usageLimit.value;
@@ -201,6 +218,10 @@ const progressGradient = computed(() => {
 });
 
 const usageMessage = computed(() => {
+    if (usageLimit.value == null) {
+        return 'Unlimited property slots—keep building your portfolio.';
+    }
+
     if (usageState.value === 'danger') {
         return 'You have reached your property limit. Upgrade to keep scaling.';
     }
@@ -209,7 +230,25 @@ const usageMessage = computed(() => {
         return 'Almost there! Consider upgrading your plan to add more properties.';
     }
 
-    return 'Great pace! You are within your plan usage this month.';
+    const slots = remainingSlots.value ?? 0;
+    return `Great pace! You still have ${slots} property slot${slots === 1 ? '' : 's'} available.`;
+});
+
+const usagePercentText = computed(() => {
+    if (usageLimit.value == null) {
+        return 'Unlimited plan';
+    }
+
+    return `${usagePercent.value}% used`;
+});
+
+const remainingSlotsText = computed(() => {
+    if (usageLimit.value == null) {
+        return 'Unlimited capacity';
+    }
+
+    const slots = remainingSlots.value ?? 0;
+    return `${slots} slot${slots === 1 ? '' : 's'} left`;
 });
 
 const firstName = computed(() => {
@@ -381,10 +420,12 @@ const dismissPropertyToast = () => {
                                     <p
                                         class="text-xs tracking-wide text-[#9CA3AF] uppercase"
                                     >
-                                        Usage this month
+                                        Properties registered
                                     </p>
                                     <p class="text-lg font-semibold">
-                                        {{ usageCount }} / {{ usageLimit }}
+                                        {{ usageCount }} / {{
+                                            usageLimitLabel
+                                        }}
                                     </p>
                                 </div>
                             </div>
@@ -402,17 +443,8 @@ const dismissPropertyToast = () => {
                                 <div
                                     class="flex items-center justify-between text-xs text-[#6b7280]"
                                 >
-                                    <span>{{ usagePercent }}% used</span>
-                                    <span>
-                                        Resets
-                                        {{
-                                            user?.usage_reset_at
-                                                ? new Date(
-                                                      user.usage_reset_at,
-                                                  ).toLocaleDateString()
-                                                : 'monthly'
-                                        }}
-                                    </span>
+                                    <span>{{ usagePercentText }}</span>
+                                    <span>{{ remainingSlotsText }}</span>
                                 </div>
                             </div>
                         </div>

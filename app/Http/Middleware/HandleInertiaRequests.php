@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Application\Shared\Services\PlanLimiter;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -38,17 +39,24 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
+        $user = $request->user();
+        $propertyCreateLimit = $user
+            ? app(PlanLimiter::class)->getLimitForFeature($user, 'property.create')
+            : null;
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user ? [
+                    ...$user->toArray(),
+                    'property_usage_limit' => $propertyCreateLimit,
+                ] : null,
             ],
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail && ! $request->user()?->hasVerifiedEmail(),
             'flash' => [
                 'status' => $request->session()->get('status'),
+                'glowupJob' => $request->session()->get('glowupJob'),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

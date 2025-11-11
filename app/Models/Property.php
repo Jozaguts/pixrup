@@ -45,4 +45,9 @@ class Property extends Model
     {
         return $this->hasOne(PropertyWorth::class)->latestOfMany('fetched_at');
     }
+
+    public function glowupJobs(): HasMany
+    {
+        return $this->hasMany(GlowupJob::class);
+    }
 }

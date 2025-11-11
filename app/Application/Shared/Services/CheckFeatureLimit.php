@@ -76,27 +76,38 @@ class CheckFeatureLimit
             event(new FeatureUsed($user->getKey(), $feature, 1));
             return;
         }
+        $resetInterval = $this->planLimiter->getResetIntervalForFeature($feature);
         $state = $this->getUsageState($user, $feature);
 
         ['count' => $count, 'reset_at' => $resetAt] = $state;
 
-        if ($resetAt === null || Carbon::parse($resetAt)->isPast()) {
-            $resetAt = $this->makeResetAt($feature);
-            $count = 0;
+        if ($resetInterval !== null) {
+            if ($resetAt === null || Carbon::parse($resetAt)->isPast()) {
+                $resetAt = $this->makeResetAt($feature);
+                $count = 0;
+            }
+        } else {
+            $resetAt = null;
         }
 
         $count++;
 
-        $ttl = max(1, Carbon::parse($resetAt)->diffInSeconds(now()));
-        $this->cache->put(
-            $this->cacheKey($user, $feature),
-            [
-                'count' => $count,
-                'reset_at' => $resetAt,
-                'limit' => $limit,
-            ],
-            $ttl
-        );
+        $payload = [
+            'count' => $count,
+            'reset_at' => $resetAt,
+            'limit' => $limit,
+        ];
+
+        if ($resetInterval === null) {
+            $this->cache->forever($this->cacheKey($user, $feature), $payload);
+        } else {
+            $ttl = max(1, Carbon::parse($resetAt)->diffInSeconds(now()));
+            $this->cache->put(
+                $this->cacheKey($user, $feature),
+                $payload,
+                $ttl
+            );
+        }
 
         event(new FeatureUsed($user->getKey(), $feature, 1));
     }
@@ -113,9 +124,10 @@ class CheckFeatureLimit
 
         $count = (int) ($state['count'] ?? 0);
         $resetAt = $state['reset_at'] ?? null;
-        $limit = $state['limit'] ?? $this->planLimiter->getLimitForFeature($user, $feature);
+        $limit = $this->planLimiter->getLimitForFeature($user, $feature);
+        $resetInterval = $this->planLimiter->getResetIntervalForFeature($feature);
 
-        if ($resetAt !== null && Carbon::parse($resetAt)->isPast()) {
+        if ($resetInterval !== null && $resetAt !== null && Carbon::parse($resetAt)->isPast()) {
             $count = 0;
             $resetAt = null;
         }
@@ -141,14 +153,27 @@ class CheckFeatureLimit
     /**
      * Description: Calculate the reset timestamp for the provided feature respecting plan cadence.
      * Parameters: string $feature Feature identifier.
-     * Returns: string
-     * Expected Result: Returns ISO-8601 timestamp describing when usage resets.
+     * Returns: ?string
+     * Expected Result: Returns ISO-8601 timestamp describing when usage resets or null for non-resettable features.
      */
-    private function makeResetAt(string $feature): string
+    private function makeResetAt(string $feature): ?string
     {
         $spec = $this->planLimiter->getResetIntervalForFeature($feature);
+        if ($spec === null) {
+            return null;
+        }
         $interval = new DateInterval($spec);
 
         return now()->add($interval)->toIso8601String();
+    }
+
+    /**
+     * Description: Provide the current usage snapshot for the given user-feature pair.
+     *
+     * @return array{count:int,reset_at:?string,limit:?int}
+     */
+    public function usageSnapshot(User $user, string $feature): array
+    {
+        return $this->getUsageState($user, $feature);
     }
 }
