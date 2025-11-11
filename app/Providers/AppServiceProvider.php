@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Application\Shared\Listeners\IncrementFeatureUsage;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
+use App\Domain\GlowUp\Contracts\GlowUpImageProvider;
+use App\Infrastructure\GlowUp\Providers\FakeAiImageService;
+use App\Infrastructure\GlowUp\Providers\ReplicateImageService;
 use Illuminate\Auth\Events\Verified;
 use App\Http\Requests\Auth\VerifyEmailRequest as AppVerifyEmailRequest;
 use App\Http\Responses\RedirectAsIntended as AppRedirectAsIntended;
@@ -39,6 +42,18 @@ class AppServiceProvider extends ServiceProvider
             PropertyWorthRepositoryInterface::class,
             EloquentPropertyWorthRepository::class,
         );
+        // todo moverlo al controlador
+        $this->app->bind(
+            GlowUpImageProvider::class,
+            function ($app) {
+                $provider = config('services.glowup.provider', 'fake');
+
+                return match ($provider) {
+                    'replicate' => $app->make(ReplicateImageService::class),
+                    default => $app->make(FakeAiImageService::class),
+                };
+            }
+        );
         $this->app->bind(
             AppraisalProviderInterface::class,
             function ($app) {
@@ -46,7 +61,6 @@ class AppServiceProvider extends ServiceProvider
 
                 return match ($provider) {
                     'housecanary' => $app->make(HouseCanaryProvider::class),
-                    'mock' => $app->make(MockAppraisalProvider::class),
                     default => $app->make(MockAppraisalProvider::class),
                 };
             }
