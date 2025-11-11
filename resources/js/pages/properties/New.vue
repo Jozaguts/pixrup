@@ -591,7 +591,7 @@ const submitProperty = async () => {
 
     form.clearErrors();
     form.transform(() => formData).submit(storeRoute.method, storeRoute.url, {
-        preserveScroll: true,
+        preserveScroll: false,
         onSuccess: () => {
             submissionError.value = null;
             sessionStorage.setItem(
