@@ -278,7 +278,6 @@ const handleFetch = () => {
     const route = propertiesRoutes.worth.fetch({
         property: propertyId.value,
     });
-    console.log(route.url);
     fetchForm.submit(route.method, route.url, {
         preserveScroll: true,
     });

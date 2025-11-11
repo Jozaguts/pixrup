@@ -376,10 +376,11 @@ const moduleStatusLabel = (id: ModuleId) => {
                                     v-for="action in actionButtons"
                                     :key="action.id"
                                     type="button"
-                                    class="neu-btn flex items-center justify-center gap-2 border border-white/40 px-5 py-3 text-sm font-semibold shadow-neu-out transition-all duration-200 ease-out focus:outline-none"
+                                    :class="activeModule.id === action.module ? 'is-pressed' :''"
+                                    class="neu-btn px-4 py-4"
                                     @click="handleAction(action)"
                                 >
-                                    <span>{{ action.label }}</span>
+                                    <span>{{ action.label}}</span>
                                 </button>
                             </div>
 
