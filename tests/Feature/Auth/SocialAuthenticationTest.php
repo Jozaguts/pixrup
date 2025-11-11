@@ -4,20 +4,20 @@ use App\Models\User;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\Facades\Socialite;
-use Mockery;
+use Mockery as MockeryAlias;
 
 afterEach(function () {
-    Mockery::close();
+    MockeryAlias::close();
 });
 
 test('google callback creates a new user and logs them in', function () {
-    $googleUser = Mockery::mock(SocialiteUser::class);
+    $googleUser = MockeryAlias::mock(SocialiteUser::class);
     $googleUser->shouldReceive('getId')->andReturn('google-id-123');
     $googleUser->shouldReceive('getEmail')->andReturn('google-user@example.com');
     $googleUser->shouldReceive('getName')->andReturn('Google User');
     $googleUser->shouldReceive('getNickname')->andReturn(null);
 
-    $provider = Mockery::mock(Provider::class);
+    $provider = MockeryAlias::mock(Provider::class);
     $provider->shouldReceive('stateless')->andReturnSelf();
     $provider->shouldReceive('user')->andReturn($googleUser);
 
@@ -43,13 +43,13 @@ test('google callback links existing user by email', function () {
         'email_verified_at' => null,
     ]);
 
-    $googleUser = Mockery::mock(SocialiteUser::class);
+    $googleUser = MockeryAlias::mock(SocialiteUser::class);
     $googleUser->shouldReceive('getId')->andReturn('google-existing-456');
     $googleUser->shouldReceive('getEmail')->andReturn('existing@example.com');
     $googleUser->shouldReceive('getName')->andReturn('Existing Google User');
     $googleUser->shouldReceive('getNickname')->andReturn(null);
 
-    $provider = Mockery::mock(Provider::class);
+    $provider = MockeryAlias::mock(Provider::class);
     $provider->shouldReceive('stateless')->andReturnSelf();
     $provider->shouldReceive('user')->andReturn($googleUser);
 
