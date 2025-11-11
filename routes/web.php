@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GlowUp\GlowUpJobController;
 use App\Http\Controllers\Properties\PropertyController;
 use App\Http\Controllers\Properties\PropertyWorthController as LegacyPropertyWorthController;
 use App\Models\Property;
@@ -15,42 +18,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('dashboard', function () {
-    $properties = Property::with('latestWorth')
-        ->latest()
-        ->get()
-        ->map(function (Property $property) {
-            $status = in_array($property->status, ['in-progress', 'ready', 'pending', 'draft'], true)
-                ? $property->status
-                : 'in-progress';
-
-            $addressSegments = collect([
-                $property->address,
-                collect([$property->city, $property->state])->filter()->implode(', '),
-                $property->postal_code,
-                $property->country,
-            ])->filter();
-
-            return [
-                'id' => $property->id,
-                'title' => $property->title ?? $property->address,
-                'address' => $addressSegments->implode(', '),
-                'status' => $status,
-                'estimatedValue' => $property->latestWorth?->value,
-                'progress' => null,
-                'thumbnail' => null,
-                'links' => [
-                    'view' => route('properties.show', $property, absolute: false),
-                    'report' => null,
-                ],
-            ];
-        })
-        ->values();
-
-    return Inertia::render('Dashboard', [
-        'properties' => $properties,
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
@@ -58,6 +26,14 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
     Route::post('/properties/{property}/worth/fetch', [AppraisalPropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
     Route::post('/properties/{property}/worth/report', [LegacyPropertyWorthController::class, 'report'])->name('properties.worth.report');
+
+    Route::prefix('api')->name('api.')->group(function (): void {
+        Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
+        Route::get('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'index'])->name('properties.glowup.jobs.index');
+        Route::post('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'store'])->name('properties.glowup.jobs.store');
+        Route::get('/properties/{property}/glowup/jobs/{glowupJob}', [GlowUpJobController::class, 'show'])->name('properties.glowup.jobs.show');
+        Route::post('/glowup/jobs/{glowupJob}/attach', [GlowUpJobController::class, 'attach'])->name('glowup.jobs.attach');
+    });
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
