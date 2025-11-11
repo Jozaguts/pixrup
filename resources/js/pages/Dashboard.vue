@@ -505,7 +505,7 @@ const dismissPropertyToast = () => {
                                 v-else
                                 class="flex size-full items-center justify-center bg-gradient-to-br from-[#eef1fb] via-[#f4f5fa] to-[#dbe2ff] text-[#7C4DFF]"
                             >
-                                <Home class="size-10" />
+                                <img src="/images/pixrup-icon.svg" alt="pixrup icon" class="w-15 h-15">
                             </div>
 
                             <div
