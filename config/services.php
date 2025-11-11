@@ -44,4 +44,23 @@ return [
         'provider' => env('APPRAISAL_PROVIDER', 'mock'),
     ],
 
+    'glowup' => [
+        'provider' => env('GLOWUP_PROVIDER', 'fake'),
+    ],
+
+    'replicate' => [
+        'token' => env('REPLICATE_API_TOKEN'),
+        'base_url' => env('REPLICATE_API_BASE_URL', 'https://api.replicate.com/v1/'),
+        'model_owner' => env('REPLICATE_MODEL_OWNER', 'bytedance'),
+        'model' => env('REPLICATE_MODEL', 'seedream-4'),
+        'prompt_template' => env(
+            'REPLICATE_PROMPT_TEMPLATE',
+            'Photograph of a {room} upgraded to {style} finish, interior design render, natural lighting, high detail'
+        ),
+        'size' => env('REPLICATE_IMAGE_SIZE', '2K'),
+        'aspect_ratio' => env('REPLICATE_ASPECT_RATIO', '4:3'),
+        'max_images' => env('REPLICATE_MAX_IMAGES', 1),
+        'wait_preference' => env('REPLICATE_WAIT_PREFERENCE', 'wait=60'),
+    ],
+
 ];

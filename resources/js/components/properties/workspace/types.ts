@@ -97,6 +97,7 @@ export interface PropertyWorkspaceProperty {
     tags?: string[];
     workspace?: PropertyWorkspaceMeta;
     worth?: WorthResult | null;
+    glowUp?: GlowUpState;
 }
 
 export type ModuleId =
@@ -107,3 +108,44 @@ export type ModuleId =
     | 'pixrVision'
     | 'pixrSeal'
     | 'pixrCollab';
+
+export type GlowUpJobStatus = 'pending' | 'processing' | 'done' | 'error';
+
+export interface GlowUpJob {
+    id: number;
+    property_id: number;
+    room_type: string;
+    style: string;
+    before_url: string;
+    after_url: string | null;
+    status: GlowUpJobStatus | string;
+    error_message?: string | null;
+    progress: number;
+    is_terminal: boolean;
+    created_at?: string | null;
+    updated_at?: string | null;
+    usage_recorded_at?: string | null;
+}
+
+export interface GlowUpUsage {
+    used: number;
+    limit: number | null;
+    reset_at?: string | null;
+}
+
+export interface GlowUpOptionItem {
+    value: string;
+    label: string;
+}
+
+export interface GlowUpState {
+    jobs: GlowUpJob[];
+    usage?: GlowUpUsage | null;
+    options?: {
+        room_types?: GlowUpOptionItem[];
+        styles?: GlowUpOptionItem[];
+    };
+    limits?: {
+        max_upload_size_mb?: number | null;
+    };
+}
