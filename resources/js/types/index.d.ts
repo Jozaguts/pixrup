@@ -27,6 +27,7 @@ export type AppPageProps<
     mustVerifyEmail: boolean;
     flash: {
         status?: string | null;
+        glowupJob?: GlowUpJobPayload | null;
     };
 };
 
@@ -41,3 +42,19 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface GlowUpJobPayload {
+    id: number;
+    property_id: number;
+    room_type: string;
+    style: string;
+    before_url: string;
+    after_url: string | null;
+    status: string;
+    error_message?: string | null;
+    progress: number;
+    is_terminal: boolean;
+    created_at?: string | null;
+    updated_at?: string | null;
+    usage_recorded_at?: string | null;
+}

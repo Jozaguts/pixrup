@@ -27,20 +27,33 @@ class PlanLimiter
      */
     public function getLimitForFeature(User $user, string $feature): ?int
     {
-        $plan = $user->plan ?? 'free';
+        $plan = strtolower((string) ($user->plan ?? 'free'));
 
         $matrix = [
             'free' => [
                 'appraisal.fetch' => 5,
+                'glowup.generate' => 3,
+                'property.create' => 1,
+            ],
+            'micro' => [
+                'appraisal.fetch' => 8,
+                'glowup.generate' => 5,
+                'property.create' => 5,
             ],
             'starter' => [
                 'appraisal.fetch' => 15,
+                'glowup.generate' => 12,
+                'property.create' => 12,
             ],
             'pro' => [
                 'appraisal.fetch' => 60,
+                'glowup.generate' => 40,
+                'property.create' => 25,
             ],
             'enterprise' => [
                 'appraisal.fetch' => null,
+                'glowup.generate' => null,
+                'property.create' => null,
             ],
         ];
 
@@ -52,13 +65,15 @@ class PlanLimiter
     /**
      * Description: Determine when a user's usage counter should reset for a feature.
      * Parameters: string $feature Feature identifier whose reset cadence is required.
-     * Returns: string
-     * Expected Result: Provides a valid DateInterval specification string describing reset frequency.
+     * Returns: ?string
+     * Expected Result: Provides a valid DateInterval specification string describing reset frequency or null when it never resets.
      */
-    public function getResetIntervalForFeature(string $feature): string
+    public function getResetIntervalForFeature(string $feature): ?string
     {
         $intervals = [
             'appraisal.fetch' => 'P1M',
+            'glowup.generate' => 'P1M',
+            'property.create' => null,
         ];
 
         return $intervals[$feature] ?? 'P1M';

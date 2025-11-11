@@ -21,6 +21,10 @@ use Carbon\Carbon;
  */
 class IncrementFeatureUsage
 {
+    private const PROPERTY_FEATURES = [
+        'property.create',
+    ];
+
     /**
      * Description: Handle the incoming feature usage event and update the user's usage counters.
      * Parameters: FeatureUsed $event Event containing usage metadata.
@@ -49,7 +53,22 @@ class IncrementFeatureUsage
             $user->usage_reset_at = $resetAt;
         }
 
+        if ($this->isPropertyFeature($event->feature)) {
+            $user->property_usage_count = (int) $user->property_usage_count + $event->quantity;
+            $user->save();
+
+            return;
+        }
+
         $user->usage_count = (int) $user->usage_count + $event->quantity;
         $user->save();
+    }
+
+    /**
+     * Determine if the provided feature should affect the property usage counter.
+     */
+    private function isPropertyFeature(string $feature): bool
+    {
+        return in_array($feature, self::PROPERTY_FEATURES, true);
     }
 }

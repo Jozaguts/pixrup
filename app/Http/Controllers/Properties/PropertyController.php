@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Properties;
 
+use App\Application\Shared\Services\CheckFeatureLimit;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GlowUp\GlowUpJobResource;
 use App\Models\Property;
 use App\Models\PropertyPhoto;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +16,11 @@ use Inertia\Response;
 
 class PropertyController extends Controller
 {
+    public function __construct(
+        private readonly CheckFeatureLimit $featureLimit,
+    ) {
+    }
+
     public function create(): Response
     {
         return Inertia::render('properties/New');
@@ -34,6 +41,21 @@ class PropertyController extends Controller
             'provider' => $latestWorth->provider,
             'fetched_at' => optional($latestWorth->fetched_at)->toIso8601String(),
         ] : null;
+
+        $glowUpJobs = $property->glowupJobs()->latest()->take(10)->get();
+        $glowUpJobsPayload = GlowUpJobResource::collection($glowUpJobs)->toArray(request());
+
+        $glowUpUsage = null;
+        $feature = config('glowup.feature_identifier');
+        $authedUser = auth()->user();
+        if ($authedUser && $feature) {
+            $usage = $this->featureLimit->usageSnapshot($authedUser, $feature);
+            $glowUpUsage = [
+                'used' => $usage['count'],
+                'limit' => $usage['limit'],
+                'reset_at' => $usage['reset_at'],
+            ];
+        }
 
         $propertyData = [
             'id' => $property->id,
@@ -113,6 +135,17 @@ class PropertyController extends Controller
                     ],
                 ],
             ],
+            'glowUp' => [
+                'jobs' => $glowUpJobsPayload,
+                'usage' => $glowUpUsage,
+                'options' => [
+                    'room_types' => config('glowup.room_types', []),
+                    'styles' => config('glowup.styles', []),
+                ],
+                'limits' => [
+                    'max_upload_size_mb' => config('glowup.max_upload_size_mb', 10),
+                ],
+            ],
         ];
 
         return Inertia::render('properties/Show', [
@@ -136,8 +169,13 @@ class PropertyController extends Controller
             'place_id' => ['nullable', 'string', 'max:255'],
             'photos.*' => ['nullable', 'file', 'image', 'max:8192'],
         ]);
+        $user = $request->user();
+        if (!is_null($user)) {
+            $this->featureLimit->assertUsageAvailable($request->user(), 'property.create');
+        }
 
-        $property = DB::transaction(function () use ($validated, $request): Property {
+
+        $property = DB::transaction(function () use ($validated, $request, $user): Property {
             $property = Property::create([
                 'title' => $validated['address'],
                 'status' => 'in-progress',
@@ -154,7 +192,7 @@ class PropertyController extends Controller
                     'created_via' => 'wizard',
                 ],
             ]);
-
+            $this->featureLimit->recordUsage($user, 'property.create');
             $this->storePhotos($request, $property);
 
             return $property;
