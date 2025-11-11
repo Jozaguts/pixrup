@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'usage_count',
         'usage_reset_at',
         'email_verified_at',
+        'property_usage_count'
     ];
 
     /**
