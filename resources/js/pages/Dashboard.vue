@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
-import type { AppPageProps, BreadcrumbItem, User } from '@/types';
+import type {
+    AppPageProps,
+    BreadcrumbItem,
+    PlanUsagePayload,
+    User,
+} from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import {
     Building2,
@@ -140,6 +145,10 @@ const user = computed<DashboardUser | null>(() => {
     return (page.props.auth.user ?? null) as DashboardUser | null;
 });
 
+const planUsage = computed<PlanUsagePayload | null>(
+    () => page.props.planUsage ?? null,
+);
+
 const planKey = computed(() => {
     const plan = user.value?.plan_tier ?? user.value?.plan;
     return typeof plan === 'string' && plan.length > 0
@@ -155,22 +164,33 @@ const formatTitle = (value: string) =>
         .replace(/\b\w/g, (char) => char.toUpperCase());
 
 const planDetails = computed(() => {
+    const usagePlan = planUsage.value?.plan;
+    if (usagePlan) {
+        return {
+            label: usagePlan.label ?? formatTitle(usagePlan.tier),
+            limit:
+                planUsage.value?.limit ??
+                usagePlan.limit ??
+                null,
+        };
+    }
+
     const key = planKey.value;
     const preset = planDefinitions[key as keyof typeof planDefinitions];
-    const limitFromUser = user.value?.property_usage_limit;
     const fallbackLimit =
         preset?.limit === undefined ? 20 : preset?.limit ?? null;
-    const usageLimit = limitFromUser ?? fallbackLimit;
 
     return {
         label: preset?.name ?? formatTitle(key),
-        limit: usageLimit,
+        limit: fallbackLimit,
     };
 });
 
-const usageCount = computed(() => user.value?.property_usage_count ?? 0);
+const usageCount = computed(() => planUsage.value?.used ?? 0);
 
-const usageLimit = computed(() => planDetails.value.limit ?? null);
+const usageLimit = computed(
+    () => planUsage.value?.limit ?? planDetails.value.limit ?? null,
+);
 
 const usageLimitLabel = computed(() => {
     const limit = usageLimit.value;
@@ -178,6 +198,15 @@ const usageLimitLabel = computed(() => {
 });
 
 const remainingSlots = computed(() => {
+    if (planUsage.value?.remaining !== undefined) {
+        const remaining = planUsage.value.remaining;
+        if (remaining === null) {
+            return null;
+        }
+
+        return Math.max(remaining, 0);
+    }
+
     const limit = usageLimit.value;
     if (!limit) {
         return null;
@@ -188,7 +217,7 @@ const remainingSlots = computed(() => {
 
 const usagePercent = computed(() => {
     const limit = usageLimit.value;
-    if (!limit) {
+    if (!limit || limit <= 0) {
         return 0;
     }
 
@@ -219,19 +248,19 @@ const progressGradient = computed(() => {
 
 const usageMessage = computed(() => {
     if (usageLimit.value == null) {
-        return 'Unlimited property slots—keep building your portfolio.';
+        return 'Unlimited monthly property usage—enjoy full access to your tools.';
     }
 
     if (usageState.value === 'danger') {
-        return 'You have reached your property limit. Upgrade to keep scaling.';
+        return 'You reached your monthly property usage limit. Upgrade to keep generating reports and AI outputs.';
     }
 
     if (usageState.value === 'warning') {
-        return 'Almost there! Consider upgrading your plan to add more properties.';
+        return 'You are close to your monthly usage limit. Consider upgrading for more capacity.';
     }
 
     const slots = remainingSlots.value ?? 0;
-    return `Great pace! You still have ${slots} property slot${slots === 1 ? '' : 's'} available.`;
+    return `Great pace! You still have ${slots} property use${slots === 1 ? '' : 's'} left this month.`;
 });
 
 const usagePercentText = computed(() => {
@@ -239,7 +268,7 @@ const usagePercentText = computed(() => {
         return 'Unlimited plan';
     }
 
-    return `${usagePercent.value}% used`;
+    return `${usagePercent.value}% of monthly usage`;
 });
 
 const remainingSlotsText = computed(() => {
@@ -248,7 +277,25 @@ const remainingSlotsText = computed(() => {
     }
 
     const slots = remainingSlots.value ?? 0;
-    return `${slots} slot${slots === 1 ? '' : 's'} left`;
+    return `${slots} use${slots === 1 ? '' : 's'} left`;
+});
+
+const usageResetLabel = computed(() => {
+    const resetAt = planUsage.value?.resets_at;
+    if (!resetAt) {
+        return null;
+    }
+
+    const date = new Date(resetAt);
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+
+    return date.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
 });
 
 const firstName = computed(() => {
@@ -417,17 +464,23 @@ const dismissPropertyToast = () => {
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <p
-                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
-                                    >
-                                        Properties registered
-                                    </p>
-                                    <p class="text-lg font-semibold">
-                                        {{ usageCount }} / {{
-                                            usageLimitLabel
-                                        }}
-                                    </p>
-                                </div>
+                                        <p
+                                            class="text-xs tracking-wide text-[#9CA3AF] uppercase"
+                                        >
+                                            Properties used this month
+                                        </p>
+                                        <p class="text-lg font-semibold">
+                                            {{ usageCount }} / {{
+                                                usageLimitLabel
+                                            }}
+                                        </p>
+                                        <p
+                                            v-if="usageResetLabel"
+                                            class="text-xs text-[#9CA3AF]"
+                                        >
+                                            Resets {{ usageResetLabel }}
+                                        </p>
+                                    </div>
                             </div>
 
                             <div class="flex flex-col gap-3">
