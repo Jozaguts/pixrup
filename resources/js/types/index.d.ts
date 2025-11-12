@@ -29,6 +29,7 @@ export type AppPageProps<
         status?: string | null;
         glowupJob?: GlowUpJobPayload | null;
     };
+    planUsage?: PlanUsagePayload | null;
 };
 
 export interface User {
@@ -42,6 +43,19 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface PlanUsagePayload {
+    plan: {
+        tier: string;
+        label: string;
+        limit: number | null;
+    };
+    used: number;
+    remaining: number;
+    limit: number | null;
+    period_key: string;
+    resets_at?: string | null;
+}
 
 export interface GlowUpJobPayload {
     id: number;
