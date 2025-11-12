@@ -1,11 +1,10 @@
 <?php
 
-use App\Application\Shared\Services\CheckFeatureLimit;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
-use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\UsagePropertyMonthly;
 
 /**
  * Test that the worth fetch endpoint returns valuation payload via Inertia.
@@ -38,15 +37,11 @@ test('property worth endpoint returns valuation payload', function (): void {
  * Expected Result: Controller responds with Inertia error payload containing worth error message.
  */
 test('property worth endpoint enforces plan limits', function (): void {
-    $property = Property::factory()->create();
-    $user = User::factory()->create();
-    $this->actingAs($user);
+    config(['plans.tiers.professional.limit' => 0]);
 
-    $featureLimit = \Mockery::mock(CheckFeatureLimit::class);
-    $featureLimit->shouldReceive('assertUsageAvailable')
-        ->once()
-        ->andThrow(new FeatureLimitExceededException('Plan limit reached'));
-    app()->instance(CheckFeatureLimit::class, $featureLimit);
+    $property = Property::factory()->create();
+    $user = User::factory()->create(['plan' => 'professional']);
+    $this->actingAs($user);
 
     app()->instance(AppraisalProviderInterface::class, new MockAppraisalProvider());
 
@@ -57,7 +52,7 @@ test('property worth endpoint enforces plan limits', function (): void {
     ])->post(route('properties.worth.fetch', ['property' => $property->id]));
 
     $response->assertStatus(403)
-        ->assertJsonPath('props.errors.worth', 'Plan limit reached');
+        ->assertJsonPath('props.errors.worth', 'Has alcanzado tu límite mensual de uso.');
 });
 
 /**
@@ -68,13 +63,6 @@ test('property worth endpoint reuses cached valuations', function (): void {
     $property = Property::factory()->create();
     $user = User::factory()->create();
     $this->actingAs($user);
-
-    $featureLimit = \Mockery::mock(CheckFeatureLimit::class);
-    $featureLimit->shouldReceive('assertUsageAvailable')
-        ->once();
-    $featureLimit->shouldReceive('recordUsage')
-        ->once();
-    app()->instance(CheckFeatureLimit::class, $featureLimit);
 
     $provider = \Mockery::mock(AppraisalProviderInterface::class);
     $sampleProvider = new MockAppraisalProvider();
@@ -95,4 +83,6 @@ test('property worth endpoint reuses cached valuations', function (): void {
     $second = $this->withHeaders($headers)->post(route('properties.worth.fetch', ['property' => $property->id]));
     $second->assertStatus(200)
         ->assertJsonPath('props.worth.value', $first->json('props.worth.value'));
+
+    expect(UsagePropertyMonthly::query()->count())->toBe(1);
 });
