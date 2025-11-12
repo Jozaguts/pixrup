@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Application\Shared\Services\PlanLimiter;
+use App\Application\Usage\Services\UsageSummaryService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -40,19 +40,27 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
         $user = $request->user();
-        $propertyCreateLimit = $user
-            ? app(PlanLimiter::class)->getLimitForFeature($user, 'property.create')
-            : null;
+        $planUsage = null;
+        $userPayload = $user?->toArray();
+
+        if ($user !== null) {
+            $planUsage = app(UsageSummaryService::class)->forUser($user)->toArray();
+
+            if ($userPayload !== null && $planUsage !== null) {
+                $userPayload['property_usage_limit'] = $planUsage['limit'];
+                $userPayload['property_usage_count'] = $planUsage['used'];
+                $userPayload['usage_reset_at'] = $planUsage['resets_at'] ?? null;
+                $userPayload['plan_usage'] = $planUsage;
+            }
+        }
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $user ? [
-                    ...$user->toArray(),
-                    'property_usage_limit' => $propertyCreateLimit,
-                ] : null,
+                'user' => $userPayload,
             ],
+            'planUsage' => $planUsage,
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail && ! $request->user()?->hasVerifiedEmail(),
             'flash' => [
                 'status' => $request->session()->get('status'),
