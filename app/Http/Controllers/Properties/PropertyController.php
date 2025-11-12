@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Properties;
 
-use App\Application\Shared\Services\CheckFeatureLimit;
+use App\Application\Usage\Services\UsageSummaryService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GlowUp\GlowUpJobResource;
 use App\Models\Property;
@@ -16,11 +16,6 @@ use Inertia\Response;
 
 class PropertyController extends Controller
 {
-    public function __construct(
-        private readonly CheckFeatureLimit $featureLimit,
-    ) {
-    }
-
     public function create(): Response
     {
         return Inertia::render('properties/New');
@@ -45,17 +40,10 @@ class PropertyController extends Controller
         $glowUpJobs = $property->glowupJobs()->latest()->take(10)->get();
         $glowUpJobsPayload = GlowUpJobResource::collection($glowUpJobs)->toArray(request());
 
-        $glowUpUsage = null;
-        $feature = config('glowup.feature_identifier');
         $authedUser = auth()->user();
-        if ($authedUser && $feature) {
-            $usage = $this->featureLimit->usageSnapshot($authedUser, $feature);
-            $glowUpUsage = [
-                'used' => $usage['count'],
-                'limit' => $usage['limit'],
-                'reset_at' => $usage['reset_at'],
-            ];
-        }
+        $usageSummary = $authedUser
+            ? app(UsageSummaryService::class)->forUser($authedUser)->toArray()
+            : null;
 
         $propertyData = [
             'id' => $property->id,
@@ -137,7 +125,13 @@ class PropertyController extends Controller
             ],
             'glowUp' => [
                 'jobs' => $glowUpJobsPayload,
-                'usage' => $glowUpUsage,
+                'usage' => $usageSummary
+                    ? [
+                        'used' => $usageSummary['used'],
+                        'limit' => $usageSummary['limit'],
+                        'reset_at' => $usageSummary['resets_at'],
+                    ]
+                    : null,
                 'options' => [
                     'room_types' => config('glowup.room_types', []),
                     'styles' => config('glowup.styles', []),
@@ -147,9 +141,9 @@ class PropertyController extends Controller
                 ],
             ],
         ];
-
         return Inertia::render('properties/Show', [
             'property' => $propertyData,
+            'usage' => $usageSummary,
         ]);
     }
 
@@ -169,13 +163,7 @@ class PropertyController extends Controller
             'place_id' => ['nullable', 'string', 'max:255'],
             'photos.*' => ['nullable', 'file', 'image', 'max:8192'],
         ]);
-        $user = $request->user();
-        if (!is_null($user)) {
-            $this->featureLimit->assertUsageAvailable($request->user(), 'property.create');
-        }
-
-
-        $property = DB::transaction(function () use ($validated, $request, $user): Property {
+        $property = DB::transaction(function () use ($validated, $request): Property {
             $property = Property::create([
                 'title' => $validated['address'],
                 'status' => 'in-progress',
@@ -192,7 +180,6 @@ class PropertyController extends Controller
                     'created_via' => 'wizard',
                 ],
             ]);
-            $this->featureLimit->recordUsage($user, 'property.create');
             $this->storePhotos($request, $property);
 
             return $property;
