@@ -52,7 +52,7 @@ test('property worth endpoint enforces plan limits', function (): void {
     ])->post(route('properties.worth.fetch', ['property' => $property->id]));
 
     $response->assertStatus(403)
-        ->assertJsonPath('props.errors.worth', 'Has alcanzado tu límite mensual de uso.');
+        ->assertJsonPath('props.errors.worth', 'You have reached your monthly property usage limit.');
 });
 
 /**

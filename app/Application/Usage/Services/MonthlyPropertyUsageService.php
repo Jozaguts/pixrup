@@ -137,7 +137,7 @@ class MonthlyPropertyUsageService
     private function limitException(PlanInfo $plan, int $used, UsagePeriod $period): FeatureLimitExceededException
     {
         return new FeatureLimitExceededException(
-            'Has alcanzado tu límite mensual de uso.',
+            'You have reached your monthly property usage limit.',
             [
                 'plan' => [
                     'tier' => $plan->tier,

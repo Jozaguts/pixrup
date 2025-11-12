@@ -62,7 +62,7 @@ const usageProgress = computed(() => {
 });
 
 const selectedFileLabel = computed(
-    () => createForm.image?.name ?? 'Selecciona una imagen',
+    () => createForm.image?.name ?? 'Select an image',
 );
 
 const statusTokens: Record<
@@ -70,28 +70,28 @@ const statusTokens: Record<
     { label: string; badge: string; dot: string; copy: string }
 > = {
     pending: {
-        label: 'En cola',
+        label: 'Queued',
         badge: 'bg-[#FFF4DA] text-[#9A6B00]',
         dot: 'bg-[#FFB74A]',
-        copy: 'Preparando tu escena para procesar.',
+        copy: 'Preparing your scene for processing.',
     },
     processing: {
-        label: 'Procesando',
+        label: 'Processing',
         badge: 'bg-[#E9EDFF] text-[#2E3A8C]',
         dot: 'bg-[#4C5FD5]',
-        copy: 'Aplicando materiales, color y postproducción.',
+        copy: 'Applying materials, color, and post-production.',
     },
     done: {
-        label: 'Listo',
+        label: 'Ready',
         badge: 'bg-[#E4F9F0] text-[#0B6B4F]',
         dot: 'bg-[#1DBE78]',
-        copy: 'El render está listo para usarse.',
+        copy: 'The render is ready to use.',
     },
     error: {
         label: 'Error',
         badge: 'bg-[#FFE6E6] text-[#9A1B1B]',
         dot: 'bg-[#EA5455]',
-        copy: 'Algo falló con el proveedor. Intenta nuevamente.',
+        copy: 'Something went wrong with the provider. Try again.',
     },
 };
 
@@ -135,19 +135,19 @@ const downloadJob = (url: string | null) => {
 };
 
 const defaultRoomTypes = [
-    { value: 'living_room', label: 'Sala de estar' },
-    { value: 'kitchen', label: 'Cocina' },
-    { value: 'bathroom', label: 'Baño' },
-    { value: 'bedroom', label: 'Dormitorio' },
-    { value: 'facade', label: 'Fachada' },
+    { value: 'living_room', label: 'Living room' },
+    { value: 'kitchen', label: 'Kitchen' },
+    { value: 'bathroom', label: 'Bathroom' },
+    { value: 'bedroom', label: 'Bedroom' },
+    { value: 'facade', label: 'Facade' },
 ];
 
 const defaultStyleOptions = [
-    { value: 'modern', label: 'Moderno' },
-    { value: 'minimalist', label: 'Minimalista' },
-    { value: 'luxury', label: 'Lujo' },
-    { value: 'rustic', label: 'Rústico' },
-    { value: 'outdoor_resort', label: 'Resort Exterior' },
+    { value: 'modern', label: 'Modern' },
+    { value: 'minimalist', label: 'Minimalist' },
+    { value: 'luxury', label: 'Luxury' },
+    { value: 'rustic', label: 'Rustic' },
+    { value: 'outdoor_resort', label: 'Outdoor resort' },
 ];
 
 const formatDate = (input?: string | null) => {
@@ -178,20 +178,20 @@ const formatDate = (input?: string | null) => {
                     Before / After AI Studio
                 </h2>
                 <p class="text-sm text-gray-500">
-                    Convierte tus fotos en visualizaciones de catálogo listas para reportes y clientes.
+                    Turn your photos into catalog-ready visuals for reports and clients.
                 </p>
             </div>
             <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-neu-in">
                 <Sparkles class="h-5 w-5 text-[#7c4dff]" />
                 <div>
                     <p class="text-xs uppercase tracking-[0.35em] text-gray-400">
-                        Uso del mes
+                        Monthly usage
                     </p>
                     <p class="text-sm font-semibold text-[#1f2937]">
                         <span v-if="usage.limit !== null"
                             >{{ usage.used }} / {{ usage.limit }} GlowUps</span
                         >
-                        <span v-else>{{ usage.used }} generados</span>
+                        <span v-else>{{ usage.used }} renders</span>
                     </p>
                 </div>
             </div>
@@ -203,13 +203,13 @@ const formatDate = (input?: string | null) => {
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <div>
                             <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
-                                1. Configura el espacio
+                                1. Configure the space
                             </p>
                             <h3 class="text-lg font-semibold text-[#1f2937]">
-                                Sube o captura una foto
+                                Upload or capture a photo
                             </h3>
                             <p class="text-sm text-gray-500">
-                                Formatos JPG/PNG ({{ maxUpload }}MB). Elige habitación y estilo para la IA.
+                                Supported formats JPG/PNG ({{ maxUpload }}MB). Choose a room and style for the AI.
                             </p>
                         </div>
                         <button
@@ -218,7 +218,7 @@ const formatDate = (input?: string | null) => {
                             @click="refreshJobs"
                         >
                             <RefreshCw class="h-4 w-4" />
-                            Actualizar
+                            Refresh
                         </button>
                     </div>
 
@@ -236,13 +236,13 @@ const formatDate = (input?: string | null) => {
                             {{ selectedFileLabel }}
                         </p>
                         <p class="text-sm text-gray-500">
-                            Arrastra aquí tu foto o
+                            Drag your photo here or
                             <button
                                 type="button"
                                 class="text-[#7c4dff]"
                                 @click="handleBrowse"
                             >
-                                examina tus archivos
+                                browse your files
                             </button>
                         </p>
                         <input
@@ -261,7 +261,7 @@ const formatDate = (input?: string | null) => {
                         >
                             <img
                                 :src="previewUrl"
-                                alt="Vista previa"
+                                alt="Preview"
                                 class="h-40 w-full rounded-2xl object-cover shadow"
                             />
                         </div>
@@ -269,7 +269,7 @@ const formatDate = (input?: string | null) => {
 
                     <div class="grid gap-4 md:grid-cols-2">
                         <label class="flex flex-col gap-2 text-sm text-gray-500">
-                            Tipo de habitación
+                            Room type
                             <select
                                 v-model="createForm.room_type"
                                 class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-[#1f2937] shadow-inner focus:border-[#7c4dff] focus:outline-none"
@@ -284,7 +284,7 @@ const formatDate = (input?: string | null) => {
                             </select>
                         </label>
                         <label class="flex flex-col gap-2 text-sm text-gray-500">
-                            Estilo deseado
+                            Desired style
                             <select
                                 v-model="createForm.style"
                                 class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-[#1f2937] shadow-inner focus:border-[#7c4dff] focus:outline-none"
@@ -312,7 +312,7 @@ const formatDate = (input?: string | null) => {
                                 class="h-4 w-4 animate-spin"
                             />
                             <Sparkles v-else class="h-4 w-4" />
-                            Generar GlowUp
+                            Generate GlowUp
                         </button>
                         <button
                             v-if="canUseCamera"
@@ -321,21 +321,21 @@ const formatDate = (input?: string | null) => {
                             @click="captureFromCamera"
                         >
                             <Camera class="h-4 w-4" />
-                            Capturar desde cámara
+                            Capture from camera
                         </button>
                         <p v-if="limitReached" class="flex items-center gap-2 text-sm text-[#9A1B1B]">
                             <ShieldAlert class="h-4 w-4" />
-                            Límite alcanzado. Actualiza tu plan para más renderizados.
+                            Limit reached. Upgrade your plan for more renders.
                         </p>
                     </div>
 
                     <div class="space-y-2 rounded-2xl bg-[#f9fafb] p-4">
                         <div class="flex items-center justify-between text-sm text-gray-600">
-                            <span>Uso de créditos</span>
+                            <span>Credit usage</span>
                             <span v-if="usage.limit !== null"
                                 >{{ usage.used }} / {{ usage.limit }}</span
                             >
-                            <span v-else>{{ usage.used }} generados</span>
+                            <span v-else>{{ usage.used }} renders</span>
                         </div>
                         <div class="h-2 rounded-full bg-gray-200">
                             <div
@@ -344,7 +344,7 @@ const formatDate = (input?: string | null) => {
                             />
                         </div>
                         <p class="text-xs text-gray-500">
-                            {{ remaining === Infinity ? 'Uso ilimitado.' : `${remaining} pendientes este ciclo.` }}
+                            {{ remaining === Infinity ? 'Unlimited usage.' : `${remaining} remaining this cycle.` }}
                         </p>
                     </div>
                 </article>
@@ -356,10 +356,10 @@ const formatDate = (input?: string | null) => {
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
-                                2. Proceso
+                                2. Processing
                             </p>
                             <h3 class="text-lg font-semibold text-[#1f2937]">
-                                {{ statusTokens[activeJob.status]?.label ?? 'Estado' }}
+                                {{ statusTokens[activeJob.status]?.label ?? 'Status' }}
                             </h3>
                         </div>
                         <span
@@ -391,10 +391,10 @@ const formatDate = (input?: string | null) => {
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
-                                3. Resultado
+                                3. Result
                             </p>
                             <h3 class="text-lg font-semibold text-[#1f2937]">
-                                Before / After listo
+                                Before / After ready
                             </h3>
                         </div>
                         <span class="rounded-full bg-[#E4F9F0] px-4 py-1.5 text-xs font-semibold text-[#0B6B4F]">
@@ -404,7 +404,7 @@ const formatDate = (input?: string | null) => {
                     <GlowUpResultSlider
                         :before="latestCompletedJob.before_url"
                         :after="latestCompletedJob.after_url ?? latestCompletedJob.before_url"
-                        label="Mueve la barra para comparar"
+                        label="Move the slider to compare"
                     />
                     <div class="flex flex-wrap items-center gap-3">
                         <button
@@ -414,7 +414,7 @@ const formatDate = (input?: string | null) => {
                             @click="attachToProperty(latestCompletedJob.id, 'save_to_property')"
                         >
                             <Save class="h-4 w-4" />
-                            Guardar en propiedad
+                            Save to property
                         </button>
                         <button
                             type="button"
@@ -423,7 +423,7 @@ const formatDate = (input?: string | null) => {
                             @click="attachToProperty(latestCompletedJob.id, 'add_to_report')"
                         >
                             <FileText class="h-4 w-4" />
-                            Agregar al reporte
+                            Add to report
                         </button>
                         <button
                             type="button"
@@ -431,7 +431,7 @@ const formatDate = (input?: string | null) => {
                             @click="downloadJob(latestCompletedJob.after_url)"
                         >
                             <Download class="h-4 w-4" />
-                            Descargar
+                            Download
                         </button>
                     </div>
                 </article>
@@ -440,20 +440,20 @@ const formatDate = (input?: string | null) => {
             <aside class="neu-surface space-y-4 rounded-3xl p-6 shadow-neu-out">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-[#1f2937]">
-                        Historial de GlowUps
+                        GlowUp history
                     </h3>
                     <button
                         type="button"
                         class="text-sm font-semibold text-[#7c4dff]"
                         @click="refreshJobs"
                     >
-                        Actualizar
+                        Refresh
                     </button>
                 </div>
                 <div v-if="jobs.length === 0" class="rounded-2xl bg-[#f9fafb] p-6 text-center">
-                    <p class="font-semibold text-[#1f2937]">Sin transformaciones aún</p>
+                    <p class="font-semibold text-[#1f2937]">No transformations yet</p>
                     <p class="text-sm text-gray-500">
-                        Genera tu primer GlowUp para ver avances aquí.
+                        Generate your first GlowUp to see progress here.
                     </p>
                 </div>
                 <ul v-else class="space-y-4">
