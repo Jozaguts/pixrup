@@ -69,7 +69,7 @@ test('glowup job creation respects plan limits', function (): void {
     );
 
     $response->assertForbidden()
-        ->assertJsonPath('message', 'Has alcanzado tu límite mensual de uso.')
+        ->assertJsonPath('message', 'You have reached your monthly property usage limit.')
         ->assertJsonStructure([
             'usage' => [
                 'plan' => ['tier', 'label', 'limit'],

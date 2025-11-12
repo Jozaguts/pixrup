@@ -232,8 +232,8 @@ const useCurrentLocation = async () => {
                         reject(
                             new Error(
                                 status === 'ZERO_RESULTS'
-                                    ? 'No se encontró una dirección para tu ubicación.'
-                                    : 'No pudimos confirmar tu ubicación. Intenta nuevamente.',
+                                    ? 'No address was found for your location.'
+                                    : 'We could not confirm your location. Please try again.',
                             ),
                         );
                     },
@@ -272,7 +272,7 @@ const useCurrentLocation = async () => {
         addressForm.error =
             error instanceof Error
                 ? error.message
-                : 'No fue posible obtener tu ubicación actual.';
+                : 'We could not retrieve your current location.';
     } finally {
         addressForm.isLocating = false;
     }
@@ -744,9 +744,7 @@ const isNextDisabled = computed(() => {
                             Step 1 — Address
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Busca la propiedad con Google Places o usa tu
-                            ubicación actual para obtener todos los datos
-                            automáticamente.
+                            Search the property via Google Places or use your current location to auto-fill every field.
                         </p>
                     </div>
 
@@ -858,9 +856,7 @@ const isNextDisabled = computed(() => {
                             Step 2 — Photos
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Sube imágenes nítidas o toma fotos desde tu
-                            dispositivo. Comprimimos automáticamente cada
-                            archivo para mantenerlo ligero.
+                            Upload crisp images or snap new photos from your device. We automatically compress every file to keep uploads light.
                         </p>
                     </div>
 
@@ -911,8 +907,7 @@ const isNextDisabled = computed(() => {
                         >
                             <ImageIcon class="size-8" />
                             <p class="text-sm md:text-base">
-                                Agrega fotos para mostrar tu propiedad.
-                                Recomendamos planos amplios con buena luz.
+                                Add photos to showcase your property. Wide angles with good lighting work best.
                             </p>
                         </div>
 
@@ -982,9 +977,7 @@ const isNextDisabled = computed(() => {
                             Step 3 — Confirmation
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Revisa la información antes de crear la propiedad.
-                            Si necesitas ajustar algo, vuelve a los pasos
-                            anteriores sin perder tus datos.
+                            Review the details before creating the property. If you need to adjust anything, return to previous steps without losing data.
                         </p>
                     </div>
 

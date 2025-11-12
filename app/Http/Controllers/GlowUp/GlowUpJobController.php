@@ -64,7 +64,7 @@ class GlowUpJobController extends Controller
         if ($image === null) {
             return $this->respondWithError(
                 $request,
-                'Selecciona una imagen para generar el GlowUp.',
+                'Please select an image before generating a GlowUp.',
             );
         }
 
@@ -101,7 +101,7 @@ class GlowUpJobController extends Controller
             return response()->json(
                 [
                     'job' => $resource,
-                    'message' => 'Tu GlowUp está en cola ✨',
+                    'message' => 'Your GlowUp request is in the queue ✨',
                 ],
                 Response::HTTP_CREATED,
             );
@@ -120,7 +120,7 @@ class GlowUpJobController extends Controller
         if ($glowupJob->after_url === null) {
             return $this->respondWithError(
                 $request,
-                'Genera el resultado antes de adjuntarlo.',
+                'Generate the result before attaching it.',
                 Response::HTTP_UNPROCESSABLE_ENTITY,
             );
         }
@@ -138,7 +138,7 @@ class GlowUpJobController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'job' => (new GlowUpJobResource($glowupJob->refresh()))->resolve(),
-                'message' => 'Resultado guardado correctamente.',
+                'message' => 'Result saved successfully.',
             ]);
         }
 

@@ -40,11 +40,11 @@ class GlowUpJobService
 
             if (! $beforePath) {
                 logger('GlowUp upload failed', ['disk' => $disk]);
-                throw new \RuntimeException('No se pudo subir la imagen, revisa los logs.');
+                throw new \RuntimeException('Unable to upload the image. Check the logs for details.');
             }
-        }catch (\Exception $e){
-            logger('catch', ['message' => $e->getMessage()]);
-            throw new \RuntimeException('catch error',);
+        } catch (\Exception $e) {
+            logger('glowup.image_upload_failed', ['message' => $e->getMessage()]);
+            throw new \RuntimeException('Unable to upload the image. Please try again later.');
         }
 
         $beforeUrl = Storage::disk($disk)->url($beforePath);

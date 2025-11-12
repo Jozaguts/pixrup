@@ -19,28 +19,28 @@ export default defineConfig([
             'dist/**',
             'build/**',
             '**/*.min.js',
-            // Opcional: ignora configuración si no quieres que ESLint la toque
+            // Optional: ignore config files you do not want ESLint to touch
             // 'tailwind.config.js',
             // 'vite.config.js',
         ],
     },
 
-    // Vue + TS recommended (si tu proyecto lo usa)
+    // Vue + TS recommended (if your project uses it)
     ...defineConfigWithVueTs(
         vue.configs['flat/essential'],
         vueTsConfigs.recommended,
     ),
 
-    // Tus reglas del proyecto
+    // Project-specific rules
     {
         rules: {
             'vue/multi-word-component-names': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
-            // Opcional: relaja expresiones sueltas si usas libs que hacen IIFE sin asignar
+            // Optional: relax unused-expression checks if you rely on libraries with bare IIFEs
             // '@typescript-eslint/no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true, allowTaggedTemplates: true }],
         },
     },
 
-    // Desactiva reglas que chocan con Prettier (formato)
+    // Disable rules that conflict with Prettier formatting
     prettier,
 ]);
