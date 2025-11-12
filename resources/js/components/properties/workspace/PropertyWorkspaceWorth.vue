@@ -24,6 +24,7 @@ import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
 import PropertyDetails from './worth/PropertyDetails.vue';
 import RentalValueCard from './worth/RentalValueCard.vue';
+import { Button } from '@/components/ui/button';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -362,16 +363,16 @@ const idleCallout = computed(() =>
                     class="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end lg:max-w-sm"
                 >
                     <span
-                        class="neu-surface neu-center-shadow inline-flex items-center gap-2 self-start rounded-full px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase shadow-neu-out"
+                        class="neu-surface inline-flex items-center gap-2 self-start rounded-full px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase "
                     >
                         API
                         <span class="font-medium">{{ endpointBadge }}</span>
                     </span>
 
-                    <button
+                    <Button
                         type="button"
                         :disabled="isFetchDisabled"
-                        class="neu-center-shadow inline-flex items-center justify-center gap-2 rounded-[18px] bg-[#7c4dff] px-5 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60"
+                        class="bg-primary-400 "
                         @click="handleFetch"
                     >
                         <component
@@ -386,7 +387,7 @@ const idleCallout = computed(() =>
                                 ? 'Limit reached'
                                 : 'Fetch valuation'
                         }}
-                    </button>
+                    </Button>
                 </div>
             </div>
 
