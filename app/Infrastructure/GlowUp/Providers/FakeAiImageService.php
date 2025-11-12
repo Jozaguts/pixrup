@@ -4,6 +4,7 @@ namespace App\Infrastructure\GlowUp\Providers;
 
 use App\Domain\GlowUp\Contracts\GlowUpImageProvider;
 use App\Models\GlowupJob;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -16,6 +17,15 @@ class FakeAiImageService implements GlowUpImageProvider
 
         if (! $storage->exists($sourcePath)) {
             throw new RuntimeException("Source image not found: {$sourcePath}");
+        }
+
+        $prompt = data_get($job->meta, 'prompt');
+        if (is_string($prompt) && $prompt !== '') {
+            Log::info('fake-glowup.prompt', [
+                'job_id' => $job->getKey(),
+                'property_id' => $job->property_id,
+                'prompt' => $prompt,
+            ]);
         }
 
         $contents = $storage->get($sourcePath);

@@ -2,8 +2,11 @@
 import { useGlowUpJobs } from '@/composables/useGlowUpJobs';
 import type { GlowUpState } from '@/components/properties/workspace/types';
 import { Camera, CloudUpload, Download, FileText, Loader2, RefreshCw, Save, ShieldAlert, Sparkles } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onBeforeUnmount } from 'vue';
 import GlowUpResultSlider from './GlowUpResultSlider.vue';
+import { TextArea } from '@/components/ui/textarea';
+import { buildPrompt, type RoomType, type Style } from '@/lib/glowupPrompt';
+import { gsap } from '@/lib/gsap';
 
 interface Props {
     propertyId: number | string;
@@ -64,6 +67,160 @@ const usageProgress = computed(() => {
 const selectedFileLabel = computed(
     () => createForm.image?.name ?? 'Select an image',
 );
+
+const promptDraft = ref('');
+const promptDirty = ref(false);
+const autoPromptActive = ref(false);
+let typingTween: gsap.core.Tween | null = null;
+const skeletonActive = ref(false);
+let skeletonTimeout: number | null = null;
+
+const canShowPrompt = computed(
+    () =>
+        Boolean(createForm.image && createForm.room_type && createForm.style),
+);
+
+const stopTyping = () => {
+    if (typingTween) {
+        typingTween.kill();
+        typingTween = null;
+    }
+};
+
+const stopSkeleton = () => {
+    if (skeletonTimeout !== null) {
+        window.clearTimeout(skeletonTimeout);
+        skeletonTimeout = null;
+    }
+    skeletonActive.value = false;
+};
+
+const triggerSkeleton = (duration: number) => {
+    stopSkeleton();
+    skeletonActive.value = true;
+    skeletonTimeout = window.setTimeout(() => {
+        skeletonActive.value = false;
+        skeletonTimeout = null;
+    }, duration * 1000);
+};
+
+const applyPromptWithTyping = (text: string) => {
+    const trimmed = text.trim();
+    stopTyping();
+    stopSkeleton();
+
+    if (!trimmed) {
+        autoPromptActive.value = false;
+        promptDraft.value = '';
+        createForm.prompt = '';
+        promptDirty.value = false;
+        return;
+    }
+
+    autoPromptActive.value = true;
+    const state = { progress: 0 };
+    const target = trimmed.length;
+    const duration = Math.min(7, Math.max(0.8, target / 30));
+    triggerSkeleton(duration);
+
+    typingTween = gsap.to(state, {
+        progress: target,
+        duration,
+        ease: 'none',
+        onUpdate: () => {
+            promptDraft.value = trimmed.slice(0, Math.round(state.progress));
+        },
+        onComplete: () => {
+            promptDraft.value = trimmed;
+            autoPromptActive.value = false;
+            typingTween = null;
+        },
+    });
+};
+
+watch(
+    [() => createForm.room_type, () => createForm.style, () => createForm.image],
+    ([room, style, image], [prevRoom, prevStyle, prevImage]) => {
+        if (!room || !style || !image) {
+            stopTyping();
+            stopSkeleton();
+            autoPromptActive.value = false;
+            promptDirty.value = false;
+            promptDraft.value = '';
+            createForm.prompt = '';
+            return;
+        }
+
+        if (
+            room !== prevRoom ||
+            style !== prevStyle ||
+            image !== prevImage
+        ) {
+            promptDirty.value = false;
+        }
+
+        if (!promptDirty.value) {
+            const { positive } = buildPrompt({
+                room: room as RoomType,
+                style: style as Style,
+                includeNegatives: false,
+            });
+            promptDirty.value = false;
+            applyPromptWithTyping(positive);
+        }
+    },
+    { immediate: true },
+);
+
+watch(
+    () => promptDraft.value,
+    (value) => {
+        createForm.prompt = value;
+        if (!autoPromptActive.value) {
+            promptDirty.value = true;
+        }
+    },
+);
+
+const regeneratePrompt = () => {
+    if (!canShowPrompt.value || !createForm.room_type || !createForm.style) {
+        return;
+    }
+
+    promptDirty.value = false;
+    const { positive } = buildPrompt({
+        room: createForm.room_type as RoomType,
+        style: createForm.style as Style,
+        includeNegatives: false,
+    });
+    applyPromptWithTyping(positive);
+};
+
+const handlePromptInput = (value: string) => {
+    stopTyping();
+    stopSkeleton();
+    autoPromptActive.value = false;
+    promptDraft.value = value;
+};
+
+const promptHelper = computed(() =>
+    canShowPrompt.value
+        ? 'Modify the prompt if you want to guide the AI differently.'
+        : 'Add an image, room type, and style to preview the prompt.',
+);
+
+onBeforeUnmount(() => {
+    stopTyping();
+    stopSkeleton();
+});
+
+const isGenerateDisabled = computed(() => {
+    if (limitReached.value || isUploading.value) {
+        return true;
+    }
+
+    return !createForm.image || !createForm.prompt?.trim();
+});
 
 const statusTokens: Record<
     string,
@@ -267,7 +424,7 @@ const formatDate = (input?: string | null) => {
                         </div>
                     </div>
 
-                    <div class="grid gap-4 md:grid-cols-2">
+                    <div class="grid gap-4 md:grid-cols-2 ">
                         <label class="flex flex-col gap-2 text-sm text-gray-500">
                             Room type
                             <select
@@ -298,13 +455,50 @@ const formatDate = (input?: string | null) => {
                                 </option>
                             </select>
                         </label>
+                        <div class="md:col-span-2 flex flex-col gap-3">
+                            <div class="relative">
+                                <TextArea
+                                    :model-value="promptDraft"
+                                    label="Prompt (editable)"
+                                    :rows="6"
+                                    placeholder="Prompt will appear once an image is selected."
+                                    :disabled="!canShowPrompt"
+                                    @update:model-value="handlePromptInput"
+                                />
+                                <div
+                                    class="pointer-events-none top-[auto] absolute inset-1 h-[80%] rounded-[20px] transition-opacity duration-300 "
+                                    :class="[
+                                        skeletonActive ? 'opacity-90' : 'opacity-0',
+                                        canShowPrompt ? 'visible' : 'invisible',
+                                        'skeleton-overlay',
+                                    ]"
+                                />
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between text-xs text-gray-500">
+                                <span>{{ promptHelper }}</span>
+                                <button
+                                    type="button"
+                                    class="font-semibold text-[#7c4dff] disabled:cursor-not-allowed disabled:opacity-50"
+                                    :disabled="!canShowPrompt"
+                                    @click="regeneratePrompt"
+                                >
+                                    Regenerate prompt
+                                </button>
+                            </div>
+                            <p
+                                v-if="createForm.errors.prompt"
+                                class="text-sm text-[#B91C1C]"
+                            >
+                                {{ createForm.errors.prompt }}
+                            </p>
+                        </div>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-4">
                         <button
                             type="button"
                             class="inline-flex items-center gap-2 rounded-2xl bg-[#7c4dff] px-5 py-3 text-sm font-semibold text-white shadow-lg disabled:opacity-60"
-                            :disabled="limitReached || isUploading"
+                            :disabled="isGenerateDisabled"
                             @click="submitJob"
                         >
                             <Loader2
@@ -402,8 +596,8 @@ const formatDate = (input?: string | null) => {
                         </span>
                     </div>
                     <GlowUpResultSlider
-                        :before="latestCompletedJob.before_url"
-                        :after="latestCompletedJob.after_url ?? latestCompletedJob.before_url"
+                        :before="latestCompletedJob.after_url ?? latestCompletedJob.before_url"
+                        :after=" latestCompletedJob.before_url "
                         label="Move the slider to compare"
                     />
                     <div class="flex flex-wrap items-center gap-3">
@@ -504,3 +698,25 @@ const formatDate = (input?: string | null) => {
         </div>
     </section>
 </template>
+
+<style scoped>
+.skeleton-overlay {
+    background: linear-gradient(
+        120deg,
+        rgba(124, 77, 255, 0.15) 0%,
+        rgba(235, 229, 255, 0.6) 50%,
+        rgba(124, 77, 255, 0.15) 100%
+    );
+    background-size: 200% 100%;
+    animation: glowupSkeleton 3.2s ease-in-out infinite;
+}
+
+@keyframes glowupSkeleton {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+</style>

@@ -131,6 +131,12 @@ class ReplicateImageService implements GlowUpImageProvider
 
     private function buildPrompt(GlowupJob $job): string
     {
+        $customPrompt = data_get($job->meta, 'prompt');
+
+        if (is_string($customPrompt) && trim($customPrompt) !== '') {
+            return trim($customPrompt);
+        }
+
         $room = $this->humanize($job->room_type, 'space');
         $style = $this->humanize($job->style, 'modern');
 
