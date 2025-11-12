@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Application\GlowUp\Services\GlowUpJobService;
 use App\Domain\GlowUp\Contracts\GlowUpImageProvider;
 use App\Events\GlowUpJobUpdated;
 use App\Models\GlowupJob;
@@ -29,7 +28,6 @@ class ProcessGlowUpImageJob implements ShouldQueue
 
     public function handle(
         GlowUpImageProvider $imageProvider,
-        GlowUpJobService $jobService,
     ): void {
         $job = GlowupJob::query()->find($this->jobId);
 
@@ -62,8 +60,6 @@ class ProcessGlowUpImageJob implements ShouldQueue
             'status' => GlowupJob::STATUS_DONE,
             'meta' => $meta,
         ])->save();
-
-        $jobService->markUsageIfNeeded($job);
 
         GlowUpJobUpdated::dispatch($job->fresh());
     }
