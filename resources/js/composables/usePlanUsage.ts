@@ -1,36 +1,24 @@
-import type { AppPageProps } from '@/types';
+import type { AppPageProps, PlanUsagePayload } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { computed, reactive, readonly } from 'vue';
-
-interface PlanUsagePayload {
-    total?: number | null;
-    limit?: number | null;
-    used?: number | null;
-    consumption?: number | null;
-    remaining?: number | null;
-    last_reset_at?: string | null;
-    last_refresh_at?: string | null;
-}
 
 export const usePlanUsage = () => {
     const page = usePage<AppPageProps<{ planUsage?: PlanUsagePayload }>>();
 
-    const payload = page.props.planUsage ?? {};
+    const payload = page.props.planUsage ?? ({} as Partial<PlanUsagePayload>);
 
     const initialTotal =
-        payload.total ??
-        payload.limit ??
+        (payload.limit ?? null) ??
         10; /* fallback to a sensible default for onboarding */
     const initialUsed =
         payload.used ??
-        payload.consumption ??
         initialTotal - (payload.remaining ?? initialTotal);
 
     const usage = reactive({
         total: Math.max(0, initialTotal),
         used: Math.max(0, initialUsed),
-        lastResetAt: payload.last_reset_at ?? null,
-        lastRefreshAt: payload.last_refresh_at ?? null,
+        lastResetAt: payload.resets_at ?? null,
+        lastRefreshAt: null,
     });
 
     const remaining = computed(() => Math.max(0, usage.total - usage.used));

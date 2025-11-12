@@ -98,6 +98,18 @@ export interface PropertyWorkspaceProperty {
     workspace?: PropertyWorkspaceMeta;
     worth?: WorthResult | null;
     glowUp?: GlowUpState;
+    usage?: {
+        plan: {
+            tier: string;
+            label: string;
+            limit: number | null;
+        };
+        used: number;
+        remaining: number;
+        limit: number | null;
+        period_key: string;
+        resets_at?: string | null;
+    } | null;
 }
 
 export type ModuleId =
