@@ -596,8 +596,8 @@ const formatDate = (input?: string | null) => {
                         </span>
                     </div>
                     <GlowUpResultSlider
-                        :before="latestCompletedJob.after_url ?? latestCompletedJob.before_url"
-                        :after=" latestCompletedJob.before_url "
+                        :before="latestCompletedJob.before_url"
+                        :after=" latestCompletedJob.after_url ?? latestCompletedJob.before_url"
                         label="Move the slider to compare"
                     />
                     <div class="flex flex-wrap items-center gap-3">

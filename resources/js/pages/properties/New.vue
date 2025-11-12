@@ -835,7 +835,7 @@ const isNextDisabled = computed(() => {
                                     {{ formatCoordinate(addressDetails.lng) }}
                                 </span>
                                 <span
-                                    class="neu-surface rounded-2xl px-3 py-2 text-xs tracking-wide text-[#9ca3af] uppercase"
+                                    class="neu-surface rounded-2xl px-3 py-2 text-xs truncate text-ellipsis tracking-wide text-[#9ca3af] uppercase"
                                 >
                                     Place ID: {{ addressDetails.placeId }}
                                 </span>
