@@ -55,6 +55,7 @@ class PropertyWorthController extends Controller
                 'errors' => [
                     'worth' => $exception->getMessage(),
                 ],
+                'usage' => $exception->context(),
             ]);
 
             return $inertia->toResponse($request)->setStatusCode(403);
