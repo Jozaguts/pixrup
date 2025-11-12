@@ -2,13 +2,14 @@
 
 use App\Application\Appraisal\DTOs\PropertyWorthDTO;
 use App\Application\Appraisal\Services\AppraisalService;
-use App\Application\Shared\Services\CheckFeatureLimit;
+use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
 use App\Infrastructure\Appraisal\Persistence\EloquentPropertyWorthRepository;
 use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\UsagePropertyMonthly;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -24,8 +25,6 @@ test('appraisal service stores valuation and updates plan usage', function (): v
     expect($repository)->toBeInstanceOf(EloquentPropertyWorthRepository::class);
 
     $provider = \Mockery::mock(AppraisalProviderInterface::class);
-    $featureLimit = \Mockery::mock(CheckFeatureLimit::class);
-
     $property = Property::factory()->create();
     $user = User::factory()->create();
     $this->actingAs($user);
@@ -37,14 +36,8 @@ test('appraisal service stores valuation and updates plan usage', function (): v
         ->with(\Mockery::on(fn ($arg) => $arg instanceof Property && $arg->is($property)))
         ->andReturn($dto);
 
-    $featureLimit->shouldReceive('assertUsageAvailable')
-        ->once()
-        ->with($user, 'appraisal.fetch');
-    $featureLimit->shouldReceive('recordUsage')
-        ->once()
-        ->with($user, 'appraisal.fetch');
-
-    $service = new AppraisalService($repository, $provider, $featureLimit);
+    $usageService = app(MonthlyPropertyUsageService::class);
+    $service = new AppraisalService($repository, $provider, $usageService);
 
     $responseDto = $service->fetchValuation($property);
 
@@ -54,6 +47,7 @@ test('appraisal service stores valuation and updates plan usage', function (): v
         ->and($responseDto->provider)->toEqual($dto->provider);
 
     expect($property->worths()->count())->toBe(1);
+    expect(UsagePropertyMonthly::query()->count())->toBe(1);
 });
 
 /**
@@ -66,14 +60,6 @@ test('appraisal service returns cached valuation when fresh', function (): void 
     $property = Property::factory()->create();
     $user = User::factory()->create();
     $this->actingAs($user);
-
-    $featureLimit = \Mockery::mock(CheckFeatureLimit::class);
-    $featureLimit->shouldReceive('assertUsageAvailable')
-        ->once()
-        ->with($user, 'appraisal.fetch');
-    $featureLimit->shouldReceive('recordUsage')
-        ->once()
-        ->with($user, 'appraisal.fetch');
 
     $provider = \Mockery::mock(AppraisalProviderInterface::class);
 
@@ -92,7 +78,8 @@ test('appraisal service returns cached valuation when fresh', function (): void 
         ->once()
         ->andReturn($dto);
 
-    $service = new AppraisalService($repository, $provider, $featureLimit);
+    $usageService = app(MonthlyPropertyUsageService::class);
+    $service = new AppraisalService($repository, $provider, $usageService);
 
     $first = $service->fetchValuation($property);
     $second = $service->fetchValuation($property);
