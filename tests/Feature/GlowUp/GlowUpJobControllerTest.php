@@ -1,11 +1,10 @@
 <?php
 
-use App\Application\Shared\Services\CheckFeatureLimit;
-use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Jobs\ProcessGlowUpImageJob;
 use App\Models\GlowupJob;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\UsagePropertyMonthly;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
@@ -46,19 +45,17 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
     Bus::assertDispatched(ProcessGlowUpImageJob::class, function (ProcessGlowUpImageJob $queued) use ($job): bool {
         return $queued->jobId === $job->id;
     });
+
+    expect(UsagePropertyMonthly::query()->count())->toBe(1);
 });
 
 test('glowup job creation respects plan limits', function (): void {
     Storage::fake('public');
     config(['glowup.disk' => 'public']);
+    config(['plans.tiers.professional.limit' => 0]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->create(['plan' => 'professional']);
     $property = Property::factory()->create();
-
-    $mock = \Mockery::mock(CheckFeatureLimit::class);
-    $mock->shouldReceive('assertUsageAvailable')
-        ->andThrow(new FeatureLimitExceededException('Has alcanzado tu límite de GlowUp.'));
-    app()->instance(CheckFeatureLimit::class, $mock);
 
     $this->actingAs($user);
 
@@ -71,9 +68,17 @@ test('glowup job creation respects plan limits', function (): void {
         ],
     );
 
-    $response->assertForbidden()->assertJson([
-        'message' => 'Has alcanzado tu límite de GlowUp.',
-    ]);
+    $response->assertForbidden()
+        ->assertJsonPath('message', 'Has alcanzado tu límite mensual de uso.')
+        ->assertJsonStructure([
+            'usage' => [
+                'plan' => ['tier', 'label', 'limit'],
+                'used',
+                'remaining',
+                'period_key',
+                'resets_at',
+            ],
+        ]);
 });
 
 test('users can attach finished glowup jobs to the property', function (): void {
