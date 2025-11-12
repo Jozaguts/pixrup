@@ -2,8 +2,9 @@
 
 namespace App\Application\GlowUp\Services;
 
-use App\Application\Shared\Services\CheckFeatureLimit;
+use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
+use App\Domain\Usage\Enums\UsageAction;
 use App\Events\GlowUpJobUpdated;
 use App\Jobs\ProcessGlowUpImageJob;
 use App\Models\GlowupJob;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 class GlowUpJobService
 {
     public function __construct(
-        private readonly CheckFeatureLimit $featureLimit,
+        private readonly MonthlyPropertyUsageService $usageService,
     ) {
     }
 
@@ -28,9 +29,7 @@ class GlowUpJobService
         UploadedFile $image,
         array $payload,
     ): GlowupJob {
-        $feature = config('glowup.feature_identifier');
-
-        $this->featureLimit->assertUsageAvailable($user, $feature);
+        $this->usageService->ensureUsage($user, $property, UsageAction::GLOW_UP);
 
         $disk = $this->disk();
         try {
@@ -61,6 +60,7 @@ class GlowUpJobService
                 'disk' => $disk,
                 'before_path' => $beforePath,
             ],
+            'usage_recorded_at' => now(),
         ]);
 
         GlowUpJobUpdated::dispatch($job);
@@ -68,25 +68,6 @@ class GlowUpJobService
         ProcessGlowUpImageJob::dispatch($job->getKey());
 
         return $job;
-    }
-
-    public function markUsageIfNeeded(GlowupJob $job): void
-    {
-        if ($job->usage_recorded_at !== null) {
-            return;
-        }
-
-        $user = $job->user;
-
-        if ($user === null) {
-            return;
-        }
-
-        $feature = config('glowup.feature_identifier');
-
-        $this->featureLimit->recordUsage($user, $feature);
-
-        $job->forceFill(['usage_recorded_at' => now()])->save();
     }
 
     public function attachResult(GlowupJob $job, string $action, ?string $notes): void
