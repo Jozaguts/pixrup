@@ -10,9 +10,10 @@
 namespace App\Application\Appraisal\Services;
 
 use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Application\Shared\Services\CheckFeatureLimit;
+use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
+use App\Domain\Usage\Enums\UsageAction;
 use App\Models\Property;
 use App\Models\User;
 use Carbon\Carbon;
@@ -26,19 +27,18 @@ use Illuminate\Support\Facades\Auth;
  */
 class AppraisalService
 {
-    private const FEATURE_IDENTIFIER = 'appraisal.fetch';
     private const CACHE_TTL_HOURS = 24;
 
     /**
      * Description: Inject dependencies required to retrieve property appraisals.
-     * Parameters: PropertyWorthRepositoryInterface $repository Persistence port; AppraisalProviderInterface $provider External provider adapter; CheckFeatureLimit $featureLimit Feature usage guard.
+     * Parameters: PropertyWorthRepositoryInterface $repository Persistence port; AppraisalProviderInterface $provider External provider adapter; MonthlyPropertyUsageService $usageService Usage guard.
      * Returns: void.
      * Expected Result: Service ready to fetch valuations with caching and limit checks.
      */
     public function __construct(
         private readonly PropertyWorthRepositoryInterface $repository,
         private readonly AppraisalProviderInterface $provider,
-        private readonly CheckFeatureLimit $featureLimit,
+        private readonly MonthlyPropertyUsageService $usageService,
     ) {
     }
 
@@ -59,15 +59,11 @@ class AppraisalService
 
         $user = $this->currentUser();
         if ($user !== null) {
-            $this->featureLimit->assertUsageAvailable($user, self::FEATURE_IDENTIFIER);
+            $this->usageService->ensureUsage($user, $property, UsageAction::APPRAISAL);
         }
 
         $valuation = $this->provider->fetchValue($property);
         $stored = $this->repository->saveFromDto($property->getKey(), $valuation);
-
-        if ($user !== null) {
-            $this->featureLimit->recordUsage($user, self::FEATURE_IDENTIFIER);
-        }
 
         return $stored->toDto();
     }
