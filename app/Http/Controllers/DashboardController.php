@@ -30,7 +30,7 @@ class DashboardController extends Controller
                     'status' => $status,
                     'estimatedValue' => $property->latestWorth?->value,
                     'progress' => null,
-                    'thumbnail' => null,
+                    'thumbnail' => $property?->photos()?->latest()?->first()?->path,
                     'links' => [
                         'view' => route('properties.show', $property, absolute: false),
                         'report' => null,

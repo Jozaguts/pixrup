@@ -10,6 +10,7 @@ use App\Models\PropertyPhoto;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -202,12 +203,18 @@ class PropertyController extends Controller
             if (! $file) {
                 continue;
             }
+            $user = $request->user();
+            if (! $user){
+                throw  new \RuntimeException('');
+            }
 
-            $path = $file->store("properties/{$property->id}", 'public');
+            $path = $file->store("/users/{$request->user()->id}/properties/{$property->id}", 's3');
+
+            $url = Storage::disk('s3')->url($path);
 
             PropertyPhoto::create([
                 'property_id' => $property->id,
-                'path' => $path,
+                'path' => $url,
                 'original_name' => $file->getClientOriginalName(),
                 'size' => $file->getSize(),
             ]);
