@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Application\Shared\Listeners\IncrementFeatureUsage;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
 use App\Domain\GlowUp\Contracts\GlowUpImageProvider;
@@ -15,7 +14,6 @@ use App\Http\Responses\PasswordResetResponse as AppPasswordResetResponse;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use App\Domain\Shared\Events\FeatureUsed;
 use App\Infrastructure\Appraisal\Persistence\EloquentPropertyWorthRepository;
 use App\Infrastructure\Appraisal\Providers\HouseCanaryProvider;
 use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
@@ -96,9 +94,5 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        Event::listen(
-            FeatureUsed::class,
-            [IncrementFeatureUsage::class, 'handle'],
-        );
     }
 }
