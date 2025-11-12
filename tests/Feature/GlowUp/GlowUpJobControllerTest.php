@@ -25,6 +25,7 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
         [
             'room_type' => 'living_room',
             'style' => 'modern',
+            'prompt' => 'Transform the living room into a modern catalog-ready render.',
             'image' => UploadedFile::fake()->image('room.jpg', 1200, 800),
         ],
     );
@@ -64,6 +65,7 @@ test('glowup job creation respects plan limits', function (): void {
         [
             'room_type' => 'living_room',
             'style' => 'modern',
+            'prompt' => 'Transform the living room into a modern catalog-ready render.',
             'image' => UploadedFile::fake()->image('room.jpg', 1200, 800),
         ],
     );

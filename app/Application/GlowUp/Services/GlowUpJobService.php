@@ -49,6 +49,15 @@ class GlowUpJobService
 
         $beforeUrl = Storage::disk($disk)->url($beforePath);
 
+        $meta = [
+            'disk' => $disk,
+            'before_path' => $beforePath,
+        ];
+
+        if (! empty($payload['prompt'])) {
+            $meta['prompt'] = $payload['prompt'];
+        }
+
         $job = GlowupJob::query()->create([
             'property_id' => $property->getKey(),
             'user_id' => $user->getKey(),
@@ -56,10 +65,7 @@ class GlowUpJobService
             'style' => $payload['style'],
             'before_url' => $beforeUrl,
             'status' => GlowupJob::STATUS_PENDING,
-            'meta' => [
-                'disk' => $disk,
-                'before_path' => $beforePath,
-            ],
+            'meta' => $meta,
             'usage_recorded_at' => now(),
         ]);
 

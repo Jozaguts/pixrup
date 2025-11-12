@@ -41,6 +41,7 @@ class CreateGlowUpJobRequest extends FormRequest
         $imageRules = [
             'room_type' => ['required', 'string', Rule::in($roomTypes)],
             'style' => ['required', 'string', Rule::in($styles)],
+            'prompt' => ['required', 'string', 'between:20,2000'],
             'image' => [
                 'required',
                 'file',
@@ -63,6 +64,7 @@ class CreateGlowUpJobRequest extends FormRequest
         return [
             'room_type' => $validated['room_type'],
             'style' => $validated['style'],
+            'prompt' => trim($validated['prompt']),
         ];
     }
 }
