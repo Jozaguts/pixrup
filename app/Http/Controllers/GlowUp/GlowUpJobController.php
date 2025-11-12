@@ -80,11 +80,19 @@ class GlowUpJobController extends Controller
                 $request->validatedPayload(),
             );
         } catch (FeatureLimitExceededException $exception) {
-            return $this->respondWithError(
-                $request,
-                $exception->getMessage(),
-                Response::HTTP_FORBIDDEN,
-            );
+            if ($request->expectsJson()) {
+                return response()->json(
+                    [
+                        'message' => $exception->getMessage(),
+                        'usage' => $exception->context(),
+                    ],
+                    Response::HTTP_FORBIDDEN,
+                );
+            }
+
+            return back()->withErrors([
+                'glowup' => $exception->getMessage(),
+            ]);
         }
 
         $resource = (new GlowUpJobResource($job))->resolve();
