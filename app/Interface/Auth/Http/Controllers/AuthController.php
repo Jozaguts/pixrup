@@ -30,8 +30,7 @@ class AuthController
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'terms' => 'accepted',
+            'password' => 'required|string|min:8',
         ]);
 
         $userEntity = $useCase->execute($request->only('name', 'email', 'password'));

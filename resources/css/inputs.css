@@ -1,0 +1,73 @@
+.npo-form-shadow {
+    box-shadow:var(--neupho-input-shadow);
+}
+
+.npo-input,.npo-input:focus,.npo-input:active {
+    @apply ml-2;
+    border: none;
+    background: transparent;
+    outline: none;
+    flex-grow: 1;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.npo-input-wrapper {
+    @apply grid grid-cols-[auto_1fr] items-center gap-2 py-[0.6rem] px-[0.9rem] rounded-[12px] mt-1;
+    box-shadow: var(--neupho-input-shadow);
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+
+    &:focus-within {
+        box-shadow: var(--neupho-input-shadow-focus);
+    }
+}
+
+
+.npo-form-label {
+    @apply capitalize ml-2 font-kulim font-semibold;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.npo-input:-webkit-autofill,
+.npo-input:-webkit-autofill:hover,
+.npo-input:-webkit-autofill:focus,
+.npo-input:-webkit-autofill:active {
+    box-shadow: 0 0 0 1000px #f7f8fc inset !important;
+    -webkit-text-fill-color: #333 !important;
+}
+
+
+.neu-button {
+    color: inherit;
+    position: relative;
+    background: inherit;
+    outline: none;
+    border: none;
+    box-shadow: var(--neupho-btn-shadow);
+    border-radius: 3px;
+    cursor: pointer;
+    text-transform: capitalize;
+    &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 3px;
+    }
+}
+
+.neu-button:hover::after,
+.neu-button:focus::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    left:3px;
+    top:3px;
+    right: 3px;
+    bottom:3px;
+    box-shadow:var(--neupho-btn-focus-shadow);
+}

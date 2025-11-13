@@ -1,29 +1,27 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { LucideMail, LockIcon, User2Icon } from 'lucide-vue-next';
+import NeuInput from '@/components/NeuInput.vue';
 </script>
 
 <template>
     <AuthBase
-        title="Create an account"
-        description="Enter your details below to create your account"
+        title="Create account"
+        description="Join us today to get started"
     >
-        <Head title="Register" />
-
-        <div class="mb-6">
+        <Head title="Pixrup | Register" />
+        <div class="mb-4">
             <Button
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="outline"
-                class="flex w-full items-center justify-center gap-3 p-6"
+                class="text-sm flex w-full items-center justify-center gap-3 p-6 py-7 neu-button"
+                tabindex="1"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -55,119 +53,67 @@ import { LoaderCircle } from 'lucide-vue-next';
                         />
                     </g>
                 </svg>
-                Continue with Google
+                Sign up using Google
             </Button>
         </div>
-
+        <div class="flex items-center">
+            <div class="flex-1 h-px bg-gray-300"></div>
+            <span class="px-3 text-sm text-gray-500"> Or continue using </span>
+            <div class="flex-1 h-px bg-gray-300"></div>
+        </div>
         <Form
             v-bind="auth.register.store()"
-            :reset-on-success="['password', 'password_confirmation']"
+            :reset-on-success="['password']"
             v-slot="{ errors, processing }"
-            class="flex flex-col gap-6 p-6 shadow-neu-in"
+            class="flex flex-col gap-6 p-6"
         >
-            <div class="grid gap-6">
+            <div class="grid gap-4"> <div class="grid gap-2">
+                <NeuInput
+                    label="Full name"
+                    name="name" :error="errors.name"
+                    :tabindex="1" type="text"
+                    required
+                    autocomplete="name"
+                    placeholder="Please enter your full name"
+                >
+                    <template #icon>
+                        <User2Icon class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                    </template>
+                </NeuInput>
+            </div>
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input
-                        id="name"
-                        type="text"
+                    <NeuInput
+                        label="Email address"
+                        name="email" :error="errors.email"
+                        :tabindex="2" type="email"
                         required
-                        autofocus
-                        :tabindex="1"
-                        autocomplete="name"
-                        class="is-pressed"
-                        name="name"
-                        placeholder="Full name"
-                    />
-                    <InputError :message="errors.name" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        required
-                        :tabindex="2"
-                        class="is-pressed"
                         autocomplete="email"
-                        name="email"
-                        placeholder="email@example.com"
-                    />
-                    <InputError :message="errors.email" />
+                        placeholder="Please enter your email"
+                    >
+                        <template #icon>
+                            <LucideMail class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                        </template>
+                    </NeuInput>
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
-                        id="password"
+                    <NeuInput
+                        label="Password"
+                        name="password" :error="errors.password"
+                        tabindex="3"
                         type="password"
                         required
-                        class="is-pressed"
-                        :tabindex="3"
-                        autocomplete="new-password"
-                        name="password"
-                        placeholder="Password"
-                    />
-                    <InputError :message="errors.password" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
-                    <Input
-                        id="password_confirmation"
-                        type="password"
-                        required
-                        :tabindex="4"
-                        autocomplete="new-password"
-                        name="password_confirmation"
-                        placeholder="Confirm password"
-                        class="is-pressed"
-                    />
-                    <InputError :message="errors.password_confirmation" />
-                </div>
-
-                <div class="space-y-2">
-                    <div class="flex items-center gap-3">
-                        <Checkbox
-                            id="terms"
-                            name="terms"
-                            :tabindex="5"
-                            required
-                            class="neu-checkbox"
-                            data-test="terms-checkbox"
-                        />
-                        <Label
-                            for="terms"
-                            class="text-sm leading-6 text-muted-foreground"
-                        >
-                            By signing up you agree to our
-                            <TextLink
-                                href="https://pixrup.com/terms"
-                                class="mx-1 underline underline-offset-4"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                Terms of Service
-                            </TextLink>
-                            and
-                            <TextLink
-                                href="https://pixrup.com/privacy"
-                                class="ml-1 underline underline-offset-4"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                Privacy Policy
-                            </TextLink>
-                            .
-                        </Label>
-                    </div>
-                    <InputError :message="errors.terms" />
+                        placeholder="Enter your password"
+                    >
+                        <template #icon>
+                            <LockIcon class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                        </template>
+                    </NeuInput>
                 </div>
 
                 <Button
                     type="submit"
-                    class="mt-2 w-full"
+                    class="mt-2 w-full neu-button p-3 py-6 text-muted-foreground"
                     tabindex="6"
                     :disabled="processing"
                     data-test="register-user-button"
@@ -178,16 +124,24 @@ import { LoaderCircle } from 'lucide-vue-next';
                     />
                     Create account
                 </Button>
-            </div>
 
-            <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
-                <TextLink
-                    :href="auth.login.show()"
-                    class="underline underline-offset-4"
-                    :tabindex="6"
+                <div class="space-y-2">
+                    <p class="text-center text-sm text-gray-500 mt-4">
+                        By signing up, you agree to our
+                        <TextLink href="#">Terms of Service</TextLink> and
+                        <TextLink href="#">Privacy Policy</TextLink>.
+                    </p>
+                </div>
+
+                <div class="text-center text-sm text-muted-foreground">
+                    Already have an account?
+                    <TextLink
+                        :href="auth.login.show()"
+                        class="underline underline-offset-4"
+                        :tabindex="6"
                     >Log in</TextLink
-                >
+                    >
+                </div>
             </div>
         </Form>
     </AuthBase>

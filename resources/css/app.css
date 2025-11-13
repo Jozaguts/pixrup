@@ -1,15 +1,20 @@
 /* app.css */
 
 /* --- Imports from your current setup --- */
+@import url('https://fonts.googleapis.com/css2?family=Kulim+Park:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import './inputs.css';
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './home-page-33.css';
+
+/* @import neuphormism-shadows.css*/
 
 /* Tailwind v4 content sources (Laravel blade cache + pagination) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 /* Dark variant helper */
 @custom-variant dark (&:is(.dark *));
+
 
 /* --- Tailwind theme token mapping (from your base file) --- */
 @theme inline {
@@ -18,10 +23,13 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
+    --font-kulim: "Kulim Park", sans-serif;
+
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
+    --font-color-dark: #4a5568;
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
@@ -78,6 +86,8 @@
 
     * {
         @apply border-border outline-ring/50;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     body,
@@ -86,6 +96,7 @@
             'Mona Sans', ui-sans-serif, system-ui, sans-serif,
             'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
             'Noto Color Emoji';
+        color:var(--font-color-dark) !important;
     }
 
     body {
@@ -100,6 +111,14 @@
 ----------------------------------------------------------------------------- */
 
 :root {
+    /* --- Input shadows --- */
+    --neupho-input-shadow-focus: inset 0.2rem 0.2rem 0.4rem #c8d0e7,
+    inset -0.2rem -0.2rem 0.4rem #FFFFFF;
+    --neupho-input-shadow: inset 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem #FFFFFF;
+    --neupho-container-shadow: -4px -2px 4px 0px #ffffff, 4px 2px 6px 0px #DFE4EA;
+    --neupho-btn-shadow: -4px -2px 4px 0 #ffffff, 4px 2px 6px 0 #DFE4EA;
+    --neupho-btn-focus-shadow:2px 2px 2px 0 #DFE4EA inset,
+    -2px -2px 2px 0 #ffffff inset;
     /* --- Brand & core --- */
     --primary: #6e33ff; /* brand purple */
     --primary-foreground: #ffffff; /* readable over purple */
@@ -107,7 +126,8 @@
     --foreground: #1f2933; /* richer neutral for text */
 
     /* --- Backgrounds / surfaces --- */
-    --background: #e8e8e8;
+    --background_legacy: #e8e8e8;
+    --background: #f5f6f7;;/*#ebe8f3;  light neutral for app background */
     --card: var(--background);
     --popover: var(--background);
 
@@ -221,11 +241,12 @@
 }
 
 @utility shadow-neu-out {
-    box-shadow: var(--neu-shadow-out);
+    box-shadow: -4px -2px 4px 0px #ffffff, 4px 2px 6px 0px #DFE4EA;
 }
 
 @utility shadow-neu-in {
-    box-shadow: var(--neu-shadow-in);
+    box-shadow:inset 2px 2px 5px #d1cccb, inset -2px -2px 5px #ffffff;
+    /*box-shadow: var(--neu-shadow-in);*/
 }
 
 @utility neu-center-shadow {
@@ -291,8 +312,6 @@
         outline: none;
         background: var(--background);
         box-shadow: var(--neu-shadow-out);
-
-
         color: var(--foreground, #000);
         border: none;
         border-radius: 10px;
@@ -300,7 +319,8 @@
     }
     .neu-input:focus{
         background: var(--background);
-        box-shadow: var(--neu-shadow-in);
+        /*box-shadow: var(--neu-shadow-in);*/
+        box-shadow: 13px 13px 52px #dedddd, -13px -13px 52px #ffffff;
         /*box-shadow: inset 5px 5px 17px var(--background),*/
         /*inset -5px -5px 17px #ffffff;*/
     }
