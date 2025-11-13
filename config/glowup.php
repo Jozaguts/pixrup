@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'disk' => env('GLOWUP_DISK', env('FILESYSTEM_DISK', 'public')),
+    'disk' => env('FILESYSTEM_DISK', 'public'),
     'feature_identifier' => 'glowup.generate',
     'max_upload_size_mb' => (int) env('GLOWUP_MAX_UPLOAD_MB', 10),
     'allowed_mimes' => [

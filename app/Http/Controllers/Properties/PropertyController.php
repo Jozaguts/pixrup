@@ -208,9 +208,9 @@ class PropertyController extends Controller
                 throw  new \RuntimeException('');
             }
 
-            $path = $file->store("/users/{$request->user()->id}/properties/{$property->id}", 's3');
+            $path = $file->store("/users/{$request->user()->id}/properties/{$property->id}");
 
-            $url = Storage::disk('s3')->url($path);
+            $url = Storage::url($path);
 
             PropertyPhoto::create([
                 'property_id' => $property->id,

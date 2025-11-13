@@ -2,43 +2,23 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import type {
-    AppPageProps,
     BreadcrumbItem,
+    DashboardPageProps,
+    DashboardProperty,
     PlanUsagePayload,
     User,
 } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import {
     Building2,
-    CheckCircle2,
     Compass,
-    Home,
     MapPin,
     Plus,
     TrendingUp,
-    X,
 } from 'lucide-vue-next';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed,  } from 'vue';
 
 type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
-
-interface DashboardProperty {
-    id: number | string;
-    title: string;
-    address: string;
-    status: PropertyStatus;
-    estimatedValue?: number;
-    progress?: number;
-    thumbnail?: string | null;
-    links?: {
-        view?: string;
-        report?: string;
-    };
-}
-
-type DashboardPageProps = AppPageProps<{
-    properties?: DashboardProperty[];
-}>;
 
 type DashboardUser = User & {
     plan?: string | null;
@@ -168,17 +148,14 @@ const planDetails = computed(() => {
     if (usagePlan) {
         return {
             label: usagePlan.label ?? formatTitle(usagePlan.tier),
-            limit:
-                planUsage.value?.limit ??
-                usagePlan.limit ??
-                null,
+            limit: planUsage.value?.limit ?? usagePlan.limit ?? null,
         };
     }
 
     const key = planKey.value;
     const preset = planDefinitions[key as keyof typeof planDefinitions];
     const fallbackLimit =
-        preset?.limit === undefined ? 20 : preset?.limit ?? null;
+        preset?.limit === undefined ? 20 : (preset?.limit ?? null);
 
     return {
         label: preset?.name ?? formatTitle(key),
@@ -342,67 +319,14 @@ const visitLink = (link?: string) => {
 
     router.visit(link);
 };
-
-const successToastStorageKey = 'pixrup:new-property-toast';
-const propertyToastMessage = ref('');
-const flashStatus = computed(() => page.props.flash?.status ?? null);
-
-onMounted(() => {
-    if (typeof window === 'undefined') {
-        return;
-    }
-
-    const stored = window.sessionStorage.getItem(successToastStorageKey);
-
-    if (stored) {
-        propertyToastMessage.value = stored;
-        window.sessionStorage.removeItem(successToastStorageKey);
-    }
-});
-
-watch(
-    flashStatus,
-    (status) => {
-        if (status === 'property-created') {
-            propertyToastMessage.value = 'Property successfully created 🎉';
-        }
-    },
-    { immediate: true },
-);
-
-const dismissPropertyToast = () => {
-    propertyToastMessage.value = '';
-};
 </script>
 
 <template>
     <Head title="Dashboard" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-col gap-6 text-[#1f2933]">
-            <Transition name="fade-slide">
-                <div
-                    v-if="propertyToastMessage"
-                    class="neu-surface flex flex-col gap-3 rounded-[24px] bg-[#f4f5fa] px-5 py-4 text-sm text-[#1f2933] shadow-neu-out md:flex-row md:items-center md:justify-between"
-                >
-                    <div class="flex items-center gap-3 text-[#1f2933]">
-                        <CheckCircle2 class="size-5 text-[#1fbf75]" />
-                        <span class="font-semibold">
-                            {{ propertyToastMessage }}
-                        </span>
-                    </div>
-                    <button
-                        type="button"
-                        class="neu-btn inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-xs font-semibold text-[#6b7280] transition-all hover:text-[#1f2933]"
-                        @click="dismissPropertyToast"
-                    >
-                        <X class="size-4" />
-                        Dismiss
-                    </button>
-                </div>
-            </Transition>
-
             <section
-                class="neu-surface flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:flex-row md:items-center md:justify-between md:gap-10"
+                class="flex flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:flex-row md:items-center md:justify-between md:gap-10"
             >
                 <div class="flex flex-col gap-2">
                     <h1
@@ -426,7 +350,7 @@ const dismissPropertyToast = () => {
             </section>
 
             <section
-                class="neu-surface flex flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out"
+                class="flex flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out"
             >
                 <header class="flex flex-col gap-2">
                     <h2 class="text-lg font-semibold md:text-xl">Plan usage</h2>
@@ -441,7 +365,7 @@ const dismissPropertyToast = () => {
                 >
                     <div class="flex flex-col gap-4">
                         <div
-                            class="neu-surface flex flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-5"
+                            class="flex flex-col gap-4 neu-surface rounded-[24px] bg-[#f4f5fa] p-5"
                         >
                             <div
                                 class="flex items-center justify-between gap-3"
@@ -464,23 +388,21 @@ const dismissPropertyToast = () => {
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                        <p
-                                            class="text-xs tracking-wide text-[#9CA3AF] uppercase"
-                                        >
-                                            Properties used this month
-                                        </p>
-                                        <p class="text-lg font-semibold">
-                                            {{ usageCount }} / {{
-                                                usageLimitLabel
-                                            }}
-                                        </p>
-                                        <p
-                                            v-if="usageResetLabel"
-                                            class="text-xs text-[#9CA3AF]"
-                                        >
-                                            Resets {{ usageResetLabel }}
-                                        </p>
-                                    </div>
+                                    <p
+                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
+                                    >
+                                        Properties used this month
+                                    </p>
+                                    <p class="text-lg font-semibold">
+                                        {{ usageCount }} / {{ usageLimitLabel }}
+                                    </p>
+                                    <p
+                                        v-if="usageResetLabel"
+                                        class="text-xs text-[#9CA3AF]"
+                                    >
+                                        Resets {{ usageResetLabel }}
+                                    </p>
+                                </div>
                             </div>
 
                             <div class="flex flex-col gap-3">
@@ -515,7 +437,7 @@ const dismissPropertyToast = () => {
                     </div>
 
                     <div
-                        class="neu-surface flex flex-col gap-4 rounded-[24px] p-5"
+                        class="flex flex-col gap-4 neu-surface rounded-[24px] p-5"
                     >
                         <h3
                             class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase"
@@ -547,7 +469,7 @@ const dismissPropertyToast = () => {
             </section>
 
             <section
-                class="neu-surface flex flex-col gap-6 rounded-[28px] p-6 shadow-neu-out"
+                class="flex flex-col gap-6 neu-surface rounded-[28px] p-6 shadow-neu-out"
             >
                 <header
                     class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
@@ -577,7 +499,7 @@ const dismissPropertyToast = () => {
                     <article
                         v-for="property in resolvedProperties"
                         :key="property.id"
-                        class="neu-surface group flex h-full flex-col overflow-hidden"
+                        class="group flex h-full flex-col overflow-hidden neu-surface"
                     >
                         <div class="relative aspect-[16/10] overflow-hidden">
                             <img
@@ -590,7 +512,11 @@ const dismissPropertyToast = () => {
                                 v-else
                                 class="flex size-full items-center justify-center bg-gradient-to-br from-[#eef1fb] via-[#f4f5fa] to-[#dbe2ff] text-[#7C4DFF]"
                             >
-                                <img src="/images/pixrup-icon.svg" alt="pixrup icon" class="w-15 h-15">
+                                <img
+                                    src="/images/pixrup-icon.svg"
+                                    alt="pixrup icon"
+                                    class="h-15 w-15"
+                                />
                             </div>
 
                             <div
@@ -678,7 +604,7 @@ const dismissPropertyToast = () => {
 
                 <div
                     v-else
-                    class="neu-surface flex flex-col items-center justify-center gap-4 rounded-[28px] bg-[#f4f5fa] p-12 text-center shadow-neu-in"
+                    class="flex flex-col items-center justify-center gap-4 neu-surface rounded-[28px] bg-[#f4f5fa] p-12 text-center shadow-neu-in"
                 >
                     <div
                         class="flex size-16 items-center justify-center rounded-3xl bg-white/90 text-[#7C4DFF] shadow-[8px_8px_20px_rgba(193,199,216,0.35),-8px_-8px_20px_rgba(255,255,255,0.8)]"
