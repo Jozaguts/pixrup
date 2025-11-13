@@ -35,21 +35,21 @@ const bootstrapEcho = () => {
             (import.meta.env.DEV ? false : true),
         enabledTransports: ['ws', 'wss'],
         disableStats: true,
-        authorizer: (channel) => ({
-            authorize: (socketId: string, callback: (status: boolean, data?: unknown) => void) => {
-                window
-                    .axios?.post('/broadcasting/auth', {
-                        socket_id: socketId,
-                        channel_name: channel.name,
-                    })
-                    .then((response) => {
-                        callback(true, response.data);
-                    })
-                    .catch((error) => {
-                        callback(false, error);
-                    });
-            },
-        }),
+        // authorizer: (channel) => ({
+        //     authorize: (socketId: string, callback: (status: boolean, data?: unknown) => void) => {
+        //         window
+        //             .axios?.post('/broadcasting/auth', {
+        //                 socket_id: socketId,
+        //                 channel_name: channel.name,
+        //             })
+        //             .then((response) => {
+        //                 callback(true, response.data);
+        //             })
+        //             .catch((error) => {
+        //                 callback(false, error);
+        //             });
+        //     },
+        // }),
     });
 };
 

@@ -33,5 +33,5 @@ return [
         ['value' => 'outdoor_resort', 'label' => 'Outdoor resort'],
     ],
     'default_poll_interval_ms' => 2800,
-    'broadcast_channel_prefix' => 'private-glowup.jobs.',
+    'broadcast_channel_prefix' => 'glowup.jobs.',
 ];
