@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Http\Resources\GlowUp\GlowUpJobResource;
 use App\Models\GlowupJob;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -22,13 +23,11 @@ class GlowUpJobUpdated implements ShouldBroadcast
         $this->job->refresh();
     }
 
-    public function broadcastOn(): array
+    public function broadcastOn(): Channel
     {
-        $channel = config('glowup.broadcast_channel_prefix', 'private-glowup.jobs.');
+        $channel = config('glowup.broadcast_channel_prefix','glowup.jobs.');
 
-        return [
-            new PrivateChannel($channel.$this->job->property_id),
-        ];
+        return  new PrivateChannel($channel.$this->job->property_id); // private channel adds private prefix so, channel name is private-glowup.jobs.X
     }
 
     public function broadcastAs(): string

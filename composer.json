@@ -20,6 +20,7 @@
         "laravel/wayfinder": "^0.1.9",
         "league/flysystem-aws-s3-v3": "^3.24",
         "mailgun/mailgun-php": "^4.3",
+        "pusher/pusher-php-server": "^7.2",
         "sentry/sentry-laravel": "^4.18"
     },
     "require-dev": {

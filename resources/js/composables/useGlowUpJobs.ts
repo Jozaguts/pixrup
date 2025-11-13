@@ -195,6 +195,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             {
                 forceFormData: true,
                 preserveScroll: true,
+                preserveState: true,
                 onSuccess: () => {
                     setImage(null);
                     createForm.prompt = '';
@@ -272,8 +273,8 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         }
 
         if (window.Echo && propertyId) {
-            subscription = window.Echo.private(`glowup.jobs.${propertyId}`);
-            subscription.listen('GlowUpJobUpdated', (event: { job: GlowUpJobPayload }) => {
+            subscription = window.Echo.private(`glowup.jobs.${propertyId}`)
+            subscription.listen('.GlowUpJobUpdated', (event: { job: GlowUpJobPayload }) => {
                 if (event?.job) {
                     upsertJob(normalizeJob(event.job));
                 }
