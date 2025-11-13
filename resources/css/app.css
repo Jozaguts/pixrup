@@ -165,7 +165,7 @@
 
 .dark {
     /* Keep brand consistent in dark mode */
-    --primary: #6e33ff;
+    --primary: #222436;
     --primary-foreground: #ffffff;
     --ring: var(--primary);
 
