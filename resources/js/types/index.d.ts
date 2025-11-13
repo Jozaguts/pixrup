@@ -72,3 +72,20 @@ export interface GlowUpJobPayload {
     updated_at?: string | null;
     usage_recorded_at?: string | null;
 }
+
+export type DashboardPageProps = AppPageProps<{
+    properties?: DashboardProperty[];
+}>;
+export interface DashboardProperty {
+    id: number | string;
+    title: string;
+    address: string;
+    status: PropertyStatus;
+    estimatedValue?: number;
+    progress?: number;
+    thumbnail?: string | null;
+    links?: {
+        view?: string;
+        report?: string;
+    };
+}

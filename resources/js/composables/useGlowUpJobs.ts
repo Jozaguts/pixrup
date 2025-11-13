@@ -216,6 +216,9 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             }),
             {
                 preserveScroll: true,
+                onSuccess: () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
             },
         );
     };
