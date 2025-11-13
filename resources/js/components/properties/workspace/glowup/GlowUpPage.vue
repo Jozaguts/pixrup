@@ -354,8 +354,8 @@ const formatDate = (input?: string | null) => {
             </div>
         </header>
 
-        <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <div class="space-y-6">
+        <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] h-[calc(100vh-120px)]">
+            <div class="space-y-6 min-h-0 overflow-y-auto custom-scroll">
                 <article class="neu-surface space-y-6 rounded-3xl p-6 shadow-neu-out">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <div>
@@ -371,7 +371,7 @@ const formatDate = (input?: string | null) => {
                         </div>
                         <button
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-2xl border border-white/60 px-4 py-2 text-sm font-semibold text-[#7c4dff]"
+                            class="inline-flex items-center gap-2 rounded-2xl border border-white/60 px-4 py-2 text-sm font-semibold text-[#7c4dff] cursor-pointer"
                             @click="refreshJobs"
                         >
                             <RefreshCw class="h-4 w-4" />
@@ -631,14 +631,14 @@ const formatDate = (input?: string | null) => {
                 </article>
             </div>
 
-            <aside class="neu-surface space-y-4 rounded-3xl p-6 shadow-neu-out">
+            <aside class="min-h-0 overflow-hidden neu-surface space-y-4 rounded-3xl p-6 shadow-neu-out">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-[#1f2937]">
                         GlowUp history
                     </h3>
                     <button
                         type="button"
-                        class="text-sm font-semibold text-[#7c4dff]"
+                        class="text-sm font-semibold text-[#7c4dff] cursor-pointer"
                         @click="refreshJobs"
                     >
                         Refresh
@@ -650,7 +650,7 @@ const formatDate = (input?: string | null) => {
                         Generate your first GlowUp to see progress here.
                     </p>
                 </div>
-                <ul v-else class="space-y-4">
+                <ul v-else class="h-full overflow-y-auto space-y-4  custom-scroll">
                     <li
                         v-for="job in jobs"
                         :key="job.id"
@@ -699,7 +699,15 @@ const formatDate = (input?: string | null) => {
     </section>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
+.custom-scroll {
+    @apply bg-primary-400 overflow-y-auto rounded-md;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(110,52,255, .50) var(--neu-surface);
+    padding-right: 1rem;
+    padding-bottom: 2rem;
+}
+
 .skeleton-overlay {
     background: linear-gradient(
         120deg,
