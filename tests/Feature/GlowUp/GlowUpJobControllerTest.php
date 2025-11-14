@@ -21,7 +21,7 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
     $this->actingAs($user);
 
     $response = $this->withHeaders(['Accept' => 'application/json'])->post(
-        route('api.properties.glowup.jobs.store', ['property' => $property->id]),
+        route('properties.glowup.jobs.store', ['property' => $property->id]),
         [
             'room_type' => 'living_room',
             'style' => 'modern',
@@ -61,7 +61,7 @@ test('glowup job creation respects plan limits', function (): void {
     $this->actingAs($user);
 
     $response = $this->withHeaders(['Accept' => 'application/json'])->post(
-        route('api.properties.glowup.jobs.store', ['property' => $property->id]),
+        route('properties.glowup.jobs.store', ['property' => $property->id]),
         [
             'room_type' => 'living_room',
             'style' => 'modern',
@@ -99,7 +99,7 @@ test('users can attach finished glowup jobs to the property', function (): void 
     $this->actingAs($user);
 
     $response = $this->withHeaders(['Accept' => 'application/json'])->post(
-        route('api.glowup.jobs.attach', ['glowupJob' => $job->id]),
+        route('glowup.jobs.attach', ['glowupJob' => $job->id]),
         [
             'action' => 'save_to_property',
         ],
