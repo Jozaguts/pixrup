@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 /**
 * @see \App\Interface\Auth\Http\Controllers\AuthController::show
 * @see app/Interface/Auth/Http/Controllers/AuthController.php:18
@@ -44,43 +44,6 @@ show.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Interface\Auth\Http\Controllers\AuthController::show
-* @see app/Interface/Auth/Http/Controllers/AuthController.php:18
-* @route '/login'
-*/
-const showForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Auth\Http\Controllers\AuthController::show
-* @see app/Interface/Auth/Http/Controllers/AuthController.php:18
-* @route '/login'
-*/
-showForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Auth\Http\Controllers\AuthController::show
-* @see app/Interface/Auth/Http/Controllers/AuthController.php:18
-* @route '/login'
-*/
-showForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
-
-/**
 * @see \App\Interface\Auth\Http\Controllers\AuthController::store
 * @see app/Interface/Auth/Http/Controllers/AuthController.php:52
 * @route '/login'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Interface\Auth\Http\Controllers\AuthController::store
-* @see app/Interface/Auth/Http/Controllers/AuthController.php:52
-* @route '/login'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Interface\Auth\Http\Controllers\AuthController::store
-* @see app/Interface/Auth/Http/Controllers/AuthController.php:52
-* @route '/login'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 const login = {
     show: Object.assign(show, show),

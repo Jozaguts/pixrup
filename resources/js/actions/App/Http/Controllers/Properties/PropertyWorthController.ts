@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Properties\PropertyWorthController::report
 * @see app/Http/Controllers/Properties/PropertyWorthController.php:37
@@ -56,28 +56,6 @@ report.post = (args: { property: number | { id: number } } | [property: number |
     url: report.url(args, options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Properties\PropertyWorthController::report
-* @see app/Http/Controllers/Properties/PropertyWorthController.php:37
-* @route '/properties/{property}/worth/report'
-*/
-const reportForm = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: report.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Properties\PropertyWorthController::report
-* @see app/Http/Controllers/Properties/PropertyWorthController.php:37
-* @route '/properties/{property}/worth/report'
-*/
-reportForm.post = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: report.url(args, options),
-    method: 'post',
-})
-
-report.form = reportForm
 
 const PropertyWorthController = { report }
 

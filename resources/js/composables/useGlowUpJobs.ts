@@ -3,7 +3,7 @@ import type {
     GlowUpState,
     GlowUpUsage,
 } from '@/components/properties/workspace/types';
-import glowupRoutes from '@/routes/glowup';
+import glowupRoutes from '@/routes/glowup/jobs';
 import propertiesRoutes from '@/routes/properties';
 import type { GlowUpJobPayload } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/vue3';
@@ -231,7 +231,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         }));
 
         attachForm.post(
-            glowupRoutes.jobs.attach.url({
+            glowupRoutes.attach.url({
                 glowupJob: jobId,
             }),
             {
