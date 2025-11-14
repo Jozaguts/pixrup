@@ -27,7 +27,7 @@ test('usage summary endpoint returns current snapshot', function (): void {
     $this->actingAs($user);
 
     $response = $this->withHeaders(['Accept' => 'application/json'])
-        ->get(route('api.usage.summary'));
+        ->get(route('usage.summary'));
 
     $response->assertOk()
         ->assertJsonPath('used', 1)
