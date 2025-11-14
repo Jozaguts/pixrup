@@ -4,7 +4,7 @@ import type {
     GlowUpUsage,
 } from '@/components/properties/workspace/types';
 import propertiesAPI from '@/routes/properties';
-import glowUpJobsAPI from '@/routes/glowup/jobs';
+import glowUpJobsAPI from '@/routes/glowup/jobs/index.ts';
 import type { GlowUpJobPayload } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import {
