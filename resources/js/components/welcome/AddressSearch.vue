@@ -26,13 +26,6 @@ const emit = defineEmits<{
 
 const modelValue = defineModel<string>({ default: '' });
 
-const props = defineProps({
-    variant: {
-        type: String as PropType<'default' | 'neumorphic'>,
-        default: 'default',
-    },
-});
-
 const inputRef = ref<InstanceType<typeof Input> | HTMLInputElement | null>(
     null,
 );
