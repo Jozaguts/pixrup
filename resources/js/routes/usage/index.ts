@@ -1,8 +1,8 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 export const summary = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: summary.url(options),
@@ -11,13 +11,13 @@ export const summary = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 
 summary.definition = {
     methods: ["get","head"],
-    url: '/api/v1/usage',
+    url: '/v1/usage',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 summary.url = (options?: RouteQueryOptions) => {
     return summary.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ summary.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 summary.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: summary.url(options),
@@ -36,7 +36,7 @@ summary.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 summary.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: summary.url(options),
@@ -46,7 +46,7 @@ summary.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 const summaryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: summary.url(options),
@@ -56,7 +56,7 @@ const summaryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 summaryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: summary.url(options),
@@ -66,7 +66,7 @@ summaryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
-* @route '/api/v1/usage'
+* @route '/v1/usage'
 */
 summaryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: summary.url({

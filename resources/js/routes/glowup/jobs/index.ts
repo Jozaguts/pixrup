@@ -1,8 +1,8 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/api/glowup/jobs',
+    url: '/glowup/jobs',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -46,7 +46,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -56,7 +56,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -66,7 +66,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::index
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:36
-* @route '/api/glowup/jobs'
+* @route '/glowup/jobs'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({
@@ -83,7 +83,7 @@ index.form = indexForm
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
-* @route '/api/glowup/jobs/{glowupJob}/attach'
+* @route '/glowup/jobs/{glowupJob}/attach'
 */
 export const attach = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: attach.url(args, options),
@@ -92,13 +92,13 @@ export const attach = (args: { glowupJob: number | { id: number } } | [glowupJob
 
 attach.definition = {
     methods: ["post"],
-    url: '/api/glowup/jobs/{glowupJob}/attach',
+    url: '/glowup/jobs/{glowupJob}/attach',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
-* @route '/api/glowup/jobs/{glowupJob}/attach'
+* @route '/glowup/jobs/{glowupJob}/attach'
 */
 attach.url = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -131,7 +131,7 @@ attach.url = (args: { glowupJob: number | { id: number } } | [glowupJob: number 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
-* @route '/api/glowup/jobs/{glowupJob}/attach'
+* @route '/glowup/jobs/{glowupJob}/attach'
 */
 attach.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: attach.url(args, options),
@@ -141,7 +141,7 @@ attach.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
-* @route '/api/glowup/jobs/{glowupJob}/attach'
+* @route '/glowup/jobs/{glowupJob}/attach'
 */
 const attachForm = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: attach.url(args, options),
@@ -151,7 +151,7 @@ const attachForm = (args: { glowupJob: number | { id: number } } | [glowupJob: n
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
 * @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
-* @route '/api/glowup/jobs/{glowupJob}/attach'
+* @route '/glowup/jobs/{glowupJob}/attach'
 */
 attachForm.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: attach.url(args, options),

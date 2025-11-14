@@ -27,15 +27,13 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
     Route::post('/properties/{property}/worth/fetch', [AppraisalPropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
     Route::post('/properties/{property}/worth/report', [LegacyPropertyWorthController::class, 'report'])->name('properties.worth.report');
+    Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
+    Route::get('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'index'])->name('properties.glowup.jobs.index');
+    Route::post('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'store'])->name('properties.glowup.jobs.store');
+    Route::get('/properties/{property}/glowup/jobs/{glowupJob}', [GlowUpJobController::class, 'show'])->name('properties.glowup.jobs.show');
+    Route::post('/glowup/jobs/{glowupJob}/attach', [GlowUpJobController::class, 'attach'])->name('glowup.jobs.attach');
+    Route::get('/v1/usage', UsageSummaryController::class)->name('usage.summary');
 
-    Route::prefix('api')->name('api.')->group(function (): void {
-        Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
-        Route::get('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'index'])->name('properties.glowup.jobs.index');
-        Route::post('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'store'])->name('properties.glowup.jobs.store');
-        Route::get('/properties/{property}/glowup/jobs/{glowupJob}', [GlowUpJobController::class, 'show'])->name('properties.glowup.jobs.show');
-        Route::post('/glowup/jobs/{glowupJob}/attach', [GlowUpJobController::class, 'attach'])->name('glowup.jobs.attach');
-        Route::get('/v1/usage', UsageSummaryController::class)->name('usage.summary');
-    });
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
