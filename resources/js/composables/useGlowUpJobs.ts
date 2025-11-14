@@ -3,8 +3,8 @@ import type {
     GlowUpState,
     GlowUpUsage,
 } from '@/components/properties/workspace/types';
-import propertiesAPI from '@/routes/properties';
-import glowUpAPI from '@/routes/glowup';
+import propertiesAPI from '@/routes/properties/index';
+import glowUpAPI from '@/routes/glowup/index';
 import type { GlowUpJobPayload } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import {
