@@ -3,8 +3,8 @@ import type {
     GlowUpState,
     GlowUpUsage,
 } from '@/components/properties/workspace/types';
-import API from '@/routes/properties';
-import GlowUpJobController from "@/actions/App/Http/Controllers/GlowUp/GlowUpJobController";
+import glowupRoutes from '@/routes/glowup';
+import propertiesRoutes from '@/routes/properties';
 import type { GlowUpJobPayload } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import {
@@ -205,7 +205,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         createForm.clearErrors();
 
         createForm.post(
-            API.glowup.jobs.store.url({
+            propertiesRoutes.glowup.jobs.store.url({
                 property: propertyId,
             }),
             {
@@ -231,7 +231,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         }));
 
         attachForm.post(
-            GlowUpJobController.attach.url({
+            glowupRoutes.jobs.attach.url({
                 glowupJob: jobId,
             }),
             {
