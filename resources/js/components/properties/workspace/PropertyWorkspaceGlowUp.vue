@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import GlowUpPage from './glowup/GlowUpPage.vue';
-import type {
-    PropertyWorkspaceProperty,
-    WorkspaceModuleMeta,
-} from './types';
+import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -15,5 +12,8 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-    <GlowUpPage :property-id="props.property.id" :glow-up="props.property.glowUp ?? null" />
+    <GlowUpPage
+        :property-id="props.property.id"
+        :glow-up="props.property.glowUp ?? null"
+    />
 </template>

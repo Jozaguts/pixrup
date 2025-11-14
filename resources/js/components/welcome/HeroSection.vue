@@ -88,8 +88,8 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.dark .hero-title__text{
-    color: #fcfcfc
+.dark .hero-title__text {
+    color: #fcfcfc;
 }
 .hero-title__text {
     display: inline-block;

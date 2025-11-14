@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button';
 import { usePlanUsage } from '@/composables/usePlanUsage';
 import propertiesRoutes from '@/routes/properties';
 import { useForm, usePage } from '@inertiajs/vue3';
@@ -24,7 +25,6 @@ import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
 import PropertyDetails from './worth/PropertyDetails.vue';
 import RentalValueCard from './worth/RentalValueCard.vue';
-import { Button } from '@/components/ui/button';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -337,7 +337,7 @@ const idleCallout = computed(() =>
 <template>
     <div class="flex flex-col gap-6 text-[#0d0d12]">
         <header
-            class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 transition-all duration-200 ease-in-out"
+            class="flex flex-col gap-5 neu-surface rounded-[28px] p-6 transition-all duration-200 ease-in-out"
         >
             <div
                 class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"
@@ -363,7 +363,7 @@ const idleCallout = computed(() =>
                     class="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end lg:max-w-sm"
                 >
                     <span
-                        class="neu-surface inline-flex items-center gap-2 self-start rounded-full px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase "
+                        class="inline-flex items-center gap-2 self-start neu-surface rounded-full px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase"
                     >
                         API
                         <span class="font-medium">{{ endpointBadge }}</span>
@@ -372,7 +372,7 @@ const idleCallout = computed(() =>
                     <Button
                         type="button"
                         :disabled="isFetchDisabled"
-                        class="bg-primary-400 "
+                        class="bg-primary-400"
                         @click="handleFetch"
                     >
                         <component
@@ -394,7 +394,7 @@ const idleCallout = computed(() =>
             <transition name="fade">
                 <div
                     v-if="showSuccessBanner"
-                    class="neu-surface flex items-center gap-3 rounded-[20px] bg-white px-4 py-3 text-sm text-[#0d0d12] shadow-neu-out"
+                    class="flex items-center gap-3 neu-surface rounded-[20px] bg-white px-4 py-3 text-sm text-[#0d0d12] shadow-neu-out"
                 >
                     <ShieldCheck class="h-5 w-5 text-[#1dbf7a]" />
                     <span>{{ successMessage }}</span>
@@ -448,7 +448,7 @@ const idleCallout = computed(() =>
 
         <section class="grid gap-6 lg:grid-cols-[1.55fr_1fr]">
             <article
-                class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 text-sm text-[#0d0d12]"
+                class="flex flex-col gap-5 neu-surface rounded-[28px] p-6 text-sm text-[#0d0d12]"
             >
                 <header
                     class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between"
@@ -515,7 +515,7 @@ const idleCallout = computed(() =>
                         />
                         <div
                             v-else
-                            class="neu-surface flex flex-col justify-center gap-2 rounded-[26px] p-6 text-sm text-[#6b7280] shadow-neu-out"
+                            class="flex flex-col justify-center gap-2 neu-surface rounded-[26px] p-6 text-sm text-[#6b7280] shadow-neu-out"
                         >
                             <p
                                 class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
@@ -581,7 +581,7 @@ const idleCallout = computed(() =>
 
             <aside class="flex flex-col gap-4">
                 <section
-                    class="neu-surface flex flex-col gap-4 rounded-[28px] p-6"
+                    class="flex flex-col gap-4 neu-surface rounded-[28px] p-6"
                 >
                     <header class="flex items-center justify-between">
                         <h3 class="text-base font-semibold text-[#0d0d12]">

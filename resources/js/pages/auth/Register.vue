@@ -1,26 +1,22 @@
 <script setup lang="ts">
+import NeuInput from '@/components/NeuInput.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
-import { LucideMail, LockIcon, User2Icon } from 'lucide-vue-next';
-import NeuInput from '@/components/NeuInput.vue';
+import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
 </script>
 
 <template>
-    <AuthBase
-        title="Create account"
-        description="Join us today to get started"
-    >
+    <AuthBase title="Create account" description="Join us today to get started">
         <Head title="Pixrup | Register" />
         <div class="mb-4">
             <Button
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="outline"
-                class="text-sm flex w-full items-center justify-center gap-3 p-6 py-7 neu-button"
+                class="neu-button flex w-full items-center justify-center gap-3 p-6 py-7 text-sm"
                 tabindex="1"
             >
                 <svg
@@ -57,9 +53,9 @@ import NeuInput from '@/components/NeuInput.vue';
             </Button>
         </div>
         <div class="flex items-center">
-            <div class="flex-1 h-px bg-gray-300"></div>
+            <div class="h-px flex-1 bg-gray-300"></div>
             <span class="px-3 text-sm text-gray-500"> Or continue using </span>
-            <div class="flex-1 h-px bg-gray-300"></div>
+            <div class="h-px flex-1 bg-gray-300"></div>
         </div>
         <Form
             v-bind="auth.register.store()"
@@ -67,31 +63,40 @@ import NeuInput from '@/components/NeuInput.vue';
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6 p-6"
         >
-            <div class="grid gap-4"> <div class="grid gap-2">
-                <NeuInput
-                    label="Full name"
-                    name="name" :error="errors.name"
-                    :tabindex="1" type="text"
-                    required
-                    autocomplete="name"
-                    placeholder="Please enter your full name"
-                >
-                    <template #icon>
-                        <User2Icon class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
-                    </template>
-                </NeuInput>
-            </div>
+            <div class="grid gap-4">
+                <div class="grid gap-2">
+                    <NeuInput
+                        label="Full name"
+                        name="name"
+                        :error="errors.name"
+                        :tabindex="1"
+                        type="text"
+                        required
+                        autocomplete="name"
+                        placeholder="Please enter your full name"
+                    >
+                        <template #icon>
+                            <User2Icon
+                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
+                            />
+                        </template>
+                    </NeuInput>
+                </div>
                 <div class="grid gap-2">
                     <NeuInput
                         label="Email address"
-                        name="email" :error="errors.email"
-                        :tabindex="2" type="email"
+                        name="email"
+                        :error="errors.email"
+                        :tabindex="2"
+                        type="email"
                         required
                         autocomplete="email"
                         placeholder="Please enter your email"
                     >
                         <template #icon>
-                            <LucideMail class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                            <LucideMail
+                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
+                            />
                         </template>
                     </NeuInput>
                 </div>
@@ -99,21 +104,24 @@ import NeuInput from '@/components/NeuInput.vue';
                 <div class="grid gap-2">
                     <NeuInput
                         label="Password"
-                        name="password" :error="errors.password"
+                        name="password"
+                        :error="errors.password"
                         tabindex="3"
                         type="password"
                         required
                         placeholder="Enter your password"
                     >
                         <template #icon>
-                            <LockIcon class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                            <LockIcon
+                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
+                            />
                         </template>
                     </NeuInput>
                 </div>
 
                 <Button
                     type="submit"
-                    class="mt-2 w-full neu-button p-3 py-6 text-muted-foreground"
+                    class="neu-button mt-2 w-full p-3 py-6 text-muted-foreground"
                     tabindex="6"
                     :disabled="processing"
                     data-test="register-user-button"
@@ -126,7 +134,7 @@ import NeuInput from '@/components/NeuInput.vue';
                 </Button>
 
                 <div class="space-y-2">
-                    <p class="text-center text-sm text-gray-500 mt-4">
+                    <p class="mt-4 text-center text-sm text-gray-500">
                         By signing up, you agree to our
                         <TextLink href="#">Terms of Service</TextLink> and
                         <TextLink href="#">Privacy Policy</TextLink>.
@@ -139,7 +147,7 @@ import NeuInput from '@/components/NeuInput.vue';
                         :href="auth.login.show()"
                         class="underline underline-offset-4"
                         :tabindex="6"
-                    >Log in</TextLink
+                        >Log in</TextLink
                     >
                 </div>
             </div>

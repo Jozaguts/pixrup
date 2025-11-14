@@ -1,12 +1,22 @@
 <script setup lang="ts">
-import { useGlowUpJobs } from '@/composables/useGlowUpJobs';
 import type { GlowUpState } from '@/components/properties/workspace/types';
-import { Camera, CloudUpload, Download, FileText, Loader2, RefreshCw, Save, ShieldAlert, Sparkles } from 'lucide-vue-next';
-import { computed, ref, watch, onBeforeUnmount } from 'vue';
-import GlowUpResultSlider from './GlowUpResultSlider.vue';
 import { TextArea } from '@/components/ui/textarea';
+import { useGlowUpJobs } from '@/composables/useGlowUpJobs';
 import { buildPrompt, type RoomType, type Style } from '@/lib/glowupPrompt';
 import { gsap } from '@/lib/gsap';
+import {
+    Camera,
+    CloudUpload,
+    Download,
+    FileText,
+    Loader2,
+    RefreshCw,
+    Save,
+    ShieldAlert,
+    Sparkles,
+} from 'lucide-vue-next';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import GlowUpResultSlider from './GlowUpResultSlider.vue';
 
 interface Props {
     propertyId: number | string;
@@ -75,9 +85,8 @@ let typingTween: gsap.core.Tween | null = null;
 const skeletonActive = ref(false);
 let skeletonTimeout: number | null = null;
 
-const canShowPrompt = computed(
-    () =>
-        Boolean(createForm.image && createForm.room_type && createForm.style),
+const canShowPrompt = computed(() =>
+    Boolean(createForm.image && createForm.room_type && createForm.style),
 );
 
 const stopTyping = () => {
@@ -139,7 +148,11 @@ const applyPromptWithTyping = (text: string) => {
 };
 
 watch(
-    [() => createForm.room_type, () => createForm.style, () => createForm.image],
+    [
+        () => createForm.room_type,
+        () => createForm.style,
+        () => createForm.image,
+    ],
     ([room, style, image], [prevRoom, prevStyle, prevImage]) => {
         if (!room || !style || !image) {
             stopTyping();
@@ -151,11 +164,7 @@ watch(
             return;
         }
 
-        if (
-            room !== prevRoom ||
-            style !== prevStyle ||
-            image !== prevImage
-        ) {
+        if (room !== prevRoom || style !== prevStyle || image !== prevImage) {
             promptDirty.value = false;
         }
 
@@ -325,23 +334,30 @@ const formatDate = (input?: string | null) => {
 <template>
     <section class="flex flex-col gap-6">
         <header
-            class="neu-surface flex flex-col gap-4 rounded-3xl p-6 shadow-neu-out md:flex-row md:items-center md:justify-between"
+            class="flex flex-col gap-4 neu-surface rounded-3xl p-6 shadow-neu-out md:flex-row md:items-center md:justify-between"
         >
             <div>
-                <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
+                <p
+                    class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase"
+                >
                     PixrGlowUp
                 </p>
                 <h2 class="mt-1 text-2xl font-semibold text-[#1f2937]">
                     Before / After AI Studio
                 </h2>
                 <p class="text-sm text-gray-500">
-                    Turn your photos into catalog-ready visuals for reports and clients.
+                    Turn your photos into catalog-ready visuals for reports and
+                    clients.
                 </p>
             </div>
-            <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-neu-in">
+            <div
+                class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-neu-in"
+            >
                 <Sparkles class="h-5 w-5 text-[#7c4dff]" />
                 <div>
-                    <p class="text-xs uppercase tracking-[0.35em] text-gray-400">
+                    <p
+                        class="text-xs tracking-[0.35em] text-gray-400 uppercase"
+                    >
                         Monthly usage
                     </p>
                     <p class="text-sm font-semibold text-[#1f2937]">
@@ -354,24 +370,33 @@ const formatDate = (input?: string | null) => {
             </div>
         </header>
 
-        <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] h-[calc(100vh-120px)]">
-            <div class="space-y-6 min-h-0 overflow-y-auto custom-scroll">
-                <article class="neu-surface space-y-6 rounded-3xl p-6 shadow-neu-out">
-                    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div
+            class="grid h-[calc(100vh-120px)] gap-6 lg:grid-cols-[1.15fr_0.85fr]"
+        >
+            <div class="custom-scroll min-h-0 space-y-6 overflow-y-auto">
+                <article
+                    class="space-y-6 neu-surface rounded-3xl p-6 shadow-neu-out"
+                >
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-4"
+                    >
                         <div>
-                            <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
+                            <p
+                                class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase"
+                            >
                                 1. Configure the space
                             </p>
                             <h3 class="text-lg font-semibold text-[#1f2937]">
                                 Upload or capture a photo
                             </h3>
                             <p class="text-sm text-gray-500">
-                                Supported formats JPG/PNG ({{ maxUpload }}MB). Choose a room and style for the AI.
+                                Supported formats JPG/PNG ({{ maxUpload }}MB).
+                                Choose a room and style for the AI.
                             </p>
                         </div>
                         <button
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-2xl border border-white/60 px-4 py-2 text-sm font-semibold text-[#7c4dff] cursor-pointer"
+                            class="inline-flex cursor-pointer items-center gap-2 rounded-2xl border border-white/60 px-4 py-2 text-sm font-semibold text-[#7c4dff]"
                             @click="refreshJobs"
                         >
                             <RefreshCw class="h-4 w-4" />
@@ -409,7 +434,10 @@ const formatDate = (input?: string | null) => {
                             class="hidden"
                             @change="handleFileChange"
                         />
-                        <p v-if="createForm.errors.image" class="text-sm text-red-500">
+                        <p
+                            v-if="createForm.errors.image"
+                            class="text-sm text-red-500"
+                        >
                             {{ createForm.errors.image }}
                         </p>
                         <div
@@ -424,8 +452,10 @@ const formatDate = (input?: string | null) => {
                         </div>
                     </div>
 
-                    <div class="grid gap-4 md:grid-cols-2 ">
-                        <label class="flex flex-col gap-2 text-sm text-gray-500">
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <label
+                            class="flex flex-col gap-2 text-sm text-gray-500"
+                        >
                             Room type
                             <select
                                 v-model="createForm.room_type"
@@ -440,7 +470,9 @@ const formatDate = (input?: string | null) => {
                                 </option>
                             </select>
                         </label>
-                        <label class="flex flex-col gap-2 text-sm text-gray-500">
+                        <label
+                            class="flex flex-col gap-2 text-sm text-gray-500"
+                        >
                             Desired style
                             <select
                                 v-model="createForm.style"
@@ -455,7 +487,7 @@ const formatDate = (input?: string | null) => {
                                 </option>
                             </select>
                         </label>
-                        <div class="md:col-span-2 flex flex-col gap-3">
+                        <div class="flex flex-col gap-3 md:col-span-2">
                             <div class="relative">
                                 <TextArea
                                     :model-value="promptDraft"
@@ -466,15 +498,19 @@ const formatDate = (input?: string | null) => {
                                     @update:model-value="handlePromptInput"
                                 />
                                 <div
-                                    class="pointer-events-none top-[auto] absolute inset-1 h-[80%] rounded-[20px] transition-opacity duration-300 "
+                                    class="pointer-events-none absolute inset-1 top-[auto] h-[80%] rounded-[20px] transition-opacity duration-300"
                                     :class="[
-                                        skeletonActive ? 'opacity-90' : 'opacity-0',
+                                        skeletonActive
+                                            ? 'opacity-90'
+                                            : 'opacity-0',
                                         canShowPrompt ? 'visible' : 'invisible',
                                         'skeleton-overlay',
                                     ]"
                                 />
                             </div>
-                            <div class="flex flex-wrap items-center justify-between text-xs text-gray-500">
+                            <div
+                                class="flex flex-wrap items-center justify-between text-xs text-gray-500"
+                            >
                                 <span>{{ promptHelper }}</span>
                                 <button
                                     type="button"
@@ -517,14 +553,19 @@ const formatDate = (input?: string | null) => {
                             <Camera class="h-4 w-4" />
                             Capture from camera
                         </button>
-                        <p v-if="limitReached" class="flex items-center gap-2 text-sm text-[#9A1B1B]">
+                        <p
+                            v-if="limitReached"
+                            class="flex items-center gap-2 text-sm text-[#9A1B1B]"
+                        >
                             <ShieldAlert class="h-4 w-4" />
                             Limit reached. Upgrade your plan for more renders.
                         </p>
                     </div>
 
                     <div class="space-y-2 rounded-2xl bg-[#f9fafb] p-4">
-                        <div class="flex items-center justify-between text-sm text-gray-600">
+                        <div
+                            class="flex items-center justify-between text-sm text-gray-600"
+                        >
                             <span>Credit usage</span>
                             <span v-if="usage.limit !== null"
                                 >{{ usage.used }} / {{ usage.limit }}</span
@@ -538,22 +579,31 @@ const formatDate = (input?: string | null) => {
                             />
                         </div>
                         <p class="text-xs text-gray-500">
-                            {{ remaining === Infinity ? 'Unlimited usage.' : `${remaining} remaining this cycle.` }}
+                            {{
+                                remaining === Infinity
+                                    ? 'Unlimited usage.'
+                                    : `${remaining} remaining this cycle.`
+                            }}
                         </p>
                     </div>
                 </article>
 
                 <article
                     v-if="activeJob && activeJob.status !== 'done'"
-                    class="neu-surface space-y-4 rounded-3xl p-6 shadow-neu-out"
+                    class="space-y-4 neu-surface rounded-3xl p-6 shadow-neu-out"
                 >
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
+                            <p
+                                class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase"
+                            >
                                 2. Processing
                             </p>
                             <h3 class="text-lg font-semibold text-[#1f2937]">
-                                {{ statusTokens[activeJob.status]?.label ?? 'Status' }}
+                                {{
+                                    statusTokens[activeJob.status]?.label ??
+                                    'Status'
+                                }}
                             </h3>
                         </div>
                         <span
@@ -580,24 +630,31 @@ const formatDate = (input?: string | null) => {
 
                 <article
                     v-if="latestCompletedJob"
-                    class="neu-surface space-y-5 rounded-3xl p-6 shadow-neu-out"
+                    class="space-y-5 neu-surface rounded-3xl p-6 shadow-neu-out"
                 >
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase">
+                            <p
+                                class="text-xs font-semibold tracking-[0.35em] text-gray-400 uppercase"
+                            >
                                 3. Result
                             </p>
                             <h3 class="text-lg font-semibold text-[#1f2937]">
                                 Before / After ready
                             </h3>
                         </div>
-                        <span class="rounded-full bg-[#E4F9F0] px-4 py-1.5 text-xs font-semibold text-[#0B6B4F]">
+                        <span
+                            class="rounded-full bg-[#E4F9F0] px-4 py-1.5 text-xs font-semibold text-[#0B6B4F]"
+                        >
                             {{ latestCompletedJob.room_type }}
                         </span>
                     </div>
                     <GlowUpResultSlider
                         :before="latestCompletedJob.before_url"
-                        :after=" latestCompletedJob.after_url ?? latestCompletedJob.before_url"
+                        :after="
+                            latestCompletedJob.after_url ??
+                            latestCompletedJob.before_url
+                        "
                         label="Move the slider to compare"
                     />
                     <div class="flex flex-wrap items-center gap-3">
@@ -605,7 +662,12 @@ const formatDate = (input?: string | null) => {
                             type="button"
                             class="inline-flex items-center gap-2 rounded-2xl bg-[#7c4dff] px-4 py-2 text-sm font-semibold text-white"
                             :disabled="attachForm.processing"
-                            @click="attachToProperty(latestCompletedJob.id, 'save_to_property')"
+                            @click="
+                                attachToProperty(
+                                    latestCompletedJob.id,
+                                    'save_to_property',
+                                )
+                            "
                         >
                             <Save class="h-4 w-4" />
                             Save to property
@@ -614,7 +676,12 @@ const formatDate = (input?: string | null) => {
                             type="button"
                             class="inline-flex items-center gap-2 rounded-2xl border border-[#7c4dff]/40 px-4 py-2 text-sm font-semibold text-[#7c4dff]"
                             :disabled="attachForm.processing"
-                            @click="attachToProperty(latestCompletedJob.id, 'add_to_report')"
+                            @click="
+                                attachToProperty(
+                                    latestCompletedJob.id,
+                                    'add_to_report',
+                                )
+                            "
                         >
                             <FileText class="h-4 w-4" />
                             Add to report
@@ -631,32 +698,44 @@ const formatDate = (input?: string | null) => {
                 </article>
             </div>
 
-            <aside class="min-h-0 overflow-hidden neu-surface space-y-4 rounded-3xl p-6 shadow-neu-out">
+            <aside
+                class="min-h-0 space-y-4 overflow-hidden neu-surface rounded-3xl p-6 shadow-neu-out"
+            >
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-[#1f2937]">
                         GlowUp history
                     </h3>
                     <button
                         type="button"
-                        class="text-sm font-semibold text-[#7c4dff] cursor-pointer"
+                        class="cursor-pointer text-sm font-semibold text-[#7c4dff]"
                         @click="refreshJobs"
                     >
                         Refresh
                     </button>
                 </div>
-                <div v-if="jobs.length === 0" class="rounded-2xl bg-[#f9fafb] p-6 text-center">
-                    <p class="font-semibold text-[#1f2937]">No transformations yet</p>
+                <div
+                    v-if="jobs.length === 0"
+                    class="rounded-2xl bg-[#f9fafb] p-6 text-center"
+                >
+                    <p class="font-semibold text-[#1f2937]">
+                        No transformations yet
+                    </p>
                     <p class="text-sm text-gray-500">
                         Generate your first GlowUp to see progress here.
                     </p>
                 </div>
-                <ul v-else class="h-full overflow-y-auto space-y-4  custom-scroll">
+                <ul
+                    v-else
+                    class="custom-scroll h-full space-y-4 overflow-y-auto"
+                >
                     <li
                         v-for="job in jobs"
                         :key="job.id"
                         :class="[
-                            'rounded-2xl p-4 border transition cursor-pointer',
-                            job.id === activeJobId ? 'border-[#7c4dff]/50 bg-white' : 'border-transparent bg-white/70',
+                            'cursor-pointer rounded-2xl border p-4 transition',
+                            job.id === activeJobId
+                                ? 'border-[#7c4dff]/50 bg-white'
+                                : 'border-transparent bg-white/70',
                         ]"
                         @click="setActiveJob(job.id)"
                     >
@@ -671,13 +750,22 @@ const formatDate = (input?: string | null) => {
                             </div>
                             <span
                                 class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold"
-                                :class="statusTokens[job.status]?.badge ?? 'bg-gray-100 text-gray-600'"
+                                :class="
+                                    statusTokens[job.status]?.badge ??
+                                    'bg-gray-100 text-gray-600'
+                                "
                             >
                                 <span
                                     class="h-2 w-2 rounded-full"
-                                    :class="statusTokens[job.status]?.dot ?? 'bg-gray-400'"
+                                    :class="
+                                        statusTokens[job.status]?.dot ??
+                                        'bg-gray-400'
+                                    "
                                 />
-                                {{ statusTokens[job.status]?.label ?? job.status }}
+                                {{
+                                    statusTokens[job.status]?.label ??
+                                    job.status
+                                }}
                             </span>
                         </div>
                         <div class="mt-3 flex items-center gap-3">
@@ -701,9 +789,9 @@ const formatDate = (input?: string | null) => {
 
 <style scoped lang="postcss">
 .custom-scroll {
-    @apply bg-primary-400 overflow-y-auto rounded-md;
+    @apply overflow-y-auto rounded-md bg-primary-400;
     scrollbar-width: thin;
-    scrollbar-color: rgba(110,52,255, .50) var(--neu-surface);
+    scrollbar-color: rgba(110, 52, 255, 0.5) var(--neu-surface);
     padding-right: 1rem;
     padding-bottom: 2rem;
 }

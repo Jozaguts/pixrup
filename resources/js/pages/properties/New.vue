@@ -696,7 +696,7 @@ const isNextDisabled = computed(() => {
 
                 <div class="flex flex-col gap-4">
                     <div
-                        class="neu-surface relative h-2 w-full rounded-full shadow-neu-in"
+                        class="relative h-2 w-full neu-surface rounded-full shadow-neu-in"
                     >
                         <div
                             class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#7C4DFF] via-[#a68dff] to-[#7C4DFF] transition-[width]"
@@ -709,7 +709,7 @@ const isNextDisabled = computed(() => {
                         <article
                             v-for="(step, index) in steps"
                             :key="step.id"
-                            class="neu-surface flex flex-col gap-1 rounded-3xl p-4 shadow-neu-out transition-all duration-200"
+                            class="flex flex-col gap-1 neu-surface rounded-3xl p-4 shadow-neu-out transition-all duration-200"
                             :class="{
                                 'text-[#1f2933] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]':
                                     index === currentStepIndex,
@@ -735,7 +735,7 @@ const isNextDisabled = computed(() => {
                 <section
                     v-if="currentStep.id === 'address'"
                     key="address-step"
-                    class="neu-surface flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
+                    class="flex flex-1 flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
@@ -744,7 +744,8 @@ const isNextDisabled = computed(() => {
                             Step 1 — Address
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Search the property via Google Places or use your current location to auto-fill every field.
+                            Search the property via Google Places or use your
+                            current location to auto-fill every field.
                         </p>
                     </div>
 
@@ -784,7 +785,7 @@ const isNextDisabled = computed(() => {
                         class="grid gap-4 md:grid-cols-2"
                     >
                         <div
-                            class="neu-surface flex flex-col gap-1 rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
+                            class="flex flex-col gap-1 neu-surface rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
                         >
                             <span
                                 class="text-xs tracking-wide text-[#9ca3af] uppercase"
@@ -796,7 +797,7 @@ const isNextDisabled = computed(() => {
                             </p>
                         </div>
                         <div
-                            class="neu-surface flex flex-col gap-2 rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
+                            class="flex flex-col gap-2 neu-surface rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
                         >
                             <span
                                 class="text-xs tracking-wide text-[#9ca3af] uppercase"
@@ -815,7 +816,7 @@ const isNextDisabled = computed(() => {
                             </p>
                         </div>
                         <div
-                            class="neu-surface flex flex-col gap-3 rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in md:col-span-2"
+                            class="flex flex-col gap-3 neu-surface rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in md:col-span-2"
                         >
                             <div class="flex items-center gap-2 text-[#6b7280]">
                                 <Globe class="size-4" />
@@ -835,7 +836,7 @@ const isNextDisabled = computed(() => {
                                     {{ formatCoordinate(addressDetails.lng) }}
                                 </span>
                                 <span
-                                    class="neu-surface rounded-2xl px-3 py-2 text-xs truncate text-ellipsis tracking-wide text-[#9ca3af] uppercase"
+                                    class="truncate neu-surface rounded-2xl px-3 py-2 text-xs tracking-wide text-ellipsis text-[#9ca3af] uppercase"
                                 >
                                     Place ID: {{ addressDetails.placeId }}
                                 </span>
@@ -847,7 +848,7 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else-if="currentStep.id === 'photos'"
                     key="photos-step"
-                    class="neu-surface flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
+                    class="flex flex-1 flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
@@ -856,7 +857,9 @@ const isNextDisabled = computed(() => {
                             Step 2 — Photos
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Upload crisp images or snap new photos from your device. We automatically compress every file to keep uploads light.
+                            Upload crisp images or snap new photos from your
+                            device. We automatically compress every file to keep
+                            uploads light.
                         </p>
                     </div>
 
@@ -899,7 +902,7 @@ const isNextDisabled = computed(() => {
                     />
 
                     <div
-                        class="neu-surface flex flex-1 flex-col gap-4 rounded-[24px] bg-[#f4f5fa] p-6 shadow-neu-in"
+                        class="flex flex-1 flex-col gap-4 neu-surface rounded-[24px] bg-[#f4f5fa] p-6 shadow-neu-in"
                     >
                         <div
                             v-if="!photoItems.length && !isProcessingPhotos"
@@ -907,7 +910,8 @@ const isNextDisabled = computed(() => {
                         >
                             <ImageIcon class="size-8" />
                             <p class="text-sm md:text-base">
-                                Add photos to showcase your property. Wide angles with good lighting work best.
+                                Add photos to showcase your property. Wide
+                                angles with good lighting work best.
                             </p>
                         </div>
 
@@ -968,7 +972,7 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else
                     key="summary-step"
-                    class="neu-surface flex flex-1 flex-col gap-6 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
+                    class="flex flex-1 flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
@@ -977,12 +981,14 @@ const isNextDisabled = computed(() => {
                             Step 3 — Confirmation
                         </h2>
                         <p class="text-sm text-[#6b7280] md:text-base">
-                            Review the details before creating the property. If you need to adjust anything, return to previous steps without losing data.
+                            Review the details before creating the property. If
+                            you need to adjust anything, return to previous
+                            steps without losing data.
                         </p>
                     </div>
 
                     <div
-                        class="neu-surface flex flex-col gap-5 rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-in md:p-8"
+                        class="flex flex-col gap-5 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-in md:p-8"
                     >
                         <div class="flex flex-col gap-3">
                             <span

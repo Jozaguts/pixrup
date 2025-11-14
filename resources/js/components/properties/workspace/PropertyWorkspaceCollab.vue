@@ -45,7 +45,7 @@ const messages = computed(() => [
 
 <template>
     <div class="flex flex-col gap-6 text-[#1f2937]">
-        <header class="neu-surface flex flex-col gap-4 p-6 shadow-neu-out">
+        <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
             >
@@ -66,7 +66,7 @@ const messages = computed(() => [
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-            <article class="neu-surface flex flex-col gap-5 p-6 shadow-neu-out">
+            <article class="flex flex-col gap-5 neu-surface p-6 shadow-neu-out">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Live Thread</h3>
@@ -78,7 +78,7 @@ const messages = computed(() => [
                     <Wifi class="h-5 w-5 text-[#7c4dff]" />
                 </header>
 
-                <div class="neu-surface flex flex-col gap-4 p-5 shadow-neu-out">
+                <div class="flex flex-col gap-4 neu-surface p-5 shadow-neu-out">
                     <article
                         v-for="message in messages"
                         :key="message.id"
@@ -113,7 +113,7 @@ const messages = computed(() => [
             </article>
 
             <aside
-                class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 shadow-neu-out"
+                class="flex flex-col gap-5 neu-surface rounded-[28px] p-6 shadow-neu-out"
             >
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Participants</h3>
@@ -124,7 +124,7 @@ const messages = computed(() => [
                     <li
                         v-for="participant in participants"
                         :key="participant.id"
-                        class="neu-surface flex items-center justify-between px-4 py-3 text-sm text-gray-600 shadow-neu-in"
+                        class="flex items-center justify-between neu-surface px-4 py-3 text-sm text-gray-600 shadow-neu-in"
                     >
                         <div>
                             <p class="font-semibold text-[#1f2937]">

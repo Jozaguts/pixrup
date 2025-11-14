@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { initHomePage33Animations } from '@/lib/homePage33Animations';
-import { Button } from '@/components/ui/button';
 import { nextTick, onMounted } from 'vue';
 
 interface ListingCard {
@@ -33,10 +32,12 @@ onMounted(async () => {
                     <span
                         data-ns-animate
                         data-delay="0.1"
-                        class="mb-5 p-4 text-primary text-3xl inline-block font-bold"
+                        class="mb-5 inline-block p-4 text-3xl font-bold text-primary"
                         >Pixrup overview</span
                     >
-                    <div class="mb-14 space-y-2 md:max-w-[595px] text-slate-800 dark:text-white">
+                    <div
+                        class="mb-14 space-y-2 text-slate-800 md:max-w-[595px] dark:text-white"
+                    >
                         <h2 data-ns-animate data-delay="0.2">
                             AI-powered creation, built for speed.
                         </h2>
@@ -56,7 +57,7 @@ onMounted(async () => {
                     <div
                         v-for="listing in listings"
                         :key="listing.id"
-                        class="stack-cards__item js-stack-cards__item neu-surface relative z-0 my-6 flex min-h-[170px]  flex-col space-y-4  rounded-[12px]  p-8 shadow-sm shadow-neu-out md:flex-row dark:border-stroke-5 "
+                        class="stack-cards__item js-stack-cards__item relative z-0 my-6 flex min-h-[170px] flex-col space-y-4 neu-surface rounded-[12px] p-8 shadow-sm shadow-neu-out md:flex-row dark:border-stroke-5"
                     >
                         <div
                             class="relative shrink-0 overflow-hidden p-2.5 md:w-2/5"

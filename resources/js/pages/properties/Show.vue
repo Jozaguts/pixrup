@@ -285,7 +285,7 @@ const moduleStatusLabel = (id: ModuleId) => {
 
         <div class="min-h-screen pt-10 pb-16">
             <div
-                class="neu-center-shadow mx-auto flex max-w-7xl flex-col gap-8 px-4 shadow-neu-out sm:px-6 lg:px-8"
+                class="mx-auto flex max-w-7xl flex-col gap-8 px-4 neu-center-shadow shadow-neu-out sm:px-6 lg:px-8"
             >
                 <section
                     :class="[
@@ -376,11 +376,15 @@ const moduleStatusLabel = (id: ModuleId) => {
                                     v-for="action in actionButtons"
                                     :key="action.id"
                                     type="button"
-                                    :class="activeModule.id === action.module ? 'is-pressed' :''"
+                                    :class="
+                                        activeModule.id === action.module
+                                            ? 'is-pressed'
+                                            : ''
+                                    "
                                     class="neu-btn px-4 py-4"
                                     @click="handleAction(action)"
                                 >
-                                    <span>{{ action.label}}</span>
+                                    <span>{{ action.label }}</span>
                                 </button>
                             </div>
 
@@ -413,7 +417,7 @@ const moduleStatusLabel = (id: ModuleId) => {
                     :id="`module-${activeModule.id}`"
                     role="tabpanel"
                     :aria-labelledby="`tab-${activeModule.id}`"
-                    class="neu-surface relative min-h-[420px] rounded-[32px] shadow-neu-in sm:p-8"
+                    class="relative min-h-[420px] neu-surface rounded-[32px] shadow-neu-in sm:p-8"
                 >
                     <KeepAlive>
                         <component

@@ -40,7 +40,7 @@ const socialLinks: SocialLink[] = [
                 :href="link.href"
                 target="_blank"
                 rel="noreferrer"
-                class="neu-icon "
+                class="neu-icon"
             >
                 <component :is="link.icon" class="h-4 w-4" />
             </a>

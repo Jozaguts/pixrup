@@ -21,7 +21,9 @@ const beforeStyle = computed(() => ({
         <p v-if="props.label" class="text-sm font-semibold text-gray-600">
             {{ props.label }}
         </p>
-        <div class="relative aspect-video w-full overflow-hidden rounded-2xl bg-gray-200 shadow-inner">
+        <div
+            class="relative aspect-video w-full overflow-hidden rounded-2xl bg-gray-200 shadow-inner"
+        >
             <img
                 :src="props.after"
                 alt="GlowUp result"
@@ -39,9 +41,15 @@ const beforeStyle = computed(() => ({
                     draggable="false"
                 />
             </div>
-            <div class="absolute inset-x-0 bottom-3 flex items-center justify-center px-6">
-                <div class="flex w-full items-center gap-3 rounded-full bg-white/70 px-4 py-2 backdrop-blur">
-                    <span class="text-xs font-semibold text-gray-500">Before</span>
+            <div
+                class="absolute inset-x-0 bottom-3 flex items-center justify-center px-6"
+            >
+                <div
+                    class="flex w-full items-center gap-3 rounded-full bg-white/70 px-4 py-2 backdrop-blur"
+                >
+                    <span class="text-xs font-semibold text-gray-500"
+                        >Before</span
+                    >
                     <input
                         v-model="slider"
                         type="range"
@@ -50,7 +58,9 @@ const beforeStyle = computed(() => ({
                         class="h-1 w-full accent-[#7c4dff]"
                         aria-label="Before/After slider control"
                     />
-                    <span class="text-xs font-semibold text-gray-800">After</span>
+                    <span class="text-xs font-semibold text-gray-800"
+                        >After</span
+                    >
                 </div>
             </div>
         </div>

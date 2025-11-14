@@ -5,9 +5,9 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import '../css/app.css';
 import { initializeTheme } from './composables/useAppearance';
+import './lib/echo';
 import { gsap, ScrollTrigger } from './lib/gsap';
 import './lib/http';
-import './lib/echo';
 import { ensureSpringer } from './lib/vendor/springer';
 import {
     ensureStackCards,

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import AddressSearch, {
     type AddressSelection,
 } from '@/components/welcome/AddressSearch.vue';
@@ -9,7 +10,6 @@ import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
-import ThemeToggle from '@/components/ThemeToggle.vue';
 import WorthPreviewModal, {
     type ComparableProperty,
 } from '@/components/welcome/WorthPreviewModal.vue';

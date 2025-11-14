@@ -41,14 +41,11 @@ const STYLE_LABEL: Record<Style, string> = {
 };
 
 const STYLE_HINTS: Partial<Record<Style, string>> = {
-    modern:
-        'clean lines, neutral palette, subtle textures, open layout, large windows',
+    modern: 'clean lines, neutral palette, subtle textures, open layout, large windows',
     minimalist:
         'decluttered, functional forms, few materials, lots of negative space',
-    luxury:
-        'premium materials, refined finishes, elegant accents, sophisticated lighting',
-    rustic:
-        'natural wood, stone textures, warm earthy tones, handcrafted feel',
+    luxury: 'premium materials, refined finishes, elegant accents, sophisticated lighting',
+    rustic: 'natural wood, stone textures, warm earthy tones, handcrafted feel',
     industrial:
         'exposed concrete, metal frames, visible piping, loft vibe, raw finishes',
     scandinavian:
@@ -61,8 +58,10 @@ const STYLE_HINTS: Partial<Record<Style, string>> = {
 
 const ROOM_HINTS: Partial<Record<RoomType, string>> = {
     living_room: 'comfortable seating, focal wall, balanced decor, area rug',
-    kitchen: 'practical layout, quality cabinetry, task lighting, clean surfaces',
-    bathroom: 'spa-like, clean fixtures, moisture-safe materials, soft lighting',
+    kitchen:
+        'practical layout, quality cabinetry, task lighting, clean surfaces',
+    bathroom:
+        'spa-like, clean fixtures, moisture-safe materials, soft lighting',
     bedroom: 'cozy linens, balanced lighting, calm palette, minimal clutter',
     dining_room: 'inviting table setup, ambient lighting, harmonious decor',
     facade: 'curb appeal, balanced proportions, realistic materials and shadows',

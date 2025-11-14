@@ -19,7 +19,7 @@ const props = defineProps<Props>();
 
 <template>
     <div class="flex flex-col gap-6 text-[#1f2937]">
-        <header class="neu-surface flex flex-col gap-4 p-6 shadow-neu-out">
+        <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
             >
@@ -33,7 +33,7 @@ const props = defineProps<Props>();
                     </p>
                 </div>
                 <span
-                    class="neu-surface hidden items-center gap-2 px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase shadow-neu-out sm:inline-flex"
+                    class="hidden items-center gap-2 neu-surface px-4 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase shadow-neu-out sm:inline-flex"
                 >
                     API
                     <span class="font-medium">{{
@@ -44,7 +44,7 @@ const props = defineProps<Props>();
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <article class="neu-surface space-y-5 p-6 shadow-neu-out">
+            <article class="space-y-5 neu-surface p-6 shadow-neu-out">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Report Timeline</h3>
@@ -113,7 +113,7 @@ const props = defineProps<Props>();
                 </div>
             </article>
 
-            <aside class="neu-surface flex flex-col gap-5 p-6 shadow-neu-out">
+            <aside class="flex flex-col gap-5 neu-surface p-6 shadow-neu-out">
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Export & settings</h3>
                     <Settings2 class="h-5 w-5 text-[#7c4dff]" />

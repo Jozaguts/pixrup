@@ -9,14 +9,8 @@ import type {
     User,
 } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import {
-    Building2,
-    Compass,
-    MapPin,
-    Plus,
-    TrendingUp,
-} from 'lucide-vue-next';
-import { computed,  } from 'vue';
+import { Building2, Compass, MapPin, Plus, TrendingUp } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
 

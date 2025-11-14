@@ -139,7 +139,7 @@ const eventItems = computed(() => [
 
         <section class="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
             <article
-                class="neu-surface neu-shadow-center flex flex-col gap-5 rounded-[28px] p-6"
+                class="neu-shadow-center flex flex-col gap-5 neu-surface rounded-[28px] p-6"
             >
                 <header class="flex items-center justify-between">
                     <div>
@@ -171,7 +171,7 @@ const eventItems = computed(() => [
             </article>
 
             <aside
-                class="neu-surface flex flex-col gap-4 rounded-[28px] p-6 shadow-neu-out"
+                class="flex flex-col gap-4 neu-surface rounded-[28px] p-6 shadow-neu-out"
             >
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Recent Activity</h3>

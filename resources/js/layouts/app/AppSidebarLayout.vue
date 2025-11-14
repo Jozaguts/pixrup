@@ -4,9 +4,9 @@ import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
 import type { BreadcrumbItemType, DashboardPageProps } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 import { CheckCircle2, X } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
-import { usePage } from '@inertiajs/vue3';
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -24,15 +24,15 @@ onMounted(() => {
     if (typeof window === 'undefined') {
         return;
     }
-    removeFlashMessageFromStorage()
+    removeFlashMessageFromStorage();
 });
-const removeFlashMessageFromStorage = () =>{
+const removeFlashMessageFromStorage = () => {
     const stored = window.sessionStorage.getItem(successToastStorageKey);
     if (stored) {
         propertyToastMessage.value = stored;
         window.sessionStorage.removeItem(successToastStorageKey);
     }
-}
+};
 
 watch(
     flashStatus,
@@ -42,18 +42,16 @@ watch(
                 propertyToastMessage.value = 'Property successfully created 🎉';
                 break;
             case 'glowup-attached':
-                propertyToastMessage.value = 'Glow up successfully attached 🎉'
+                propertyToastMessage.value = 'Glow up successfully attached 🎉';
                 break;
-
         }
-
     },
     { immediate: true },
 );
 
 const dismissPropertyToast = () => {
     propertyToastMessage.value = '';
-    removeFlashMessageFromStorage()
+    removeFlashMessageFromStorage();
 };
 </script>
 
@@ -65,7 +63,7 @@ const dismissPropertyToast = () => {
             <Transition name="fade-slide">
                 <div
                     v-if="propertyToastMessage"
-                    class="flex flex-col gap-3 neu-surface rounded-[24px] bg-[#f4f5fa] px-5 py-4 mb-4 text-sm text-[#1f2933] shadow-neu-out md:flex-row md:items-center md:justify-between"
+                    class="mb-4 flex flex-col gap-3 neu-surface rounded-[24px] bg-[#f4f5fa] px-5 py-4 text-sm text-[#1f2933] shadow-neu-out md:flex-row md:items-center md:justify-between"
                 >
                     <div class="flex items-center gap-3 text-[#1f2933]">
                         <CheckCircle2 class="size-5 text-[#1fbf75]" />

@@ -26,8 +26,7 @@ const props = withDefaults(
 const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
-const largeLogo = new URL('../../../images/pixrup-2.svg', import.meta.url)
-    .href;
+const largeLogo = new URL('../../../images/pixrup-2.svg', import.meta.url).href;
 const compactLogo = new URL('../../../images/pixrup-2.svg', import.meta.url)
     .href;
 
@@ -93,17 +92,13 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 <template>
     <header>
         <div
-            class="navbar fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full neu-bg-surface-color px-3 py-2 shadow-lg backdrop-blur dark:bg-[#1f252f]"
+            class="navbar neu-bg-surface-color fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full px-3 py-2 shadow-lg backdrop-blur dark:bg-[#1f252f]"
         >
             <div>
                 <Link href="/">
                     <span class="sr-only">Home</span>
                     <figure class="hidden lg:block lg:max-w-[50px]">
-                        <img
-                            :src="largeLogo"
-                            alt="Pixrup"
-                            class="dark"
-                        />
+                        <img :src="largeLogo" alt="Pixrup" class="dark" />
                     </figure>
                     <figure class="block max-w-[44px] lg:hidden">
                         <img

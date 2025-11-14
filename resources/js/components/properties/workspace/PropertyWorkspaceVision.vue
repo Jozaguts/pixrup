@@ -19,7 +19,7 @@ const props = defineProps<Props>();
 
 <template>
     <div class="flex flex-col gap-6 text-[#1f2937]">
-        <header class="neu-surface flex flex-col gap-4 p-6 shadow-neu-out">
+        <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
             >
@@ -42,10 +42,10 @@ const props = defineProps<Props>();
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <article class="neu-surface space-y-5 p-6 shadow-neu-out">
+            <article class="space-y-5 neu-surface p-6 shadow-neu-out">
                 <div class="neu-surface p-6 shadow-neu-out">
                     <div
-                        class="neu-surface relative flex aspect-video items-center justify-center shadow-neu-out"
+                        class="relative flex aspect-video items-center justify-center neu-surface shadow-neu-out"
                     >
                         <button
                             type="button"
@@ -109,7 +109,7 @@ const props = defineProps<Props>();
             </article>
 
             <aside
-                class="neu-surface flex flex-col gap-5 rounded-[28px] p-6 shadow-neu-out"
+                class="flex flex-col gap-5 neu-surface rounded-[28px] p-6 shadow-neu-out"
             >
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Asset controls</h3>
@@ -137,7 +137,7 @@ const props = defineProps<Props>();
                     </p>
                     <button
                         type="button"
-                        class="neu-surface mt-3 inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase shadow-neu-in"
+                        class="mt-3 inline-flex items-center gap-2 neu-surface px-3 py-2 text-xs font-semibold tracking-[0.3em] text-[#7c4dff] uppercase shadow-neu-in"
                     >
                         <Share2 class="h-4 w-4" />
                         Copy link

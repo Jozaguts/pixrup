@@ -3,10 +3,18 @@ import type {
     GlowUpState,
     GlowUpUsage,
 } from '@/components/properties/workspace/types';
-import type { GlowUpJobPayload } from '@/types';
 import apiRoutes from '@/routes/api';
+import type { GlowUpJobPayload } from '@/types';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch, type Ref } from 'vue';
+import {
+    computed,
+    onBeforeUnmount,
+    onMounted,
+    reactive,
+    ref,
+    watch,
+    type Ref,
+} from 'vue';
 
 interface UseGlowUpJobsOptions {
     propertyId: number;
@@ -41,7 +49,9 @@ const sortJobs = (input: GlowUpJob[]) =>
 
 export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
     const initialState = glowUp.value;
-    const jobs = ref<GlowUpJob[]>(sortJobs((initialState?.jobs ?? []).map(normalizeJob)));
+    const jobs = ref<GlowUpJob[]>(
+        sortJobs((initialState?.jobs ?? []).map(normalizeJob)),
+    );
     const countedJobIds = new Set<number>(
         jobs.value.filter((job) => job.usage_recorded_at).map((job) => job.id),
     );
@@ -76,7 +86,9 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
 
     const page = usePage<{ flash?: { glowupJob?: GlowUpJobPayload | null } }>();
     const lastFlashJobId = ref<number | null>(null);
-    let subscription: ReturnType<NonNullable<typeof window.Echo>['private']> | null = null;
+    let subscription: ReturnType<
+        NonNullable<typeof window.Echo>['private']
+    > | null = null;
 
     const limitReached = computed(
         () =>
@@ -93,8 +105,11 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         return Math.max(0, usage.limit - usage.used);
     });
 
-    const activeJob = computed(() =>
-        jobs.value.find((job) => job.id === activeJobId.value) ?? jobs.value[0] ?? null,
+    const activeJob = computed(
+        () =>
+            jobs.value.find((job) => job.id === activeJobId.value) ??
+            jobs.value[0] ??
+            null,
     );
 
     const completedJobs = computed(() =>
@@ -124,10 +139,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             usage.limit !== null
         ) {
             countedJobIds.add(incoming.id);
-            usage.used = Math.min(
-                usage.limit,
-                (usage.used ?? 0) + 1,
-            );
+            usage.used = Math.min(usage.limit, (usage.used ?? 0) + 1);
         }
     };
 
@@ -181,7 +193,10 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         const trimmedPrompt = (createForm.prompt ?? '').trim();
 
         if (!trimmedPrompt) {
-            createForm.setError('prompt', 'Provide a prompt before generating.');
+            createForm.setError(
+                'prompt',
+                'Provide a prompt before generating.',
+            );
             return;
         }
 
@@ -204,7 +219,11 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         );
     };
 
-    const attachToProperty = (jobId: number, action: 'save_to_property' | 'add_to_report', notes?: string) => {
+    const attachToProperty = (
+        jobId: number,
+        action: 'save_to_property' | 'add_to_report',
+        notes?: string,
+    ) => {
         attachForm.transform(() => ({
             action,
             notes,
@@ -276,12 +295,15 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         }
 
         if (window.Echo && propertyId) {
-            subscription = window.Echo.private(`glowup.jobs.${propertyId}`)
-            subscription.listen('.GlowUpJobUpdated', (event: { job: GlowUpJobPayload }) => {
-                if (event?.job) {
-                    upsertJob(normalizeJob(event.job));
-                }
-            });
+            subscription = window.Echo.private(`glowup.jobs.${propertyId}`);
+            subscription.listen(
+                '.GlowUpJobUpdated',
+                (event: { job: GlowUpJobPayload }) => {
+                    if (event?.job) {
+                        upsertJob(normalizeJob(event.job));
+                    }
+                },
+            );
         }
     });
 
@@ -296,7 +318,9 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         }
     });
 
-    const canUseCamera = computed(() => typeof window !== 'undefined' && !!navigator.mediaDevices);
+    const canUseCamera = computed(
+        () => typeof window !== 'undefined' && !!navigator.mediaDevices,
+    );
     const isUploading = computed(() => createForm.processing);
 
     return {

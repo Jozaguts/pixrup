@@ -75,7 +75,7 @@ const marketSignals = computed(() => [
                         <Radar class="h-5 w-5 text-[#7c4dff]" />
                     </header>
 
-                    <div class="neu-surface mt-4 h-64 shadow-neu-in" />
+                    <div class="mt-4 h-64 neu-surface shadow-neu-in" />
 
                     <div class="mt-4 grid gap-3 sm:grid-cols-3">
                         <div

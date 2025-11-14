@@ -69,7 +69,7 @@ const handleClose = () => {
             @click="handleClose"
         ></div>
         <aside
-            class="sidebar fixed top-0 right-0 z-[9999] h-screen w-full overflow-y-auto neu-bg-surface-color transition-transform duration-100 sm:w-1/2 dark:bg-slate-900"
+            class="sidebar neu-bg-surface-color fixed top-0 right-0 z-[9999] h-screen w-full overflow-y-auto transition-transform duration-100 sm:w-1/2 dark:bg-slate-900"
             :class="open ? 'translate-x-0' : 'translate-x-full'"
         >
             <div class="space-y-4 p-5 sm:p-8 lg:p-9">

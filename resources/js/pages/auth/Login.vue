@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
+import NeuInput from '@/components/NeuInput.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
-import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle, LockIcon, LucideMail } from 'lucide-vue-next';
-import NeuInput from '@/components/NeuInput.vue';
 
 defineProps<{
     status?: string;
@@ -37,7 +34,7 @@ defineProps<{
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="ghost"
-                class="flex w-full items-center justify-center p-3 py-6 neu-button mb-2"
+                class="neu-button mb-2 flex w-full items-center justify-center p-3 py-6"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -72,9 +69,9 @@ defineProps<{
                 Sign in using Google
             </Button>
             <div class="flex items-center">
-                <div class="flex-1 h-px bg-gray-300"></div>
+                <div class="h-px flex-1 bg-gray-300"></div>
                 <span class="px-3 text-sm text-gray-500"> Or </span>
-                <div class="flex-1 h-px bg-gray-300"></div>
+                <div class="h-px flex-1 bg-gray-300"></div>
             </div>
         </div>
 
@@ -82,20 +79,24 @@ defineProps<{
             v-bind="auth.login.store()"
             :reset-on-success="['password']"
             v-slot="{ errors, processing }"
-            class="flex flex-col gap-6 py-3 p-6"
+            class="flex flex-col gap-6 p-6 py-3"
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <NeuInput
                         label="Email address"
-                        name="email" :error="errors.email"
-                        tabindex="1" type="email"
+                        name="email"
+                        :error="errors.email"
+                        tabindex="1"
+                        type="email"
                         required
                         autocomplete="email"
                         placeholder="Please enter your email"
                     >
                         <template #icon>
-                            <LucideMail class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                            <LucideMail
+                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
+                            />
                         </template>
                     </NeuInput>
                 </div>
@@ -103,20 +104,26 @@ defineProps<{
                 <div class="grid gap-2">
                     <NeuInput
                         label="Password"
-                        name="password" :error="errors.password"
+                        name="password"
+                        :error="errors.password"
                         tabindex="2"
                         type="password"
                         required
                         placeholder="Enter your password"
                     >
                         <template #icon>
-                            <LockIcon class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500" />
+                            <LockIcon
+                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
+                            />
                         </template>
                     </NeuInput>
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <Label for="remember" class="flex items-center space-x-3 font-kulim">
+                    <Label
+                        for="remember"
+                        class="flex items-center space-x-3 font-kulim"
+                    >
                         <Checkbox id="remember" name="remember" :tabindex="3" />
                         <span>Remember me</span>
                     </Label>

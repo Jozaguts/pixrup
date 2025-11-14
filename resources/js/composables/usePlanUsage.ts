@@ -8,11 +8,11 @@ export const usePlanUsage = () => {
     const payload = page.props.planUsage ?? ({} as Partial<PlanUsagePayload>);
 
     const initialTotal =
-        (payload.limit ?? null) ??
+        payload.limit ??
+        null ??
         10; /* fallback to a sensible default for onboarding */
     const initialUsed =
-        payload.used ??
-        initialTotal - (payload.remaining ?? initialTotal);
+        payload.used ?? initialTotal - (payload.remaining ?? initialTotal);
 
     const usage = reactive({
         total: Math.max(0, initialTotal),

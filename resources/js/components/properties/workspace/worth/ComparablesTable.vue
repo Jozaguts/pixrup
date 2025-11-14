@@ -44,7 +44,7 @@ const rows = computed(() =>
 
 <template>
     <section
-        class="neu-surface flex flex-col gap-4 rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4 neu-surface rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
     >
         <header
             class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between"

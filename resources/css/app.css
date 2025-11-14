@@ -15,7 +15,6 @@
 /* Dark variant helper */
 @custom-variant dark (&:is(.dark *));
 
-
 /* --- Tailwind theme token mapping (from your base file) --- */
 @theme inline {
     --font-sans:
@@ -23,7 +22,7 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
-    --font-kulim: "Kulim Park", sans-serif;
+    --font-kulim: 'Kulim Park', sans-serif;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -96,7 +95,7 @@
             'Mona Sans', ui-sans-serif, system-ui, sans-serif,
             'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
             'Noto Color Emoji';
-        color:var(--font-color-dark) !important;
+        color: var(--font-color-dark) !important;
     }
 
     body {
@@ -112,13 +111,15 @@
 
 :root {
     /* --- Input shadows --- */
-    --neupho-input-shadow-focus: inset 0.2rem 0.2rem 0.4rem #c8d0e7,
-    inset -0.2rem -0.2rem 0.4rem #FFFFFF;
-    --neupho-input-shadow: inset 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem #FFFFFF;
-    --neupho-container-shadow: -4px -2px 4px 0px #ffffff, 4px 2px 6px 0px #DFE4EA;
-    --neupho-btn-shadow: -4px -2px 4px 0 #ffffff, 4px 2px 6px 0 #DFE4EA;
-    --neupho-btn-focus-shadow:2px 2px 2px 0 #DFE4EA inset,
-    -2px -2px 2px 0 #ffffff inset;
+    --neupho-input-shadow-focus:
+        inset 0.2rem 0.2rem 0.4rem #c8d0e7, inset -0.2rem -0.2rem 0.4rem #ffffff;
+    --neupho-input-shadow:
+        inset 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem #ffffff;
+    --neupho-container-shadow:
+        -4px -2px 4px 0px #ffffff, 4px 2px 6px 0px #dfe4ea;
+    --neupho-btn-shadow: -4px -2px 4px 0 #ffffff, 4px 2px 6px 0 #dfe4ea;
+    --neupho-btn-focus-shadow:
+        2px 2px 2px 0 #dfe4ea inset, -2px -2px 2px 0 #ffffff inset;
     /* --- Brand & core --- */
     --primary: #6e33ff; /* brand purple */
     --primary-foreground: #ffffff; /* readable over purple */
@@ -127,7 +128,7 @@
 
     /* --- Backgrounds / surfaces --- */
     --background_legacy: #e8e8e8;
-    --background: #f5f6f7;;/*#ebe8f3;  light neutral for app background */
+    --background: #f5f6f7; /*#ebe8f3;  light neutral for app background */
     --card: var(--background);
     --popover: var(--background);
 
@@ -174,11 +175,11 @@
     --neu-blur: 5px;
     --neu-radius: 17px;
     --neu-shadow-out:
-            0 1px 1px 1px rgba(255, 255, 255, 0.2),
-            0 10px 20px rgba(0, 0, 0, 0.2),
-            0 4px 5px 0 rgba(0, 0, 0, 0.05);
+        0 1px 1px 1px rgba(255, 255, 255, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2),
+        0 4px 5px 0 rgba(0, 0, 0, 0.05);
     --neu-shadow-in:
-        inset var(--neu-offset) var(--neu-offset) var(--neu-blur) var(--neu-dark),
+        inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+            var(--neu-dark),
         inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
             var(--neu-blur) var(--neu-light);
 }
@@ -241,11 +242,15 @@
 }
 
 @utility shadow-neu-out {
-    box-shadow: -4px -2px 4px 0px #ffffff, 4px 2px 6px 0px #DFE4EA;
+    box-shadow:
+        -4px -2px 4px 0px #ffffff,
+        4px 2px 6px 0px #dfe4ea;
 }
 
 @utility shadow-neu-in {
-    box-shadow:inset 2px 2px 5px #d1cccb, inset -2px -2px 5px #ffffff;
+    box-shadow:
+        inset 2px 2px 5px #d1cccb,
+        inset -2px -2px 5px #ffffff;
     /*box-shadow: var(--neu-shadow-in);*/
 }
 
@@ -266,11 +271,13 @@
 }
 
 @layer components {
-    .neu-icon{
+    .neu-icon {
         width: 3rem;
         height: 3rem;
         border-radius: 50%;
-        box-shadow: 0.3rem 0.3rem 0.6rem var(--neu-dark), -0.2rem -0.2rem 0.5rem var(--neu-surface);
+        box-shadow:
+            0.3rem 0.3rem 0.6rem var(--neu-dark),
+            -0.2rem -0.2rem 0.5rem var(--neu-surface);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -279,9 +286,10 @@
         color: var(--primary);
         transition: all 0.5s ease;
     }
-    .neu-icon:hover{
-        box-shadow: inset 0.2rem 0.2rem 0.5rem var(--neu-dark), inset -0.2rem -0.2rem 0.5rem var(--neu-surface);
-
+    .neu-icon:hover {
+        box-shadow:
+            inset 0.2rem 0.2rem 0.5rem var(--neu-dark),
+            inset -0.2rem -0.2rem 0.5rem var(--neu-surface);
     }
     .neu-btn {
         @apply neu-surface shadow-neu-out;
@@ -315,12 +323,14 @@
         color: var(--foreground, #000);
         border: none;
         border-radius: 10px;
-        transition: all .5s;
+        transition: all 0.5s;
     }
-    .neu-input:focus{
+    .neu-input:focus {
         background: var(--background);
         /*box-shadow: var(--neu-shadow-in);*/
-        box-shadow: 13px 13px 52px #dedddd, -13px -13px 52px #ffffff;
+        box-shadow:
+            13px 13px 52px #dedddd,
+            -13px -13px 52px #ffffff;
         /*box-shadow: inset 5px 5px 17px var(--background),*/
         /*inset -5px -5px 17px #ffffff;*/
     }
@@ -350,7 +360,7 @@
     }
 
     .neu-switch {
-        @apply neu-surface shadow-neu-out inline-flex items-center;
+        @apply inline-flex items-center neu-surface shadow-neu-out;
         padding: 0.4rem;
         width: 64px;
         height: 50px;
