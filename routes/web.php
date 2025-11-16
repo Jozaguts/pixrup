@@ -3,9 +3,8 @@
 use App\Http\Controllers\Api\UsageSummaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GlowUp\GlowUpJobController;
-use App\Http\Controllers\Properties\PropertyController;
 use App\Http\Controllers\Properties\PropertyWorthController as LegacyPropertyWorthController;
-use App\Models\Property;
+use App\Interface\Properties\Http\Controllers\PropertyController;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Interface\Appraisal\Http\Controllers\PropertyWorthController as AppraisalPropertyWorthController;

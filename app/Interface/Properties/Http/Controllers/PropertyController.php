@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Properties;
+namespace App\Interface\Properties\Http\Controllers;
 
+use App\Application\Properties\DTOs\CreatePropertyDTO;
+use App\Application\Properties\UseCases\CreatePropertyUseCase;
 use App\Application\Usage\Services\UsageSummaryService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GlowUp\GlowUpJobResource;
+use App\Interface\Properties\Http\Requests\CreatePropertyRequest;
 use App\Models\Property;
-use App\Models\PropertyPhoto;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -147,77 +145,26 @@ class PropertyController extends Controller
             'usage' => $usageSummary,
         ]);
     }
-
-    /**
-     * @throws ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+    public function store(CreatePropertyRequest $request, CreatePropertyUseCase $useCase): RedirectResponse
     {
-        $validated = $request->validate([
-            'address' => ['required', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:120'],
-            'state' => ['nullable', 'string', 'max:120'],
-            'postal_code' => ['nullable', 'string', 'max:30'],
-            'country' => ['nullable', 'string', 'max:120'],
-            'lat' => ['required', 'numeric', 'between:-90,90'],
-            'lng' => ['required', 'numeric', 'between:-180,180'],
-            'place_id' => ['nullable', 'string', 'max:255'],
-            'photos.*' => ['nullable', 'file', 'image', 'max:8192'],
-        ]);
-        $property = DB::transaction(function () use ($validated, $request): Property {
-            $property = Property::create([
-                'title' => $validated['address'],
-                'status' => 'in-progress',
-                'address' => $validated['address'],
-                'city' => $validated['city'] ?? null,
-                'state' => $validated['state'] ?? null,
-                'postal_code' => $validated['postal_code'] ?? null,
-                'country' => $validated['country'] ?? null,
-                'lat' => $validated['lat'],
-                'lng' => $validated['lng'],
-                'place_id' => $validated['place_id'] ?? null,
-                'metadata' => [
-                    'source' => 'ui',
-                    'created_via' => 'wizard',
-                ],
-            ]);
-            $this->storePhotos($request, $property);
+        $dto = new CreatePropertyDTO(
+            $request->input('address'),
+            $request->input('status'),
+            $request->input('address'),
+            $request->input('city'),
+            $request->input('state'),
+            $request->input('postal_code'),
+            $request->input('country'),
+            $request->input('lat'),
+            $request->input('lng'),
+            $request->input('place_id'),
+            $request->input('metadata'),
+        );
 
-            return $property;
-        });
+        $useCase->execute($dto, $request->file('photos'));
 
         return redirect()
             ->route('dashboard')
             ->with('status', 'property-created');
-    }
-
-    protected function storePhotos(Request $request, Property $property): void
-    {
-        if (! $request->hasFile('photos')) {
-            return;
-        }
-
-        $files = $request->file('photos');
-
-        foreach ($files as $file) {
-            if (! $file) {
-                continue;
-            }
-            $user = $request->user();
-            if (! $user){
-                throw  new \RuntimeException('');
-            }
-
-            $path = $file->store("/users/{$request->user()->id}/properties/{$property->id}");
-
-            $url = Storage::url($path);
-
-            PropertyPhoto::create([
-                'property_id' => $property->id,
-                'path' => $url,
-                'original_name' => $file->getClientOriginalName(),
-                'size' => $file->getSize(),
-            ]);
-        }
     }
 }

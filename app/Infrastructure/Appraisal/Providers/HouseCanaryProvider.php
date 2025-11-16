@@ -10,6 +10,7 @@
 namespace App\Infrastructure\Appraisal\Providers;
 
 use App\Application\Appraisal\DTOs\PropertyWorthDTO;
+use App\Domain\Appraisal\Entities\PropertyWorth;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Models\Property;
 use Carbon\Carbon;
@@ -30,7 +31,7 @@ class HouseCanaryProvider implements AppraisalProviderInterface
      * Returns: PropertyWorthDTO
      * Expected Result: Returns predictable placeholder data indicating unimplemented provider workflow.
      */
-    public function fetchValue(Property $property): PropertyWorthDTO
+    public function fetchValue(PropertyWorth $property): PropertyWorthDTO
     {
         $timestamp = Carbon::now();
 

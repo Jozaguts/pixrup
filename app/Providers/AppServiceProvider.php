@@ -40,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             PropertyWorthRepositoryInterface::class,
             EloquentPropertyWorthRepository::class,
         );
+
         // todo moverlo al controlador
         $this->app->bind(
             GlowUpImageProvider::class,
