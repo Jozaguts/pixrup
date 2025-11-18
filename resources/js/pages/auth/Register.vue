@@ -6,6 +6,7 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
+import { Icon } from '@iconify/vue';
 </script>
 
 <template>
@@ -66,6 +67,7 @@ import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
             <div class="grid gap-4">
                 <div class="grid gap-2">
                     <NeuInput
+                        icon="fluent-color:contact-card-16"
                         label="Full name"
                         name="name"
                         :error="errors.name"
@@ -74,16 +76,11 @@ import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
                         required
                         autocomplete="name"
                         placeholder="Please enter your full name"
-                    >
-                        <template #icon>
-                            <User2Icon
-                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
-                            />
-                        </template>
-                    </NeuInput>
+                    />
                 </div>
                 <div class="grid gap-2">
                     <NeuInput
+                        icon="fluent-color:mail-16"
                         label="Email address"
                         name="email"
                         :error="errors.email"
@@ -92,17 +89,12 @@ import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
                         required
                         autocomplete="email"
                         placeholder="Please enter your email"
-                    >
-                        <template #icon>
-                            <LucideMail
-                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
-                            />
-                        </template>
-                    </NeuInput>
+                    ></NeuInput>
                 </div>
 
                 <div class="grid gap-2">
                     <NeuInput
+                        icon="fluent-color:lock-closed-24"
                         label="Password"
                         name="password"
                         :error="errors.password"
@@ -110,13 +102,7 @@ import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
                         type="password"
                         required
                         placeholder="Enter your password"
-                    >
-                        <template #icon>
-                            <LockIcon
-                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
-                            />
-                        </template>
-                    </NeuInput>
+                    ></NeuInput>
                 </div>
 
                 <Button

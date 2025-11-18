@@ -7,6 +7,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/password/confirm';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import NeuInput from '@/components/NeuInput.vue';
 </script>
 
 <template>
@@ -24,7 +25,7 @@ import { LoaderCircle } from 'lucide-vue-next';
             <div class="space-y-6">
                 <div class="grid gap-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input
+                    <NeuInput
                         id="password"
                         type="password"
                         name="password"
@@ -32,9 +33,21 @@ import { LoaderCircle } from 'lucide-vue-next';
                         required
                         autocomplete="current-password"
                         autofocus
+                        placeholder="Please enter your password"
+                        :error="errors.password"
+                        icon="fluent-color:lock-shield-16"
                     />
+<!--                    <Input-->
+<!--                        id="password"-->
+<!--                        type="password"-->
+<!--                        name="password"-->
+<!--                        class="mt-1 block w-full"-->
+<!--                        required-->
+<!--                        autocomplete="current-password"-->
+<!--                        autofocus-->
+<!--                    />-->
 
-                    <InputError :message="errors.password" />
+<!--                    <InputError :message="errors.password" />-->
                 </div>
 
                 <div class="flex items-center">

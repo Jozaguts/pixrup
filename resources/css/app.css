@@ -120,6 +120,10 @@
     --neupho-btn-shadow: -4px -2px 4px 0 #ffffff, 4px 2px 6px 0 #dfe4ea;
     --neupho-btn-focus-shadow:
         2px 2px 2px 0 #dfe4ea inset, -2px -2px 2px 0 #ffffff inset;
+
+    --neupho-icon-shadow:
+        -6px -6px 12px  rgba(255, 255, 255, 0.7),
+        6px 6px 12px rgba(120, 90, 200, 0.3);
     /* --- Brand & core --- */
     --primary: #6e33ff; /* brand purple */
     --primary-foreground: #ffffff; /* readable over purple */
@@ -128,7 +132,7 @@
 
     /* --- Backgrounds / surfaces --- */
     --background_legacy: #e8e8e8;
-    --background: #f5f6f7; /*#ebe8f3;  light neutral for app background */
+    --background: #e7eaf0; /*#ebe8f3;  light neutral for app background */
     --card: var(--background);
     --popover: var(--background);
 
@@ -157,7 +161,7 @@
     --radius: 0.75rem;
 
     /* --- Sidebar --- */
-    --sidebar-background: var(--neu-surface);
+    --sidebar-background: /* var(--neu-surface);*/ #f9fafb;
     --sidebar-foreground: #6b7280;
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: #ffffff;
@@ -230,15 +234,7 @@
 ----------------------------------------------------------------------------- */
 
 @utility neu-surface {
-    background: var(--neu-surface);
-    border: 1px solid transparent;
-    border-radius: var(--neu-radius);
-    transition:
-        box-shadow 0.25s ease,
-        transform 0.1s ease,
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
+    box-shadow: var(--neupho-container-shadow);
 }
 
 @utility shadow-neu-out {
@@ -259,7 +255,7 @@
 }
 
 @utility is-pressed {
-    box-shadow: var(--neu-shadow-in);
+   box-sizing: inherit;
 }
 
 @utility neu-focus {
@@ -297,7 +293,7 @@
         border-color: var(--neu-surface);
         color: color-mix(in oklab, var(--foreground, #000) 92%, #090909 8%);
         cursor: pointer;
-        background: var(--background) !important;
+        /*background: var(--background) !important;*/
     }
 
     .neu-btn:active {
