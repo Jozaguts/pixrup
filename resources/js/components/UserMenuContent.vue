@@ -12,6 +12,7 @@ import auth from '@/routes/auth';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
+import { Icon } from '@iconify/vue';
 interface Props {
     user: User;
 }
@@ -24,9 +25,9 @@ defineProps<Props>();
 </script>
 
 <template>
-    <DropdownMenuLabel class="p-0 font-normal">
+    <DropdownMenuLabel class="p-0 font-kulim">
         <div
-            class="neu-btn flex items-center gap-2 px-1 py-1.5 text-left text-sm is-pressed"
+            class="neu-btn flex items-center gap-2 px-1 py-1.5 text-left text-sm"
         >
             <UserInfo :user="user" :show-email="true" />
         </div>
@@ -40,7 +41,7 @@ defineProps<Props>();
                 prefetch
                 as="button"
             >
-                <SettingsIcon class="mr-2 h-4 w-4" />
+                <Icon icon="fluent-color:settings-16" class="mr-2 !w-6 !h-6" />
                 Settings
             </Link>
         </DropdownMenuItem>
@@ -54,7 +55,7 @@ defineProps<Props>();
             as="button"
             data-test="logout-button"
         >
-            <LogOutIcon class="mr-2 h-4 w-4" />
+            <Icon icon="fluent-color:share-ios-20" class="mr-2 !h-6 !w-6 rotate-90" />
             Log out
         </Link>
     </DropdownMenuItem>

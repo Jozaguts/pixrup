@@ -92,13 +92,8 @@ defineProps<{
                         required
                         autocomplete="email"
                         placeholder="Please enter your email"
-                    >
-                        <template #icon>
-                            <LucideMail
-                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
-                            />
-                        </template>
-                    </NeuInput>
+                        icon="fluent-color:mail-16"
+                    />
                 </div>
 
                 <div class="grid gap-2">
@@ -110,13 +105,8 @@ defineProps<{
                         type="password"
                         required
                         placeholder="Enter your password"
-                    >
-                        <template #icon>
-                            <LockIcon
-                                class="h-5 w-5 text-muted-foreground/50 group-focus-within:text-slate-500"
-                            />
-                        </template>
-                    </NeuInput>
+                        icon="fluent-color:lock-closed-24"
+                    />
                 </div>
 
                 <div class="flex items-center justify-between">

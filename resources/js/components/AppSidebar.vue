@@ -26,7 +26,8 @@ import type { AppPageProps, NavItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { User } from 'lucide-vue-next';
 import { computed } from 'vue';
-
+import { cn } from '@/lib/utils'
+import { Icon } from '@iconify/vue';
 type ExtendedPageProps = AppPageProps<{
     appMeta?: {
         version?: string;
@@ -59,19 +60,19 @@ const navGroups = computed(() => {
             key: 'global',
             items: withState([
                 {
-                    title: 'Dashboard',
+                    title: 'Home',
                     href: dashboard(),
-                    icon: LayoutDashboard,
+                    icon: 'fluent-color:people-home-16',
                 },
                 {
                     title: 'Properties',
                     href: '/properties',
-                    icon: Home,
+                    icon: 'fluent-color:building-people-20',
                 },
                 {
                     title: 'Reports',
                     href: '/reports',
-                    icon: ReportsIcon,
+                    icon: 'fluent-color:people-list-20',
                 },
             ]),
         },
@@ -81,17 +82,17 @@ const navGroups = computed(() => {
                 {
                     title: 'Billing',
                     href: '/billing',
-                    icon: CardIcon,
+                    icon: 'fluent-color:receipt-16',
                 },
                 {
                     title: 'Tutorials',
                     href: '/tutorials',
-                    icon: GraduationCap,
+                    icon: 'fluent-emoji-flat:graduation-cap',
                 },
                 {
                     title: 'Support',
                     href: '/support',
-                    icon: SupportIcon,
+                    icon: 'fluent-color:chat-bubbles-question-20',
                 },
             ]),
         },
@@ -124,7 +125,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="icon" variant="sidebar">
         <SidebarHeader class="pb-2">
             <SidebarMenu>
                 <SidebarMenuItem>
@@ -152,9 +153,9 @@ const handleLogout = () => {
                             >
                                 <Link
                                     :href="item.href"
-                                    :class="{ 'is-pressed': item.isActive }"
+                                    :class="cn( item.isActive && 'neu-button')"
                                 >
-                                    <component :is="item.icon" />
+                                    <Icon :icon="item.icon" class="!w-8 !h-8" />
                                     <span>{{ item.title }}</span>
                                 </Link>
                             </SidebarMenuButton>

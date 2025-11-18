@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
 import { useAttrs } from 'vue';
+import { Icon } from '@iconify/vue';
 const model = defineModel();
 const attributes = useAttrs();
 const props = defineProps<{
@@ -8,6 +9,7 @@ const props = defineProps<{
     error?: string;
     class?: string;
     tabIndex?: number;
+    icon?: string;
 }>();
 </script>
 
@@ -16,7 +18,8 @@ const props = defineProps<{
         <label v-if="label" class="npo-form-label">{{ label }}</label>
 
         <div :class="cn('npo-input-wrapper', 'group', error && 'bg-red-100')">
-            <slot name="icon" />
+
+            <Icon v-if="props.icon"  :icon="props.icon" class="w-8 h-8 text-slate-500" />
             <input
                 v-bind="attributes"
                 :class="
@@ -32,3 +35,16 @@ const props = defineProps<{
         </p>
     </div>
 </template>
+
+
+<style scoped>
+.neumo-icon {
+    position: relative;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 1),
+    inset 3px 3px 5px rgba(0, 0, 0, 0.1);
+}
+</style>
