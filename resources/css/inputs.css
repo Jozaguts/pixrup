@@ -1,13 +1,23 @@
 :root {
-    --card-bg: #eaebea;
-    --neupho-bg:#F5F7FA;
+    --card-bg: #eee;
+    --neupho-bg:#eee;
 }
 
 .bg-neu {
     background-color: var(--neupho-bg) !important;
 }
 .npo-form-shadow {
-    box-shadow:var(--neupho-container-shadow);
+    /*box-shadow: 20px 20px 40px 0px #bcbcbd, -20px -20px 40px #f8fdff;*/
+    box-shadow:
+            -2.3px -2.3px 3.8px rgba(255,255,255, 0.2),
+            -6.3px -6.3px 10.6px rgba(255,255,255, 0.3),
+            -15.1px -15.1px 25.6px rgba(255,255,255, 0.4),
+            -50px -50px 85px rgba(0255,255,255, 0.07),
+
+            2.3px 2.3px 3.8px rgba(0, 0, 0, 0.024),
+            6.3px 6.3px 10.6px rgba(0, 0, 0, 0.035),
+            15.1px 15.1px 25.6px rgba(0, 0, 0, 0.046),
+            50px 50px 85px rgba(0, 0, 0, 0.07);
     background-color: var(--neupho-bg);
     /*background:#FEFEFC;*/
 }
@@ -58,7 +68,15 @@
     background: inherit;
     outline: none;
     border: none;
-    box-shadow: var(--neupho-btn-shadow);
+    box-shadow: -2.3px -2.3px 3.8px rgba(255,255,255, 0.2),
+    -6.3px -6.3px 10.6px rgba(255,255,255, 0.3),
+    -15.1px -15.1px 25.6px rgba(255,255,255, 0.4),
+    -50px -50px 85px rgba(0255,255,255, 0.07),
+
+    2.3px 2.3px 3.8px rgba(0, 0, 0, 0.024),
+    6.3px 6.3px 10.6px rgba(0, 0, 0, 0.035),
+    15.1px 15.1px 25.6px rgba(0, 0, 0, 0.046),
+    50px 50px 85px rgba(0, 0, 0, 0.07);
     cursor: pointer;
     text-transform: capitalize;
     border-radius: 12px;
