@@ -13,16 +13,16 @@ const tabs = [
 
 <template>
     <div
-        class="inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800"
+        class="inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800 npo-form-shadow"
     >
         <button
             v-for="{ value, Icon, label } in tabs"
             :key="value"
             @click="updateAppearance(value)"
             :class="[
-                'flex items-center rounded-md px-3.5 py-1.5 transition-colors',
+                'relative flex items-center rounded-md px-6 py-3 transition-colors tab',
                 appearance === value
-                    ? 'bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100'
+                    ? 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100'
                     : 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60',
             ]"
         >
@@ -31,3 +31,18 @@ const tabs = [
         </button>
     </div>
 </template>
+
+
+<style scoped>
+ .tab::after {
+    content: '';
+    display: block;
+     inset:3px;
+    position: absolute;
+     border-radius:8px;
+ }
+ .tab.active:after {
+     box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 1),
+     inset 3px 3px 5px rgba(0, 0, 0, 0.1);
+ }
+</style>

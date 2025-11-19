@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem } from '@/types';
+import NeuInput from "@/components/NeuInput.vue";
+import { Icon } from "@iconify/vue";
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -50,8 +52,9 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
                     <div class="grid gap-2">
-                        <Label for="current_password">Current password</Label>
-                        <Input
+                        <NeuInput
+                            icon="fluent-color:lock-closed-16"
+                            label="Current password"
                             id="current_password"
                             ref="currentPasswordInput"
                             name="current_password"
@@ -59,13 +62,14 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                             class="mt-1 block w-full"
                             autocomplete="current-password"
                             placeholder="Current password"
+                            :error="errors.current_password"
                         />
-                        <InputError :message="errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password">New password</Label>
-                        <Input
+                       <NeuInput
+                           icon="fluent-color:lock-shield-24"
+                           label="New password"
                             id="password"
                             ref="passwordInput"
                             name="password"
@@ -73,29 +77,29 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="New password"
+                           :error="errors.password"
                         />
-                        <InputError :message="errors.password" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password_confirmation"
-                            >Confirm password</Label
-                        >
-                        <Input
+                        <NeuInput
+                            icon="fluent-color:lock-shield-24"
+                            label="Confirm password"
                             id="password_confirmation"
                             name="password_confirmation"
                             type="password"
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="Confirm password"
+                            :error="errors.password_confirmation"
                         />
-                        <InputError :message="errors.password_confirmation" />
                     </div>
 
                     <div class="flex items-center gap-4">
                         <Button
                             :disabled="processing"
                             data-test="update-password-button"
+                            class="px-4 py-6 shadow-lg"
                             >Save password</Button
                         >
 
@@ -109,7 +113,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                                 v-show="recentlySuccessful"
                                 class="text-sm text-neutral-600"
                             >
-                                Saved.
+                                Password updated successfully <Icon icon="fluent-color:checkmark-circle-16" class="inline w-5 h-5 mr-1 text-green-500" />
                             </p>
                         </Transition>
                     </div>

@@ -10,6 +10,7 @@ const props = defineProps<{
     class?: string;
     tabIndex?: number;
     icon?: string;
+    defaultValue?: string;
 }>();
 </script>
 

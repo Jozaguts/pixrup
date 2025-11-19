@@ -13,6 +13,8 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
+import NeuInput from "@/components/NeuInput.vue";
+import { Icon } from "@iconify/vue";
 
 interface Props {
     mustVerifyEmail: boolean;
@@ -49,32 +51,32 @@ const user = page.props.auth.user;
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
                     <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input
+                        <NeuInput
+                            icon="fluent-color:contact-card-48"
                             id="name"
                             class="mt-1 block w-full"
                             name="name"
-                            :default-value="user.name"
+                            v-model="user.name"
                             required
                             autocomplete="name"
                             placeholder="Full name"
+                            :error="errors.name"
                         />
-                        <InputError class="mt-2" :message="errors.name" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
-                        <Input
+                        <NeuInput
+                            icon="fluent-color:mail-16"
                             id="email"
                             type="email"
                             class="mt-1 block w-full"
                             name="email"
-                            :default-value="user.email"
+                            v-model="user.email"
                             required
-                            autocomplete="username"
+                            autocomplete="email"
                             placeholder="Email address"
+                            :error="errors.email"
                         />
-                        <InputError class="mt-2" :message="errors.email" />
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
@@ -102,7 +104,8 @@ const user = page.props.auth.user;
                         <Button
                             :disabled="processing"
                             data-test="update-profile-button"
-                            >Save</Button
+                            class="px-4 py-6 shadow-lg"
+                            >Save Changes</Button
                         >
 
                         <Transition
@@ -113,9 +116,9 @@ const user = page.props.auth.user;
                         >
                             <p
                                 v-show="recentlySuccessful"
-                                class="text-sm text-neutral-600"
+                                class="text-sm text-neutral-600 animate-bounce"
                             >
-                                Saved.
+                               Profile updated successfully <Icon icon="fluent-color:checkmark-circle-16" class="inline w-5 h-5 mr-1 text-green-500" />
                             </p>
                         </Transition>
                     </div>
