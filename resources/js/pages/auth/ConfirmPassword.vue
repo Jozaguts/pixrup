@@ -52,7 +52,7 @@ import NeuInput from '@/components/NeuInput.vue';
 
                 <div class="flex items-center">
                     <Button
-                        class="w-full"
+                        class="w-full px-4 py-6 shadow-lg"
                         :disabled="processing"
                         data-test="confirm-password-button"
                     >
