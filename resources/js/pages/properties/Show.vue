@@ -266,17 +266,6 @@ const headerMetricCards = computed(() => {
         },
     ];
 });
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const moduleStatusLabel = (id: ModuleId) => {
-    const meta = moduleMeta.value[id];
-    if (!meta) {
-        return null;
-    }
-
-    const status = statusTokens[meta.status] ?? null;
-    return status?.label ?? null;
-};
 </script>
 
 <template>
