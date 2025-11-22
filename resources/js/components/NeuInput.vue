@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
-import { useAttrs } from 'vue';
+import { useAttrs, ref} from 'vue';
 import { Icon } from '@iconify/vue';
 const model = defineModel();
+defineOptions({
+    inheritAttrs: false,
+});
 const attributes = useAttrs();
 const props = defineProps<{
     label?: string;
@@ -12,23 +15,33 @@ const props = defineProps<{
     icon?: string;
     defaultValue?: string;
 }>();
+const { ref: forwardedRef, ...attrs } = attributes;
+const inputEl = ref<HTMLInputElement | null>(null);
+if (typeof forwardedRef === 'function') {
+    forwardedRef(inputEl.value);
+}
+defineExpose({
+    el: inputEl,
+});
 </script>
 
 <template>
     <div class="npo-form-control gap-2">
         <label v-if="label" class="npo-form-label">{{ label }}</label>
 
-        <div :class="cn('npo-input-wrapper', 'group', error && 'bg-red-100')">
+        <div :class="cn('npo-input-wrapper py-3 px-2', 'group', error && 'bg-red-100')">
 
             <Icon v-if="props.icon"  :icon="props.icon" class="w-8 h-8 text-slate-500" />
             <input
-                v-bind="attributes"
+                v-bind="attrs"
+                ref="inputEl"
                 :class="
-                    cn('npo-input', props.class, 'placeholder:text-[#9da3b0]')
+                    cn('npo-input', 'flex-1', props.class, 'placeholder:text-[#9da3b0]')
                 "
                 v-model="model"
                 :tabindex="props.tabIndex"
             />
+            <slot/>
         </div>
 
         <p v-show="error" class="pl-3 text-[0.8rem] text-red-500">

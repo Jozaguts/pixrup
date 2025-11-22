@@ -5,7 +5,7 @@
     type TabItem = {
         label: string;
         icon?: string
-        index: string | number;
+        id: string | number;
     };
     type IndexType = string | number;
     const props = defineProps({
@@ -17,35 +17,50 @@
             type: String,
             default: '',
         },
-    })
+        value: {
+            type: [String, Number],
+            default: 0,
+        },
+        togglable: {
+            type: Boolean,
+            default: true,
+        },
+    });
+    const emit = defineEmits(['onchange']);
 
-    const activeTab:Ref<IndexType> = ref(0);
+    const activeTab:Ref<IndexType> = ref('address');
 
     function setActiveTab(index: IndexType) {
-        activeTab.value = index
+        emit('onchange', index);
+        if(props.togglable) {
+            activeTab.value = index
+            return;
+        }
     }
+
 
 </script>
 
 <template>
     <div :class="cn(
-    'inline-flex gap-1',
-     'rounded-lg p-1',
-      'bg-neutral-100 dark:bg-neutral-800 npo-form-shadow'
+    'flex flex-row gap-1',
+     'rounded-lg p-2',
+      'bg-neutral-100dark:bg-neutral-800 npo-form-shadow',
+      'w-full'
      )">
         <button
-            v-for="{ label, icon, index } in props.items"
-            :key="index"
-            @click="setActiveTab(index)"
+            v-for="{ label, icon, id } in props.items"
+            :key="id"
+            @click="setActiveTab(id)"
             :class="cn(
-                'tab relative flex items-center rounded-md px-6 py-3 transition-colors',
+                'tab relative flex items-center rounded-md px-6 py-3 transition-colors duration-200',
                 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black',
                  'dark:text-neutral-400 dark:hover:bg-neutral-700/60',
-                activeTab === index && 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100',
+                value === id && 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100',
                 props.class
             )"
         >
-            <Icon v-if="icon" :icon="icon" class="-ml-1 !h-6 w-6" />
+            <Icon v-if="icon" :icon="icon" class="-ml-1 !h-5 w-5 text-green-500" />
             <span class="ml-1.5 text-sm">{{ label }}</span>
         </button>
     </div>

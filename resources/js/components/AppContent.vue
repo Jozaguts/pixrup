@@ -12,9 +12,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const className = computed(() => props.class);
-
 const flashStatus = computed(() => usePage().props.flash?.status ?? null);
-
 const statusDetails = computed(() => {
     switch (flashStatus.value) {
         case 'already-verified':

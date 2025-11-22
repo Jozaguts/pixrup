@@ -32,6 +32,7 @@ export type AppPageProps<
     planUsage?: PlanUsagePayload | null;
 };
 
+
 export interface User {
     id: number;
     name: string;

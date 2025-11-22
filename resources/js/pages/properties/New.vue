@@ -8,25 +8,26 @@ import type { BreadcrumbItemType } from '@/types';
 import { Capacitor } from '@capacitor/core';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { Head, useForm } from '@inertiajs/vue3';
+import { cn } from '@/lib/utils';
 import {
-    CalendarDays,
-    Camera as CameraIcon,
-    Globe,
     Image as ImageIcon,
     Loader2,
-    MapPin,
     Navigation,
     Trash2,
     Upload,
 } from 'lucide-vue-next';
 import {
     computed,
+    ComputedRef,
     nextTick,
     onBeforeUnmount,
     reactive,
     ref,
     type Ref,
 } from 'vue';
+import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
+import AddressMapImage from '@/components/properties/address-map-image.vue';
+import { Icon } from '@iconify/vue';
 
 type WizardStep = 'address' | 'photos' | 'summary';
 
@@ -37,7 +38,7 @@ type PhotoItem = {
     name: string;
     size: number;
 };
-
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
 const successToastStorageKey = 'pixrup:new-property-toast';
 const form = useForm({});
 
@@ -46,35 +47,32 @@ const breadcrumbs: BreadcrumbItemType[] = [
     { title: 'Properties', href: '/properties' },
     { title: 'New Property', href: '/properties/new' },
 ];
-
-const steps: Array<{
-    id: WizardStep;
-    title: string;
-    description: string;
-}> = [
+const currentStepIndex = ref(0);
+const steps: ComputedRef<any[]> = computed(() => [
     {
         id: 'address',
-        title: 'Address',
-        description: 'Confirm the exact property location.',
+        label: 'Address',
+        icon:
+            currentStepIndex.value === 0
+                ? 'fluent-emoji-flat:open-mailbox-with-raised-flag'
+                : 'ph:seal-check-fill',
     },
     {
         id: 'photos',
-        title: 'Photos',
-        description: 'Upload or capture compelling property imagery.',
+        label: 'Photos',
+        icon:
+            currentStepIndex.value <= 1
+                ? 'fluent-color:image-20'
+                : 'ph:seal-check-fill',
     },
     {
         id: 'summary',
-        title: 'Review',
-        description: 'Verify every detail before creating the property.',
+        label: 'Review',
+        icon: 'fluent-color:content-view-16',
     },
-];
+]);
 
-const currentStepIndex = ref(0);
-const currentStep = computed(() => steps[currentStepIndex.value]);
-
-const progressPercent = computed(
-    () => ((currentStepIndex.value + 1) / steps.length) * 100,
-);
+const currentStep = computed(() => steps.value[currentStepIndex.value]);
 
 const addressSearchRef = ref<InstanceType<typeof AddressSearch> | null>(null);
 
@@ -108,7 +106,7 @@ const ensureGeocoder = async () => {
         return geocoder;
     }
 
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
+    //const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
 
     if (!apiKey) {
         throw new Error(
@@ -539,13 +537,13 @@ const formatFileSize = (size: number) => {
 };
 
 const goToStep = async (index: number) => {
-    if (index < 0 || index > steps.length - 1) {
+    if (index < 0 || index > steps.value.length - 1) {
         return;
     }
 
     currentStepIndex.value = index;
 
-    if (steps[index].id === 'address') {
+    if (steps.value[index].id === 'address') {
         await nextTick();
         addressSearchRef.value?.focus();
     }
@@ -674,7 +672,14 @@ const isNextDisabled = computed(() => {
     <Head title="New Property" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <section
-            class="relative flex min-h-[calc(100vh-8rem)] w-full flex-1 flex-col gap-6 rounded-none px-5 pt-6 pb-28 shadow-none shadow-neu-in md:mx-auto md:max-w-5xl md:rounded-[32px] md:px-10 md:pt-10 md:pb-10 md:shadow-[24px_24px_48px_rgba(207,213,235,0.6),-24px_-24px_48px_rgba(255,255,255,0.9)] lg:max-w-6xl"
+            :class="
+                cn(
+                    'relative flex flex-1 flex-col',
+                    'min-h-[calc(100vh-8rem)] gap-6 rounded-none px-5 pt-6 pb-28',
+                    'm-5',
+                    'md:rounded-[12px] md:px-10 md:pt-10 md:pb-10',
+                )
+            "
         >
             <header class="flex flex-col gap-6">
                 <div class="flex flex-col gap-2">
@@ -695,38 +700,13 @@ const isNextDisabled = computed(() => {
                 </div>
 
                 <div class="flex flex-col gap-4">
-                    <div
-                        class="relative h-2 w-full neu-surface rounded-full shadow-neu-in"
-                    >
-                        <div
-                            class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#7C4DFF] via-[#a68dff] to-[#7C4DFF] transition-[width]"
-                            :style="{ width: `${progressPercent}%` }"
+                    <div class="relative w-fit">
+                        <NeuphormistTabs
+                            :value="currentStep.id"
+                            :items="steps"
+                            class="w-auto"
+                            :togglable="false"
                         />
-                    </div>
-                    <div
-                        class="grid gap-3 text-sm text-[#6b7280] md:grid-cols-3 md:gap-4"
-                    >
-                        <article
-                            v-for="(step, index) in steps"
-                            :key="step.id"
-                            class="flex flex-col gap-1 neu-surface rounded-3xl p-4 shadow-neu-out transition-all duration-200"
-                            :class="{
-                                'text-[#1f2933] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]':
-                                    index === currentStepIndex,
-                            }"
-                        >
-                            <span
-                                class="text-xs font-semibold tracking-wide text-[#9ca3af] uppercase"
-                            >
-                                Step {{ index + 1 }}
-                            </span>
-                            <span class="text-base font-semibold">
-                                {{ step.title }}
-                            </span>
-                            <span class="text-xs text-[#9ca3af] md:text-sm">
-                                {{ step.description }}
-                            </span>
-                        </article>
                     </div>
                 </div>
             </header>
@@ -735,7 +715,7 @@ const isNextDisabled = computed(() => {
                 <section
                     v-if="currentStep.id === 'address'"
                     key="address-step"
-                    class="flex flex-1 flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
+                    class="flex flex-1 flex-col gap-6 rounded-[28px] px-6 md:p-10"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
@@ -756,11 +736,10 @@ const isNextDisabled = computed(() => {
                             variant="neumorphic"
                             @place-selected="handlePlaceSelected"
                             @error="handleAddressError"
-                        />
-                        <div class="flex flex-col gap-3 md:flex-row">
+                        >
                             <button
                                 type="button"
-                                class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                                class="npo-form-shadow flex w-full items-center justify-center gap-2 rounded-[8px] px-3 py-2 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
                                 :disabled="addressForm.isLocating"
                                 @click="useCurrentLocation"
                             >
@@ -771,7 +750,7 @@ const isNextDisabled = computed(() => {
                                         : 'Use current location'
                                 }}
                             </button>
-                        </div>
+                        </AddressSearch>
                         <p
                             v-if="addressForm.error"
                             class="text-sm text-[#B91C1C]"
@@ -780,75 +759,17 @@ const isNextDisabled = computed(() => {
                         </p>
                     </div>
 
-                    <div
-                        v-if="isAddressStepValid"
-                        class="grid gap-4 md:grid-cols-2"
-                    >
-                        <div
-                            class="flex flex-col gap-1 neu-surface rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
-                        >
-                            <span
-                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
-                            >
-                                Address
-                            </span>
-                            <p class="font-semibold text-[#1f2933]">
-                                {{ addressDetails.formattedAddress }}
-                            </p>
-                        </div>
-                        <div
-                            class="flex flex-col gap-2 neu-surface rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in"
-                        >
-                            <span
-                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
-                            >
-                                City & State
-                            </span>
-                            <p class="font-semibold text-[#1f2933]">
-                                {{ addressDetails.city || '—' }},
-                                {{ addressDetails.state || '—' }}
-                            </p>
-                            <p class="text-xs text-[#9ca3af]">
-                                {{
-                                    addressDetails.country ||
-                                    'Country not available'
-                                }}
-                            </p>
-                        </div>
-                        <div
-                            class="flex flex-col gap-3 neu-surface rounded-3xl bg-[#f4f5fa] p-5 shadow-neu-in md:col-span-2"
-                        >
-                            <div class="flex items-center gap-2 text-[#6b7280]">
-                                <Globe class="size-4" />
-                                <span class="text-xs tracking-wide uppercase">
-                                    Coordinates
-                                </span>
-                            </div>
-                            <div
-                                class="flex flex-wrap gap-4 text-sm text-[#1f2933]"
-                            >
-                                <span class="neu-surface rounded-2xl px-3 py-2">
-                                    Lat:
-                                    {{ formatCoordinate(addressDetails.lat) }}
-                                </span>
-                                <span class="neu-surface rounded-2xl px-3 py-2">
-                                    Lng:
-                                    {{ formatCoordinate(addressDetails.lng) }}
-                                </span>
-                                <span
-                                    class="truncate neu-surface rounded-2xl px-3 py-2 text-xs tracking-wide text-ellipsis text-[#9ca3af] uppercase"
-                                >
-                                    Place ID: {{ addressDetails.placeId }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    <AddressMapImage
+                        :lat="addressDetails.lat"
+                        :lng="addressDetails.lng"
+                        :formatted-address="addressDetails.formattedAddress"
+                    />
                 </section>
 
                 <section
                     v-else-if="currentStep.id === 'photos'"
                     key="photos-step"
-                    class="flex flex-1 flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
+                    class="flex flex-1 flex-col gap-6 rounded-[28px] p-6 md:p-10"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
@@ -866,7 +787,7 @@ const isNextDisabled = computed(() => {
                     <div class="flex flex-col gap-3 md:flex-row">
                         <button
                             type="button"
-                            class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                            class="neu-button flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
                             :disabled="isProcessingPhotos"
                             @click="openUploadDialog"
                         >
@@ -875,11 +796,14 @@ const isNextDisabled = computed(() => {
                         </button>
                         <button
                             type="button"
-                            class="neu-btn flex w-full items-center justify-center gap-2 rounded-2xl bg-[#7C4DFF] px-4 py-3 font-semibold text-white shadow-[12px_12px_24px_rgba(78,47,155,0.35),-12px_-12px_24px_rgba(152,117,255,0.45)] transition-all duration-200 hover:shadow-[inset_8px_8px_18px_rgba(78,47,155,0.35),inset_-8px_-8px_18px_rgba(152,117,255,0.35)] md:w-auto"
+                            class="neu-button flex w-full items-center justify-center gap-2 rounded-[12px] px-4 py-3 font-semibold !text-muted-foreground transition-all duration-200 hover:!text-slate-600 md:w-auto"
                             :disabled="isProcessingPhotos"
                             @click="takePhoto"
                         >
-                            <CameraIcon class="size-4" />
+                            <Icon
+                                icon="fluent:camera-arrow-up-24-filled"
+                                class="!w-5 !h-5"
+                            />
                             Take photo
                         </button>
                     </div>
@@ -902,7 +826,7 @@ const isNextDisabled = computed(() => {
                     />
 
                     <div
-                        class="flex flex-1 flex-col gap-4 neu-surface rounded-[24px] bg-[#f4f5fa] p-6 shadow-neu-in"
+                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-gray-200 p-6 shadow-neu-in"
                     >
                         <div
                             v-if="!photoItems.length && !isProcessingPhotos"
@@ -922,12 +846,12 @@ const isNextDisabled = computed(() => {
                             <div
                                 v-for="photo in photoItems"
                                 :key="photo.id"
-                                class="relative overflow-hidden rounded-[24px] shadow-[12px_12px_24px_rgba(200,206,224,0.5),-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                                class="relative overflow-hidden rounded-[12px] npo-form-shadow"
                             >
                                 <img
                                     :src="photo.previewUrl"
                                     :alt="photo.name"
-                                    class="h-48 w-full rounded-t-[24px] object-cover"
+                                    class="h-48 w-full rounded-t-[12px] object-cover"
                                 />
                                 <div
                                     class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]"
@@ -944,7 +868,7 @@ const isNextDisabled = computed(() => {
                                     </div>
                                     <button
                                         type="button"
-                                        class="neu-btn inline-flex items-center justify-center rounded-xl bg-[#fde2e1] p-2 text-[#B91C1C] shadow-[6px_6px_16px_rgba(252,226,225,0.6),-6px_-6px_16px_rgba(255,255,255,0.95)] transition-all hover:shadow-[inset_6px_6px_16px_rgba(252,226,225,0.6),inset_-6px_-6px_16px_rgba(255,255,255,0.95)]"
+                                        class="neu-button inline-flex items-center justify-center rounded-[8px] bg-[#fde2e1] p-2 !text-slate-400 hover:!text-[#B91C1C]  transition-all"
                                         @click="removePhoto(photo.id)"
                                     >
                                         <Trash2 class="size-4" />
@@ -972,7 +896,7 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else
                     key="summary-step"
-                    class="flex flex-1 flex-col gap-6 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-out md:p-10"
+                    class="flex flex-1 flex-col gap-6 p-6 md:p-10"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
@@ -988,67 +912,20 @@ const isNextDisabled = computed(() => {
                     </div>
 
                     <div
-                        class="flex flex-col gap-5 neu-surface rounded-[28px] bg-[#f4f5fa] p-6 shadow-neu-in md:p-8"
+                        class="flex flex-col flex-wrap gap-5 py-5 relative"
                     >
-                        <div class="flex flex-col gap-3">
-                            <span
-                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
-                            >
-                                Address
-                            </span>
-                            <p class="text-lg font-semibold text-[#1f2933]">
+                        <div class="w-fit flex flex-row gap-3 px-4 py-3 bg-[#f4f5fa] npo-form-shadow rounded-[12px]">
+                            <p class="text-xs font-semibold text-[#1f2933]">
+                                <Icon icon="fluent-color:building-home-32" class="inline-block mr-2" />
                                 {{ addressDetails.formattedAddress || '—' }}
                             </p>
-                            <p class="text-sm text-[#6b7280]">
-                                {{ addressDetails.city || '—' }},
-                                {{ addressDetails.state || '—' }}
-                                {{
-                                    addressDetails.postalCode
-                                        ? `· ${addressDetails.postalCode}`
-                                        : ''
-                                }}
+                            <p class="text-xs font-semibold  border-l-2 border-gray-300 pl-4 text-[#1f2933]">
+                                <Icon icon="logos:google-maps" class="inline-block mr-2" />
+                                {{ addressDetails.lat || '—' }}, {{ addressDetails.lng || '—' }}
                             </p>
                         </div>
 
-                        <div class="grid gap-3 sm:grid-cols-2">
-                            <div
-                                class="flex flex-col gap-2 px-4 py-3 text-sm text-[#6b7280] shadow-neu-in"
-                            >
-                                <div
-                                    class="flex items-center gap-2 text-[#1f2933]"
-                                >
-                                    <MapPin class="size-4" />
-                                    <span class="font-semibold"
-                                        >Coordinates</span
-                                    >
-                                </div>
-                                <span
-                                    >Lat:
-                                    {{
-                                        formatCoordinate(addressDetails.lat)
-                                    }}</span
-                                >
-                                <span
-                                    >Lng:
-                                    {{
-                                        formatCoordinate(addressDetails.lng)
-                                    }}</span
-                                >
-                            </div>
-                            <div
-                                class="s flex flex-col gap-2 px-4 py-3 text-sm text-[#6b7280] shadow-neu-in"
-                            >
-                                <div
-                                    class="flex items-center gap-2 text-[#1f2933]"
-                                >
-                                    <CalendarDays class="size-4" />
-                                    <span class="font-semibold">Created</span>
-                                </div>
-                                <span>{{ creationPreview }}</span>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col gap-3">
+                        <div class="flex flex-col gap-3 flex-1 w-full rounded-[12px] bg-gray-200 p-6 shadow-neu-in">
                             <span
                                 class="text-xs tracking-wide text-[#9ca3af] uppercase"
                             >
@@ -1060,7 +937,7 @@ const isNextDisabled = computed(() => {
                                 <div
                                     v-for="photo in photoItems"
                                     :key="photo.id"
-                                    class="overflow-hidden shadow-neu-in"
+                                    class="overflow-hidden npo-form-shadow rounded-[12px] relative"
                                 >
                                     <img
                                         :src="photo.previewUrl"
@@ -1068,7 +945,7 @@ const isNextDisabled = computed(() => {
                                         class="h-36 w-full object-cover"
                                     />
                                     <div
-                                        class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]"
+                                        class="absolute bg-white/90 bottom-0 left-0 right-0 flex items-center justify-center gap-2 px-4 py-3 text-xs text-[#6b7280]"
                                     >
                                         <span
                                             class="font-semibold text-[#1f2933]"
@@ -1093,12 +970,10 @@ const isNextDisabled = computed(() => {
                 </section>
             </Transition>
 
-            <div
-                class="fixed right-6 bottom-6 left-6 z-20 flex flex-col gap-3 rounded-[28px] bg-[#f4f5fa]/95 p-4 backdrop-blur md:static md:flex-row md:items-center md:justify-between md:bg-transparent md:p-0 md:backdrop-blur-none"
-            >
+            <div class="mt-0 flex w-full flex-row px-10">
                 <button
                     type="button"
-                    class="neu-btn flex items-center justify-center rounded-2xl px-6 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933]"
+                    class="flex items-center justify-center rounded-2xl px-6 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933]"
                     :class="{
                         'pointer-events-none opacity-40':
                             currentStepIndex === 0 || isSubmitting,
@@ -1109,7 +984,7 @@ const isNextDisabled = computed(() => {
                 </button>
                 <button
                     type="button"
-                    class="neu-btn relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white"
+                    class="neu-button relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white"
                     :class="{
                         'pointer-events-none opacity-60': isNextDisabled,
                     }"
