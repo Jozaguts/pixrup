@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import type { PropType } from 'vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import NeuInput from "@/components/NeuInput.vue";
 
 type AddressLocation = {
     lat: number;
@@ -54,10 +55,7 @@ const initializeAutocomplete = async () => {
         return;
     }
 
-    const targetElement =
-        inputRef.value instanceof HTMLInputElement
-            ? inputRef.value
-            : ((inputRef.value as any)?.$el as HTMLInputElement | undefined);
+    const targetElement = (inputRef.value as any)?.el as HTMLInputElement | null;
 
     if (!targetElement) {
         return;
@@ -172,11 +170,9 @@ defineExpose({
 </script>
 
 <template>
-    <div class="flex w-full max-w-xl flex-col gap-2">
-        <label class="sr-only" for="address-search"
-            >Search for an address</label
-        >
-        <Input
+    <div class="flex w-full flex-col gap-2">
+        <NeuInput
+            icon="fluent-color:location-ripple-16"
             id="address-search"
             ref="inputRef"
             v-model="modelValue"
@@ -187,9 +183,9 @@ defineExpose({
             autocapitalize="off"
             spellcheck="false"
             class="py-4"
-        />
-        <p v-if="errorMessage" class="text-sm text-red-500">
-            {{ errorMessage }}
-        </p>
+            :error="errorMessage"
+        >
+            <slot/>
+        </NeuInput>
     </div>
 </template>

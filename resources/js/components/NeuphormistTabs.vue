@@ -1,0 +1,82 @@
+<script setup lang="ts">
+    import { cn } from '@/lib/utils';
+    import { Icon } from '@iconify/vue';
+    import {Ref, ref} from "vue";
+    type TabItem = {
+        label: string;
+        icon?: string
+        id: string | number;
+    };
+    type IndexType = string | number;
+    const props = defineProps({
+        items: {
+            default: () => [],
+            type: Array as () => TabItem[],
+        },
+        class: {
+            type: String,
+            default: '',
+        },
+        value: {
+            type: [String, Number],
+            default: 0,
+        },
+        togglable: {
+            type: Boolean,
+            default: true,
+        },
+    });
+    const emit = defineEmits(['onchange']);
+
+    const activeTab:Ref<IndexType> = ref('address');
+
+    function setActiveTab(index: IndexType) {
+        emit('onchange', index);
+        if(props.togglable) {
+            activeTab.value = index
+            return;
+        }
+    }
+
+
+</script>
+
+<template>
+    <div :class="cn(
+    'flex flex-row gap-1',
+     'rounded-lg p-2',
+      'bg-neutral-100dark:bg-neutral-800 npo-form-shadow',
+      'w-full'
+     )">
+        <button
+            v-for="{ label, icon, id } in props.items"
+            :key="id"
+            @click="setActiveTab(id)"
+            :class="cn(
+                'tab relative flex items-center rounded-md px-6 py-3 transition-colors duration-200',
+                'text-neutral-500 hover:bg-neutral-200/60 hover:text-black',
+                 'dark:text-neutral-400 dark:hover:bg-neutral-700/60',
+                value === id && 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100',
+                props.class
+            )"
+        >
+            <Icon v-if="icon" :icon="icon" class="-ml-1 !h-5 w-5 text-green-500" />
+            <span class="ml-1.5 text-sm">{{ label }}</span>
+        </button>
+    </div>
+
+</template>
+
+<style scoped>
+.tab::after {
+    content: '';
+    display: block;
+    inset:3px;
+    position: absolute;
+    border-radius:8px;
+}
+.tab.active:after {
+    box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 1),
+    inset 3px 3px 5px rgba(0, 0, 0, 0.1);
+}
+</style>
