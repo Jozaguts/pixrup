@@ -65,6 +65,9 @@ importers:
       vue:
         specifier: ^3.5.13
         version: 3.5.24(typescript@5.9.3)
+      vue3-easy-data-table:
+        specifier: ^1.5.47
+        version: 1.5.47(typescript@5.9.3)
     devDependencies:
       '@eslint/js':
         specifier: ^9.19.0
@@ -3042,6 +3045,9 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: '>=5.0.0'
+
+  vue3-easy-data-table@1.5.47:
+    resolution: {integrity: sha512-q0bZBlWIwQ3FIhB+F98ylFPfBJWiS3Xv7QqBe3xS5MbRNZP96RFjaQn7C0Pi0J/aaucNW8gFWxPyh9NESS1ehw==}
 
   vue@3.5.24:
     resolution: {integrity: sha512-uTHDOpVQTMjcGgrqFPSb8iO2m1DUvo+WbGqoXQz8Y1CeBYQ0FXf2z1gLRaBtHjlRz7zZUBHxjVB5VTLzYkvftg==}
@@ -6230,6 +6236,12 @@ snapshots:
       '@volar/typescript': 2.4.15
       '@vue/language-core': 2.2.12(typescript@5.9.3)
       typescript: 5.9.3
+
+  vue3-easy-data-table@1.5.47(typescript@5.9.3):
+    dependencies:
+      vue: 3.5.24(typescript@5.9.3)
+    transitivePeerDependencies:
+      - typescript
 
   vue@3.5.24(typescript@5.9.3):
     dependencies:

@@ -14,6 +14,9 @@ import {
     requestStackCardsUpdate,
 } from './lib/vendor/stackCards';
 
+import Vue3EasyDataTable from 'vue3-easy-data-table';
+import 'vue3-easy-data-table/dist/style.css';
+
 window.gsap = gsap;
 window.ScrollTrigger = ScrollTrigger;
 window.ensureSpringer = ensureSpringer;
@@ -33,6 +36,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(autoAnimatePlugin)
+            .component('EasyDataTable', Vue3EasyDataTable)
             .mount(el);
     },
     progress: {
