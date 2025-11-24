@@ -13,6 +13,8 @@ import { Building2, Compass, MapPin, Plus, TrendingUp } from 'lucide-vue-next';
 import { computed } from 'vue';
 import DashboardSection from '@/components/DashboardSection.vue';
 import { Icon } from '@iconify/vue';
+import CardDisplay from '@/components/card-display.vue';
+import PropertyCard from '@/components/properties/property-card.vue';
 
 type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
 
@@ -445,152 +447,10 @@ const visitLink = (link?: string) => {
                 </div>
             </DashboardSection>
 
-            <DashboardSection
-                title="Your properties"
-                description="Track status, values, and jump back into each project."
-                class="flex flex-col gap-6 py-5"
-            >
-
-                <div
-                    v-if="hasProperties"
-                    class="flex items-stretch flex-wrap"
-                >
-                    <article
-                        v-for="property in resolvedProperties"
-                        :key="property.id"
-                        class="md:w-1/3 sm:w-full group flex h-full flex-col overflow-hidden npo-form-shadow rounded-[12px]"
-                    >
-                        <div class="relative aspect-[16/10] overflow-hidden">
-                            <img
-                                v-if="property.thumbnail"
-                                :src="property.thumbnail as string"
-                                @error="e => { (e.target as HTMLImageElement).src = 'https://placehold.co/600x400'; }"
-                                :alt="`Preview of ${property.title}`"
-                                class="size-full object-cover"
-                            />
-                            <div
-                                v-else
-                                class="flex size-full items-center justify-center bg-gradient-to-br from-[#eef1fb] via-[#f4f5fa] to-[#dbe2ff] text-[#7C4DFF]"
-                            >
-                                <img
-                                    :src="property.thumbnail as string"
-                                    alt="pixrup icon"
-                                    class="h-15 w-15 neu-surface"
-                                />
-                            </div>
-
-                            <div
-                                class="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
-                                :class="
-                                    statusStyles[property.status].badgeClass
-                                "
-                            >
-                                <span
-                                    class="size-2 rounded-full"
-                                    :class="
-                                        statusStyles[property.status].dotClass
-                                    "
-                                />
-                                {{ statusStyles[property.status].label }}
-                            </div>
-                        </div>
-
-                        <div class="flex flex-1 flex-col gap-4 p-5">
-                            <div class="flex flex-col gap-2">
-                                <h3
-                                    class="text-base font-semibold text-[#1f2933]"
-                                >
-                                    {{ property.title }}
-                                </h3>
-                                <p
-                                    class="flex items-center gap-2 text-sm text-[#6b7280]"
-                                >
-                                    <MapPin class="size-4 text-[#7C4DFF]" />
-                                    <span>{{ property.address }}</span>
-                                </p>
-                            </div>
-
-                            <div
-                                class="flex flex-wrap items-center gap-4 text-sm text-[#475569]"
-                            >
-                                <div class="flex flex-col">
-                                    <span
-                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
-                                    >
-                                        Estimated value
-                                    </span>
-                                    <span class="font-semibold">
-                                        {{
-                                            formatCurrency(
-                                                property.estimatedValue,
-                                            )
-                                        }}
-                                    </span>
-                                </div>
-                                <div
-                                    v-if="property.progress != null"
-                                    class="flex flex-col"
-                                >
-                                    <span
-                                        class="text-xs tracking-wide text-[#9CA3AF] uppercase"
-                                    >
-                                        Progress
-                                    </span>
-                                    <span class="font-semibold">
-                                        {{ property.progress }}%
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="mt-auto flex flex-wrap gap-3">
-                                <button
-                                    type="button"
-                                    class="neu-button py-5 flex-1 rounded-2xl px-4 text-sm font-medium text-muted-surface hover:text-faded-600 text-[#1f2933] group"
-                                    @click="visitLink(property.links?.view)"
-                                >
-                                    View project
-                                    <Icon icon="fluent-color:link-multiple-16" class="!size-5 ml-2 inline-block opacity-0 group-hover:opacity-100" />
-                                </button>
-                                <button
-                                    type="button"
-                                    class="neu-button py-5 flex-1 rounded-2xl px-4 text-sm font-medium text-muted-surface hover:text-faded-600 text-[#1f2933]"
-                                    @click="visitLink(property.links?.report)"
-                                >
-                                    Report
-                                    <Icon icon="fluent-color:megaphone-loud-20" class="!size-5 ml-2 inline-block" />
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-
-                <div
-                    v-else
-                    class="flex flex-col items-center justify-center gap-4 npo-form-shadow rounded-[28px] bg-[#f4f5fa] p-12 text-center shadow-neu-in"
-                >
-                    <div
-                        class="flex size-16 items-center justify-center rounded-3xl bg-white/90 text-[#7C4DFF] shadow-[8px_8px_20px_rgba(193,199,216,0.35),-8px_-8px_20px_rgba(255,255,255,0.8)]"
-                    >
-                        <Building2 class="size-8" />
-                    </div>
-                    <div class="space-y-2">
-                        <h3 class="text-xl font-semibold text-[#1f2933]">
-                            You haven’t added any properties yet.
-                        </h3>
-                        <p class="text-sm text-[#6b7280]">
-                            Start by adding your first property to unlock
-                            tailored dashboards and reports.
-                        </p>
-                    </div>
-                    <button
-                        type="button"
-                        class="group inline-flex items-center gap-2 rounded-2xl bg-[#7C4DFF] px-5 py-3 font-semibold text-white shadow-[12px_12px_24px_rgba(78,47,155,0.35),-12px_-12px_24px_rgba(152,117,255,0.45)] transition-all duration-200 ease-out hover:shadow-[inset_8px_8px_18px_rgba(78,47,155,0.35),inset_-8px_-8px_18px_rgba(152,117,255,0.35)]"
-                        @click="openNewPropertyWizard"
-                    >
-                        <Plus class="size-5" />
-                        Add your first property
-                    </button>
-                </div>
+            <DashboardSection title="Your properties" description="Track status, values, and jump back into each project." class="flex flex-col gap-6 py-5">
+               <CardDisplay class="gap-0 items-stretch">
+                    <PropertyCard v-for="property in resolvedProperties" :key="property.id" :item="property"/>
+               </CardDisplay>
             </DashboardSection>
         </div>
     </AppLayout>
