@@ -47,7 +47,8 @@
             "Domain\\": "app/Domain/",
             "Application\\": "app/Application/",
             "Infrastructure\\": "app/Infrastructure/",
-            "Interface\\": "app/Interface/"
+            "Interface\\": "app/Interface/",
+            "App\\Interface\\Properties\\Jobs\\": "app/Interface/Properties/Jobs/"
         }
     },
     "scripts": {

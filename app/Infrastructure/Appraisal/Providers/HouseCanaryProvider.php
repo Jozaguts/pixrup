@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description: File defining the HouseCanaryProvider placeholder adapter for future integration.
+ * Description: File defining the SpyHuntService placeholder adapter for future integration.
  * Parameters: None.
  * Returns: Void.
  * Expected Result: Allows dependency injection to resolve even before real API wiring.
