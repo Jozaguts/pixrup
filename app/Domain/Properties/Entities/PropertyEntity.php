@@ -2,6 +2,8 @@
 
 namespace App\Domain\Properties\Entities;
 
+use App\Domain\Properties\ValueObjects\Coordinates;
+
 class PropertyEntity
 {
     public function __construct(
@@ -18,5 +20,9 @@ class PropertyEntity
         public string $place_id,
         public mixed $metadata,
     ) {
+    }
+    public function coordinates(): Coordinates
+    {
+        return new Coordinates($this->lat, $this->lng);
     }
 }
