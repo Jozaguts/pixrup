@@ -8,15 +8,17 @@ namespace App\Application\Properties\DTOs;
 class ComparableItemDTO
 {
     public function __construct(
-        public int $id,
+        public string $id,
+        public ?float $price,
+        public ?int $square_footage,
+        public ?int $bedrooms,
+        public ?int $bathrooms,
+        public ?int $year_built,
+        public ?int $dom,
+        public ?float $distance,
         public string $address,
-        public string $type,
-        public int $bedrooms,
-        public int $bathrooms,
-        public int $square_footage,
-        public float $distance,
-        public int $days_on_market,
-        public string $photo,
+        public ?string $last_seen,
+        public ?string $status,
         public float $latitude,
         public float $longitude,
     ){}
@@ -25,15 +27,14 @@ class ComparableItemDTO
         return [
             'id' => $this->id,
             'address' => $this->address,
-            'type' => $this->type,
             'bedrooms' => $this->bedrooms,
             'bathrooms' => $this->bathrooms,
-            'square_footage' => $this->square_footage,
+            'sqft' => $this->square_footage,
             'distance' => $this->distance,
-            'days_on_market' => $this->days_on_market,
-            'photo' => $this->photo,
+            'dom' => $this->dom,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'last_seen' => $this->last_seen,
         ];
     }
 }

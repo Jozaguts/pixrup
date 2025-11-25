@@ -14,10 +14,10 @@ class MarketSnapshotDTO
     public function toArray(): array
     {
         return [
-            'avgPricePerFt' => $this->avgPricePerFt,
-            'avgRentPerFt' => $this->avgRentPerFt,
-            'daysOnMarket' => $this->daysOnMarket,
-            'trend30d' => $this->trend30d,
+            'avgPricePerFt' => $this->avgPricePerFt,  //sale value
+            'avgRentPerFt' => $this->avgRentPerFt, // rent value
+            'daysOnMarket' => $this->daysOnMarket, // sale value
+            'trend30d' => $this->trend30d, //sale value
         ];
     }
 

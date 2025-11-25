@@ -9,7 +9,7 @@ class SpyHuntDataDTO
         public readonly FiltersDTO $filters,
         public readonly MarketSnapshotDTO $marketSnapshot,
         public readonly ValueEstimateDTO $valueEstimate,
-        public readonly ComparablesDTO $comparables,
+        public readonly ComparableDTO $comparables,
         public readonly StatsDTO $stats,
         public readonly SourceDTO $source,
 
