@@ -9,7 +9,10 @@ class SpyHuntFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'radius' => ['nullable','numeric'],
+            'property_types' => ['nullable','array'],
+            'price_min' => ['nullable','numeric'],
+            'price_max' => ['nullable','numeric'],
         ];
     }
 
