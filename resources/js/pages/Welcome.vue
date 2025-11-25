@@ -205,10 +205,13 @@ const handleAppraiseFullProperty = () => {
                 class="flex flex-1 flex-col items-center justify-center gap-10 pt-32 text-center"
             >
                 <HeroSection />
-                <AddressSearch
-                    v-model="addressQuery"
-                    @place-selected="handlePlaceSelected"
-                />
+                <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px]">
+                    <AddressSearch
+                        v-model="addressQuery"
+                        @place-selected="handlePlaceSelected"
+                    />
+                </div>
+<!--             todo  remove and chang for android and apple icons  /-->
                 <ContinueButtons
                     :address-data="selectedAddress"
                     :is-authenticated="isAuthenticated"

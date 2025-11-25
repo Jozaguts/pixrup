@@ -26,8 +26,8 @@ const props = withDefaults(
 const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
-const largeLogo = new URL('../../../images/pixrup-2.svg', import.meta.url).href;
-const compactLogo = new URL('../../../images/pixrup-2.svg', import.meta.url)
+const largeLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
+const compactLogo = new URL('../../../images/pixrup.png', import.meta.url)
     .href;
 
 const toggleMobileMenu = () => {
@@ -97,7 +97,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
             <div>
                 <Link href="/">
                     <span class="sr-only">Home</span>
-                    <figure class="hidden lg:block lg:max-w-[50px]">
+                    <figure class="hidden lg:block lg:max-w-[50px] ml-2">
                         <img :src="largeLogo" alt="Pixrup" class="dark" />
                     </figure>
                     <figure class="block max-w-[44px] lg:hidden">
