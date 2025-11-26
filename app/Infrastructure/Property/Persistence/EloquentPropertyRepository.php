@@ -42,4 +42,42 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
             $model->metadata,
         );
     }
+
+    public function findOrFail(int $id): PropertyEntity
+    {
+        $property = Property::where(['id' => $id])->firstOrFail();
+        return new PropertyEntity(
+            $property->id,
+            $property->address,
+            $property->status,
+            $property->address,
+            $property->city,
+            $property->state,
+            $property->postal_code,
+            $property->country,
+            $property->lat,
+            $property->lng,
+            $property->place_id,
+            $property->metadata,
+        );
+    }
+    public function findById(int $id): ?PropertyEntity
+    {
+        $property = Property::find($id);
+
+        return new PropertyEntity(
+            $property->id,
+            $property->address,
+            $property->status,
+            $property->address,
+            $property->city,
+            $property->state,
+            $property->postal_code,
+            $property->country,
+            $property->lat,
+            $property->lng,
+            $property->place_id,
+            $property->metadata,
+        );
+    }
 }
