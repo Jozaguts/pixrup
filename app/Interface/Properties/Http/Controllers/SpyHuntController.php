@@ -13,16 +13,16 @@ class SpyHuntController extends Controller
     public function __construct(
         private readonly FetchSpyHuntDataUseCase $fetchSpyHuntData,
     ) {}
-    public function show(int $propertyId, SpyHuntFilterRequest $request)
+    public function fetch(int $propertyId, SpyHuntFilterRequest $request)
     {
+
         try{
             $filters = $request->validated();
 
             $dto = $this->fetchSpyHuntData->execute($propertyId, $filters);
-            return Inertia::render('properties/Show',[
-                'spyhunt' => $dto->toArray(),
-                'filters' => $filters,
-                'propertyId' => $propertyId,
+
+            return response()->json([
+                'data' => $dto->toArray(),
             ]);
 
         }catch (\Throwable $e){

@@ -30,7 +30,6 @@ readonly class FetchSpyHuntDataUseCase
         }
         $property = $this->propertyRepository->findOrFail($propertyId);
         $coordinates = $property->coordinates();
-        $radius = $filters['radius'] ?? 1.0;
 
         $raw = $this->marketDataProvider->fetchAll($property->address, $coordinates);
         /**
@@ -39,7 +38,7 @@ readonly class FetchSpyHuntDataUseCase
          * PropertyDTO is part a of property DB and Property value from provider (rentCast)
          * ------------------------------------------
          */
-        $subject = $raw->subject ?? [];
+        $subject = $raw->subjectProperty ?? [];
 
         $propertyDto = new PropertyDTO(
             // form DB
@@ -65,27 +64,14 @@ readonly class FetchSpyHuntDataUseCase
          * 2. Build FiltersDTO
          * ------------------------------------------
          */
-        $filtersDto = new FiltersDTO(
-            radiusOptions: [1,3,5],
-            propertyTypes: ['Single Family','Condo','Townhouse','Manufactured','Multi-Family','Apartment','Land'],
-            priceMin: 50000,
-            priceMax: 3000000,
-            defaultRadius: 3,
-            defaultPropertyType: 'any',
-            defaultMode: 'sale'
-        );
+        $filtersDto = FiltersDTO::defaults();
         /**
          * ------------------------------------------
          * 3. MARKET SNAPSHOT (avgPrice, avgRent, DOM, trend)
          * ------------------------------------------
          */
-        $averages = $this->getAvgValues(['rent' => $raw->rentComps,  'sale' => $raw->saleComps]);
-        $marketSnapshot = new MarketSnapshotDTO(
-            avgPricePerFt: $averages['avgPricePerFt'],
-            avgRentPerFt: $averages['avgRentPerFt'],
-            daysOnMarket: $averages['daysOnMarket'],
-            trend30d: $averages['trend30d'],
-        );
+
+        $marketSnapshot =  MarketSnapshotDTO::fromArray(['sale' => $raw->saleComps,  'rent' => $raw->rentComps]);
         /**
          * ------------------------------------------
          * 4. VALUE ESTIMATE (sale + rent)
@@ -93,22 +79,15 @@ readonly class FetchSpyHuntDataUseCase
          */
         $valueEstimateDto = new ValueEstimateDTO(
             $raw->valueEstimate['price'],
-            $raw->valueEstimate['priceRangeLow'],
-            $raw->valueEstimate['priceRangeHigh'],
+            $raw->valueEstimate['rangeLow'],
+            $raw->valueEstimate['rangeHigh'],
         );
         /**
          * ------------------------------------------
          * 5. COMPARABLES
          * ------------------------------------------
          */
-        $saleComps = array_map(fn($c) => $this->mapComparableItem($c), $raw->saleComps);
-        $rentComps = $raw->rentComps
-            ? array_map(fn($c) => $this->mapComparableItem($c), $raw->rentComps)
-            : [];
-        $comparablesDto = new ComparableDTO(
-            saleComps: $saleComps,
-            rentComps: $rentComps,
-        );
+        $comparablesDto = ComparableDTO::fromArray($raw->saleComps, $raw->rentComps ?? []);
         /**
          * ------------------------------------------
          * 6. STATS
@@ -142,68 +121,6 @@ readonly class FetchSpyHuntDataUseCase
         return $spyHuntDto;
 
     }
-    /**
-     * -------------------------------------------------
-     * HELPER: Compare averages for price/ft, rent/ft, DOM, trend
-     * -------------------------------------------------
-     */
-    private function getAvgValues(array $comparables): array
-    {
-        $now = now();
-
-        $pricePerFt = [];
-        $rentPricePerFt = [];
-        $domValues = [];
-        $recentComps = [];
-
-        /** SALE COMPS */
-        foreach ($comparables['sale'] ?? [] as $comp) {
-            $price = $comp['price'] ?? null;
-            $sqft  = $comp['squareFootage'] ?? null;
-            $dom   = $comp['daysOnMarket'] ?? null;
-            $lastSeen = isset($comp['lastSeen']) ? \Carbon\Carbon::parse($comp['lastSeen']) : null;
-
-            if ($price && $sqft && $sqft > 50) {
-                $pricePerFt[] = $price / $sqft;
-            }
-            if ($dom !== null && $dom > 0) {
-                $domValues[] = $dom;
-            }
-            if ($lastSeen && $lastSeen->greaterThan($now->copy()->subDays(30))) {
-                if ($price && $sqft && $sqft > 50) {
-                    $recentComps[] = $price / $sqft;
-                }
-            }
-        }
-
-        /** RENT COMPS */
-        foreach ($comparables['rent'] ?? [] as $comp) {
-            $rent = $comp['price'] ?? null;
-            $sqft = $comp['squareFootage'] ?? null;
-
-            if ($rent && $sqft && $sqft > 50) {
-                $rentPricePerFt[] = $rent / $sqft;
-            }
-        }
-
-        $avgPrice = count($pricePerFt) ? array_sum($pricePerFt) / count($pricePerFt) : null;
-        $avgRent = count($rentPricePerFt) ? array_sum($rentPricePerFt) / count($rentPricePerFt) : null;
-
-        $daysOnMarket = count($domValues) ? array_sum($domValues) / count($domValues) : null;
-
-        $recentAvg = count($recentComps) ? array_sum($recentComps) / count($recentComps) : null;
-
-        $trend30d = ($recentAvg && $avgPrice)
-            ? (($recentAvg - $avgPrice) / $avgPrice) * 100
-            : null;
-
-        return [
-            'avgPricePerFt' => $avgPrice,
-            'avgRentPerFt' => $avgRent,
-            'daysOnMarket' => $daysOnMarket,
-            'trend30d' => $trend30d,
-        ];
-    }
 
     /**
      * -------------------------------------------------
@@ -236,26 +153,6 @@ readonly class FetchSpyHuntDataUseCase
             buyerDemandChange: null,
             subjectDom: $subjectDom,
         );
-    }
-
-    /**
-     * -------------------------------------------------
-     * HELPER: Map comparable item
-     * -------------------------------------------------
-     */
-    private function mapComparableItem(array $comp): array
-    {
-        return [
-            'price' => $comp['price'] ?? null,
-            'sqft' => $comp['squareFootage'] ?? null,
-            'bedrooms' => $comp['bedrooms'] ?? null,
-            'bathrooms' => $comp['bathrooms'] ?? null,
-            'year_built' => $comp['yearBuilt'] ?? null,
-            'dom' => $comp['daysOnMarket'] ?? null,
-            'distance' => $comp['distance'] ?? null,
-            'address' => $comp['address'] ?? null,
-            'last_seen' => $comp['lastSeen'] ?? null,
-        ];
     }
 
 }
