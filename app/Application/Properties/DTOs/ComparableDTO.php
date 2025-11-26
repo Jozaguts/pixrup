@@ -23,4 +23,33 @@ class ComparableDTO
             'rent' => $this->rentComps,
         ];
     }
+    public static function fromArray(array $salesComps, array $rentComps): ComparableDTO
+    {
+        return new ComparableDTO(
+            array_map(fn($c) => self::mapComparableItem($c), $salesComps),
+            count($rentComps)
+                ? array_map(fn($c) => self::mapComparableItem($c), $rentComps)
+                : []
+            );
+    }
+
+    /**
+     * -------------------------------------------------
+     * HELPER: Map comparable item
+     * -------------------------------------------------
+     */
+    private static function mapComparableItem(array $comp): array
+    {
+        return [
+            'price' => $comp['price'] ,
+            'squareFootage' => $comp['squareFootage'],
+            'bedrooms' => $comp['bedrooms'] ,
+            'bathrooms' => $comp['bathrooms'],
+            'yearBuilt' => $comp['yearBuilt'],
+            'daysOnMarket' => $comp['daysOnMarket'],
+            'distance' => $comp['distance'],
+            'address' => $comp['address'] ?? $comp['formattedAddress'],
+            'lastSeenDate' => $comp['lastSeenDate'],
+        ];
+    }
 }

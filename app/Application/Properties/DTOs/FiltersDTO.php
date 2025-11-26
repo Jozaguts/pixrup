@@ -30,4 +30,17 @@ class FiltersDTO
             ],
         ];
     }
+    public static function defaults(?array $array = []): FiltersDTO
+    {
+        return new FiltersDTO(
+            radiusOptions: $array['radiusOption'] ??[1,3,5],
+            propertyTypes:  $array['propertyTypes'] ?? ['Single Family','Condo','Townhouse','Manufactured','Multi-Family','Apartment','Land'],
+            priceMin: $array['priceMin'] ?? 50000,
+            priceMax: $array['priceMax'] ?? 3000000,
+            defaultRadius: $array['defaultRadius']?? 3,
+            defaultPropertyType: $array['defaultPropertyType']?? 'Single Family',
+            defaultMode: $array['defaultMode'] ?? 'sale'
+        );
+    }
+
 }

@@ -22,5 +22,15 @@ class StatsDTO
             'zipDom' => $this->zipDom,
         ];
     }
+    public static function fromArray(array $array): StatsDTO
+    {
+        return new self(
+            $array['radiusMatches'],
+            $array['zipDom'],
+            $array['buyerDemandScore'],
+            $array['buyerDemandChange'],
+            $array['subjectDom'],
+        );
+    }
 
 }

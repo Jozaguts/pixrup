@@ -16,5 +16,12 @@ class SourceDTO
             'last_sync' => $this->lastSync,
         ];
     }
+    public static function fromArray($array):self
+    {
+        return new self(
+            $array['source'],
+            $array['last_sync']
+        );
+    }
 
 }

@@ -8,9 +8,9 @@ public function __construct(
     public string $title,
     public string $status,
     public string $address,
-    public string $city,
+    public ?string $city,
     public string $state,
-    public string $postal_code,
+    public ?string $postal_code,
     public string $country,
     public float $lat,
     public float $lng,
@@ -40,5 +40,25 @@ public function __construct(
             'bathrooms' => $this->bathrooms,
             'square_footage' => $this->square_footage,
         ];
+    }
+    public static function fromArray(array $raw): PropertyDTO
+    {
+        return new  PropertyDTO(
+            $raw['title'],
+            $raw['status'],
+            $raw['address'],
+            $raw['city'],
+            $raw['state'],
+            $raw['postal_code'],
+            $raw['country'],
+            $raw['lat'],
+            $raw['lng'],
+            $raw['place_id'],
+            $raw['metadata'],
+            $raw['type'],
+            $raw['bedrooms'],
+            $raw['bathrooms'],
+            $raw['square_footage'],
+        );
     }
 }

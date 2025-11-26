@@ -17,4 +17,12 @@ class ValueEstimateDTO
             'range_high' => $this->rangeHigh,
         ];
     }
+    public static function fromArray(array $value): ValueEstimateDTO
+    {
+        return new ValueEstimateDTO(
+            $value['price'],
+            $value['range_low'] ?? $value['rangeLow'],
+            $value['range_high'] ?? $value['rangeHigh'],
+        );
+    }
 }
