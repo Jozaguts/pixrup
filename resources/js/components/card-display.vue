@@ -14,7 +14,7 @@
 </script>
 <template>
 <div :class="cn(
-    'flex flex-row flex-wrap items-start justify-center-safe rounded-[12px] gap-4 py-10 bg-gray-200',
+    'grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 rounded-[12px] bg-gray-200',
     !props.disableShadow && 'shadow-neu-in',
     props.class
 )">

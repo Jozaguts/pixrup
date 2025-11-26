@@ -172,7 +172,7 @@ defineExpose({
 <template>
     <div class="flex w-full flex-col gap-2">
         <NeuInput
-            icon="fluent-color:location-ripple-16"
+            icon="mdi:location-on-outline"
             id="address-search"
             ref="inputRef"
             v-model="modelValue"

@@ -11,6 +11,7 @@ const props = defineProps<{
     label?: string;
     error?: string;
     class?: string;
+    wrapperClass?: string;
     tabIndex?: number;
     icon?: string;
     defaultValue?: string;
@@ -29,7 +30,7 @@ defineExpose({
     <div class="npo-form-control gap-2">
         <label v-if="label" class="npo-form-label">{{ label }}</label>
 
-        <div :class="cn('npo-input-wrapper py-3 px-2', 'group', error && 'bg-red-100')">
+        <div :class="cn('npo-input-wrapper py-3 px-2', 'group', error && 'bg-red-100', props.wrapperClass)">
 
             <Icon v-if="props.icon"  :icon="props.icon" class="w-8 h-8 text-slate-500" />
             <input

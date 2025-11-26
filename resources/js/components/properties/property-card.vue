@@ -1,14 +1,14 @@
 <template>
-    <div class="md:w-[350px] sm:w-full h-[400px] p-4 relative overflow-hidden group">
-        <div class="rounded-[24px] overflow-hidden relative bg-background p-2.5 property-card h-full w-full shadow-sm">
+    <div class="sm:w-full h-[400px] p-4 relative overflow-hidden">
+        <div class="rounded-[12px] overflow-hidden relative bg-background p-2.5 property-card h-full w-full shadow-sm">
             <img
                 :src="props?.item?.thumbnail"
                 @error="setBackupThumbnail"
                 alt="Property Image"
-                class="w-full h-full object-cover rounded-[24px]"
+                class="w-full h-full object-cover rounded-[12px]"
             />
 
-            <div class="group-hover:inline-block hidden bg-background absolute inset-2.5 top-1/2 transition-all ease-in-out">
+            <div class="bg-background absolute inset-2.5 top-1/2 transition-all ease-in-out">
                 <h3 class="line-clamp-2 text-lg font-semibold font-kulim text-black px-2 pt-4" :title="props.item?.title">
                     {{ props?.item?.title }}
                 </h3>

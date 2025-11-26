@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
 import NavUser from '@/components/NavUser.vue';
-import CardIcon from '@/components/ui/icons/card.vue';
-import LayoutDashboard from '@/components/ui/icons/dashboard.vue';
-import GraduationCap from '@/components/ui/icons/graduation-cap.vue';
-import Home from '@/components/ui/icons/properties.vue';
-import ReportsIcon from '@/components/ui/icons/reports.vue';
-import SupportIcon from '@/components/ui/icons/support.vue';
 import {
     Sidebar,
     SidebarContent,
@@ -62,17 +56,17 @@ const navGroups = computed(() => {
                 {
                     title: 'Home',
                     href: dashboard(),
-                    icon: 'fluent-color:people-home-16',
+                    icon: 'mdi-light:home',
                 },
                 {
                     title: 'Properties',
                     href: '/properties',
-                    icon: 'fluent-color:building-people-20',
+                    icon: 'mdi:office-building-outline',
                 },
                 {
                     title: 'Reports',
                     href: '/reports',
-                    icon: 'fluent-color:people-list-20',
+                    icon: 'mdi:account-file-text-outline',
                 },
             ]),
         },
@@ -82,17 +76,17 @@ const navGroups = computed(() => {
                 {
                     title: 'Billing',
                     href: '/billing',
-                    icon: 'fluent-color:receipt-16',
+                    icon: 'mdi:file-document-arrow-right-outline',
                 },
                 {
                     title: 'Tutorials',
                     href: '/tutorials',
-                    icon: 'fluent-emoji-flat:graduation-cap',
+                    icon: 'material-symbols-light:school-outline-rounded',
                 },
                 {
                     title: 'Support',
                     href: '/support',
-                    icon: 'fluent-color:chat-bubbles-question-20',
+                    icon: 'material-symbols-light:contact-support-outline-rounded',
                 },
             ]),
         },
@@ -153,9 +147,11 @@ const handleLogout = () => {
                             >
                                 <Link
                                     :href="item.href"
-                                    :class="cn( item.isActive && 'neu-button')"
+                                    :class="cn( item.isActive && 'neu-button active',
+                                     '!text-black font-semibold shadow-neu-in'
+                                     )"
                                 >
-                                    <Icon :icon="item.icon" class="!w-8 !h-8" />
+                                    <Icon :icon="item.icon as string" class="!w-6 !h-6 text-black" />
                                     <span>{{ item.title }}</span>
                                 </Link>
                             </SidebarMenuButton>

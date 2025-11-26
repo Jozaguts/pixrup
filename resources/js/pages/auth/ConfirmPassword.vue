@@ -35,7 +35,7 @@ import NeuInput from '@/components/NeuInput.vue';
                         autofocus
                         placeholder="Please enter your password"
                         :error="errors.password"
-                        icon="fluent-color:lock-shield-16"
+                        icon="mdi-light:lock"
                     />
 <!--                    <Input-->
 <!--                        id="password"-->

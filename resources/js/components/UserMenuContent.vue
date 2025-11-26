@@ -41,7 +41,7 @@ defineProps<Props>();
                 prefetch
                 as="button"
             >
-                <Icon icon="fluent-color:settings-16" class="mr-2 !w-6 !h-6" />
+                <Icon icon="mdi:settings-outline" class="mr-2 !w-6 !h-6" />
                 Settings
             </Link>
         </DropdownMenuItem>
@@ -55,7 +55,7 @@ defineProps<Props>();
             as="button"
             data-test="logout-button"
         >
-            <Icon icon="fluent-color:share-ios-20" class="mr-2 !h-6 !w-6 rotate-90" />
+            <Icon icon="mdi:logout" class="mr-2 !h-6 !w-6" />
             Log out
         </Link>
     </DropdownMenuItem>

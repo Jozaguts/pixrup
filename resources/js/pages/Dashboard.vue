@@ -330,7 +330,8 @@ const visitLink = (link?: string) => {
                     <h1
                         class="text-3xl font-semibold tracking-tight md:text-3xl"
                     >
-                        Welcome back, {{ firstName }} 👋
+                        Welcome back, {{ firstName }}
+                        <Icon icon="mdi:hand-wave-outline" class="w-8 h-8 ml-2 inline" />
                     </h1>
                     <p class="text-md ml-2 text-[#6b7280] md:text-base">
                         Here’s your property summary.
@@ -351,19 +352,21 @@ const visitLink = (link?: string) => {
                         </h3>
                         <button
                             type="button"
-                            class="neu-button flex items-center justify-center gap-2 rounded-[12px] px-4 text-sm !text-muted-foreground hover:!text-slate-600 cursor-pointer !bg-transparent py-4 font-medium"
+                            class="neu-button flex items-center justify-center gap-2 rounded-[12px] px-4 text-sm !text-black cursor-pointer !bg-transparent py-4 font-medium transition-transform duration-200 ease-out transform hover:scale-110"
                             @click="openNewPropertyWizard"
                         >
                             New property
-                            <Icon icon="fluent-color:document-add-24" class="!size-6 ml-2" />
+                            <Icon icon="mdi:office-building-plus-outline" class="!size-6 ml-2" />
                         </button>
                         <button
                             type="button"
-                            class="neu-button flex items-center justify-center gap-2 rounded-[12px] px-4 text-sm !text-muted-foreground hover:!text-slate-600 cursor-pointer !bg-transparent py-4 font-medium"
+                            class="neu-button flex items-center justify-center gap-2 rounded-[12px] px-4 text-sm !text-black cursor-pointer !bg-transparent py-4 font-medium transition-transform duration-200 ease-out transform hover:scale-105
+
+"
                             @click="visitLink('/billing')"
                         >
                             Explore plans
-                            <Icon icon="fluent-color:search-sparkle-48" class="!size-6 ml-2" />
+                            <Icon icon="mdi:text-box-search-outline" class="!size-6 ml-2" />
                         </button>
                         <p class="text-xs text-[#94a3b8]">
                             These shortcuts stay at hand so you can act quickly
@@ -384,7 +387,7 @@ const visitLink = (link?: string) => {
                     >
                         <div class="flex items-center gap-3">
                             <div
-                                class="flex size-12 items-center justify-center rounded-2xl neu-button pointer-events-none !bg-white text-[#7C4DFF]"
+                                class="flex size-12 items-center justify-center rounded-full text-black pointer-events-none shadow-neu-in text-[#7C4DFF]"
                             >
                                 <TrendingUp class="size-5" />
                             </div>
@@ -435,7 +438,7 @@ const visitLink = (link?: string) => {
                         </div>
                     </div>
                     <p
-                        class="text-sm border-2 border-blue-200 bg-blue-100 rounded-[8px] p-3 px-5 font-medium text-slate-600"
+                        class="text-sm bg-gray-200 ring-2 ring-gray-300 rounded-[8px] p-3 px-5 font-medium text-black"
                         :class="{
                                 'text-[#1f2933]': usageState === 'success',
                                 'text-[#9A6B00]': usageState === 'warning',
@@ -449,7 +452,12 @@ const visitLink = (link?: string) => {
 
             <DashboardSection title="Your properties" description="Track status, values, and jump back into each project." class="flex flex-col gap-6 py-5">
                <CardDisplay class="gap-0 items-stretch">
-                    <PropertyCard v-for="property in resolvedProperties" :key="property.id" :item="property"/>
+                   <PropertyCard
+                       v-for="property in resolvedProperties"
+                       :key="property.id"
+                       :item="property"
+                       class="cols-span-1 sm:cols-span-3"
+                   />
                </CardDisplay>
             </DashboardSection>
         </div>
