@@ -1,25 +1,25 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-export const show = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
+export const fetch = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: fetch.url(args, options),
     method: 'get',
 })
 
-show.definition = {
+fetch.definition = {
     methods: ["get","head"],
-    url: '/properties/{property}/spyhunt',
+    url: '/properties/{property}/fetch',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-show.url = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions) => {
+fetch.url = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { property: args }
     }
@@ -36,58 +36,58 @@ show.url = (args: { property: string | number } | [property: string | number ] |
         property: args.property,
     }
 
-    return show.definition.url
+    return fetch.definition.url
             .replace('{property}', parsedArgs.property.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-show.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
+fetch.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: fetch.url(args, options),
     method: 'get',
 })
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-show.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: show.url(args, options),
+fetch.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: fetch.url(args, options),
     method: 'head',
 })
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-const showForm = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
+const fetchForm = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: fetch.url(args, options),
     method: 'get',
 })
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-showForm.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
+fetchForm.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: fetch.url(args, options),
     method: 'get',
 })
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::show
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/spyhunt'
+* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @route '/properties/{property}/fetch'
 */
-showForm.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
+fetchForm.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: fetch.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -96,7 +96,7 @@ showForm.head = (args: { property: string | number } | [property: string | numbe
     method: 'get',
 })
 
-show.form = showForm
+fetch.form = fetchForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::mslRefresh
@@ -198,7 +198,7 @@ mslRefreshForm.head = (args: { property: string | number } | [property: string |
 mslRefresh.form = mslRefreshForm
 
 const spyhunt = {
-    show: Object.assign(show, show),
+    fetch: Object.assign(fetch, fetch),
     mslRefresh: Object.assign(mslRefresh, mslRefresh),
 }
 

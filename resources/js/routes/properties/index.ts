@@ -1,6 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 import worth from './worth'
 import glowup from './glowup'
+import spyhunt from './spyhunt'
 /**
 * @see \App\Interface\Properties\Http\Controllers\PropertyController::newMethod
 * @see app/Interface/Properties/Http/Controllers/PropertyController.php:18
@@ -249,6 +250,7 @@ const properties = {
     show: Object.assign(show, show),
     worth: Object.assign(worth, worth),
     glowup: Object.assign(glowup, glowup),
+    spyhunt: Object.assign(spyhunt, spyhunt),
 }
 
 export default properties
