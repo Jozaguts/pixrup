@@ -9,6 +9,7 @@ import {
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
+import PropertyOverviewLogs from "@/components/properties/workspace/PropertyOverviewLogs.vue";
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -72,27 +73,6 @@ const lastRunCopy = computed(() => {
         minute: '2-digit',
     })}`;
 });
-
-const eventItems = computed(() => [
-    {
-        id: 'appraisal',
-        title: 'Appraisal refreshed',
-        timestamp: '2 days ago',
-        body: 'PixrWorth pulled latest comps from HouseCanary and recalibrated the AVM.',
-    },
-    {
-        id: 'glow',
-        title: 'Glow-Up render ready',
-        timestamp: '12 hours ago',
-        body: 'AI renovation preview approved and staged for investor deck.',
-    },
-    {
-        id: 'collab',
-        title: 'Collab thread active',
-        timestamp: '5 minutes ago',
-        body: 'Sofia dropped notes on staging priorities for the walkthrough.',
-    },
-]);
 </script>
 
 <template>
@@ -139,7 +119,7 @@ const eventItems = computed(() => [
 
         <section class="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
             <article
-                class="neu-shadow-center flex flex-col gap-5 neu-surface rounded-[28px] p-6"
+                class="flex flex-col gap-5 rounded-[12px] p-6 neo-shadow"
             >
                 <header class="flex items-center justify-between">
                     <div>
@@ -154,49 +134,31 @@ const eventItems = computed(() => [
                     <ClipboardList class="h-5 w-5 text-[#7c4dff]" />
                 </header>
 
-                <ul class="space-y-4 text-sm text-gray-600">
-                    <li class="neu-surface rounded-[18px] p-4">
+                <ul class="space-y-4 text-sm text-gray-600 shadow-neu-in p-4 px-6 rounded-[12px] bg-gray-200">
+                    <li class="shadow-md rounded-[12px] bg-background p-4">
                         PixrWorth signals potential 4.9% appreciation in the
                         next 90 days compared to the ZIP median.
                     </li>
-                    <li class="neu-surface rounded-[18px] p-4">
+                    <li class="shadow-md rounded-[12px] bg-background p-4">
                         Glow-Up scenario #2 increases ARV by $68K with minimal
                         structural changes and quick cosmetic upgrades.
                     </li>
-                    <li class="neu-surface rounded-[18px] p-4">
+                    <li class="shadow-md rounded-[12px] bg-background p-4">
                         SpyHunt flagged two competing listings going under
                         contract within 7 days — move fast on staging.
                     </li>
                 </ul>
             </article>
 
-            <aside
-                class="flex flex-col gap-4 neu-surface rounded-[28px] p-6 shadow-neu-out"
-            >
-                <header class="flex items-center justify-between">
-                    <h3 class="text-base font-semibold">Recent Activity</h3>
-                    <Activity class="h-5 w-5 text-[#7c4dff]" />
-                </header>
-                <ol class="space-y-4 text-sm text-gray-600">
-                    <li
-                        v-for="event in eventItems"
-                        :key="event.id"
-                        class="neu-surface p-4 shadow-neu-in"
-                    >
-                        <p
-                            class="text-xs tracking-[0.3em] text-gray-400 uppercase"
-                        >
-                            {{ event.timestamp }}
-                        </p>
-                        <p class="mt-1 font-semibold text-[#1f2937]">
-                            {{ event.title }}
-                        </p>
-                        <p class="mt-1 text-sm text-gray-600">
-                            {{ event.body }}
-                        </p>
-                    </li>
-                </ol>
+            <aside class="p-3">
+                <PropertyOverviewLogs />
             </aside>
         </section>
     </div>
 </template>
+<style scoped>
+.neo-shadow{
+    box-shadow: -5px -5px 15px rgba(255, 255, 255, 0.8),
+    5px 5px 15px rgba(0, 0, 0, 0.1);
+}
+</style>

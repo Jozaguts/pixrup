@@ -33,6 +33,7 @@ import type {
     WorkspaceAction,
     WorkspaceModuleMeta,
 } from '@/components/properties/workspace/types';
+import NeuphormistTabs from "@/components/NeuphormistTabs.vue";
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -44,7 +45,7 @@ interface WorkspaceModuleDefinition {
     id: ModuleId;
     label: string;
     subtitle: string;
-    icon: typeof LayoutDashboard;
+    icon: typeof LayoutDashboard | string;
     component: unknown;
     description: string;
 }
@@ -54,7 +55,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'overview',
         label: 'Overview',
         subtitle: 'Summary',
-        icon: LayoutDashboard,
+        icon: 'material-symbols-light:overview-outline',
         component: PropertyWorkspaceOverview,
         description: 'Snapshot of property vitals and workspace activity.',
     },
@@ -62,7 +63,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'pixrWorth',
         label: 'PixrWorth',
         subtitle: 'Appraisal',
-        icon: LineChart,
+        icon: 'mdi:scale-balance',
         component: PropertyWorkspaceWorth,
         description: 'Automated valuation insights and comps.',
     },
@@ -70,7 +71,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'pixrGlowUp',
         label: 'PixrGlowUp',
         subtitle: 'AI Renovation',
-        icon: Sparkles,
+        icon: 'mdi:chart-finance',
         component: PropertyWorkspaceGlowUp,
         description: 'Before/after AI visualizations and renovation jobs.',
     },
@@ -78,7 +79,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'pixrSpyHunt',
         label: 'PixrSpyHunt',
         subtitle: 'Market Intel',
-        icon: Radar,
+        icon: 'mdi:target-arrow',
         component: PropertyWorkspaceSpyHunt,
         description: 'Competitive market scan and nearby activity.',
     },
@@ -86,7 +87,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'pixrVision',
         label: 'PixrVision',
         subtitle: '3D Tour',
-        icon: Box,
+        icon: 'mdi:monitor-eye',
         component: PropertyWorkspaceVision,
         description: 'Immersive tour and assets management.',
     },
@@ -94,7 +95,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'pixrSeal',
         label: 'PixrSeal',
         subtitle: 'Report Builder',
-        icon: Stamp,
+        icon: 'mdi:certificate-outline',
         component: PropertyWorkspaceSeal,
         description: 'Generate investor-ready docs and shareables.',
     },
@@ -102,7 +103,7 @@ const modules: WorkspaceModuleDefinition[] = [
         id: 'pixrCollab',
         label: 'PixrCollab',
         subtitle: 'Realtime Chat',
-        icon: MessageCircle,
+        icon: 'mdi:account-group',
         component: PropertyWorkspaceCollab,
         description: 'Collaborate with partners and clients live.',
     },
@@ -274,11 +275,11 @@ const headerMetricCards = computed(() => {
 
         <div class="min-h-screen pt-10 pb-16">
             <div
-                class="mx-auto flex max-w-7xl flex-col gap-8 px-4 neu-center-shadow shadow-neu-out sm:px-6 lg:px-8"
+                class="flex flex-col gap-8 px-4 sm:px-6 lg:px-8"
             >
                 <section
                     :class="[
-                        'relative overflow-hidden px-6 py-8 sm:px-8 md:px-10',
+                        'relative overflow-hidden px-6 sm:px-8 md:px-10',
                     ]"
                 >
                     <div
@@ -328,15 +329,6 @@ const headerMetricCards = computed(() => {
                                     </div>
                                 </div>
 
-                                <p
-                                    v-if="composedAddress"
-                                    class="flex items-center gap-2 text-gray-500"
-                                >
-                                    <MapPin class="h-4 w-4" />
-                                    <span class="font-medium text-[#1f2937]">{{
-                                        composedAddress
-                                    }}</span>
-                                </p>
 
                                 <div
                                     v-if="props.property.tags?.length"
@@ -358,35 +350,16 @@ const headerMetricCards = computed(() => {
                         </div>
 
                         <div class="flex w-full flex-col gap-5 lg:w-auto">
-                            <div
-                                class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-2"
-                            >
-                                <button
-                                    v-for="action in actionButtons"
-                                    :key="action.id"
-                                    type="button"
-                                    :class="
-                                        activeModule.id === action.module
-                                            ? 'is-pressed'
-                                            : ''
-                                    "
-                                    class="neu-btn px-4 py-4"
-                                    @click="handleAction(action)"
-                                >
-                                    <span>{{ action.label }}</span>
-                                </button>
-                            </div>
-
                             <div class="grid gap-4 sm:grid-cols-2">
                                 <div
                                     v-for="metric in headerMetricCards"
                                     :key="metric.id"
-                                    class="neu-btn flex items-center gap-3 rounded-[20px] px-4 py-3 text-sm text-gray-600"
+                                    class="flex items-center gap-3 rounded-[12px] px-4 py-3 text-sm text-gray-600 shadow-sm"
                                 >
-                                    <component
-                                        :is="metric.icon"
-                                        class="h-5 w-5 text-[#7c4dff]"
-                                    />
+                                         <component
+                                             :is="metric.icon"
+                                             class="!h-4 !w-4 text-[#7c4dff]"
+                                         />
                                     <div>
                                         <p
                                             class="text-xs tracking-[0.25em] text-gray-400 uppercase"
@@ -406,8 +379,11 @@ const headerMetricCards = computed(() => {
                     :id="`module-${activeModule.id}`"
                     role="tabpanel"
                     :aria-labelledby="`tab-${activeModule.id}`"
-                    class="relative min-h-[420px] neu-surface rounded-[32px] shadow-neu-in sm:p-8"
+                    class="relative min-h-[420px] rounded-[32px] sm:p-8 md:p-2"
                 >
+                    <div class="w-fit">
+                        <NeuphormistTabs :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />
+                    </div>
                     <KeepAlive>
                         <component
                             :is="activeModule.component"

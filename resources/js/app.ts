@@ -14,9 +14,11 @@ import {
     requestStackCardsUpdate,
 } from './lib/vendor/stackCards';
 
+// @ts-expect-error vue3-easy-data-table ships broken types
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
-
+import { createPinia } from 'pinia';
+import { PiniaColada } from '@pinia/colada';
 window.gsap = gsap;
 window.ScrollTrigger = ScrollTrigger;
 window.ensureSpringer = ensureSpringer;
@@ -35,8 +37,15 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(createPinia())
+            .use(PiniaColada,{
+                    queryOptions: {
+                            // 🔄 auto refetch every 5 minutes
+                            gcTime:300_000,
+                    },
+                })
             .use(autoAnimatePlugin)
-            .component('EasyDataTable', Vue3EasyDataTable)
+            .component('data-table', Vue3EasyDataTable)
             .mount(el);
     },
     progress: {

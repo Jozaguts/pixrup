@@ -14,23 +14,23 @@ import { Icon } from '@iconify/vue';
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
-        icon:'fluent-color:apps-list-detail-20',
+        icon:'mdi:text-user',
         href: editProfile(),
     },
     {
         title: 'Password',
         href: editPassword(),
-        icon:'fluent-color:lock-shield-16',
+        icon:'mdi-light:lock',
     },
     {
         title: 'Two-Factor Auth',
         href: show(),
-        icon:'fluent-color:phone-laptop-16'
+        icon:'carbon:two-factor-authentication'
     },
     {
         title: 'Appearance',
         href: editAppearance(),
-        icon:'fluent-color:options-32',
+        icon:'mdi:slider',
     },
 ];
 
@@ -53,7 +53,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         variant="ghost"
                         :class="cn(
                             'w-full justify-start',
-                             'px-4 py-6 bg-transparent shadow-none',
+                             'px-4 py-6 bg-transparent shadow-neu-in',
                              urlIsActive(item.href, currentPath) && 'neu-button active' ,
                         )"
                         as-child

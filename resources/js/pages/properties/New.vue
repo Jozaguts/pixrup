@@ -54,21 +54,21 @@ const steps: ComputedRef<any[]> = computed(() => [
         label: 'Address',
         icon:
             currentStepIndex.value === 0
-                ? 'fluent-emoji-flat:open-mailbox-with-raised-flag'
-                : 'ph:seal-check-fill',
+                ? 'mdi:office-building-plus-outline'
+                : 'line-md:check-all',
     },
     {
         id: 'photos',
         label: 'Photos',
         icon:
             currentStepIndex.value <= 1
-                ? 'fluent-color:image-20'
+                ? 'mdi-light:camera'
                 : 'ph:seal-check-fill',
     },
     {
         id: 'summary',
         label: 'Review',
-        icon: 'fluent-color:content-view-16',
+        icon: 'mdi:file-document-box-check-outline',
     },
 ]);
 
@@ -787,7 +787,7 @@ const isNextDisabled = computed(() => {
                     <div class="flex flex-col gap-3 md:flex-row">
                         <button
                             type="button"
-                            class="neu-button flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                            class="neu-button flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-medium !text-black transition-transform duration-200 ease-out transform hover:scale-105 md:w-auto"
                             :disabled="isProcessingPhotos"
                             @click="openUploadDialog"
                         >
@@ -796,12 +796,12 @@ const isNextDisabled = computed(() => {
                         </button>
                         <button
                             type="button"
-                            class="neu-button flex w-full items-center justify-center gap-2 rounded-[12px] px-4 py-3 font-semibold !text-muted-foreground transition-all duration-200 hover:!text-slate-600 md:w-auto"
+                            class="neu-button flex w-full items-center justify-center gap-2 rounded-[12px] px-4 py-3 font-medium !text-black md:w-auto transition-transform duration-200 ease-out transform hover:scale-105"
                             :disabled="isProcessingPhotos"
                             @click="takePhoto"
                         >
                             <Icon
-                                icon="fluent:camera-arrow-up-24-filled"
+                                icon="material-symbols:add-a-photo-outline-rounded"
                                 class="!w-5 !h-5"
                             />
                             Take photo
@@ -916,11 +916,11 @@ const isNextDisabled = computed(() => {
                     >
                         <div class="w-fit flex flex-row gap-3 px-4 py-3 bg-[#f4f5fa] npo-form-shadow rounded-[12px]">
                             <p class="text-xs font-semibold text-[#1f2933]">
-                                <Icon icon="fluent-color:building-home-32" class="inline-block mr-2" />
+                                <Icon icon="mdi:location-on-outline" class="inline-block mr-2" />
                                 {{ addressDetails.formattedAddress || '—' }}
                             </p>
                             <p class="text-xs font-semibold  border-l-2 border-gray-300 pl-4 text-[#1f2933]">
-                                <Icon icon="logos:google-maps" class="inline-block mr-2" />
+                                <Icon icon="mdi:office-building-location-outline" class="inline-block mr-2" />
                                 {{ addressDetails.lat || '—' }}, {{ addressDetails.lng || '—' }}
                             </p>
                         </div>
@@ -942,7 +942,7 @@ const isNextDisabled = computed(() => {
                                     <img
                                         :src="photo.previewUrl"
                                         :alt="photo.name"
-                                        class="h-36 w-full object-cover"
+                                        class="h-[200px] w-full object-cover"
                                     />
                                     <div
                                         class="absolute bg-white/90 bottom-0 left-0 right-0 flex items-center justify-center gap-2 px-4 py-3 text-xs text-[#6b7280]"

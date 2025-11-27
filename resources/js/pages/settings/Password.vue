@@ -53,7 +53,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                 >
                     <div class="grid gap-2">
                         <NeuInput
-                            icon="fluent-color:lock-closed-16"
+                            icon="mdi:lock-check-outline"
                             label="Current password"
                             id="current_password"
                             ref="currentPasswordInput"
@@ -68,7 +68,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
 
                     <div class="grid gap-2">
                        <NeuInput
-                           icon="fluent-color:lock-shield-24"
+                           icon="mdi:lock-open-outline"
                            label="New password"
                             id="password"
                             ref="passwordInput"
@@ -83,7 +83,7 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
 
                     <div class="grid gap-2">
                         <NeuInput
-                            icon="fluent-color:lock-shield-24"
+                            icon="mdi:lock-alert-outline"
                             label="Confirm password"
                             id="password_confirmation"
                             name="password_confirmation"

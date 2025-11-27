@@ -52,7 +52,7 @@ const user = page.props.auth.user;
                 >
                     <div class="grid gap-2">
                         <NeuInput
-                            icon="fluent-color:contact-card-48"
+                            icon="mdi:id-card-outline"
                             id="name"
                             class="mt-1 block w-full"
                             name="name"
@@ -66,7 +66,7 @@ const user = page.props.auth.user;
 
                     <div class="grid gap-2">
                         <NeuInput
-                            icon="fluent-color:mail-16"
+                            icon="mdi:email-outline"
                             id="email"
                             type="email"
                             class="mt-1 block w-full"

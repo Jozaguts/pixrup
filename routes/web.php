@@ -46,3 +46,29 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])->
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 require __DIR__.'/settings.php';
+
+
+Route::middleware( ['auth', 'verified'])
+    ->prefix('reports')
+    ->name('reports')
+    ->group(function () {
+        Route::get('/',[
+               \App\Http\Controllers\Reports\PdfReportsController::class,
+               'index'
+           ])->name('pdf.index');
+
+        Route::get('/new',[
+            \App\Http\Controllers\Reports\PdfReportsController::class,
+            'new'
+        ])->name('pdf.new');
+
+        Route::get('/logos',[
+            \App\Http\Controllers\Reports\PdfReportsController::class,
+            'getLogos'
+        ])->name('pdf.logos');
+
+        Route::post('/logos/create',[
+            \App\Http\Controllers\Reports\PdfReportsController::class,
+            'storeLogo'
+        ])->name('pdf.logos.new');
+    });

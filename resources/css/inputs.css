@@ -81,6 +81,7 @@
     text-transform: capitalize;
     border-radius: 12px;
     &:after {
+        pointer-events: none;
         content: '';
         position: absolute;
         left: 0;

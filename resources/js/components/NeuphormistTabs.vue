@@ -6,6 +6,7 @@
         label: string;
         icon?: string
         id: string | number;
+        [key: string]: any;
     };
     type IndexType = string | number;
     const props = defineProps({
@@ -30,10 +31,10 @@
 
     const activeTab:Ref<IndexType> = ref('address');
 
-    function setActiveTab(index: IndexType) {
-        emit('onchange', index);
+    function setActiveTab(item: TabItem) {
+        emit('onchange', item);
         if(props.togglable) {
-            activeTab.value = index
+            activeTab.value = item.id
             return;
         }
     }
@@ -49,19 +50,19 @@
       'w-full'
      )">
         <button
-            v-for="{ label, icon, id } in props.items"
-            :key="id"
-            @click="setActiveTab(id)"
+            v-for="item in props.items"
+            :key="item.id"
+            @click="setActiveTab(item)"
             :class="cn(
                 'tab relative flex items-center rounded-md px-6 py-3 transition-colors duration-200',
                 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black',
                  'dark:text-neutral-400 dark:hover:bg-neutral-700/60',
-                value === id && 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100',
+                value === item.id && 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100',
                 props.class
             )"
         >
-            <Icon v-if="icon" :icon="icon" class="-ml-1 !h-5 w-5 text-green-500" />
-            <span class="ml-1.5 text-sm">{{ label }}</span>
+            <Icon v-if="item.icon" :icon="item.icon" class="-ml-1 !h-5 w-5 text-black" />
+            <span class="ml-1.5 text-sm !text-black">{{ item.label }}</span>
         </button>
     </div>
 
