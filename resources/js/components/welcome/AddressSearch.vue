@@ -62,6 +62,12 @@ const initializeAutocomplete = async () => {
     }
 
     try {
+        const usaBounds = {
+            north: 49.38,
+            south: 24.52,
+            east: -66.94,
+            west: -124.77,
+        };
         isLoading.value = true;
         setOptions({
             key: apiKey,
@@ -78,6 +84,9 @@ const initializeAutocomplete = async () => {
                 'place_id',
                 'address_components',
             ],
+            componentRestrictions: { country: 'us' },
+            bounds: usaBounds,
+            strictBounds: true,
         });
 
         placeListener = autocomplete.addListener('place_changed', () => {
