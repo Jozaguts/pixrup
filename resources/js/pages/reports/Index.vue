@@ -35,7 +35,7 @@
                     </template>
                     <template #item-thumbnail="{ name }">
                         <div class="flex flex-row items-center group">
-                            <Icon icon="formkit:filepdf" class="w-8 h-8 text-black/80"></Icon>
+                            <Icon icon="ph:file-pdf-thin" class="w-8 h-8 text-black/80"></Icon>
                             <span class="text-md font-semibold ml-2 text-black/80">
                                 {{ name }}
                             </span>
@@ -43,7 +43,7 @@
                     </template>
 
                     <template #item-actions>
-                       <NeuButton icon="mdi:download" label="Download Report" :shake="true" />
+                       <NeuButton icon="ph:file-plus-thin" label="Download Report" :shake="true" />
                     </template>
                 </data-table>
             </div>

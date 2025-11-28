@@ -3,15 +3,7 @@
         {title:'Reports', href: '/reports'},
         {title:'New Report', href: '/reports/new'}
         ]">
-        <DashboardSection
-            title="Create New Report"
-            description="Complete the steps in order to generate your report."
-            title-class="!text-3xl font-semibold"
-            description-class="text-md font-light text-black/60 mb-6"
-            class="w-full h-full p-0"
-        >
-            <HorizontalStepper :steps="items" :current-step="currentStep" />
-        </DashboardSection>
+        <HorizontalStepper :steps="items" :step="currentStep" />
     </AppLayout>
 </template>
 
@@ -26,10 +18,11 @@
      return completedSteps.value.includes(index);
  }
  const items = ref([
-     { title: 'Choose a logo',
+     { title: 'Choose a logo for your report.',
          completed: isStepCompleted('logo'),
          index: 'logo',
          icon: 'mdi:image-filter-center-focus-weak',
+         description: 'Select a logo to be displayed on the report cover page.',
          component: defineAsyncComponent(() =>
              import('@/components/reports/logo-picker.vue')
          )

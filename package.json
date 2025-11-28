@@ -56,11 +56,13 @@
         "pinia": "^3.0.4",
         "pinia-colada": "^0.0.1",
         "reka-ui": "^2.4.1",
+        "sweetalert2": "^11.26.3",
         "tailwind-merge": "^3.2.0",
         "tailwindcss": "^4.1.1",
         "tw-animate-css": "^1.2.5",
         "vue": "^3.5.13",
-        "vue3-easy-data-table": "^1.5.47"
+        "vue3-easy-data-table": "^1.5.47",
+        "zod": "^4.1.13"
     },
     "optionalDependencies": {
         "@rollup/rollup-linux-x64-gnu": "4.9.5",

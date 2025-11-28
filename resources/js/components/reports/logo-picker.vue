@@ -1,129 +1,105 @@
-<template>
-    <div class="mx-auto w-full p-8 sm:w-full sm:p-2 md:max-w-3xl">
-        <!-- Title -->
-        <h1 class="sm:text-md mb-6 font-bold md:text-3xl">
-            Choose a logo for your report
-        </h1>
-
-        <NeuInput
-            v-model="searchQuery"
-            icon="mdi:image-search-outline"
-            placeholder="Search logos..."
-        />
-
-        <div
-            v-if="error"
-            class="border border-black rounded-xl p-4 flex items-start gap-3
-           bg-black/20 text-black shadow-md my-2"
-        >
-            <span class="font-semibold">Error loading logos</span>
-            <p class="text-sm opacity-90">{{ error.response.data.message}}</p>
-
-            <button
-                class="ml-auto text-black hover:text-black/60"
-                @click="$emit('close')"
-            >
-                ✕
-            </button>
-        </div>
-        <div
-            v-if="uploadErorr"
-            class="border border-black rounded-xl p-4 flex items-start gap-3
-           bg-black/20 text-black shadow-md my-2"
-        >
-            <span class="font-semibold">Error uploading image</span>
-            <p class="text-sm opacity-90">{{ uploadErorr.response.data.message}}</p>
-
-            <button
-                class="ml-auto text-black hover:text-black/60"
-                @click="$emit('close')"
-            >
-                ✕
-            </button>
-        </div>
-
-
-<!-- Avatar Grid -->
-        <div
-            v-auto-animate
-            class="align-center mt-6 flex flex-row flex-wrap justify-start overflow-hidden sm:w-full sm:gap-0.5 md:mx-auto md:w-10/12 md:gap-4"
-        >
-            <UploadButton @logo-uploaded="handleUpload" key="upload-button" />
-            <template v-if="isLoading">
-                <div
-                    v-for="i in 4"
-                    :key="i"
-                    class="pointer-events-none relative flex h-24 w-24 animate-pulse items-center justify-center overflow-hidden rounded-[12px] border-8 border-white bg-gray-300"
-                >
-                    <Icon
-                        icon="line-md:downloading-loop"
-                        class="h-8 w-8 z-20"
-                        mode="svg"
-                    />
-                </div>
-            </template>
-            <template v-else>
-                <div
-                    v-for="(avatar, i) in filteredAvatars"
-                    :key="avatar.uri"
-                    class="relative flex h-24 w-24 cursor-pointer items-center justify-center-safe overflow-hidden rounded-[12px] border-8 border-white transition-all"
-                >
-                    <input
-                        class="absolute inset-0 z-20 opacity-0"
-                        type="radio"
-                        name="avatar"
-                        :value="avatar.uri"
-                        @change.prevent="selectedAvatar = avatar.uri"
-                    />
-                    <img
-                        :alt="`img-${i}`"
-                        :src="avatar.uri"
-                        class="h-full w-full object-cover z-10"
-                    />
-                    <span v-if="selectedAvatar == avatar.uri" class="bg-white/20 p-3 absolute top-1 left-1 h-10 w-10 z-20">
-                        <Icon
-                            icon="mdi:check-circle-outline"
-                            class="h-6 w-6 text-black/50"
-                        />
-                    </span>
-                </div>
-            </template>
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { Icon } from '@iconify/vue';
-import UploadButton from '@/components/reports/upload-logo-button.vue';
-import NeuInput from '@/components/NeuInput.vue';
+import LogoCollection from '@/components/reports/logo-collection.vue';
+import AddLogoButton from '@/components/image-upload-button.vue';
+import LogoSkeleton from '@/components/reports/logo-skeleton.vue';
+import LogoSearchbar from '@/components/reports/logo-searchbar.vue';
+import PiniaColadaError from "@/PiniaColadaError.vue";
+import { computed, ref } from 'vue';
 import { useStoreLogoMutation } from '@/queries/store-logo';
-import { useFetchLogos } from '@/queries/fetch-logos';
+import useFetchLogos from '@/queries/fetch-logos';
+import LogoSchema from '@/schemas/image/logos';
+import Swal from 'sweetalert2';
+import {AxiosError} from "axios";
+import {VerticalStepItem} from "@/types";
+import {PropType} from "vue";
+type StepItem = VerticalStepItem & { id: number };
+
+const props = defineProps({
+    maxLogos:{
+        type: Number,
+        default:15
+    },
+    step: {
+        type: Object as PropType<StepItem>,
+        required: true,
+    },
+});
+const shouldRenderAddLogoButton = computed(() => {
+    return visibleLogos.value?.length < props.maxLogos;
+});
 
 const file = ref<File | null>(null);
-const { data, error, isLoading, refetch } = useFetchLogos();
-const { mutate, error: uploadErorr } = useStoreLogoMutation({
+const emit = defineEmits(['change', 'upload-success']);
+const { data, isLoading, refetch, error } = useFetchLogos();
+const { mutate, error:mutationError } = useStoreLogoMutation({
     file,
-    onSucess: refetch
+    onSucess: ()=> {
+        refetch();
+        Swal.fire({
+            icon: 'success',
+            title: 'Upload Successful',
+            text: 'Your logo has been uploaded successfully.',
+            toast: true,
+            position: 'top-end',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            showCloseButton:true,
+            iconColor: 'rgba(0, 0, 0, 0.7)',
+        });
+        emit('upload-success');
+    },
 });
 const selectedAvatar = ref('');
+const searchQuery = ref('');
+const visibleLogos = computed(() => {
+    if (!data.value || !data.value.logos) return [];
+    if (!searchQuery.value) return data.value.logos;
 
-function handleUpload(img: File) {
-    file.value = img;
+    const search = searchQuery.value.toLowerCase();
+
+    return data.value.logos.filter((item) => {
+        return item.name.toLowerCase().includes(search);
+    });
+});
+
+function handleUpload(payload:any) {
+    file.value = new File([payload.file], payload.name);
     mutate();
 }
-
-const searchQuery = ref('');
-
-const filteredAvatars = computed(() => {
-    if (!data) {
-        return [];
-    }
-    if (!searchQuery.value) {
-        return data.value?.logos;
-    }
-    return data.value?.logos?.filter((avatar) =>
-        avatar.toLowerCase().includes(searchQuery.value.toLowerCase()),
-    );
-});
+function handleImagePick(img: { uri: string; name: string }) {
+    selectedAvatar.value = img.name;
+    emit('change', img);
+}
 </script>
+
+<template>
+    <div class="w-full px-2 md:px-5">
+        <LogoSearchbar v-model:value="searchQuery" />
+
+        <p class="text-black/60 px-4 text-xs mt-4" v-if="visibleLogos.length > 0">
+            You can upload up to logos {{ maxLogos }} to your personal gallery ({{ visibleLogos.length }} uploaded).
+        </p>
+
+        <!-- Avatar Grid -->
+        <div
+            v-auto-animate
+            class="align-center w-full md:w-10/12 mt-4 md:mt-6 flex flex-row flex-wrap justify-center-safe md:justify-start overflow-hidden sm:w-full gap-4 mx-0 md:mx-auto"
+        >
+            <AddLogoButton :schema="LogoSchema" @logo-uploaded="handleUpload"
+                key="upload-button" label="new logo"
+                v-if="shouldRenderAddLogoButton"
+            />
+            <!-- Images Skeleton -->
+            <LogoSkeleton v-if="isLoading" :size="8" class="m-2" />
+            <!-- Images Display -->
+            <LogoCollection
+                v-if="visibleLogos.length" :items="visibleLogos"
+                :active-item="selectedAvatar" @onChange="handleImagePick"
+            />
+        </div>
+    </div>
+
+    <PiniaColadaError :error="mutationError as AxiosError" />
+    <PiniaColadaError :error="error as AxiosError" />
+</template>

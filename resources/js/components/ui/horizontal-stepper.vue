@@ -2,74 +2,91 @@
    import NButton from "@/components/neuphormic-button.vue";
    import { ref, computed } from "vue";
    import { Icon } from "@iconify/vue";
+   import { ClassValue } from "clsx";
+   import type { VerticalStepItem } from "@/types";
+   import useResolvedClasses from "@/composables/reports/use-resolve-classes";
+   type StepMap = Record<number, VerticalStepItem & { id: number }>;
 
    const props = defineProps<{
-       steps: Array<{
-           title: string;
-           description?: string;
-           icon?: string;
-           completed: boolean;
-           index: string | number;
-           component?: any;
-           step?: number;
-       }>;
-       currentStep: string
+       steps: VerticalStepItem[];
+       step?: string | number;
+       wrapperClass?: ClassValue;
+       menusClass?: ClassValue;
+       contentClass?: ClassValue;
+       menusWrapperClass?: ClassValue;
    }>();
+   const  { wrapperClasses, contentClasses, menuWrapperClasses }  = useResolvedClasses(props);
 
-   const currentStep = ref<string>(props.currentStep);
-   const hashmapSteps = ref<Record<string | number, any>>({});
-   hashmapSteps.value = props.steps.reduce((acc, step, index) => {
-       acc[step.index] ={
+   const currentStep = ref<number>(0);
+   const hashmapSteps = ref<StepMap>({});
+   hashmapSteps.value= props.steps.reduce((acc, step, index) => {
+       acc[index] = {
            ...step,
-           step: index + 1,
+           id:index
        };
+       if(step.index == props.step) {
+           //set current step to index
+           currentStep.value = index;
+       }
        return acc;
-   }, {} as Record<string | number, any>);
-
-   //
-
+   }, {} as StepMap);
    const activeStep = computed(()=> hashmapSteps.value[currentStep.value]);
-   //items.find(item => item.index === currentStep.value);
+
+   function handleSelectImage(payload:any) {
+       // console.log(payload);
+       // // activeStep.value.completed = true;
+       // // currentStep.value += 1;
+       // // store.setImage();
+   }
 </script>
 
 <template>
-    <div class="grid md:grid-cols-[200px_auto] sm:grid-cols-1 sm:gap-0 h-full shadow-md rounded-[12px] overflow-hidden">
-        <div class="relative bg-gray-200 md:gap-y-2 sm:gap-x-2 w-full h-full col-span-1 flex md:flex-col sm:flex-row sm:overflow-x-auto items-center justify-start md:py-4 sm:py-0">
-                <NButton
-                    v-for="(step, index) in props.steps" :key="index"
+    <div :class="wrapperClasses">
+        <div :class="menuWrapperClasses">
+            <NButton
+                    v-for="(step, index) in hashmapSteps" :key="index"
                     :label="step.title"
                     :icon="step.completed ? 'mdi:check-all' : step.icon"
-                    button-class="text-xs px-4 py-2 w-full sm:text-[12px]"
+                    button-class="text-xs py-1 items-start justify-start w-full sm:text-[12px] text-black/80 disabled:text-black/50 disabled:font-light font-medium sm:whitespace-nowrap"
                     :shadow="false"
                     icon-class="!w-5 !h-5 sm:!w-4 sm:!h-4"
-                    :disabled="currentStep != step.index"
+                    :disabled="currentStep != step.id"
                 />
         </div>
-        <div class="col-span-1 h-full overflow-hidden grid grid-rows-[auto_80px]">
-           <component :is="activeStep?.component" />
-            <div class="flex flex-row items-center justify-center-safe gay-4 w-fit mx-auto npo-form-shadow mb-4 rounded-[12px] p-3">
-                <button class="hover:shadow-neu-in px-4 py-3 rounded-[12px] cursor-pointer">
-                    <Icon icon="mdi:chevron-double-left" class="w-6 h-6 ml-2 inline" />
-                    Previous
-                </button>
-                <span class="mx-8">
-                   Step {{ activeStep.step }} of {{ props.steps.length }}
-                </span>
-                <button
-                    :disabled="!activeStep?.completed"
-                    :class="[
-                        activeStep?.completed ? 'hover:shadow-neu-in' : '',
-                        'px-4 py-3 rounded-[12px] text-black disabled:text-black/20',
-                        activeStep?.completed ? 'cursor-not-allowed' : 'cursor-pointer',
-                        ]"
+        <div :class="contentClasses">
+            <div class="mb-4 space-y-2 px-5">
+                <h1 class="md:text-3xl sm:text-xl font-semibold">{{ activeStep.title }}</h1>
+                <p class="text-xs md:text-sm font-light text-muted-foreground"
                 >
-                    Next
-                    <Icon icon="mdi:chevron-double-right" class="w-6 h-6 ml-2 inline" />
-                </button>
+                    {{ activeStep.description }}
+                </p>
+            </div>
+            <div class="flex-1 w-full">
+                <component @image-selected="handleSelectImage" :is="activeStep?.component" :step="activeStep" />
+            </div>
+            <div class="w-full h-[50px] md:h-[75px] overflow-hidden">
+                <slot name="footer">
+                    <div class="h-full flex flex-row items-center justify-center-safe gap-4 w-full md:w-fit md:mx-auto rounded-[12px]">
+                        <button :disabled="activeStep.id == 0" class="disabled:text-black/20 disabled:pointer-events-none hover:shadow-neu-in px-2 md:px-4 py-2 md:py-3 rounded-[12px] cursor-pointer">
+                            <Icon icon="mdi:chevron-double-left" class="w-6 h-6 ml-2 inline" />
+                        </button>
+                        <p class="flex flex-row">
+                            step {{(currentStep + 1) + ' of ' + props.steps.length }}
+                        </p>
+                        <button
+                            :disabled="!activeStep?.completed"
+                            :class="[
+                            activeStep?.completed ? 'hover:shadow-neu-in' : '',
+                            'px-4 py-3 rounded-[12px] text-black ursor-pointer disabled:text-black/20 disabled:pointer-events-none',
+                            ]"
+                        >
+                            <Icon icon="mdi:chevron-double-right" class="w-6 h-6 ml-2 inline" />
+                        </button>
+                    </div>
+                </slot>
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>

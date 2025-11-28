@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
 /**
  * @method static create(array $array)
+ * @method static orderBy(string $string, string $string1)
  */
 #[ScopedBy([UserImages::class])]
 class Image extends Model
