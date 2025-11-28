@@ -148,6 +148,7 @@ class PropertyController extends Controller
     public function store(CreatePropertyRequest $request, CreatePropertyUseCase $useCase): RedirectResponse
     {
         $dto = new CreatePropertyDTO(
+            auth()->user()->id,
             $request->input('address'),
             $request->input('status'),
             $request->input('address'),

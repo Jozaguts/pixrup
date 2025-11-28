@@ -592,9 +592,9 @@ const submitProperty = async () => {
     formData.append('lng', String(lng));
     formData.append('place_id', addressDetails.placeId);
     formData.append('property_type', detailsForm.propertyType);
-    formData.append('bedrooms',detailsForm.bedrooms);
-    formData.append('bathrooms', detailsForm.bathrooms);
-    formData.append('square_footage', detailsForm.square_footage);
+    formData.append('bedrooms',detailsForm.bedrooms as string);
+    formData.append('bathrooms', detailsForm.bathrooms as string);
+    formData.append('square_footage', detailsForm.square_footage  as string);
 
     photoItems.value.forEach((photo, index) => {
         formData.append(`photos[${index}]`, photo.file, photo.file.name);

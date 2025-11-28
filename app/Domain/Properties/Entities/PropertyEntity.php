@@ -8,6 +8,7 @@ class PropertyEntity
 {
     public function __construct(
         public ?int $id = null,
+        public string $user_id,
         public string $title,
         public ?string $status,
         public string $address,

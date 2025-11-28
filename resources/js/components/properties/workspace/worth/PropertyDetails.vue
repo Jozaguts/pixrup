@@ -4,14 +4,14 @@ import { computed } from 'vue';
 interface Props {
     beds?: number | null;
     baths?: number | null;
-    sqft?: number | null;
+    squareFootage?: number | null;
     yearBuilt?: number | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     beds: null,
     baths: null,
-    sqft: null,
+    squareFootage: null,
     yearBuilt: null,
 });
 
@@ -31,13 +31,13 @@ const details = computed(() => [
                 : '—',
     },
     {
-        id: 'sqft',
+        id: 'squareFootage',
         label: 'Sq Ft',
         value:
-            props.sqft !== null && props.sqft !== undefined
+            props.squareFootage !== null && props.squareFootage !== undefined
                 ? Intl.NumberFormat('en-US', {
                       maximumFractionDigits: 0,
-                  }).format(props.sqft)
+                  }).format(props.squareFootage)
                 : '—',
     },
     {

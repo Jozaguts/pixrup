@@ -97,12 +97,12 @@ const title = computed(() => {
                         {{ formatPrice(item) }} •
                         {{ item.beds ?? '—' }} bd •
                         {{ item.baths ?? '—' }} ba •
-                        {{ item.sqft?.toLocaleString() ?? '—' }} ft²
+                        {{ item.squareFootage?.toLocaleString() ?? '—' }} ft²
                     </p>
                     <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
                         <span>{{ item.propertyType }}</span>
                         <span>• {{ item.distanceMiles.toFixed(1) }} mi</span>
-                        <span v-if="item.dom">• {{ item.dom }} DOM</span>
+                        <span v-if="item.daysOnMarket">• {{ item.daysOnMarket }} DOM</span>
                     </div>
                     <button
                         type="button"

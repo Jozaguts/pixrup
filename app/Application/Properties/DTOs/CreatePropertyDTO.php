@@ -4,6 +4,7 @@ namespace App\Application\Properties\DTOs;
 class CreatePropertyDTO
 {
     public function __construct(
+        public string $user_id,
         public string $title,
         public ?string $status,
         public string $address,

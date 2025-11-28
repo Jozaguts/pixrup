@@ -320,7 +320,7 @@ const propertySummary = computed(() => props.property.summary ?? {});
 const subjectDetails = computed(() => ({
     beds: propertySummary.value?.bedrooms ?? null,
     baths: propertySummary.value?.bathrooms ?? null,
-    sqft: propertySummary.value?.livingArea ?? null,
+    squareFootage: propertySummary.value?.livingArea ?? null,
     yearBuilt: propertySummary.value?.yearBuilt ?? null,
 }));
 
@@ -644,7 +644,7 @@ const idleCallout = computed(() =>
                 <PropertyDetails
                     :beds="subjectDetails.beds"
                     :baths="subjectDetails.baths"
-                    :sqft="subjectDetails.sqft"
+                    :squareFootage="subjectDetails.squareFootage"
                     :year-built="subjectDetails.yearBuilt"
                 />
 

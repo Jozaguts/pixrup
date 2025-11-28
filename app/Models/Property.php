@@ -27,6 +27,7 @@ class Property extends Model
         'bedrooms',
         'bathrooms',
         'square_footage',
+        'user_id'
     ];
 
     protected $casts = [

@@ -7,12 +7,12 @@ export interface SpyHuntComparable {
     rentPerMonth?: number | null;
     beds: number | null;
     baths: number | null;
-    sqft: number | null;
+    squareFootage: number | null;
     status: SpyHuntComparableStatus;
     propertyType: 'House' | 'Condo' | 'Multi-family' | 'Townhome';
     distanceMiles: number;
     lastEvent: string;
-    dom: number;
+    daysOnMarket: number;
     thumbnail: string;
     position: {
         x: number;
@@ -29,3 +29,20 @@ export interface SpyHuntFilters {
 }
 
 export type SpyHuntState = 'loading' | 'ready' | 'empty' | 'error';
+export type SpyHuntStatus =
+    | 'ready'
+    | 'processing'
+    | 'in-progress'
+    | 'needs-action'
+    | 'loading'
+    | 'error'
+    | 'empty'
+    | string
+export interface SpyHuntHeaderProps {
+    title: string
+    subtitle: string
+    status: SpyHuntStatus
+    isRefreshing: boolean
+    isAddToReportBusy: boolean
+    reportAdded: boolean
+}

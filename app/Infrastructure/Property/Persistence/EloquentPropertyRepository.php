@@ -13,6 +13,7 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
     {
         $model = Property::create([
             'title' => $property->address,
+            'user_id' => auth()->user()->id,
             'status' => 'in-progress',
             'address' => $property->address,
             'city' => $property->city,
@@ -33,6 +34,7 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
         ]);
         return new PropertyEntity(
             $model->id,
+            auth()->user()->id,
             $model->address,
             $model->status,
             $model->address,
@@ -56,6 +58,7 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
         $property = Property::where(['id' => $id])->firstOrFail();
         return new PropertyEntity(
             $property->id,
+            auth()->user()->id,
             $property->address,
             $property->status,
             $property->address,
@@ -79,6 +82,7 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
 
         return new PropertyEntity(
             $property->id,
+            auth()->user()->id,
             $property->address,
             $property->status,
             $property->address,
