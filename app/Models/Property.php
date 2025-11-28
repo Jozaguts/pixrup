@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Scopes\OwnProperties;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[ScopedBy([OwnProperties::class])]
 class Property extends Model
 {
     use HasFactory;

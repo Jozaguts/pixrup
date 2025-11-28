@@ -15,6 +15,44 @@ use Inertia\Response;
 
 class PropertyController extends Controller
 {
+
+    public function index(): Response
+    {
+        $properties = Property::with('latestWorth')
+            ->get()
+            ->map(function (Property $property) {
+                $status = in_array($property->status, ['in-progress', 'ready', 'pending', 'draft'], true)
+                    ? $property->status
+                    : 'in-progress';
+
+                $addressSegments = collect([
+                    $property->address,
+                    collect([$property->city, $property->state])->filter()->implode(', '),
+                    $property->postal_code,
+                    $property->country,
+                ])->filter();
+
+                return [
+                    'id' => $property->id,
+                    'title' => $property->title ?? $property->address,
+                    'formattedAddress' => $addressSegments->implode(', '),
+                    'address' => $property->address,
+                    'city' => $property->city .', '. $property->state,
+                    'status' => $status,
+                    'estimatedValue' => $property->latestWorth?->value,
+                    'progress' => null,
+                    'thumbnail' => $property?->photos()?->latest()?->first()?->path,
+                    'links' => [
+                        'view' => route('properties.show', $property, absolute: false),
+                        'report' => null,
+                    ],
+                ];
+            })
+            ->values();
+        return Inertia::render('properties/Index', [
+            'properties' => $properties,
+        ]);
+    }
     public function create(): Response
     {
         return Inertia::render('properties/New');

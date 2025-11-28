@@ -27,7 +27,7 @@ const attrs = useAttrs();
         :class="cn(
         'group px-4 py-5 rounded-[8px] flex items-center justify-center transform',
         'text-black disabled:text-black/40',
-        props.shadow && 'neu-button',
+        props.shadow && 'shadow-neu-out',
         props.shake && 'transition-transform duration-200 ease-out hover:scale-110',
         props.buttonClass
     )"

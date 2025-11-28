@@ -21,6 +21,7 @@ Route::get('/', function () {
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
     Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
     Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
