@@ -164,6 +164,8 @@ jobs:
               echo "GOOGLE_REDIRECT_URI=${{ vars.GOOGLE_REDIRECT_URI }}"
               echo "VITE_GOOGLE_MAPS_KEY=${{ secrets.VITE_GOOGLE_MAPS_KEY }}"
               echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
+              echo "RENT_CAST_API_KEY=${{ secrets.RENT_CAST_API_KEY }}"
+              echo "RENT_CAST_API_BASE_URL=https://api.rentcast.io/v1/"
             } > .env.new
 
             if [ -f .env ] && grep -q '^APP_KEY=' .env; then
