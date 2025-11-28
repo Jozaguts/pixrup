@@ -50,7 +50,7 @@ class MarketSnapshotDTO
         /** SALE COMPS */
         foreach ($comparables['sale'] ?? [] as $comp) {
             $price = $comp['price'] ?? null;
-            $squareFootage  = $comp['squareFootage'];
+            $squareFootage  = $comp['squareFootage'] ?? null;
             $dom   = $comp['daysOnMarket'];
             $lastSeenRaw = $comp['lastSeenDate'];
             $lastSeen = $lastSeenRaw ? Carbon::parse($lastSeenRaw) : null;
@@ -71,7 +71,7 @@ class MarketSnapshotDTO
         /** RENT COMPS */
         foreach ($comparables['rent'] ?? [] as $comp) {
             $rent =  $comp['price'] ?? null;
-            $squareFootage = $comp['squareFootage'];
+            $squareFootage = $comp['squareFootage'] ?? null;
 
             if ($rent && $squareFootage && $squareFootage > 50) {
                 $rentPricePerFt[] = $rent / $squareFootage;

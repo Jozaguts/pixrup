@@ -31,14 +31,14 @@ readonly class FetchSpyHuntDataUseCase
         $property = $this->propertyRepository->findOrFail($propertyId);
         $coordinates = $property->coordinates();
 
-        $raw = $this->marketDataProvider->fetchAll($property->address, $coordinates);
+        $raw = $this->marketDataProvider->fetchAll($property->address, $property->place_id,$coordinates);
         /**
          * ------------------------------------------
          * 1. Build PropertyDTO (subject property)
          * PropertyDTO is part a of property DB and Property value from provider (rentCast)
          * ------------------------------------------
          */
-        $subject = $raw->subjectProperty ?? [];
+//        $subject = $raw->subjectProperty ?? [];
 
         $propertyDto = new PropertyDTO(
             // form DB
@@ -54,10 +54,10 @@ readonly class FetchSpyHuntDataUseCase
             place_id: $property->place_id,
             metadata: $property->metadata,
             // from provider
-            type: $subject['propertyType'],
-            bedrooms: $subject['bedrooms'],
-            bathrooms: $subject['bathrooms'],
-            square_footage: $subject['squareFootage'],
+            type: $property->property_type,
+            bedrooms: $property->bedrooms,
+            bathrooms: $property->bathrooms,
+            square_footage: $property->square_footage,
         );
         /**
          * ------------------------------------------

@@ -42,14 +42,15 @@ class ComparableDTO
     {
         return [
             'price' => $comp['price'] ,
-            'squareFootage' => $comp['squareFootage'],
-            'bedrooms' => $comp['bedrooms'] ,
-            'bathrooms' => $comp['bathrooms'],
-            'yearBuilt' => $comp['yearBuilt'],
+            'squareFootage' => $comp['squareFootage'] ?? null,
+            'bedrooms' => $comp['bedrooms'] ?? null ,
+            'bathrooms' => $comp['bathrooms'] ?? null,
+            'yearBuilt' => $comp['yearBuilt'] ?? null,
             'daysOnMarket' => $comp['daysOnMarket'],
             'distance' => $comp['distance'],
             'address' => $comp['address'] ?? $comp['formattedAddress'],
             'lastSeenDate' => $comp['lastSeenDate'],
+            'propertyType' => $comp['propertyType'],
         ];
     }
 }

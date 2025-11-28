@@ -6,6 +6,7 @@ use App\Application\Properties\DTOs\SpyHuntRawResponseDTO;
 use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
 use App\Domain\Properties\ValueObjects\Coordinates;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class RentCastMarketDataProvider implements SpyHuntMarketDataProviderInterface
@@ -22,18 +23,21 @@ class RentCastMarketDataProvider implements SpyHuntMarketDataProviderInterface
             ->baseUrl(config('services.rentcast.base_url'));
     }
 
-    public function fetchAll(string $address, Coordinates $coordinates): SpyHuntRawResponseDTO
+    public function fetchAll(string $address, string $place_id, Coordinates $coordinates): SpyHuntRawResponseDTO
     {
-        $valueResponse = $this->client->get('avm/value',[
-            'address' => $address,
-            'compCount' => 10,
-        ]);
 
-        if (!$valueResponse->successful()) {
-            throw new \RuntimeException('RentCast Value API failed: ' . $valueResponse->body());
-        }
+        $valueData = Cache::remember('avm:'.$place_id, 86400, function() use($address) {
+            $response = $this->client->get('avm/value',[
+                'address' => $address,
+                'compCount' => 10,
+            ]);
 
-        $valueData = $valueResponse->json();
+            if (!$response->successful()) {
+                throw new \RuntimeException('RentCast Value API failed: ' . $response->body());
+            }
+            return  $response->json();
+        });
+
 
         $subject = $valueData['subjectProperty'] ?? [];
 
@@ -45,23 +49,23 @@ class RentCastMarketDataProvider implements SpyHuntMarketDataProviderInterface
 
         $salesComps = $valueData['comparables'] ?? [];
 
-        $rentResponse = $this->client->get('avm/rent/long-term',[
-            'address' => $address,
-            'compCount' => 10,
-        ]);
-        $rentData = null;
-        $rentEstimate = null;
-        $rentComps = null;
+        $rentData = Cache::remember('long-term:'.$place_id, 86400, function() use($address) {
+            $response = $this->client->get('avm/rent/long-term',[
+                'address' => $address,
+                'compCount' => 10,
+            ]);
+            if (!$response->successful()) {
+                throw new \RuntimeException('RentCast Value API failed: ' . $response->body());
+            }
+            return  $response->json();
+        });
 
-        if ($rentResponse->successful()) {
-            $rentData = $rentResponse->json();
-            $rentEstimate = [
-                'price' => $rentData['rent'] ?? null,
-                'rangeLow' => $rentData['rentRangeLow'] ?? null,
-                'rangeHigh' => $rentData['rentRangeHigh'] ?? null,
-            ];
-            $rentComps = $rentData['comparables'] ?? [];
-        }
+        $rentEstimate = [
+            'price' => $rentData['rent'] ?? null,
+            'rangeLow' => $rentData['rentRangeLow'] ?? null,
+            'rangeHigh' => $rentData['rentRangeHigh'] ?? null,
+        ];
+        $rentComps = $rentData['comparables'] ?? [];
 
         return new SpyHuntRawResponseDTO(
             $subject,

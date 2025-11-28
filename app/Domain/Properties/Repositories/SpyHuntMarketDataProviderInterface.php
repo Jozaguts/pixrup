@@ -7,6 +7,6 @@ use App\Domain\Properties\ValueObjects\Coordinates;
 
 interface SpyHuntMarketDataProviderInterface
 {
-    public function fetchAll(string $address, Coordinates $coordinates): SpyHuntRawResponseDTO;
+    public function fetchAll(string $address, string $place_id, Coordinates $coordinates): SpyHuntRawResponseDTO;
 
 }
