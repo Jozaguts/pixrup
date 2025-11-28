@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table): void {
             $table->id();
+            $table->uuid('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users');
             $table->string('title')->nullable();
             $table->string('status')->default('in-progress');
             $table->string('address')->nullable();
