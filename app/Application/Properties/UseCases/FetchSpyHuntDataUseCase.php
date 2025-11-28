@@ -54,10 +54,10 @@ readonly class FetchSpyHuntDataUseCase
             place_id: $property->place_id,
             metadata: $property->metadata,
             // from provider
-            type: $subject['propertyType'] ?? null,
-            bedrooms: $subject['bedrooms'] ?? null,
-            bathrooms: $subject['bathrooms'] ?? null,
-            square_footage: $subject['squareFootage'] ?? null,
+            type: $subject['propertyType'],
+            bedrooms: $subject['bedrooms'],
+            bathrooms: $subject['bathrooms'],
+            square_footage: $subject['squareFootage'],
         );
         /**
          * ------------------------------------------

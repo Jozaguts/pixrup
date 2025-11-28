@@ -18,6 +18,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('users');
             $table->string('title')->nullable();
+            $table->enum('property_type', ['Single Family','Condo','Townhouse','Manufactured','Multi-Family','Apartment','Land'])->default('Single Family');
+            $table->integer('bedrooms');
+            $table->integer('bathrooms');
+            $table->integer('square_footage');
             $table->string('status')->default('in-progress');
             $table->string('address')->nullable();
             $table->string('city')->nullable();

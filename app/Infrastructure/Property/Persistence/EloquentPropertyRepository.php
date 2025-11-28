@@ -26,6 +26,10 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
                 'source' => 'ui',
                 'created_via' => 'wizard',
             ],
+            'property_type' => $property->property_type,
+            'bedrooms' => $property->bedrooms,
+            'bathrooms' => $property->bathrooms,
+            'square_footage' => $property->square_footage,
         ]);
         return new PropertyEntity(
             $model->id,
@@ -40,6 +44,10 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
             $model->lng,
             $model->place_id,
             $model->metadata,
+            $model->property_type,
+            $model->bedrooms,
+            $model->bathrooms,
+            $model->square_footage,
         );
     }
 
@@ -59,6 +67,10 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
             $property->lng,
             $property->place_id,
             $property->metadata,
+            $property->property_type,
+            $property->bedrooms,
+            $property->bathrooms,
+            $property->square_footage,
         );
     }
     public function findById(int $id): ?PropertyEntity
@@ -78,6 +90,10 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
             $property->lng,
             $property->place_id,
             $property->metadata,
+            $property->property_type,
+            $property->bedrooms,
+            $property->bathrooms,
+            $property->square_footage,
         );
     }
 }

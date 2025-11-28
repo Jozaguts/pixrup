@@ -159,6 +159,10 @@ class PropertyController extends Controller
             $request->input('lng'),
             $request->input('place_id'),
             $request->input('metadata'),
+            $request->input('property_type'),
+            $request->input('bedrooms'),
+            $request->input('bathrooms'),
+            $request->input('square_footage'),
         );
 
         $useCase->execute($dto, $request->file('photos'));

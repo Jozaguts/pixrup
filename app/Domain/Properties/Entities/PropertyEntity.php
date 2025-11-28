@@ -19,6 +19,10 @@ class PropertyEntity
         public float $lng,
         public string $place_id,
         public mixed $metadata,
+        public string $property_type,
+        public string $bedrooms,
+        public string $bathrooms,
+        public string $square_footage,
     ) {
     }
     public function coordinates(): Coordinates

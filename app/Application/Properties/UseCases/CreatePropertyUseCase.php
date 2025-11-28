@@ -33,6 +33,10 @@ readonly class CreatePropertyUseCase
             lng: $createPropertyDTO->lng,
             place_id: $createPropertyDTO->place_id,
             metadata: $createPropertyDTO->metadata,
+            property_type: $createPropertyDTO->property_type,
+            bedrooms: $createPropertyDTO->bedrooms,
+            bathrooms: $createPropertyDTO->bathrooms,
+            square_footage: $createPropertyDTO->square_footage,
         );
 
         $savedProperty = $this->propertyRepository->save($propertyEntity);
