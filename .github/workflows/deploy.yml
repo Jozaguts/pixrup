@@ -89,10 +89,6 @@ jobs:
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
 
-            echo "⚙️ Building frontend"
-            npm ci
-            ${{ matrix.build_cmd }}
-
             echo "🔧 Generating .env"
             rm -f .env.new
             {
@@ -172,6 +168,11 @@ jobs:
               grep '^APP_KEY=' .env >> .env.new
             fi
             mv .env.new .env
+            
+            echo "⚙️ Building frontend"
+            
+            npm ci
+            ${{ matrix.build_cmd }}
 
             echo "🚀 Running migrations and caches"
             php artisan migrate --force
