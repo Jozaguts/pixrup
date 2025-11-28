@@ -65,6 +65,9 @@ importers:
       reka-ui:
         specifier: ^2.4.1
         version: 2.6.0(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3))
+      sweetalert2:
+        specifier: ^11.26.3
+        version: 11.26.3
       tailwind-merge:
         specifier: ^3.2.0
         version: 3.4.0
@@ -80,6 +83,9 @@ importers:
       vue3-easy-data-table:
         specifier: ^1.5.47
         version: 1.5.47(typescript@5.9.3)
+      zod:
+        specifier: ^4.1.13
+        version: 4.1.13
     devDependencies:
       '@eslint/js':
         specifier: ^9.19.0
@@ -2906,6 +2912,9 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  sweetalert2@11.26.3:
+    resolution: {integrity: sha512-VU0hGw/WfI9h7Mh+SCsDlWgtxDwWZ6ccqS7QcO8zEeWnwplN1GptcLstq76OluUBSLUza6ldvKd3558OhjpJ9A==}
+
   tailwind-merge@3.4.0:
     resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
 
@@ -3270,6 +3279,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod@4.1.13:
+    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
 
 snapshots:
 
@@ -6194,6 +6206,8 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  sweetalert2@11.26.3: {}
+
   tailwind-merge@3.4.0: {}
 
   tailwindcss@4.1.17: {}
@@ -6622,3 +6636,5 @@ snapshots:
       yargs-parser: 21.1.1
 
   yocto-queue@0.1.0: {}
+
+  zod@4.1.13: {}

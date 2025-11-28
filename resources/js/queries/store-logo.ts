@@ -10,7 +10,7 @@ export const useStoreLogoMutation = ({ file, onSucess}:StoreLogoParams) => {
     return useMutation({
         key: ["store-logo"],
         mutation: () => storeLogo(file),
-        onSuccess: () => onSucess()
+        onSuccess: () => onSucess(),
     });
 }
 

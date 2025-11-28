@@ -2,6 +2,7 @@
 import { cn } from '@/lib/utils';
 import { useAttrs, ref} from 'vue';
 import { Icon } from '@iconify/vue';
+import {ClassValue} from "clsx";
 const model = defineModel();
 defineOptions({
     inheritAttrs: false,
@@ -11,7 +12,7 @@ const props = defineProps<{
     label?: string;
     error?: string;
     class?: string;
-    wrapperClass?: string;
+    wrapperClass?: ClassValue;
     tabIndex?: number;
     icon?: string;
     defaultValue?: string;

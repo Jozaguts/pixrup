@@ -90,3 +90,17 @@ export interface DashboardProperty {
         report?: string;
     };
 }
+interface Image {
+    uri: string,
+    name: string
+    [key: PropertyKey]: any
+}
+
+interface VerticalStepItem {
+    title: string;
+    description?: string;
+    icon?: string;
+    completed: boolean;
+    index: string | number;
+    component?: any;
+}
