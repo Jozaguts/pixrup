@@ -82,9 +82,9 @@ jobs:
 
             cd "${{ matrix.deploy_path }}"
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
-            git fetch --prune
-            git checkout ${{ github.ref_name }}
-            git pull --ff-only origin ${{ github.ref_name }}
+            git fetch --prune origin
+            git reset --hard origin/${{ github.ref_name }}
+            git clean -xfd
 
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
