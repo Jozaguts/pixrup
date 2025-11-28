@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
 * @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:35
@@ -58,28 +58,6 @@ fetch.post = (args: { property: number | { id: number } } | [property: number | 
 })
 
 /**
-* @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:35
-* @route '/properties/{property}/worth/fetch'
-*/
-const fetchForm = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: fetch.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:35
-* @route '/properties/{property}/worth/fetch'
-*/
-fetchForm.post = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: fetch.url(args, options),
-    method: 'post',
-})
-
-fetch.form = fetchForm
-
-/**
 * @see \App\Http\Controllers\Properties\PropertyWorthController::report
 * @see app/Http/Controllers/Properties/PropertyWorthController.php:37
 * @route '/properties/{property}/worth/report'
@@ -136,28 +114,6 @@ report.post = (args: { property: number | { id: number } } | [property: number |
     url: report.url(args, options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Properties\PropertyWorthController::report
-* @see app/Http/Controllers/Properties/PropertyWorthController.php:37
-* @route '/properties/{property}/worth/report'
-*/
-const reportForm = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: report.url(args, options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Properties\PropertyWorthController::report
-* @see app/Http/Controllers/Properties/PropertyWorthController.php:37
-* @route '/properties/{property}/worth/report'
-*/
-reportForm.post = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: report.url(args, options),
-    method: 'post',
-})
-
-report.form = reportForm
 
 const worth = {
     fetch: Object.assign(fetch, fetch),

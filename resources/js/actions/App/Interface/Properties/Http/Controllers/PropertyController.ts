@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
 * @see \App\Interface\Properties\Http\Controllers\PropertyController::create
 * @see app/Interface/Properties/Http/Controllers/PropertyController.php:18
@@ -44,43 +44,6 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::create
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:18
-* @route '/properties/new'
-*/
-const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::create
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:18
-* @route '/properties/new'
-*/
-createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::create
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:18
-* @route '/properties/new'
-*/
-createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-create.form = createForm
-
-/**
 * @see \App\Interface\Properties\Http\Controllers\PropertyController::store
 * @see app/Interface/Properties/Http/Controllers/PropertyController.php:148
 * @route '/properties'
@@ -113,28 +76,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::store
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:148
-* @route '/properties'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::store
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:148
-* @route '/properties'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\PropertyController::show
@@ -203,43 +144,6 @@ show.head = (args: { property: number | { id: number } } | [property: number | {
     url: show.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::show
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:23
-* @route '/properties/{property}'
-*/
-const showForm = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::show
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:23
-* @route '/properties/{property}'
-*/
-showForm.get = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\PropertyController::show
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:23
-* @route '/properties/{property}'
-*/
-showForm.head = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: show.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
 
 const PropertyController = { create, store, show }
 

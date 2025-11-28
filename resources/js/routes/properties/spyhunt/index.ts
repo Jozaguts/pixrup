@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
 * @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
@@ -62,43 +62,6 @@ fetch.head = (args: { property: string | number } | [property: string | number ]
 })
 
 /**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
-* @route '/properties/{property}/fetch'
-*/
-const fetchForm = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: fetch.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
-* @route '/properties/{property}/fetch'
-*/
-fetchForm.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: fetch.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
-* @route '/properties/{property}/fetch'
-*/
-fetchForm.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: fetch.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-fetch.form = fetchForm
-
-/**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::mslRefresh
 * @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
 * @route '/properties/{property}/mls-refresh'
@@ -159,43 +122,6 @@ mslRefresh.head = (args: { property: string | number } | [property: string | num
     url: mslRefresh.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::mslRefresh
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/mls-refresh'
-*/
-const mslRefreshForm = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: mslRefresh.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::mslRefresh
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/mls-refresh'
-*/
-mslRefreshForm.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: mslRefresh.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Interface\Properties\Http\Controllers\SpyHuntController::mslRefresh
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:0
-* @route '/properties/{property}/mls-refresh'
-*/
-mslRefreshForm.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: mslRefresh.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-mslRefresh.form = mslRefreshForm
 
 const spyhunt = {
     fetch: Object.assign(fetch, fetch),

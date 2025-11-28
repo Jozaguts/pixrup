@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Reports\PdfReportsController::index
 * @see app/Http/Controllers/Reports/PdfReportsController.php:15
@@ -42,43 +42,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::index
-* @see app/Http/Controllers/Reports/PdfReportsController.php:15
-* @route '/reports'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::index
-* @see app/Http/Controllers/Reports/PdfReportsController.php:15
-* @route '/reports'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::index
-* @see app/Http/Controllers/Reports/PdfReportsController.php:15
-* @route '/reports'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Reports\PdfReportsController::newMethod
@@ -125,43 +88,6 @@ newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Reports\PdfReportsController::newMethod
-* @see app/Http/Controllers/Reports/PdfReportsController.php:20
-* @route '/reports/new'
-*/
-const newMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: newMethod.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::newMethod
-* @see app/Http/Controllers/Reports/PdfReportsController.php:20
-* @route '/reports/new'
-*/
-newMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: newMethod.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::newMethod
-* @see app/Http/Controllers/Reports/PdfReportsController.php:20
-* @route '/reports/new'
-*/
-newMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: newMethod.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-newMethod.form = newMethodForm
-
-/**
 * @see \App\Http\Controllers\Reports\PdfReportsController::getLogos
 * @see app/Http/Controllers/Reports/PdfReportsController.php:55
 * @route '/reports/logos'
@@ -206,43 +132,6 @@ getLogos.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Reports\PdfReportsController::getLogos
-* @see app/Http/Controllers/Reports/PdfReportsController.php:55
-* @route '/reports/logos'
-*/
-const getLogosForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: getLogos.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::getLogos
-* @see app/Http/Controllers/Reports/PdfReportsController.php:55
-* @route '/reports/logos'
-*/
-getLogosForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: getLogos.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::getLogos
-* @see app/Http/Controllers/Reports/PdfReportsController.php:55
-* @route '/reports/logos'
-*/
-getLogosForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: getLogos.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-getLogos.form = getLogosForm
-
-/**
 * @see \App\Http\Controllers\Reports\PdfReportsController::storeLogo
 * @see app/Http/Controllers/Reports/PdfReportsController.php:25
 * @route '/reports/logos/create'
@@ -275,28 +164,6 @@ storeLogo.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeLogo.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::storeLogo
-* @see app/Http/Controllers/Reports/PdfReportsController.php:25
-* @route '/reports/logos/create'
-*/
-const storeLogoForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: storeLogo.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Reports\PdfReportsController::storeLogo
-* @see app/Http/Controllers/Reports/PdfReportsController.php:25
-* @route '/reports/logos/create'
-*/
-storeLogoForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: storeLogo.url(options),
-    method: 'post',
-})
-
-storeLogo.form = storeLogoForm
 
 const PdfReportsController = { index, newMethod, getLogos, storeLogo, new: newMethod }
 
