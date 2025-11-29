@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
 * @see app/Http/Controllers/Api/UsageSummaryController.php:18
@@ -42,5 +42,42 @@ UsageSummaryController.head = (options?: RouteQueryOptions): RouteDefinition<'he
     url: UsageSummaryController.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
+* @see app/Http/Controllers/Api/UsageSummaryController.php:18
+* @route '/v1/usage'
+*/
+const UsageSummaryControllerForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: UsageSummaryController.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
+* @see app/Http/Controllers/Api/UsageSummaryController.php:18
+* @route '/v1/usage'
+*/
+UsageSummaryControllerForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: UsageSummaryController.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Api\UsageSummaryController::__invoke
+* @see app/Http/Controllers/Api/UsageSummaryController.php:18
+* @route '/v1/usage'
+*/
+UsageSummaryControllerForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: UsageSummaryController.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+UsageSummaryController.form = UsageSummaryControllerForm
 
 export default UsageSummaryController

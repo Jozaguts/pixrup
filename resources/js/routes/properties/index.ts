@@ -1,7 +1,88 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 import worth from './worth'
 import glowup from './glowup'
 import spyhunt from './spyhunt'
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/properties',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\PropertyController::index
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:19
+* @route '/properties'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
 /**
 * @see \App\Interface\Properties\Http\Controllers\PropertyController::newMethod
 * @see app/Interface/Properties/Http/Controllers/PropertyController.php:56
