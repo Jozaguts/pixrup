@@ -82,16 +82,12 @@ jobs:
 
             cd "${{ matrix.deploy_path }}"
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
-            git fetch --prune
-            git checkout ${{ github.ref_name }}
-            git pull --ff-only origin ${{ github.ref_name }}
+            git fetch --prune origin
+            git reset --hard origin/${{ github.ref_name }}
+            git clean -xfd
 
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
-
-            echo "⚙️ Building frontend"
-            npm ci
-            ${{ matrix.build_cmd }}
 
             echo "🔧 Generating .env"
             rm -f .env.new
@@ -113,6 +109,7 @@ jobs:
               fi
               echo "APP_URL=${{ matrix.app_url }}"
               echo
+              echo "APP_KEY=${{ secrets.APP_KEY }}"
               echo "LOG_CHANNEL=stack"
               echo "LOG_LEVEL=debug"
               echo "FILESYSTEM_DISK=s3"
@@ -135,7 +132,7 @@ jobs:
               echo "VITE_PUSHER_APP_ID=${{ secrets.PUSHER_APP_ID }}"
               echo "VITE_PUSHER_APP_KEY=${{ secrets.PUSHER_APP_KEY }}"
               echo "VITE_PUSHER_APP_SECRET=${{ secrets.PUSHER_APP_SECRET }}"
-              echo "VITE_PUSHER_APP_CLUSTER=${{ secrets.PUSHER_APP_CLUSTER }}"
+              echo "VITE_PUSHER_APP_CLUSTER=${{ vars.PUSHER_APP_CLUSTER }}"
               echo "VITE_PUSHER_HOST="
               echo "VITE_PUSHER_PORT=${{ vars.PUSHER_PORT }}"
               echo "VITE_PUSHER_SCHEME=${{ vars.PUSHER_SCHEME }}"
@@ -163,13 +160,19 @@ jobs:
               echo "GOOGLE_REDIRECT_URI=${{ vars.GOOGLE_REDIRECT_URI }}"
               echo "VITE_GOOGLE_MAPS_KEY=${{ secrets.VITE_GOOGLE_MAPS_KEY }}"
               echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
+              echo "RENT_CAST_API_KEY=${{ secrets.RENT_CAST_API_KEY }}"
+              echo "RENT_CAST_API_BASE_URL=https://api.rentcast.io/v1/"
             } > .env.new
 
             if [ -f .env ] && grep -q '^APP_KEY=' .env; then
               grep '^APP_KEY=' .env >> .env.new
             fi
             mv .env.new .env
-            php artisan key:generate --force || true
+            
+            echo "⚙️ Building frontend"
+            
+            npm ci
+            ${{ matrix.build_cmd }}
 
             echo "🚀 Running migrations and caches"
             php artisan migrate --force

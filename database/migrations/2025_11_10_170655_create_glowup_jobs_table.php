@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('property_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->foreignId('user_id')
-                ->constrained()
+            $table->uuid('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
                 ->cascadeOnDelete();
             $table->string('room_type', 40);
             $table->string('style', 40);

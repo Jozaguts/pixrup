@@ -2,21 +2,32 @@
 
 namespace App\Domain\Properties\Entities;
 
+use App\Domain\Properties\ValueObjects\Coordinates;
+
 class PropertyEntity
 {
     public function __construct(
         public ?int $id = null,
+        public string $user_id,
         public string $title,
         public ?string $status,
         public string $address,
-        public string $city,
+        public ?string $city,
         public string $state,
-        public string $postal_code,
+        public ?string $postal_code,
         public string $country,
         public float $lat,
         public float $lng,
         public string $place_id,
         public mixed $metadata,
+        public string $property_type,
+        public string $bedrooms,
+        public string $bathrooms,
+        public string $square_footage,
     ) {
+    }
+    public function coordinates(): Coordinates
+    {
+        return new Coordinates($this->lat, $this->lng);
     }
 }

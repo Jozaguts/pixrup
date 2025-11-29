@@ -24,40 +24,38 @@ onMounted(async () => {
         class="pt-14 pb-[220px] sm:pb-14 md:pt-16 md:pb-16 lg:pt-[88px] lg:pb-[88px] xl:pt-[100px] xl:pb-[100px]"
     >
         <div class="main-container">
-            <div
-                class="flex flex-col items-start justify-center max-md:gap-y-18 md:flex-row md:justify-between md:gap-x-[120px]"
-            >
-                <!-- Left: Intro -->
-                <div class="lg:sticky lg:top-28">
+            <div class="lg:sticky lg:top-28">
                     <span
                         data-ns-animate
                         data-delay="0.1"
                         class="mb-5 inline-block p-4 text-3xl font-bold text-primary"
-                        >Pixrup overview</span
+                    > AI-powered creation, built for speed.</span
                     >
-                    <div
-                        class="mb-14 space-y-2 text-slate-800 md:max-w-[595px] dark:text-white"
+                <div
+                    class="mb-14 space-y-2  text-slate-800  dark:text-white"
+                >
+                    <p
+                        data-ns-animate
+                        data-delay="0.3"
+                        class=""
                     >
-                        <h2 data-ns-animate data-delay="0.2">
-                            AI-powered creation, built for speed.
-                        </h2>
-                        <p
-                            data-ns-animate
-                            data-delay="0.3"
-                            class="max-w-[512px]"
-                        >
-                            Pixrup helps you generate, transform, and deliver
-                            on-brand content in minutes—secure, collaborative,
-                            and PWA-ready for any team.
-                        </p>
-                    </div>
+                        Pixrup helps you generate, transform, and deliver
+                        on-brand content in minutes—secure, collaborative,
+                        and PWA-ready for any team.
+                    </p>
                 </div>
+            </div>
+            <div
+                class="flex  items-start justify-center max-md:gap-y-18 md:flex-row md:justify-between"
+            >
+                <!-- Left: Intro -->
+
                 <!-- Right: Features List -->
-                <div class="stack-cards js-stack-cards w-full max-w-xl">
+                <div class="stack-cards js-stack-cards w-full  max-w-[940px] max-h-[400px]">
                     <div
                         v-for="listing in listings"
                         :key="listing.id"
-                        class="stack-cards__item js-stack-cards__item relative z-0 my-6 flex min-h-[170px] flex-col space-y-4 neu-surface rounded-[12px] p-8 shadow-sm shadow-neu-out md:flex-row dark:border-stroke-5"
+                        class="stack-cards__item h-full  max-h-[400px] w-full bg-white/80  backdrop-blur dark:bg-[#1f252f] js-stack-cards__item relative z-0 my-6 flex min-h-[170px] flex-col space-y-4  rounded-[12px] p-8 shadow-sm md:flex-row dark:border-stroke-5"
                     >
                         <div
                             class="relative shrink-0 overflow-hidden p-2.5 md:w-2/5"
@@ -65,7 +63,7 @@ onMounted(async () => {
                             <img
                                 :src="listing.image"
                                 :alt="listing.title"
-                                class="h-full w-full rounded-md object-cover md:rounded-lg"
+                                class="h-full  max-h-[400px] w-full rounded-md object-cover md:rounded-lg"
                             />
                         </div>
                         <div class="p-6">

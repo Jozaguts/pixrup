@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         apiPrefix: 'api/v1',
     )
+    ->withEvents(discover: [
+        __DIR__.'/../app/Interface/*/Events',
+        __DIR__.'/../app/Interface/*/Listeners',
+    ])
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
         $middleware->redirectGuestsTo(fn (Request $request) => route('auth.register.show'));

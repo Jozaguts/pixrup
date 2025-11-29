@@ -186,6 +186,7 @@ class PropertyController extends Controller
     public function store(CreatePropertyRequest $request, CreatePropertyUseCase $useCase): RedirectResponse
     {
         $dto = new CreatePropertyDTO(
+            auth()->user()->id,
             $request->input('address'),
             $request->input('status'),
             $request->input('address'),
@@ -197,6 +198,10 @@ class PropertyController extends Controller
             $request->input('lng'),
             $request->input('place_id'),
             $request->input('metadata'),
+            $request->input('property_type'),
+            $request->input('bedrooms'),
+            $request->input('bathrooms'),
+            $request->input('square_footage'),
         );
 
         $useCase->execute($dto, $request->file('photos'));

@@ -28,6 +28,7 @@ import {
 import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
 import AddressMapImage from '@/components/properties/address-map-image.vue';
 import { Icon } from '@iconify/vue';
+import NeuInput from '@/components/NeuInput.vue';
 
 type WizardStep = 'address' | 'photos' | 'summary';
 
@@ -66,6 +67,14 @@ const steps: ComputedRef<any[]> = computed(() => [
                 : 'ph:seal-check-fill',
     },
     {
+        id: 'details',
+        label: 'Details',
+        icon:
+            currentStepIndex.value <= 2
+                ? 'clarity:details-line'
+                : 'ph:seal-check-fill',
+    },
+    {
         id: 'summary',
         label: 'Review',
         icon: 'mdi:file-document-box-check-outline',
@@ -94,6 +103,12 @@ const addressDetails = reactive({
     lng: null as number | null,
     placeId: '',
 });
+const detailsForm = reactive({
+    propertyType: 'Select an option',
+    bedrooms: null as number | null,
+    bathrooms: null as number | null,
+    square_footage: null as number | null,
+})
 
 let geocoder: google.maps.Geocoder | null = null;
 
@@ -508,6 +523,12 @@ const isAddressStepValid = computed(
         addressDetails.lat !== null &&
         addressDetails.lng !== null,
 );
+const isDetailsValid = computed(
+    () => Boolean(detailsForm.propertyType !== 'Select an option') &&
+        detailsForm.bedrooms !== null &&
+        detailsForm.bathrooms !== null &&
+        detailsForm.square_footage !== null
+)
 
 const isPhotosStepValid = computed(
     () => photoItems.value.length > 0 && !isProcessingPhotos.value,
@@ -516,16 +537,6 @@ const isPhotosStepValid = computed(
 const isSummaryValid = computed(
     () => isAddressStepValid.value && photoItems.value.length > 0,
 );
-
-const creationPreview = computed(() =>
-    new Date().toLocaleString(undefined, {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }),
-);
-
-const formatCoordinate = (value: number | null) =>
-    value === null ? '—' : value.toFixed(5);
 
 const formatFileSize = (size: number) => {
     const mb = size / (1024 * 1024);
@@ -580,6 +591,10 @@ const submitProperty = async () => {
     formData.append('lat', String(lat));
     formData.append('lng', String(lng));
     formData.append('place_id', addressDetails.placeId);
+    formData.append('property_type', detailsForm.propertyType);
+    formData.append('bedrooms',detailsForm.bedrooms as string);
+    formData.append('bathrooms', detailsForm.bathrooms as string);
+    formData.append('square_footage', detailsForm.square_footage  as string);
 
     photoItems.value.forEach((photo, index) => {
         formData.append(`photos[${index}]`, photo.file, photo.file.name);
@@ -625,7 +640,6 @@ const handleNext = async () => {
                 addressForm.error = 'Select a valid address before continuing.';
                 return;
             }
-
             await goToStep(currentStepIndex.value + 1);
             break;
         }
@@ -633,6 +647,15 @@ const handleNext = async () => {
             if (!isPhotosStepValid.value) {
                 photoError.value =
                     'Add at least one property photo to continue.';
+                return;
+            }
+
+            await goToStep(currentStepIndex.value + 1);
+            break;
+        }
+        case 'details': {
+            if (!isDetailsValid.value) {
+                addressForm.error = 'property details are required.';
                 return;
             }
 
@@ -660,6 +683,8 @@ const isNextDisabled = computed(() => {
             return !isAddressStepValid.value;
         case 'photos':
             return !isPhotosStepValid.value;
+        case 'details':
+            return !isDetailsValid.value;
         case 'summary':
             return !isSummaryValid.value;
     }
@@ -710,7 +735,34 @@ const isNextDisabled = computed(() => {
                     </div>
                 </div>
             </header>
-
+            <div class="mt-0 flex w-full flex-row">
+                <button
+                    type="button"
+                    class="flex items-center justify-center rounded-2xl px-6 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933]"
+                    :class="{
+                        'pointer-events-none opacity-40':
+                            currentStepIndex === 0 || isSubmitting,
+                    }"
+                    @click="handleBack"
+                >
+                    Back
+                </button>
+                <button
+                    type="button"
+                    class="neu-button relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white"
+                    :class="{
+                        'pointer-events-none opacity-60': isNextDisabled,
+                    }"
+                    :disabled="isNextDisabled"
+                    @click="handleNext"
+                >
+                    <Loader2
+                        v-if="isSubmitting"
+                        class="size-4 animate-spin text-white"
+                    />
+                    {{ isSubmitting ? 'Creating…' : nextLabel }}
+                </button>
+            </div>
             <Transition name="fade-slide" mode="out-in">
                 <section
                     v-if="currentStep.id === 'address'"
@@ -892,7 +944,92 @@ const isNextDisabled = computed(() => {
                         {{ photoError }}
                     </p>
                 </section>
+                <section
+                    v-else-if="currentStep.id === 'details'"
+                    key="details-step"
+                    class="flex flex-1 flex-col gap-6 rounded-[28px] p-6 md:p-10"
+                >
+                    <div class="flex flex-col gap-2">
+                        <h2
+                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                        >
+                            Step 3 — Details
+                        </h2>
+                        <p class="text-sm text-[#6b7280] md:text-base">
+                            Define the essential details of the property: type, number of bedrooms, bathrooms, and total square footage.
+                        </p>
+                    </div>
+                    <div
+                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-gray-200 p-6 shadow-neu-in"
+                    >
 
+                        <div class="grid gap-8 grid-cols-2 ">
+                            <div>
+                                <label class="npo-form-label">Property type</label>
+                                <div class="npo-input-wrapper py-3 px-2">
+                                    <Icon icon="material-symbols-light:home-work-outline" class="w-8 h-8 text-slate-500" />
+                                    <select v-model="detailsForm.propertyType"
+                                            name="property-type"
+                                            id="property-type"
+                                            class="mt-1 outline-[0] block w-full" required>
+                                        <option value="Select an option"  disabled>Select an option</option>
+                                        <option :selected="true" value="Single Family" >Single Family</option>
+                                        <option value="Condo"  >Condo</option>
+                                        <option value="Townhouse"  >Townhouse</option>
+                                        <option value="Manufactured"  >Manufactured</option>
+                                        <option value="Multi-Family"  >Multi-Family</option>
+                                        <option value="Apartment"  >Apartment</option>
+                                        <option value="Land"  >Land</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <NeuInput
+                                icon="material-symbols-light:bedroom-parent-outline"
+                                id="bedrooms"
+                                class="mt-1 block w-full"
+                                name="bedrooms"
+                                required
+                                label="Bedrooms"
+                                type="number"
+                                min="0"
+                                v-model="detailsForm.bedrooms"
+                                autocomplete="bedrooms"
+                                placeholder="Bedrooms"
+                            />
+                            <NeuInput
+                                icon="material-symbols-light:shower-outline"
+                                id="bathrooms"
+                                class="mt-1 block w-full"
+                                name="bathrooms"
+                                required
+                                type="number"
+                                min="0"
+                                v-model="detailsForm.bathrooms"
+                                autocomplete="bathrooms"
+                                placeholder="Bathrooms"
+                                label="Bathrooms"
+                            />
+                            <NeuInput
+                                icon="material-symbols-light:square-foot"
+                                id="square_footage"
+                                class="mt-1 block w-full"
+                                name="square_footage"
+                                required
+                                type="number"
+                                min="0"
+                                v-model="detailsForm.square_footage "
+                                autocomplete="square_footage"
+                                placeholder="Square footage"
+                                label="Square footage"
+                                @keydown.esc="detailsForm.square_footage = 0"
+                            />
+                        </div>
+                    </div>
+
+                    <p v-if="photoError" class="text-sm text-[#B91C1C]">
+                        {{ photoError }}
+                    </p>
+                </section>
                 <section
                     v-else
                     key="summary-step"
@@ -969,35 +1106,6 @@ const isNextDisabled = computed(() => {
                     </div>
                 </section>
             </Transition>
-
-            <div class="mt-0 flex w-full flex-row px-10">
-                <button
-                    type="button"
-                    class="flex items-center justify-center rounded-2xl px-6 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933]"
-                    :class="{
-                        'pointer-events-none opacity-40':
-                            currentStepIndex === 0 || isSubmitting,
-                    }"
-                    @click="handleBack"
-                >
-                    Back
-                </button>
-                <button
-                    type="button"
-                    class="neu-button relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white"
-                    :class="{
-                        'pointer-events-none opacity-60': isNextDisabled,
-                    }"
-                    :disabled="isNextDisabled"
-                    @click="handleNext"
-                >
-                    <Loader2
-                        v-if="isSubmitting"
-                        class="size-4 animate-spin text-white"
-                    />
-                    {{ isSubmitting ? 'Creating…' : nextLabel }}
-                </button>
-            </div>
         </section>
     </AppLayout>
 </template>

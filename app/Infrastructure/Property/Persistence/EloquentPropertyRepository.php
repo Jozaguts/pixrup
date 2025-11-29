@@ -13,6 +13,7 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
     {
         $model = Property::create([
             'title' => $property->address,
+            'user_id' => auth()->user()->id,
             'status' => 'in-progress',
             'address' => $property->address,
             'city' => $property->city,
@@ -26,9 +27,14 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
                 'source' => 'ui',
                 'created_via' => 'wizard',
             ],
+            'property_type' => $property->property_type,
+            'bedrooms' => $property->bedrooms,
+            'bathrooms' => $property->bathrooms,
+            'square_footage' => $property->square_footage,
         ]);
         return new PropertyEntity(
             $model->id,
+            auth()->user()->id,
             $model->address,
             $model->status,
             $model->address,
@@ -40,6 +46,58 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
             $model->lng,
             $model->place_id,
             $model->metadata,
+            $model->property_type,
+            $model->bedrooms,
+            $model->bathrooms,
+            $model->square_footage,
+        );
+    }
+
+    public function findOrFail(int $id): PropertyEntity
+    {
+        $property = Property::where(['id' => $id])->firstOrFail();
+        return new PropertyEntity(
+            $property->id,
+            auth()->user()->id,
+            $property->address,
+            $property->status,
+            $property->address,
+            $property->city,
+            $property->state,
+            $property->postal_code,
+            $property->country,
+            $property->lat,
+            $property->lng,
+            $property->place_id,
+            $property->metadata,
+            $property->property_type,
+            $property->bedrooms,
+            $property->bathrooms,
+            $property->square_footage,
+        );
+    }
+    public function findById(int $id): ?PropertyEntity
+    {
+        $property = Property::find($id);
+
+        return new PropertyEntity(
+            $property->id,
+            auth()->user()->id,
+            $property->address,
+            $property->status,
+            $property->address,
+            $property->city,
+            $property->state,
+            $property->postal_code,
+            $property->country,
+            $property->lat,
+            $property->lng,
+            $property->place_id,
+            $property->metadata,
+            $property->property_type,
+            $property->bedrooms,
+            $property->bathrooms,
+            $property->square_footage,
         );
     }
 }

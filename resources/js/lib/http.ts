@@ -18,6 +18,7 @@ const csrfToken =
 if (csrfToken) {
     http.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 }
+http.defaults.withXSRFToken = true
 
 precognitionClient.use(http);
 

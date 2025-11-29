@@ -25,6 +25,11 @@ class Property extends Model
         'lng',
         'place_id',
         'metadata',
+        'property_type',
+        'bedrooms',
+        'bathrooms',
+        'square_footage',
+        'user_id'
     ];
 
     protected $casts = [

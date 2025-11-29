@@ -63,4 +63,9 @@ return [
         'wait_preference' => env('REPLICATE_WAIT_PREFERENCE', 'wait=60'),
     ],
 
+    'rentcast' => [
+        'api_key' => env('RENT_CAST_API_KEY'),
+        'base_url' => env('RENT_CAST_API_BASE_URL', 'https://api.rentcast.io/v1/'),
+    ]
+
 ];
