@@ -51,6 +51,8 @@ class ComparableDTO
             'address' => $comp['address'] ?? $comp['formattedAddress'],
             'lastSeenDate' => $comp['lastSeenDate'],
             'propertyType' => $comp['propertyType'],
+            'latitude' => $comp['latitude'],
+            'longitude' => $comp['longitude'],
         ];
     }
 }
