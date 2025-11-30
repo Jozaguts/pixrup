@@ -23,7 +23,7 @@ class RedisSpyHuntCacheRepository implements SpyHuntCacheRepositoryInterface
     /**
      * @throws \JsonException
      */
-    public function get(int $propertyId): ?SpyHuntDataDTO
+    public function get(int $propertyId, $filters = []): ?SpyHuntDataDTO
     {
         $raw = Redis::get($this->key($propertyId));
 
