@@ -26,7 +26,7 @@ readonly class FetchSpyHuntDataUseCase
         private PropertyRepositoryInterface $propertyRepository,
         private SpyHuntMarketDataProviderInterface $marketDataProvider,
         private SpyHuntCacheRepositoryInterface $cacheRepository,
-        private readonly MonthlyPropertyUsageService $usageService,
+        private MonthlyPropertyUsageService $usageService,
     ) {}
 
     /**
@@ -34,7 +34,7 @@ readonly class FetchSpyHuntDataUseCase
      */
     public function execute(int $propertyId,  User $user, $filters = []): SpyHuntDataDTO
     {
-//        $this->cacheRepository->forget($propertyId);
+
         if ($cached = $this->cacheRepository->get($propertyId)) {
             return $cached;
         }
@@ -46,11 +46,7 @@ readonly class FetchSpyHuntDataUseCase
 
         $this->usageService->ensureUsage($user, $eloquentProperty, UsageAction::SPY_HUNT);
 
-        if (!isset($eloquentProperty->metadata['raw_response'])) {
-            $propertyMetadata = $eloquentProperty->metadata ?? [];
-            $eloquentProperty->metadata = [...$propertyMetadata, 'raw_response' => $raw->rawValueResponse];
-            $eloquentProperty->save();
-        }
+
         /**
          * ------------------------------------------
          * 1. Build PropertyDTO (subject property)
@@ -73,7 +69,7 @@ readonly class FetchSpyHuntDataUseCase
             place_id: $property->place_id,
             metadata: $property->metadata,
             // from provider
-            type: $property->property_type,
+            property_type: $property->property_type,
             bedrooms: $property->bedrooms,
             bathrooms: $property->bathrooms,
             square_footage: $property->square_footage,
