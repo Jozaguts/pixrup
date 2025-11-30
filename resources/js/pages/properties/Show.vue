@@ -275,7 +275,7 @@ const headerMetricCards = computed(() => {
 
         <div class="min-h-screen pt-10 pb-16">
             <div
-                class="flex flex-col gap-8 px-4 sm:px-6 lg:px-8"
+                class="flex flex-col gap-4"
             >
                 <section
                     :class="[
@@ -379,7 +379,7 @@ const headerMetricCards = computed(() => {
                     :id="`module-${activeModule.id}`"
                     role="tabpanel"
                     :aria-labelledby="`tab-${activeModule.id}`"
-                    class="relative min-h-[420px] rounded-[32px] sm:p-8 md:p-2"
+                    class="relative min-h-[420px] rounded-[12px]"
                 >
                     <div class="w-fit">
                         <NeuphormistTabs :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />

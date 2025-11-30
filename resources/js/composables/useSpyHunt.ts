@@ -14,9 +14,20 @@ export default function useSpyHunt() {
         }
         return property.id ? `Property #${property.id}` : 'PixrSpyHunt';
     };
+    const moneyFormat = (value: number) => {
+        const USDollar =  new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            compactDisplay: 'short',
+            maximumFractionDigits: 0,
+            currencyDisplay: 'code',
+        });
+       return USDollar.format(value)
+    }
 
 
     return {
-        formatAddress
+        formatAddress,
+        moneyFormat
     }
 }
