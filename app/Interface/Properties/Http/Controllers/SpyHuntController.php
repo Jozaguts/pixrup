@@ -19,7 +19,9 @@ class SpyHuntController extends Controller
         try{
             $filters = $request->validated();
 
-            $dto = $this->fetchSpyHuntData->execute($propertyId, $filters);
+            $user = $request->user();
+
+            $dto = $this->fetchSpyHuntData->execute($propertyId, $user, $filters);
 
             return response()->json([
                 'data' => $dto->toArray(),

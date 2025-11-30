@@ -10,9 +10,14 @@ use App\Application\Properties\DTOs\SourceDTO;
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
 use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
+use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
 use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
 use App\Domain\Properties\Repositories\SpyHuntCacheRepositoryInterface;
+use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
+use App\Domain\Usage\Enums\UsageAction;
+use App\Models\Property;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 
 readonly class FetchSpyHuntDataUseCase
@@ -21,24 +26,38 @@ readonly class FetchSpyHuntDataUseCase
         private PropertyRepositoryInterface $propertyRepository,
         private SpyHuntMarketDataProviderInterface $marketDataProvider,
         private SpyHuntCacheRepositoryInterface $cacheRepository,
+        private readonly MonthlyPropertyUsageService $usageService,
     ) {}
-    public function execute(int $propertyId, $filters = []): SpyHuntDataDTO
-    {
 
+    /**
+     * @throws FeatureLimitExceededException
+     */
+    public function execute(int $propertyId,  User $user, $filters = []): SpyHuntDataDTO
+    {
+//        $this->cacheRepository->forget($propertyId);
         if ($cached = $this->cacheRepository->get($propertyId)) {
             return $cached;
         }
         $property = $this->propertyRepository->findOrFail($propertyId);
         $coordinates = $property->coordinates();
-
         $raw = $this->marketDataProvider->fetchAll($property->address, $property->place_id,$coordinates);
+
+        $eloquentProperty = Property::find($propertyId);
+
+        $this->usageService->ensureUsage($user, $eloquentProperty, UsageAction::SPY_HUNT);
+
+        if (!isset($eloquentProperty->metadata['raw_response'])) {
+            $propertyMetadata = $eloquentProperty->metadata ?? [];
+            $eloquentProperty->metadata = [...$propertyMetadata, 'raw_response' => $raw->rawValueResponse];
+            $eloquentProperty->save();
+        }
         /**
          * ------------------------------------------
          * 1. Build PropertyDTO (subject property)
          * PropertyDTO is part a of property DB and Property value from provider (rentCast)
          * ------------------------------------------
          */
-//        $subject = $raw->subjectProperty ?? [];
+        $subject = $raw->subjectProperty ?? [];
 
         $propertyDto = new PropertyDTO(
             // form DB
@@ -117,6 +136,7 @@ readonly class FetchSpyHuntDataUseCase
             source: $sourceDto
         );
         $this->cacheRepository->put($propertyId, $spyHuntDto, 86400);
+
 
         return $spyHuntDto;
 
