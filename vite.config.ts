@@ -1,6 +1,8 @@
 import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
+import Components from 'unplugin-vue-components/vite';
+import { VueMapUiResolver, VueMapUiPreset } from 'unplugin-vue-map-ui';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -10,6 +12,10 @@ export default defineConfig({
             input: ['resources/js/app.ts'],
             ssr: 'resources/js/ssr.ts',
             refresh: true,
+        }),
+        Components({
+            resolvers: [VueMapUiResolver()],
+            types: [VueMapUiPreset]
         }),
         tailwindcss(),
         wayfinder({

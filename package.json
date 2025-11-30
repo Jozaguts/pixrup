@@ -18,6 +18,7 @@
         "@laravel/vite-plugin-wayfinder": "^0.1.3",
         "@tailwindcss/vite": "^4.1.11",
         "@types/google.maps": "^3.58.1",
+        "@types/leaflet": "^1.9.21",
         "@types/node": "^22.13.5",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/eslint-config-typescript": "^14.3.0",
@@ -32,6 +33,8 @@
         "pusher-js": "^8.4.0",
         "typescript": "^5.2.2",
         "typescript-eslint": "^8.23.0",
+        "unplugin-vue-components": "^30.0.0",
+        "unplugin-vue-map-ui": "^0.0.14",
         "vite": "7.1.11",
         "vite-plugin-pwa": "^1.1.0",
         "vue-tsc": "^2.2.4"
@@ -52,6 +55,7 @@
         "gsap": "^3.12.2",
         "laravel-precognition-vue": "^0.7.3",
         "laravel-vite-plugin": "^2.0.0",
+        "leaflet": "^1.9.4",
         "lucide-vue-next": "^0.468.0",
         "pinia": "^3.0.4",
         "pinia-colada": "^0.0.1",
@@ -61,6 +65,7 @@
         "tailwindcss": "^4.1.1",
         "tw-animate-css": "^1.2.5",
         "vue": "^3.5.13",
+        "vue-map-ui": "^0.0.18",
         "vue3-easy-data-table": "^1.5.47",
         "zod": "^4.1.13"
     },

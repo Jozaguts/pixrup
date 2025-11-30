@@ -13,7 +13,9 @@ import {
     ensureStackCards,
     requestStackCardsUpdate,
 } from './lib/vendor/stackCards';
-
+import 'leaflet/dist/leaflet.css';
+import 'vue-map-ui/dist/style.css';
+import 'vue-map-ui/dist/theme-all.css';
 // @ts-expect-error vue3-easy-data-table ships broken types
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
