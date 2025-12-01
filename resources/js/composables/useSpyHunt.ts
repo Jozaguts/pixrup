@@ -101,11 +101,13 @@ export default function useSpyHunt() {
         }
     })
     const radius = computed(() =>{
-        return spyhunt.value.filters.radius.map((r, index) => ({id: index + 1, label: r + 'ml', icon: 'ph:map-pin-simple-area-light'}))
+        return spyhunt.value.filters.radius.map((r) => ({id: r, label: r + 'ml', icon: 'ph:map-pin-simple-area-light'}))
     })
     const radiusMatches = computed(() =>{
        return spyhunt.value.comps[mode.value].filter((comp) => comp.distance <= spyhunt.value.filters.defaults.radius)?.length ?? 0
-
+    })
+    const comparables = computed(()=>{
+        return spyhunt.value.comps[mode.value].filter((comp) => comp.distance <= spyhunt.value.filters.defaults.radius)
     })
 
     return {
@@ -116,6 +118,7 @@ export default function useSpyHunt() {
         radius,
         radiusMatches,
         mode,
+        comparables,
         formatAddress,
         moneyFormat
     }

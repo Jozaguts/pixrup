@@ -22,6 +22,10 @@
             type: [String, Number],
             default: 0,
         },
+        parentClasses:{
+            type: String,
+            default: '',
+        },
         togglable: {
             type: Boolean,
             default: true,
@@ -44,10 +48,11 @@
 
 <template>
     <div :class="cn(
-    'flex flex-row gap-1',
+    'md:flex lg:flex md:flex-row lg:flex-row gap-1 grid grid-cols-2 mx-2',
      'rounded-lg p-2',
       'bg-neutral-100dark:bg-neutral-800 npo-form-shadow',
-      'w-full'
+      'w-full',
+       props.parentClasses
      )">
         <button
             v-for="item in props.items"

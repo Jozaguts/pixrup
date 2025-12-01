@@ -19,7 +19,7 @@ import {
 } from 'vue-map-ui';
 import MarketOverviewCard from '@/components/properties/workspace/spyhunt/MarketOverviewCard.vue';
 import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
-const { spyhunt, avgPrice, avgPerSqft, dayOnMarket, radius, radiusMatches, mode } = toRefs(useSpyHunt());
+const { spyhunt, avgPrice, avgPerSqft, dayOnMarket, radius, radiusMatches, mode, comparables } = toRefs(useSpyHunt());
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -39,8 +39,6 @@ function onViewChanged(e: ViewChangedEvent) {
     zoom.value = e.zoom;
     bounds.value = e.bounds;
 }
-type Marker = { lag: number; lat: number; lng: number };
-const markers = ref<Marker[]>([]);
 async function loadSpyHunt() {
     loading.value = true;
     const res = await fetch(spyHuntRoutes.fetch.get(props.property.id).url, {
@@ -52,9 +50,7 @@ async function loadSpyHunt() {
     const json = await res.json();
     spyhunt.value = json.data as SpyHunt;
     center.value = [spyhunt.value.property.lat, spyhunt.value.property.lng];
-    markers.value = spyhunt.value.comps[mode.value].map((comp) => {
-        return { lat: comp.latitude, lng: comp.longitude };
-    }) as Marker[];
+
     loading.value = false;
 }
 
@@ -76,18 +72,15 @@ const isReady = computed(() => !loading.value && !!spyhunt.value.property?.lat);
 onMounted(() => {
     loadSpyHunt();
 });
-console.log(markers.value);
 </script>
 <template>
     <div class="flex flex-col gap-6 text-[#111827]">
-
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
-        <section v-else-if="isReady" class="space-y-6">
-            <div class="mt-10 grid min-h-[400px] grid-cols-1 gap-4 md:grid-cols-12 lg:grid-cols-12">
-                <div class="max-h-[600px] rounded-[12px] bg-gray-200 shadow-neu-in md:col-span-9 lg:col-span-9">
+        <section v-else-if="isReady">
+            <div class="mt-10 grid grid-cols-1 gap-4 md:grid-cols-12 lg:grid-cols-12">
+                <div class="max-h-[600px] min-h-[600px] rounded-[12px] bg-gray-200 shadow-neu-in md:col-span-9 lg:col-span-9">
                     <VMap
                         :max-zoom="15"
-                        :popupopen="popup"
                         :center="center"
                         :zoom="zoom"
                         @view-changed="onViewChanged"
@@ -110,9 +103,9 @@ console.log(markers.value);
                             </VMapPinIcon>
                         </VMapMarker>
                         <VMapMarker
-                            v-for="(marker, idx) in markers"
+                            v-for="(comp, idx) in comparables"
                             :key="idx"
-                            :latlng="[marker.lat, marker.lng]"
+                            :latlng="[comp.latitude, comp.longitude]"
                             @mouseover="onMarkHover"
                             @mouseout="activeMarker = null"
                         />
@@ -130,20 +123,27 @@ console.log(markers.value);
                                 <p class="text-sm text-gray-600">Price:</p>
                             </div>
                         </transition>
-                        <section class="absolute top-0 left-0 z-[700] p-2">
+                        <section class="absolute top-0 left-0 z-[700] p-2 flex flex-col md:flex-row lg:flex-row gap-2">
                             <NeuphormistTabs
                                 :value="spyhunt.filters.defaults.radius"
                                 @onchange="(v) => (spyhunt.filters.defaults.radius = v.id)"
                                 :items="radius"
+                                parentClasses="!flex mx-0"
+                            />
+                            <NeuphormistTabs
+                                :value="mode"
+                                @onchange="(v) => (spyhunt.filters.defaults.mode = v.id)"
+                                :items="[{id: 'sale', label: 'Sale'}, {id: 'rent', label: 'Rent'}]"
+                                parentClasses="!flex mx-0 w-fit"
                             />
                         </section>
-                        <section class="absolute top-[50%] left-0 z-[700] p-2">
-                            <div class="npo-form-shadow flex flex-col rounded-[12px] p-5">
-                                <div class="flex gap-2 items-center max-w-[300px] text-base">
+                        <section class="absolute md:top-[50%] lg:top-[50%] bottom-0 left-0 z-[700] p-2 ">
+                            <div class="npo-form-shadow flex flex-col rounded-[12px] p-4 ">
+                                <div class="flex gap-2 items-center md:max-w-[300px] lg:max-w-[300px] max-w-[200px] lg:text-base md:text-base text-sm ">
                                     <Icon icon="ph:map-pin-bold"  class="h-8 w-8 font-bold text-primary  "/>
-                                    <p class="truncate">  {{spyhunt.property.title}}</p>
+                                    <p class="truncate ">  {{spyhunt.property.title}}</p>
                                 </div>
-                                <p>Properties within this radius: {{ radiusMatches }} Comparables</p>
+                                <p class="text-xs">Properties within this radius: {{ radiusMatches }} Comparables</p>
                             </div>
                         </section>
                     </VMap>
