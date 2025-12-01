@@ -2,10 +2,11 @@
 import type { SpyHuntComparable } from '@/components/properties/workspace/spyhunt/types';
 import type { PropertyWorkspaceProperty, SpyHunt, WorkspaceModuleMeta } from '@/components/properties/workspace/types';
 import { computed, onMounted, ref, toRefs } from 'vue';
+import { Icon } from '@iconify/vue';
 import SpyHuntWorkSpaceSkeleton from '@/components/skeleton/SpyHuntWorkSpaceSkeleton.vue';
 import useSpyHunt from '@/composables/useSpyHunt';
 import spyHuntRoutes from '@/routes/properties/spyhunt';
-import { LeafletMouseEvent } from 'leaflet';
+import L, { LeafletMouseEvent } from 'leaflet';
 import type { LatLng, LatLngBounds, LatLngTuple } from 'leaflet';
 import type { ViewChangedEvent } from 'vue-use-leaflet';
 import {
@@ -17,7 +18,8 @@ import {
     VMapZoomControl,
 } from 'vue-map-ui';
 import MarketOverviewCard from '@/components/properties/workspace/spyhunt/MarketOverviewCard.vue';
-const { spyhunt, avgPrice, avgPerSqft, dayOnMarket } = toRefs(useSpyHunt());
+import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
+const { spyhunt, avgPrice, avgPerSqft, dayOnMarket, radius, radiusMatches, mode } = toRefs(useSpyHunt());
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -48,22 +50,19 @@ async function loadSpyHunt() {
         },
     });
     const json = await res.json();
-    loading.value = false;
     spyhunt.value = json.data as SpyHunt;
     center.value = [spyhunt.value.property.lat, spyhunt.value.property.lng];
-    markers.value = spyhunt.value.comps[spyhunt.value.filters.defaults.mode].map((comp) => {
+    markers.value = spyhunt.value.comps[mode.value].map((comp) => {
         return { lat: comp.latitude, lng: comp.longitude };
     }) as Marker[];
+    loading.value = false;
 }
-onMounted(() => {
-    loadSpyHunt();
-});
+
 const activeMarker = ref<LeafletMouseEvent | null>(null);
 const markerScreenPos = ref({ x: 0, y: 0 });
-const mapRef = ref<HTMLElement | null>(null);
 function onMarkHover(marker: LeafletMouseEvent): void {
     activeMarker.value = marker;
-    const point = marker.layerPoint;
+    const point = marker.containerPoint;
     if (!point) {
         return;
     }
@@ -73,18 +72,22 @@ function onMarkHover(marker: LeafletMouseEvent): void {
  * COMPUTED
  * */
 
-const isReady = computed(() => !loading.value && spyhunt.value.property?.lat);
+const isReady = computed(() => !loading.value && !!spyhunt.value.property?.lat);
+onMounted(() => {
+    loadSpyHunt();
+});
+console.log(markers.value);
 </script>
 <template>
     <div class="flex flex-col gap-6 text-[#111827]">
+
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
         <section v-else-if="isReady" class="space-y-6">
             <div class="mt-10 grid min-h-[400px] grid-cols-1 gap-4 md:grid-cols-12 lg:grid-cols-12">
-                <div class=" max-h-[600px] rounded-[12px] bg-gray-200 shadow-neu-in md:col-span-9 lg:col-span-9">
+                <div class="max-h-[600px] rounded-[12px] bg-gray-200 shadow-neu-in md:col-span-9 lg:col-span-9">
                     <VMap
                         :max-zoom="15"
-                        :bounce-at-zoom-limits="true"
-                        ref="mapRef"
+                        :popupopen="popup"
                         :center="center"
                         :zoom="zoom"
                         @view-changed="onViewChanged"
@@ -127,6 +130,22 @@ const isReady = computed(() => !loading.value && spyhunt.value.property?.lat);
                                 <p class="text-sm text-gray-600">Price:</p>
                             </div>
                         </transition>
+                        <section class="absolute top-0 left-0 z-[700] p-2">
+                            <NeuphormistTabs
+                                :value="spyhunt.filters.defaults.radius"
+                                @onchange="(v) => (spyhunt.filters.defaults.radius = v.id)"
+                                :items="radius"
+                            />
+                        </section>
+                        <section class="absolute top-[50%] left-0 z-[700] p-2">
+                            <div class="npo-form-shadow flex flex-col rounded-[12px] p-5">
+                                <div class="flex gap-2 items-center max-w-[300px] text-base">
+                                    <Icon icon="ph:map-pin-bold"  class="h-8 w-8 font-bold text-primary  "/>
+                                    <p class="truncate">  {{spyhunt.property.title}}</p>
+                                </div>
+                                <p>Properties within this radius: {{ radiusMatches }} Comparables</p>
+                            </div>
+                        </section>
                     </VMap>
                 </div>
                 <div class="pa-2 md:col-span-3 lg:col-span-3">
@@ -160,7 +179,11 @@ const isReady = computed(() => !loading.value && spyhunt.value.property?.lat);
                         <MarketOverviewCard
                             icon="ph:chart-line"
                             label="ZIP Avg Days on Market"
-                            :title="spyhunt.stats.zipDom ? spyhunt.stats.zipDom + ' D': 'No information in the last 30 days'"
+                            :title="
+                                spyhunt.stats.zipDom
+                                    ? spyhunt.stats.zipDom + ' D'
+                                    : 'No information in the last 30 days'
+                            "
                         />
                     </div>
                 </div>

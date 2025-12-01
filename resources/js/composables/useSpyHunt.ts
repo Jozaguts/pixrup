@@ -1,8 +1,44 @@
 import type { PropertyWorkspaceProperty, SpyHunt } from '@/components/properties/workspace/types';
 import { computed, ref } from 'vue';
+import type { SpyHuntComparable } from '@/components/properties/workspace/spyhunt/types';
 
 export default function useSpyHunt() {
-    const spyhunt = ref<SpyHunt>({} as SpyHunt);
+    const spyhunt = ref<SpyHunt>({
+        property: {
+            lat: 0,
+            lng: 0,
+            square_footage: 0,
+        },
+        filters: {
+            radius: [1,3,5],
+            defaults: {
+                radius: 1,
+                mode: 'sale',
+            },
+        },
+        comps: {
+            summary: {
+                sale_count: 0,
+                rent_count: 0,
+            },
+            sale: [] as SpyHuntComparable,
+            rent: [] as SpyHuntComparable,
+        },
+        market_snapshot: {
+            avgPricePerFt: 0,
+            avgRentPerFt:0,
+            daysOnMarket: 0,
+            trend30d: 0,
+            avgRentPrice: 0,
+            avgSalePrice: 0,
+            trend30dTotal: 0,
+        },
+        value_estimate: {
+            price: 0,
+            range_low: 0,
+            range_high: 0,
+        }
+    });
     const formatAddress = (property: PropertyWorkspaceProperty) => {
         const primary = property.address?.line1 ?? property.title ?? null;
         const locality = [property.address?.city, property.address?.state]
@@ -25,6 +61,7 @@ export default function useSpyHunt() {
         });
        return USDollar.format(value)
     }
+    const mode = computed(()=> spyhunt.value.filters.defaults.mode)
     const avgPrice = computed(() =>{
         const diff = spyhunt.value.value_estimate.price - spyhunt.value.market_snapshot.avgSalePrice;
         const percentDiff = ((diff / spyhunt.value.market_snapshot.avgSalePrice) * 100).toFixed(1);
@@ -63,12 +100,22 @@ export default function useSpyHunt() {
             percentDiff
         }
     })
+    const radius = computed(() =>{
+        return spyhunt.value.filters.radius.map((r, index) => ({id: index + 1, label: r + 'ml', icon: 'ph:map-pin-simple-area-light'}))
+    })
+    const radiusMatches = computed(() =>{
+       return spyhunt.value.comps[mode.value].filter((comp) => comp.distance <= spyhunt.value.filters.defaults.radius)?.length ?? 0
+
+    })
 
     return {
         spyhunt,
         avgPrice,
         avgPerSqft,
         dayOnMarket,
+        radius,
+        radiusMatches,
+        mode,
         formatAddress,
         moneyFormat
     }

@@ -37,7 +37,7 @@ class FiltersDTO
             propertyTypes:  $array['propertyTypes'] ?? ['Single Family','Condo','Townhouse','Manufactured','Multi-Family','Apartment','Land'],
             priceMin: $array['priceMin'] ?? 50000,
             priceMax: $array['priceMax'] ?? 3000000,
-            defaultRadius: $array['defaultRadius']?? 3,
+            defaultRadius: $array['defaultRadius']?? 1,
             defaultPropertyType: $array['defaultPropertyType']?? 'Single Family',
             defaultMode: $array['defaultMode'] ?? 'sale'
         );
