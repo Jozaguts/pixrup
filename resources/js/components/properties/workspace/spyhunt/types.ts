@@ -8,11 +8,11 @@ export interface SpyHuntComparable {
     thumbnail: string;
     tag?: string;
     price: number;
-    squareFootage: number | null;
-    bedrooms: number | null;
-    bathrooms: number | null;
-    yearBuild: number | null;
-    daysOnMarket: number | null;
+    squareFootage: number;
+    bedrooms: number;
+    bathrooms: number;
+    yearBuild: number;
+    daysOnMarket: number;
     distance: number,
     address: string,
     lastSeenDate: Date,

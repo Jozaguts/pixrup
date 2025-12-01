@@ -1,3 +1,42 @@
+import type { SpyHuntComparable } from '@/components/properties/workspace/spyhunt/types';
+
+export type SpyHunt = {
+    property: {
+        lat: number;
+        lng: number;
+        square_footage: number;
+    };
+    filters: {
+        radius: number[];
+        defaults: {
+            radius: number;
+            mode: 'sale' | 'rent';
+        };
+    };
+    comps: {
+        summary: {
+            sale_count: number;
+            rent_count: number;
+        };
+        sale: SpyHuntComparable[];
+        rent: SpyHuntComparable[];
+    };
+    market_snapshot: {
+        avgPricePerFt: number;
+        avgRentPerFt: number;
+        daysOnMarket: number;
+        trend30d: number;
+        avgRentPrice: number;
+        avgSalePrice:number;
+        trend30dTotal:number;
+    };
+    value_estimate: {
+        price: number;
+        range_low: number;
+        range_high: number;
+    };
+};
+
 export type WorkspaceStatus =
     | 'in-progress'
     | 'ready'

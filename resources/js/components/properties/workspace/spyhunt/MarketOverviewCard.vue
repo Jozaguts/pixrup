@@ -3,9 +3,9 @@ import { Icon } from '@iconify/vue';
 import { computed } from 'vue';
 type Props = {
     label: string;
-    title: string;
+    title: string | number;
     icon: string;
-    percentage: number | null | string;
+    percentage?: number | string;
 }
 const {label='', title='', icon='', percentage=0} = defineProps<Props>()
 const classes = computed(() => {
@@ -14,9 +14,7 @@ const classes = computed(() => {
 </script>
 
 <template>
-    <div class="pa-2 md:col-span-3 lg:col-span-3">
-        <h2 class="text-2xl font-semibold tracking-tight text-[#1f2937] sm:text-2xl md:text-2xl mb-2">Market Overview</h2>
-        <div class="npo-form-shadow flex justify-between rounded-[12px] p-5">
+    <div class="npo-form-shadow flex justify-between rounded-[12px] p-5 min-h-[140px]">
             <div>
                 <h3
                     class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase"
@@ -32,10 +30,9 @@ const classes = computed(() => {
                         class="h-6 w-6 font-bold"
                     />
                 </div>
-                <span class="font-bold text-accent shadow-neu-in py-2 px-4 mt-3" :class="classes">{{percentage}}%</span>
+                <span v-if="percentage" class="font-bold text-accent shadow-neu-in py-2 px-4 mt-3" :class="classes">{{percentage}}%</span>
             </div>
 
-        </div>
     </div>
 </template>
 

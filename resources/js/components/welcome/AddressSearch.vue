@@ -97,7 +97,7 @@ const initializeAutocomplete = async () => {
             }
 
             const formattedAddress =
-                place.formatted_address ?? modelValue.value ?? '';
+                place.formatted_address?.replace(', USA', '') ?? modelValue.value ?? '';
             const placeId = place.place_id ?? '';
             const location = place.geometry?.location;
             const components = place.address_components ?? [];
@@ -118,6 +118,11 @@ const initializeAutocomplete = async () => {
                 components.find((component) =>
                     types.every((type) => component.types.includes(type)),
                 );
+            const streetComponent = findComponent(['route']);
+            const streetNumberComponent = findComponent(['street_number']);
+            const street = [streetNumberComponent?.long_name, streetComponent?.long_name]
+                .filter(Boolean)
+                .join(' ');
 
             const cityComponent =
                 findComponent(['locality']) ??
@@ -128,18 +133,23 @@ const initializeAutocomplete = async () => {
                 findComponent(['administrative_area_level_2']);
             const postalCodeComponent = findComponent(['postal_code']);
             const countryComponent = findComponent(['country']);
+            const  city = cityComponent?.long_name;
+            const  state = stateComponent?.short_name ?? stateComponent?.long_name;
+            const postalCode = postalCodeComponent?.long_name;
+            const country = countryComponent?.long_name;
+            const formattedForRentCast = `${street}, ${city}, ${state} ${postalCode}`;
 
             emit('place-selected', {
-                formattedAddress,
+                formattedAddress: formattedForRentCast,
                 placeId,
                 location: {
                     lat: location.lat(),
                     lng: location.lng(),
                 },
-                city: cityComponent?.long_name,
-                state: stateComponent?.short_name ?? stateComponent?.long_name,
-                postalCode: postalCodeComponent?.long_name,
-                country: countryComponent?.long_name,
+                city,
+                state,
+                postalCode,
+                country,
             });
         });
     } catch (error) {
