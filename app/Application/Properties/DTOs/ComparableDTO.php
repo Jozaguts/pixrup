@@ -53,6 +53,7 @@ class ComparableDTO
             'propertyType' => $comp['propertyType'],
             'latitude' => $comp['latitude'],
             'longitude' => $comp['longitude'],
+            'status' =>$comp['status'],
         ];
     }
 }

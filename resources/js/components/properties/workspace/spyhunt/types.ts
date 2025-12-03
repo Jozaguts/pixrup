@@ -1,4 +1,4 @@
-export type SpyHuntComparableStatus = 'sold' | 'active' | 'rental';
+export type SpyHuntComparableStatus = 'Active' | 'Inactive';
 
 export interface SpyHuntComparable {
     id: string;

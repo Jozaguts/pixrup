@@ -19,7 +19,7 @@ import {
 } from 'vue-map-ui';
 import MarketOverviewCard from '@/components/properties/workspace/spyhunt/MarketOverviewCard.vue';
 import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
-const { spyhunt, avgPrice, avgPerSqft, dayOnMarket, radius, radiusMatches, mode, comparables } = toRefs(useSpyHunt());
+const { spyhunt, avgPrice, dayOnMarket, radius, mode, comparables, trend30d, spyHuntProperty } = toRefs(useSpyHunt());
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -31,7 +31,7 @@ const props = defineProps<Props>();
 const loading = ref(false);
 const center = ref<LatLngTuple | LatLng>([0, 0]);
 
-const zoom = ref(14);
+const zoom = ref(13);
 const bounds = ref<LatLngBounds | null>(null);
 
 function onViewChanged(e: ViewChangedEvent) {
@@ -55,9 +55,11 @@ async function loadSpyHunt() {
 }
 
 const activeMarker = ref<LeafletMouseEvent | null>(null);
+const activeComparable = ref<SpyHuntComparable>()
 const markerScreenPos = ref({ x: 0, y: 0 });
-function onMarkHover(marker: LeafletMouseEvent): void {
+function onMarkHover(marker: LeafletMouseEvent, comparable: SpyHuntComparable): void {
     activeMarker.value = marker;
+    activeComparable.value = useSpyHunt().formatComparable(comparable)
     const point = marker.containerPoint;
     if (!point) {
         return;
@@ -77,22 +79,49 @@ onMounted(() => {
     <div class="flex flex-col gap-6 text-[#111827]">
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
         <section v-else-if="isReady">
-            <div class="mt-10 grid grid-cols-1 gap-4 md:grid-cols-12 lg:grid-cols-12">
-                <div class="max-h-[600px] min-h-[600px] rounded-[12px] bg-gray-200 shadow-neu-in md:col-span-9 lg:col-span-9">
+            <div class="mt-10 md:grid lg:grid gap-4 md:grid-cols-12 lg:grid-cols-12 flex flex-col">
+                <div class="h-full min-h-[600px] rounded-[12px] col-span-1 md:col-span-9 lg:col-span-9 ">
+                    <div class="flex flex-col lg:hidden md:hidden npo-form-shadow  p-4 rounded-[12px] mb-4 ">
+                        <div class="relative mb-6 ">
+                            <label for="labels-range-input" class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase">Radius</label>
+                            <input id="labels-range-input"
+                                   type="range"
+                                   :min="1"
+                                   :max="5"
+                                   :step="1"
+                                   :value="spyhunt.filters.defaults.radius"
+                                   @change="(v) => (spyhunt.filters.defaults.radius = v.target.value)"
+                                   class="w-full h-4  appearance-none cursor-pointer   overflow-hidden rounded-full !bg-[#e4e6ee] shadow-inner"
+                            >
+                            <span class="text-sm text-body absolute start-0 -bottom-6">1</span>
+                            <span class="text-sm text-body absolute start-1/2 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">3</span>
+                            <span class="text-sm text-body absolute end-0 -bottom-6">5</span>
+                        </div>
+                        <div class="mt-4">
+                            <span class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase">  Property type</span>
+                            <NeuphormistTabs
+                                :value="mode"
+                                @onchange="(v) => (spyhunt.filters.defaults.mode = v.id)"
+                                :items="[{id: 'sale', label: 'Sale'}, {id: 'rent', label: 'Rent'}]"
+                                parentClasses="flex w-fit    m-0 "
+                            />
+                        </div>
+                    </div>
                     <VMap
-                        :max-zoom="15"
+                        :max-zoom="16"
+                        :max-zoom-out="10"
+                        :bounce-at-zoom-limits="10"
+                        :scroll-wheel-zoom="false"
                         :center="center"
                         :zoom="zoom"
                         @view-changed="onViewChanged"
-                        class="h-full rounded-[12px]"
+                        class="min-h-[600px]  rounded-[12px]"
                     >
                         <VMapGoogleTileLayer />
                         <VMapZoomControl />
                         <VMapAttributionControl />
                         <VMapMarker
                             :latlng="[spyhunt.property?.lat, spyhunt?.property?.lng]"
-                            @mouseover="onMarkHover"
-                            @mouseout="activeMarker = null"
                         >
                             <VMapPinIcon color="#6e33ff" root-class="npo-form-shadow">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
@@ -106,21 +135,47 @@ onMounted(() => {
                             v-for="(comp, idx) in comparables"
                             :key="idx"
                             :latlng="[comp.latitude, comp.longitude]"
-                            @mouseover="onMarkHover"
+                            @mouseover="(e) => onMarkHover(e,comp)"
                             @mouseout="activeMarker = null"
-                        />
+                        >
+                            <VMapPinIcon :color="comp.status === 'Active' ? '#3B82F6': '#16A34A'" root-class="npo-form-shadow">
+                            </VMapPinIcon>
+                        </VMapMarker>
+
                         <transition name="fade">
                             <div
                                 v-if="activeMarker"
-                                class="absolute z-[500] w-56 rounded-lg border border-gray-200 bg-white p-3 shadow-lg"
+                                class="absolute z-[600] min-full  max-w-[340px] m rounded-lg shadow-neu-in bg-gray-200 p-4"
                                 :style="{
                                     top: markerScreenPos.y + 'px',
-                                    left: markerScreenPos.x + 150 + 'px',
+                                    left: markerScreenPos.x + 200 + 'px',
                                     transform: 'translate(-50%, -100%)',
                                 }"
                             >
-                                <p class="font-semibold text-gray-800">activeMarker</p>
-                                <p class="text-sm text-gray-600">Price:</p>
+                                <p class="font-semibold text-gray-800">{{activeComparable.address}}</p>
+                                 <div class="flex gap-2 text-gray-600 mt-1 mb-3">
+                                     <span class="text-sm">{{activeComparable.price}}</span> -
+                                     <span class="text-sm">{{activeComparable.squareFootage}} sqft</span> -
+                                     <span class="text-sm">{{activeComparable.pricePerFt}}/ft²</span>
+                                 </div>
+                                 <div class="flex gap-x-4">
+                                     <div class="text-base inline-flex justify-center items-center">
+                                         <Icon icon="ph:bulldozer-light" class="w-6 h-6 "></Icon>
+                                         <span class=" ml-1 ">{{activeComparable.yearBuilt}}</span>
+                                     </div>
+                                     <div class="text-base inline-flex justify-center items-center">
+                                         <Icon icon="material-symbols-light:bedroom-parent-outline" class="w-6 h-6 "></Icon>
+                                         <span class=" ml-1 ">{{activeComparable.bedrooms}}</span>
+                                     </div>
+                                     <div class="text-base inline-flex justify-center items-center">
+                                         <Icon icon="material-symbols-light:shower-outline" class="w-6 h-6 "></Icon>
+                                         <span class=" ml-1">{{activeComparable.bathrooms}}</span>
+                                     </div>
+                                     <div class="text-sm inline-flex justify-center items-center">
+                                         <Icon icon="game-icons:path-distance" class="w-5 h-5 "></Icon>
+                                         <span class=" ml-1">{{activeComparable.distance}}</span>
+                                     </div>
+                                 </div>
                             </div>
                         </transition>
                         <section class="absolute top-0 left-0 z-[700] p-2 flex flex-col md:flex-row lg:flex-row gap-2">
@@ -128,22 +183,68 @@ onMounted(() => {
                                 :value="spyhunt.filters.defaults.radius"
                                 @onchange="(v) => (spyhunt.filters.defaults.radius = v.id)"
                                 :items="radius"
-                                parentClasses="!flex mx-0"
+                                parentClasses="hidden"
                             />
                             <NeuphormistTabs
                                 :value="mode"
                                 @onchange="(v) => (spyhunt.filters.defaults.mode = v.id)"
                                 :items="[{id: 'sale', label: 'Sale'}, {id: 'rent', label: 'Rent'}]"
-                                parentClasses="!flex mx-0 w-fit"
+                                parentClasses="hidden"
                             />
                         </section>
-                        <section class="absolute md:top-[50%] lg:top-[50%] bottom-0 left-0 z-[700] p-2 ">
-                            <div class="npo-form-shadow flex flex-col rounded-[12px] p-4 ">
+                        <section class="absolute md:top-[50%] lg:top-[50%] bottom-0 left-0 z-[700] p-2 w-full lg:w-fit md:w-fit ">
+                            <div class="npo-form-shadow flex flex-col rounded-[12px] p-4">
                                 <div class="flex gap-2 items-center md:max-w-[300px] lg:max-w-[300px] max-w-[200px] lg:text-base md:text-base text-sm ">
                                     <Icon icon="ph:map-pin-bold"  class="h-8 w-8 font-bold text-primary  "/>
-                                    <p class="truncate ">  {{spyhunt.property.title}}</p>
+                                    <p class="truncate ">  {{spyHuntProperty.title}}</p>
                                 </div>
-                                <p class="text-xs">Properties within this radius: {{ radiusMatches }} Comparables</p>
+                                <div>
+                                    <div class="flex gap-2 text-gray-600 mt-1 mb-3">
+                                        <span class="text-sm font-bold">{{spyHuntProperty.price}}</span> -
+                                        <span class="text-sm">{{spyHuntProperty.square_footage}} sqft</span> -
+                                        <span class="text-sm">{{spyHuntProperty.pricePerFt}}/ft²</span>
+                                    </div>
+                                    <div class="w-full text-base font-bold my-2">
+                                      <div class="flex items-center- justify-between">
+                                          <p class="text-lg">Low Estimate</p>
+                                          <span>{{spyHuntProperty.lowest_estimate_price}}</span>
+                                      </div>
+                                        <div
+                                            class="relative h-6 w-full overflow-hidden rounded-full !bg-[#e4e6ee] shadow-inner"
+                                        >
+                                            <div class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r transition-all duration-500 ease-out from-[#ccf] to-[#6e33ff] w-[70%]" />
+                                        </div>
+                                        <div class="flex items-center- justify-between">
+                                            <p class="text-lg">High Estimate</p>
+                                            <span>{{spyHuntProperty.highest_estimate_price}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-x-4">
+                                        <div class="text-base inline-flex justify-center items-center">
+                                            <Icon icon="material-symbols-light:bedroom-parent-outline" class="w-6 h-6 "></Icon>
+                                                <span class=" ml-1 ">{{spyHuntProperty.bedrooms}}</span>
+                                        </div>
+                                        <div class="text-base inline-flex justify-center items-center">
+                                            <Icon icon="material-symbols-light:shower-outline" class="w-6 h-6 "></Icon>
+                                            <span class=" ml-1">{{spyHuntProperty.bathrooms}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs mt-4">Properties within this radius: {{ spyHuntProperty.radiusMatches }} Comparables</p>
+                            </div>
+                        </section>
+                        <section class="absolute bottom-0 right-0 z-[9999] hidden md:block lg:block p-2 ">
+                            <div class=" shadow-neu-in bg-gray-200 flex flex-col rounded-[12px] p-4 ">
+                                <div class="flex gap-x-4">
+                                    <div class="flex items-center justify-center">
+                                        <Icon icon="pajamas:status-active"  class="h-4 w-4 font-bold text-[#3B82F6]  "/>
+                                        <span class="ml-2">Active</span>
+                                    </div>
+                                    <div class="flex items-center justify-center">
+                                        <Icon icon="pajamas:status-active"  class="h-4 w-4 font-bold text-[#16A34A]  "/>
+                                        <span class="ml-2">Inactive</span>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </VMap>
@@ -153,38 +254,42 @@ onMounted(() => {
                         Market Overview
                     </h2>
                     <div class="flex flex-col gap-4">
-                        <MarketOverviewCard
-                            icon="ph:currency-dollar-bold"
-                            label="Avg. Price"
-                            :title="avgPrice.value"
-                            :percentage="avgPrice.percentDiff"
-                        />
-                        <MarketOverviewCard
-                            icon="ph:currency-dollar-bold"
-                            label="Avg. price per sqft"
-                            :title="avgPerSqft.value"
-                            :percentage="avgPerSqft.percentDiff"
-                        />
-                        <MarketOverviewCard
-                            icon="ph:chart-bar"
-                            label="Avg. Days on market"
-                            :title="dayOnMarket.value"
-                            :percentage="dayOnMarket.percentDiff"
-                        />
-                        <MarketOverviewCard
-                            icon="ph:chart-line"
-                            label="Trend 30D"
-                            :title="spyhunt.market_snapshot.trend30d ?? 'No information in the last 30 days '"
-                        />
-                        <MarketOverviewCard
-                            icon="ph:chart-line"
-                            label="ZIP Avg Days on Market"
-                            :title="
-                                spyhunt.stats.zipDom
-                                    ? spyhunt.stats.zipDom + ' D'
-                                    : 'No information in the last 30 days'
-                            "
-                        />
+                        <div class="  bg-gray-200 justify-between rounded-[12px] p-5 md:grid lg:grid flex flex-col sm:gap-3 grid-cols-2 gap-4">
+                            <MarketOverviewCard
+                                icon="ph:currency-dollar-bold"
+                                label="Avg. Price"
+                                :title="avgPrice.value"
+                                :percentage="avgPrice.percentDiff"
+                            />
+                            <MarketOverviewCard
+                                icon="ph:currency-dollar-bold"
+                                label="Avg. Price"
+                                :title="avgPrice.value"
+                                :percentage="avgPrice.percentDiff"
+                            />
+                            <MarketOverviewCard
+                                icon="ph:chart-bar"
+                                label="Avg. Days on market"
+                                :title="dayOnMarket.value"
+                                :percentage="dayOnMarket.percentDiff"
+                            />
+                            <MarketOverviewCard
+                                icon="ph:chart-line"
+                                label="Trend 30D"
+                                :title="trend30d.value"
+                                :percentage="trend30d.percentDiff"
+                            />
+                            <MarketOverviewCard
+                                icon="ph:chart-line"
+                                label="ZIP Avg Days on Market"
+                                class="lg:col-span-2 md:col-span-2"
+                                :title="
+                                    spyhunt.stats.zipDom
+                                        ? spyhunt.stats.zipDom + ' D'
+                                        : 'No information in the last 30 days'
+                                "
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

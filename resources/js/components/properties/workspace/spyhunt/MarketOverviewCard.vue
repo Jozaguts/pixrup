@@ -30,7 +30,7 @@ const classes = computed(() => {
                         class="h-6 w-6 font-bold"
                     />
                 </div>
-                <span v-if="percentage" class="font-bold text-accent shadow-neu-in py-2 px-4 mt-3" :class="classes">{{percentage}}%</span>
+                <span v-if="percentage" class="font-bold text-accent shadow-neu-in py-2 px-4 mt-3 min-w-[80px] text-center" :class="classes">{{percentage}}</span>
             </div>
 
     </div>

@@ -61,47 +61,38 @@ export default function useSpyHunt() {
         });
        return USDollar.format(value)
     }
+    const numberFormat = (value: number) => {
+        const format =  new Intl.NumberFormat('en-US', )
+        return format.format(value)
+    }
     const mode = computed(()=> spyhunt.value.filters.defaults.mode)
     const avgPrice = computed(() =>{
         const diff = spyhunt.value.value_estimate.price - spyhunt.value.market_snapshot.avgSalePrice;
         const percentDiff = ((diff / spyhunt.value.market_snapshot.avgSalePrice) * 100).toFixed(1);
         return {
-            value: moneyFormat(
-                spyhunt.value.filters.defaults.mode == 'sale'
-                    ? spyhunt.value.market_snapshot.avgSalePrice
-                    : (spyhunt.value.market_snapshot.avgRentPrice ?? 0),
-            ),
-            percentDiff,
+            value: moneyFormat(mode.value === 'sale' ? spyhunt.value.market_snapshot.avgSalePrice : spyhunt.value.market_snapshot.avgRentPrice),
+            percentDiff: mode.value === 'sale' ? percentDiff + '%' : 'N/A',
         }
     })
     const avgPerSqft = computed(() =>{
         const mode = spyhunt.value.filters.defaults.mode
-        const propertyPricePerFt = spyhunt.value.value_estimate.price / spyhunt.value.property.square_footage
-        const marketAvg = mode === 'sale'
-            ? spyhunt.value.market_snapshot.avgPricePerFt
-            : spyhunt.value.market_snapshot.avgRentPerFt
-        const diff = propertyPricePerFt - marketAvg
-        const percentDiff = ((diff / marketAvg) * 100).toFixed(1)
-
-        return {
-            value: moneyFormat(
-                spyhunt.value.filters.defaults.mode == 'sale'
-                    ? spyhunt.value.market_snapshot.avgPricePerFt
-                    : (spyhunt.value.market_snapshot.avgRentPerFt ?? 0),
-            ),
-            percentDiff: percentDiff
-        }
+            const propertyPricePerFt = spyhunt.value.value_estimate.price / spyhunt.value.property.square_footage
+            const marketAvg = spyhunt.value.market_snapshot.avgPricePerFt
+            const diff = propertyPricePerFt - marketAvg
+            const percentDiff = ((diff / marketAvg) * 100).toFixed(1) + '%'
+            return{
+                value: moneyFormat(mode.value === 'sale' ? spyhunt.value.market_snapshot.avgPricePerFt : spyhunt.value.market_snapshot.avgRentPerFt),
+                percentDiff: mode === 'sale' ? percentDiff  : 'N/A',
+            }
     })
     const dayOnMarket = computed(() =>{
-        const diff =  spyhunt.value.stats.subjectDom -  spyhunt.value.market_snapshot.daysOnMarket;
-        const percentDiff = ((diff / spyhunt.value.market_snapshot.daysOnMarket) * 100).toFixed(1);
         return {
             value: spyhunt.value.market_snapshot.daysOnMarket,
-            percentDiff
+            percentDiff: spyhunt.value.stats.subjectDom + 'D'
         }
     })
     const radius = computed(() =>{
-        return spyhunt.value.filters.radius.map((r) => ({id: r, label: r + 'ml', icon: 'ph:map-pin-simple-area-light'}))
+        return spyhunt.value.filters.radius.map((r) => ({id: r, label: r + 'mi', icon: 'ph:map-pin-simple-area-light'}))
     })
     const radiusMatches = computed(() =>{
        return spyhunt.value.comps[mode.value].filter((comp) => comp.distance <= spyhunt.value.filters.defaults.radius)?.length ?? 0
@@ -109,8 +100,51 @@ export default function useSpyHunt() {
     const comparables = computed(()=>{
         return spyhunt.value.comps[mode.value].filter((comp) => comp.distance <= spyhunt.value.filters.defaults.radius)
     })
+    const trend30d = computed(() =>{
+        const value =  spyhunt.value.market_snapshot.trend30d.toFixed(2)  + '%'
+        const propertyPricePerFt = spyhunt.value.value_estimate.price / spyhunt.value.property.square_footage
+        const avgPerSqft = spyhunt.value.market_snapshot.avgPricePerFt
+        const diff = propertyPricePerFt - avgPerSqft
 
+        const percentDiff =( (diff / avgPerSqft) * 100).toFixed(2) + '%'
+
+        return {
+            value,
+            percentDiff
+        }
+    })
+    const formatComparable = (comparable: SpyHuntComparable)=>{
+        if (!Object.keys(comparable).length){
+            return
+        }
+        const price = comparable?.price ?? 0
+        const squareFootage = comparable?.squareFootage ?? 0
+        const pricePerFt =( price / squareFootage) .toFixed(0)
+        const distance = comparable.distance.toFixed(2)
+        return {
+            ...comparable,
+            price: moneyFormat(price),
+            squareFootage: numberFormat(squareFootage),
+            pricePerFt: moneyFormat(pricePerFt),
+            distance
+        }
+    }
+    const spyHuntProperty  = computed(() =>{
+        const propertyPrice = spyhunt.value.value_estimate.price ?? 0
+        const propertySquareFootage = spyhunt.value.property.square_footage ?? 0
+        const pricePerFt =( propertyPrice / propertySquareFootage).toFixed(2)
+        return {
+            ...spyhunt.value.property,
+            square_footage: numberFormat(propertySquareFootage),
+            price: moneyFormat(propertyPrice),
+            pricePerFt: moneyFormat(pricePerFt),
+            radiusMatches: radiusMatches.value,
+            lowest_estimate_price: moneyFormat(spyhunt.value.value_estimate.range_low),
+            highest_estimate_price:moneyFormat( spyhunt.value.value_estimate.range_high),
+        }
+    })
     return {
+        spyHuntProperty,
         spyhunt,
         avgPrice,
         avgPerSqft,
@@ -119,7 +153,9 @@ export default function useSpyHunt() {
         radiusMatches,
         mode,
         comparables,
+        trend30d,
         formatAddress,
-        moneyFormat
+        moneyFormat,
+        formatComparable
     }
 }
