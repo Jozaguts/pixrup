@@ -21,8 +21,8 @@ export default function useSpyHunt() {
                 sale_count: 0,
                 rent_count: 0,
             },
-            sale: [] as SpyHuntComparable,
-            rent: [] as SpyHuntComparable,
+            sale: [] as SpyHuntComparable[],
+            rent: [] as SpyHuntComparable[],
         },
         market_snapshot: {
             avgPricePerFt: 0,
@@ -37,6 +37,9 @@ export default function useSpyHunt() {
             price: 0,
             range_low: 0,
             range_high: 0,
+        },
+        stats:{
+            subjectDom: ''
         }
     });
     const formatAddress = (property: PropertyWorkspaceProperty) => {
@@ -75,14 +78,13 @@ export default function useSpyHunt() {
         }
     })
     const avgPerSqft = computed(() =>{
-        const mode = spyhunt.value.filters.defaults.mode
             const propertyPricePerFt = spyhunt.value.value_estimate.price / spyhunt.value.property.square_footage
             const marketAvg = spyhunt.value.market_snapshot.avgPricePerFt
             const diff = propertyPricePerFt - marketAvg
             const percentDiff = ((diff / marketAvg) * 100).toFixed(1) + '%'
             return{
                 value: moneyFormat(mode.value === 'sale' ? spyhunt.value.market_snapshot.avgPricePerFt : spyhunt.value.market_snapshot.avgRentPerFt),
-                percentDiff: mode === 'sale' ? percentDiff  : 'N/A',
+                percentDiff: mode.value === 'sale' ? percentDiff  : 'N/A',
             }
     })
     const dayOnMarket = computed(() =>{
@@ -119,8 +121,8 @@ export default function useSpyHunt() {
         }
         const price = comparable?.price ?? 0
         const squareFootage = comparable?.squareFootage ?? 0
-        const pricePerFt =( price / squareFootage) .toFixed(0)
-        const distance = comparable.distance.toFixed(2)
+        const pricePerFt =( price / squareFootage)
+        const distance = comparable.distance
         return {
             ...comparable,
             price: moneyFormat(price),
@@ -132,7 +134,7 @@ export default function useSpyHunt() {
     const spyHuntProperty  = computed(() =>{
         const propertyPrice = spyhunt.value.value_estimate.price ?? 0
         const propertySquareFootage = spyhunt.value.property.square_footage ?? 0
-        const pricePerFt =( propertyPrice / propertySquareFootage).toFixed(2)
+        const pricePerFt =( propertyPrice / propertySquareFootage)
         return {
             ...spyhunt.value.property,
             square_footage: numberFormat(propertySquareFootage),

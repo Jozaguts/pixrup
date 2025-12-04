@@ -35,6 +35,9 @@ export type SpyHunt = {
         range_low: number;
         range_high: number;
     };
+    stats:{
+        subjectDom: number |  string
+    }
 };
 
 export type WorkspaceStatus =

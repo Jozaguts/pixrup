@@ -19,7 +19,7 @@ import {
 } from 'vue-map-ui';
 import MarketOverviewCard from '@/components/properties/workspace/spyhunt/MarketOverviewCard.vue';
 import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
-const { spyhunt, avgPrice, dayOnMarket, radius, mode, comparables, trend30d, spyHuntProperty } = toRefs(useSpyHunt());
+const { spyhunt, avgPrice, dayOnMarket, radius, mode, comparables, trend30d, spyHuntProperty, avgPerSqft } = toRefs(useSpyHunt());
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -59,7 +59,7 @@ const activeComparable = ref<SpyHuntComparable>()
 const markerScreenPos = ref({ x: 0, y: 0 });
 function onMarkHover(marker: LeafletMouseEvent, comparable: SpyHuntComparable): void {
     activeMarker.value = marker;
-    activeComparable.value = useSpyHunt().formatComparable(comparable)
+    activeComparable.value = useSpyHunt().formatComparable(comparable) as unknown as SpyHuntComparable
     const point = marker.containerPoint;
     if (!point) {
         return;
@@ -90,7 +90,7 @@ onMounted(() => {
                                    :max="5"
                                    :step="1"
                                    :value="spyhunt.filters.defaults.radius"
-                                   @change="(v) => (spyhunt.filters.defaults.radius = v.target.value)"
+                                   @change="(v) => (spyhunt.filters.defaults.radius = v?.target?.value)"
                                    class="w-full h-4  appearance-none cursor-pointer   overflow-hidden rounded-full !bg-[#e4e6ee] shadow-inner"
                             >
                             <span class="text-sm text-body absolute start-0 -bottom-6">1</span>
@@ -110,7 +110,6 @@ onMounted(() => {
                     <VMap
                         :max-zoom="16"
                         :max-zoom-out="10"
-                        :bounce-at-zoom-limits="10"
                         :scroll-wheel-zoom="false"
                         :center="center"
                         :zoom="zoom"
@@ -152,28 +151,28 @@ onMounted(() => {
                                     transform: 'translate(-50%, -100%)',
                                 }"
                             >
-                                <p class="font-semibold text-gray-800">{{activeComparable.address}}</p>
+                                <p class="font-semibold text-gray-800">{{activeComparable?.address}}</p>
                                  <div class="flex gap-2 text-gray-600 mt-1 mb-3">
-                                     <span class="text-sm">{{activeComparable.price}}</span> -
-                                     <span class="text-sm">{{activeComparable.squareFootage}} sqft</span> -
-                                     <span class="text-sm">{{activeComparable.pricePerFt}}/ft²</span>
+                                     <span class="text-sm">{{activeComparable?.price}}</span> -
+                                     <span class="text-sm">{{activeComparable?.squareFootage}} sqft</span> -
+                                     <span class="text-sm">{{activeComparable?.pricePerFt}}/ft²</span>
                                  </div>
                                  <div class="flex gap-x-4">
                                      <div class="text-base inline-flex justify-center items-center">
                                          <Icon icon="ph:bulldozer-light" class="w-6 h-6 "></Icon>
-                                         <span class=" ml-1 ">{{activeComparable.yearBuilt}}</span>
+                                         <span class=" ml-1 ">{{activeComparable?.yearBuilt}}</span>
                                      </div>
                                      <div class="text-base inline-flex justify-center items-center">
                                          <Icon icon="material-symbols-light:bedroom-parent-outline" class="w-6 h-6 "></Icon>
-                                         <span class=" ml-1 ">{{activeComparable.bedrooms}}</span>
+                                         <span class=" ml-1 ">{{activeComparable?.bedrooms}}</span>
                                      </div>
                                      <div class="text-base inline-flex justify-center items-center">
                                          <Icon icon="material-symbols-light:shower-outline" class="w-6 h-6 "></Icon>
-                                         <span class=" ml-1">{{activeComparable.bathrooms}}</span>
+                                         <span class=" ml-1">{{activeComparable?.bathrooms}}</span>
                                      </div>
                                      <div class="text-sm inline-flex justify-center items-center">
                                          <Icon icon="game-icons:path-distance" class="w-5 h-5 "></Icon>
-                                         <span class=" ml-1">{{activeComparable.distance}}</span>
+                                         <span class=" ml-1">{{activeComparable?.distance}}</span>
                                      </div>
                                  </div>
                             </div>
@@ -263,9 +262,9 @@ onMounted(() => {
                             />
                             <MarketOverviewCard
                                 icon="ph:currency-dollar-bold"
-                                label="Avg. Price"
-                                :title="avgPrice.value"
-                                :percentage="avgPrice.percentDiff"
+                                label="Avg. Price per Sqft"
+                                :title="avgPerSqft.value"
+                                :percentage="avgPerSqft.percentDiff"
                             />
                             <MarketOverviewCard
                                 icon="ph:chart-bar"
