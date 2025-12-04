@@ -7,10 +7,10 @@
  * Expected Result: Implements the property worth repository interface using Laravel models.
  */
 
-namespace App\Infrastructure\Appraisal\Persistence;
+namespace App\Infrastructure\Property\Persistence;
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Domain\Appraisal\Entities\PropertyWorth as PropertyWorthEntity;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Domain\Appraisal\Entities\AppraisalSnapshot as PropertyWorthEntity;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
 use App\Models\PropertyWorth;
 use Carbon\Carbon;
@@ -76,7 +76,7 @@ class EloquentPropertyWorthRepository implements PropertyWorthRepositoryInterfac
 
     /**
      * Description: Convert an Eloquent model instance into a domain entity representation.
-     * Parameters: PropertyWorth $model Persisted model instance.
+     * Parameters: AppraisalSnapshot $model Persisted model instance.
      * Returns: PropertyWorthEntity
      * Expected Result: Domain entity mirrors the model's persisted state.
      */

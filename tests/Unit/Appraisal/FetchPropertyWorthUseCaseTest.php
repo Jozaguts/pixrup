@@ -1,8 +1,8 @@
 <?php
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Application\Appraisal\Services\AppraisalService;
-use App\Application\Appraisal\UseCases\FetchPropertyWorthUseCase;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Application\Properties\Services\AppraisalService;
+use App\Application\Properties\UseCases\FetchPropertyWorthUseCase;
 use App\Models\Property;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;

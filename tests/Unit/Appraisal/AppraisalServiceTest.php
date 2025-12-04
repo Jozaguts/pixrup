@@ -1,15 +1,15 @@
 <?php
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Application\Appraisal\Services\AppraisalService;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Application\Properties\Services\AppraisalService;
 use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
-use App\Infrastructure\Appraisal\Persistence\EloquentPropertyWorthRepository;
-use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
+use App\Infrastructure\Property\Persistence\EloquentPropertyWorthRepository;
+use App\Infrastructure\Property\Providers\MockAppraisalProvider;
 use App\Models\Property;
-use App\Models\User;
 use App\Models\UsagePropertyMonthly;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

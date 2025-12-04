@@ -7,12 +7,11 @@
  * Expected Result: Enables local development and tests without hitting external APIs.
  */
 
-namespace App\Infrastructure\Appraisal\Providers;
+namespace App\Infrastructure\Property\Providers;
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Domain\Appraisal\Entities\PropertyWorth;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Domain\Appraisal\Entities\AppraisalSnapshot;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
-use App\Models\Property;
 use Carbon\Carbon;
 
 /**
@@ -31,7 +30,7 @@ class MockAppraisalProvider implements AppraisalProviderInterface
      * Returns: PropertyWorthDTO
      * Expected Result: Returns static valuation data emulating provider output.
      */
-    public function fetchValue(Property | PropertyWorth $property): PropertyWorthDTO
+    public function fetchValue(AppraisalSnapshot $property): PropertyWorthDTO
     {
         $baseValue = 485000;
         $offset = ($property->id ?? 0) % 1000;

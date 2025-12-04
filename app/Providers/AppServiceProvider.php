@@ -37,12 +37,6 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Auth\Persistence\EloquentUserRepository::class
         );
         $this->app->bind(
-            PropertyWorthRepositoryInterface::class,
-            EloquentPropertyWorthRepository::class,
-        );
-
-        // todo moverlo al controlador
-        $this->app->bind(
             GlowUpImageProvider::class,
             function ($app) {
                 $provider = config('services.glowup.provider', 'fake');
@@ -53,17 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 };
             }
         );
-        $this->app->bind(
-            AppraisalProviderInterface::class,
-            function ($app) {
-                $provider = config('services.appraisal.provider', 'mock');
 
-                return match ($provider) {
-                    'housecanary' => $app->make(HouseCanaryProvider::class),
-                    default => $app->make(MockAppraisalProvider::class),
-                };
-            }
-        );
         $this->app->bind(
             FortifyRedirectAsIntended::class,
             AppRedirectAsIntended::class,

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Property\Providers;
 
+use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Properties\Repositories\PropertyPhotoRepositoryInterface;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
 use App\Domain\Properties\Repositories\SpyHuntCacheRepositoryInterface;
@@ -35,6 +36,17 @@ class PropertyServiceProvider extends ServiceProvider
                     $app->make(RedisSpyHuntCacheRepository::class),
                     $app->make(SpyHuntCacheRepository::class)
                 );
-            });
+        });
+        $this->app->bind(
+            AppraisalProviderInterface::class,
+            function ($app) {
+                $provider = config('services.appraisal.provider', 'mock');
+
+                return match ($provider) {
+                    'housecanary' => $app->make(HouseCanaryProvider::class),
+                    default => $app->make(MockAppraisalProvider::class),
+                };
+            }
+        );
     }
 }

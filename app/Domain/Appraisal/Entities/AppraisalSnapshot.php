@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Description: File declaring the PropertyWorth domain entity representing a persisted valuation.
+ * Description: File declaring the AppraisalSnapshot domain entity representing a persisted valuation.
  * Parameters: None.
  * Returns: Void.
- * Expected Result: Exposes the PropertyWorth entity for domain-level operations.
+ * Expected Result: Exposes the AppraisalSnapshot entity for domain-level operations.
  */
 
 namespace App\Domain\Appraisal\Entities;
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
 use Carbon\Carbon;
 
 /**
@@ -18,7 +18,7 @@ use Carbon\Carbon;
  * Returns: Not applicable.
  * Expected Result: Encapsulates valuation attributes independent from infrastructure concerns.
  */
-class PropertyWorth
+readonly class AppraisalSnapshot
 {
     /**
      * Description: Build an immutable domain entity for property valuation data.
@@ -27,15 +27,15 @@ class PropertyWorth
      * Expected Result: Domain entity mirrors stored valuation values.
      */
     public function __construct(
-        public readonly float $value,
-        public readonly float $value_low,
-        public readonly float $value_high,
-        public readonly float $confidence,
-        public readonly array $comparables,
-        public readonly string $provider,
-        public readonly Carbon $fetched_at,
-        public readonly Carbon $created_at,
-        public readonly Carbon $updated_at,
+        public float $value,
+        public float $value_low,
+        public float $value_high,
+        public float $confidence,
+        public array $comparables,
+        public string $provider,
+        public Carbon $fetched_at,
+        public Carbon $created_at,
+        public Carbon $updated_at,
     ) {
     }
 

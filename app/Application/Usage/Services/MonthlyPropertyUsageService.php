@@ -15,17 +15,17 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class MonthlyPropertyUsageService
+readonly class MonthlyPropertyUsageService
 {
     public function __construct(
-        private readonly PlanResolver $planResolver,
-        private readonly UsageScopeResolver $scopeResolver,
-        private readonly UsagePeriodService $periodService,
+        private PlanResolver $planResolver,
+        private UsageScopeResolver $scopeResolver,
+        private UsagePeriodService $periodService,
     ) {
     }
 
     /**
-     * @throws FeatureLimitExceededException
+     * @throws FeatureLimitExceededException|\Throwable
      */
     public function ensureUsage(User $user, Property $property, UsageAction $action): void
     {

@@ -1,10 +1,10 @@
 <?php
 
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
-use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
+use App\Infrastructure\Property\Providers\MockAppraisalProvider;
 use App\Models\Property;
-use App\Models\User;
 use App\Models\UsagePropertyMonthly;
+use App\Models\User;
 
 /**
  * Test that the worth fetch endpoint returns valuation payload via Inertia.

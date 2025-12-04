@@ -9,8 +9,8 @@
 
 namespace App\Domain\Appraisal\Providers;
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Domain\Appraisal\Entities\PropertyWorth;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Domain\Properties\Entities\PropertyEntity;
 
 /**
  * Description: Contract for external valuation providers supplying property worth data.
@@ -22,9 +22,10 @@ interface AppraisalProviderInterface
 {
     /**
      * Description: Fetch property valuation data from the underlying provider.
-     * Parameters: Property $property Eloquent property model containing location metadata.
+     * Parameters: Property $property  property entity containing location metadata.
      * Returns: PropertyWorthDTO
      * Expected Result: Returns normalized valuation payload ready for application processing.
      */
-    public function fetchValue(PropertyWorth $property): PropertyWorthDTO;
+    public function fetchValue(PropertyEntity $property): PropertyWorthDTO;
+
 }

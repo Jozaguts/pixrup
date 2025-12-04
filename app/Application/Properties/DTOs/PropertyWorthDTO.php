@@ -7,7 +7,7 @@
  * Expected Result: Provides a strongly typed DTO for property worth responses.
  */
 
-namespace App\Application\Appraisal\DTOs;
+namespace App\Application\Properties\DTOs;
 
 use Carbon\Carbon;
 
@@ -34,6 +34,7 @@ class PropertyWorthDTO
         public string $provider,
         public Carbon $fetched_at,
         public ?Carbon $cached_at = null,
+        public mixed $trend30 = null
     ) {
     }
 }

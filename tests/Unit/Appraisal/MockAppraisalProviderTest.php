@@ -1,6 +1,6 @@
 <?php
 
-use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
+use App\Infrastructure\Property\Providers\MockAppraisalProvider;
 use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

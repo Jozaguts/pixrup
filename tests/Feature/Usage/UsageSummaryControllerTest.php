@@ -10,7 +10,12 @@ test('usage summary endpoint returns current snapshot', function (): void {
         'plan' => 'professional',
     ]);
 
-    $property = Property::factory()->create();
+    $property = Property::factory()->create([
+        'user_id' => $user->id,
+        'bedrooms' => 2,
+        'bathrooms' => 3,
+        'square_footage' => 900,
+    ]);
     $periodKey = now('UTC')->format('Y-m');
 
     UsagePropertyMonthly::query()->create([

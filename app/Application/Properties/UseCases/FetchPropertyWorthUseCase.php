@@ -7,10 +7,11 @@
  * Expected Result: Exposes a use case to drive backend controller interactions.
  */
 
-namespace App\Application\Appraisal\UseCases;
+namespace App\Application\Properties\UseCases;
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Application\Appraisal\Services\AppraisalService;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Application\Properties\Services\AppraisalService;
+use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Models\Property;
 
 /**
@@ -19,7 +20,7 @@ use App\Models\Property;
  * Returns: Not applicable.
  * Expected Result: Controllers invoke this use case to obtain valuation DTOs for responses.
  */
-class FetchPropertyWorthUseCase
+readonly class FetchPropertyWorthUseCase
 {
     /**
      * Description: Build the use case with its supporting service.
@@ -28,7 +29,7 @@ class FetchPropertyWorthUseCase
      * Expected Result: Use case ready to serve controller or job invocations.
      */
     public function __construct(
-        private readonly AppraisalService $service,
+        private AppraisalService $service,
     ) {
     }
 
@@ -37,6 +38,7 @@ class FetchPropertyWorthUseCase
      * Parameters: Property $property Property instance to evaluate.
      * Returns: PropertyWorthDTO
      * Expected Result: Returns DTO produced by the application service for the property.
+     * @throws FeatureLimitExceededException|\Throwable
      */
     public function execute(Property $property): PropertyWorthDTO
     {

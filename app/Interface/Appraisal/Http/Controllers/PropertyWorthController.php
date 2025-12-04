@@ -9,8 +9,8 @@
 
 namespace App\Interface\Appraisal\Http\Controllers;
 
-use App\Application\Appraisal\DTOs\PropertyWorthDTO;
-use App\Application\Appraisal\UseCases\FetchPropertyWorthUseCase;
+use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Application\Properties\UseCases\FetchPropertyWorthUseCase;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
@@ -48,7 +48,6 @@ class PropertyWorthController extends Controller
 
             return $inertia->toResponse($request);
         } catch (FeatureLimitExceededException $exception) {
-            /** @var InertiaResponse $inertia */
             $inertia = Inertia::render('Appraisal/PixrWorth', [
                 'worth' => null,
                 'property' => $this->transformProperty($property),
@@ -59,6 +58,12 @@ class PropertyWorthController extends Controller
             ]);
 
             return $inertia->toResponse($request)->setStatusCode(403);
+        } catch (\Throwable $e) {
+            return Inertia::render('Appraisal/PixrWorth', [
+                'worth' => null,
+                'property' => $this->transformProperty($property),
+                'errors' => ['worth' => $e->getMessage()],
+            ])->toResponse($request)->setStatusCode(500);
         }
     }
 

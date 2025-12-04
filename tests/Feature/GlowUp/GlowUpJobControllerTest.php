@@ -56,7 +56,7 @@ test('glowup job creation respects plan limits', function (): void {
     config(['plans.tiers.professional.limit' => 0]);
 
     $user = User::factory()->create(['plan' => 'professional']);
-    $property = Property::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
 
@@ -86,6 +86,7 @@ test('glowup job creation respects plan limits', function (): void {
 test('users can attach finished glowup jobs to the property', function (): void {
     $user = User::factory()->create();
     $property = Property::factory()->create([
+        'user_id' => $user->id,
         'metadata' => [],
     ]);
 

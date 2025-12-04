@@ -66,6 +66,11 @@ return [
     'rentcast' => [
         'api_key' => env('RENT_CAST_API_KEY'),
         'base_url' => env('RENT_CAST_API_BASE_URL', 'https://api.rentcast.io/v1/'),
+    ],
+    'house_canary' => [
+        'api_key' => env('HC_API_KEY'),
+        'secret' => env('HC_API_SECRET'),
+        'base_url' => env('HC_API_BASE_URL', 'https://api.housecanary.com/'),
     ]
 
 ];
