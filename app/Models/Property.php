@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Domain\Properties\Entities\PropertyEntity;
 use App\Models\Scopes\OwnProperties;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,5 +57,26 @@ class Property extends Model
     public function glowupJobs(): HasMany
     {
         return $this->hasMany(GlowupJob::class);
+    }
+    public function toEntity(): PropertyEntity
+    {
+        return new PropertyEntity(
+            $this->id,
+            $this->title,
+            $this->status,
+            $this->address,
+            $this->city,
+            $this->state,
+            $this->postal_code,
+            $this->country,
+            $this->lat,
+            $this->lng,
+            $this->place_id,
+            $this->metadata,
+            $this->property_type,
+            $this->bedrooms,
+            $this->bathrooms,
+            $this->square_footage,
+        );
     }
 }

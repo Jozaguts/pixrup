@@ -42,9 +42,11 @@ class PropertyFactory extends Factory
             'country' => 'US',
             'lat' => fake()->latitude(33, 37),
             'lng' => fake()->longitude(-122, -118),
+            'place_id' => 'ChIJa6pNW7G9xokRlzVEgQShhMQ',
             'bedrooms' => 3,
             'bathrooms' => 2,
             'square_footage' => 900,
+            'property_type' => 'Multi-Family',
         ];
     }
 }

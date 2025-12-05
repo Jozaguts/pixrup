@@ -10,8 +10,8 @@
 namespace App\Infrastructure\Property\Providers;
 
 use App\Application\Properties\DTOs\PropertyWorthDTO;
-use App\Domain\Appraisal\Entities\AppraisalSnapshot;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
+use App\Domain\Properties\Entities\PropertyEntity;
 use Carbon\Carbon;
 
 /**
@@ -30,7 +30,7 @@ class MockAppraisalProvider implements AppraisalProviderInterface
      * Returns: PropertyWorthDTO
      * Expected Result: Returns static valuation data emulating provider output.
      */
-    public function fetchValue(AppraisalSnapshot $property): PropertyWorthDTO
+    public function fetchValue(PropertyEntity $property): PropertyWorthDTO
     {
         $baseValue = 485000;
         $offset = ($property->id ?? 0) % 1000;

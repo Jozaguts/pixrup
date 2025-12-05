@@ -2,6 +2,7 @@
 
 use App\Infrastructure\Property\Providers\MockAppraisalProvider;
 use App\Models\Property;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,10 +13,13 @@ uses(TestCase::class, RefreshDatabase::class);
  * Expected Result: DTO contains provider "mock", numeric valuation, and comparable entries.
  */
 test('mock provider returns deterministic valuation payload', function (): void {
-    $property = Property::factory()->create();
+
+
+    $user = User::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
 
     $provider = new MockAppraisalProvider();
-    $dto = $provider->fetchValue($property);
+    $dto = $provider->fetchValue($property->toEntity());
 
     expect($dto->provider)->toBe('mock')
         ->and($dto->value)->toBeFloat()

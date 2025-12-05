@@ -5,6 +5,7 @@ use App\Application\Properties\Services\AppraisalService;
 use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
+use App\Domain\Properties\Entities\PropertyEntity;
 use App\Infrastructure\Property\Persistence\EloquentPropertyWorthRepository;
 use App\Infrastructure\Property\Providers\MockAppraisalProvider;
 use App\Models\Property;
@@ -21,23 +22,23 @@ uses(TestCase::class, RefreshDatabase::class);
  * Expected Result: Provider called once, repository stores record, plan limit hooks invoked.
  */
 test('appraisal service stores valuation and updates plan usage', function (): void {
-    $repository = app(PropertyWorthRepositoryInterface::class);
+    $repository = new EloquentPropertyWorthRepository;
     expect($repository)->toBeInstanceOf(EloquentPropertyWorthRepository::class);
 
     $provider = \Mockery::mock(AppraisalProviderInterface::class);
-    $property = Property::factory()->create();
     $user = User::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
-    $dto = (new MockAppraisalProvider())->fetchValue($property);
+    $dto = (new MockAppraisalProvider())->fetchValue($property->toEntity());
 
     $provider->shouldReceive('fetchValue')
         ->once()
-        ->with(\Mockery::on(fn ($arg) => $arg instanceof Property && $arg->is($property)))
+        ->with(\Mockery::on(fn ($arg) => $arg instanceof PropertyEntity && $arg->id === $property->id))
         ->andReturn($dto);
 
     $usageService = app(MonthlyPropertyUsageService::class);
-    $service = new AppraisalService($repository, $provider, $usageService);
+    $service = new AppraisalService($provider, $usageService);
 
     $responseDto = $service->fetchValuation($property);
 
@@ -55,10 +56,10 @@ test('appraisal service stores valuation and updates plan usage', function (): v
  * Expected Result: Second request returns same data and no new provider call.
  */
 test('appraisal service returns cached valuation when fresh', function (): void {
-    $repository = app(PropertyWorthRepositoryInterface::class);
+    $repository = new EloquentPropertyWorthRepository;
 
-    $property = Property::factory()->create();
     $user = User::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
     $provider = \Mockery::mock(AppraisalProviderInterface::class);
@@ -79,7 +80,7 @@ test('appraisal service returns cached valuation when fresh', function (): void 
         ->andReturn($dto);
 
     $usageService = app(MonthlyPropertyUsageService::class);
-    $service = new AppraisalService($repository, $provider, $usageService);
+    $service = new AppraisalService( $provider, $usageService);
 
     $first = $service->fetchValuation($property);
     $second = $service->fetchValuation($property);

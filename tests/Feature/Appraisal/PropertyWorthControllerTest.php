@@ -11,8 +11,8 @@ use App\Models\User;
  * Expected Result: Response status 200 with component props containing worth data keys.
  */
 test('property worth endpoint returns valuation payload', function (): void {
-    $property = Property::factory()->create();
     $user = User::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
     app()->instance(AppraisalProviderInterface::class, new MockAppraisalProvider());
@@ -38,9 +38,9 @@ test('property worth endpoint returns valuation payload', function (): void {
  */
 test('property worth endpoint enforces plan limits', function (): void {
     config(['plans.tiers.professional.limit' => 0]);
-
-    $property = Property::factory()->create();
     $user = User::factory()->create(['plan' => 'professional']);
+    $property = Property::factory()->create(['user_id' => $user->id]);
+
     $this->actingAs($user);
 
     app()->instance(AppraisalProviderInterface::class, new MockAppraisalProvider());
@@ -60,15 +60,16 @@ test('property worth endpoint enforces plan limits', function (): void {
  * Expected Result: Second request hits cache, retains same values, and provider mock is invoked once.
  */
 test('property worth endpoint reuses cached valuations', function (): void {
-    $property = Property::factory()->create();
     $user = User::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
     $provider = \Mockery::mock(AppraisalProviderInterface::class);
+
     $sampleProvider = new MockAppraisalProvider();
     $provider->shouldReceive('fetchValue')
         ->once()
-        ->andReturn($sampleProvider->fetchValue($property));
+        ->andReturn($sampleProvider->fetchValue($property->toEntity()));
     app()->instance(AppraisalProviderInterface::class, $provider);
 
     $headers = [

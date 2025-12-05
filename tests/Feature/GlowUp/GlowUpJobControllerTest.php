@@ -16,7 +16,7 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
     Bus::fake();
 
     $user = User::factory()->create();
-    $property = Property::factory()->create();
+    $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
 
