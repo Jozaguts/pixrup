@@ -67,14 +67,40 @@ export type WorthStatusState =
     | 'cached';
 
 export interface WorthComparable {
-    id: string;
-    address: string;
-    sale_price: number | null;
-    sale_date: string | null;
-    distance_miles: number | null;
-    delta?: string | null;
+    info:    Info;
+    address: Address;
 }
-
+export type Info = {
+    beds:                      number;
+    sqft:                      number;
+    baths:                     number;
+    status:                    string;
+    lot_size:                  number;
+    close_date:                Date;
+    close_price:               number;
+    listing_date:              Date;
+    listing_price:             number;
+    similarity_score:          number;
+    distance_from_subject:     number;
+    similarity_score_adjusted: number;
+}
+export type Address = {
+    msa:           string;
+    city:          string;
+    fips:          string;
+    slug:          string;
+    unit:          string;
+    state:         string;
+    address:       string;
+    zipcode:       string;
+    block_id:      string;
+    latitude:      number;
+    longitude:     number;
+    address_id:    number;
+    address_full:  string;
+    geo_precision: string;
+    zipcode_plus4: string;
+}
 export interface WorthTrendPoint {
     label: string;
     value: number;
@@ -103,7 +129,7 @@ export interface PropertySummary {
     bedrooms?: number;
     bathrooms?: number;
     livingArea?: number;
-    lotSize?: number;
+    squareFootage?: number;
     yearBuilt?: number;
     propertyType?: string;
 }

@@ -48,7 +48,7 @@
 
 <template>
     <div :class="cn(
-    'md:flex lg:flex md:flex-row lg:flex-row gap-1 grid grid-cols-2 mx-2',
+    'md:flex lg:flex md:flex-row lg:flex-row gap-1 grid grid-cols-2',
      'rounded-lg p-2',
       'bg-neutral-100dark:bg-neutral-800 npo-form-shadow',
       'w-full',

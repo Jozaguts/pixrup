@@ -14,8 +14,8 @@ const classes = computed(() => {
 </script>
 
 <template>
-    <div class="npo-form-shadow flex justify-between rounded-[12px] p-5 min-h-[140px]">
-            <div>
+    <div class="npo-form-shadow flex justify-between rounded-[12px] p-2 min-h-[140px]">
+            <div class="flex flex-col  items-start">
                 <h3
                     class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase"
                 >
@@ -23,14 +23,14 @@ const classes = computed(() => {
                 </h3>
                 <p class="font-bold">{{title}}</p>
             </div>
-            <div class="flex flex-col justify-center items-center">
-                <div class="pointer-events-none flex size-12 items-center justify-center rounded-full text-[#7C4DFF] shadow-neu-in">
+            <div class="flex flex-col justify-between items-center">
+                <div class="pointer-events-none flex size-10 items-center justify-center rounded-full text-[#7C4DFF] shadow-neu-in">
                     <Icon
                         :icon="icon"
-                        class="h-6 w-6 font-bold"
+                        class="h-4 w-4 font-bold"
                     />
                 </div>
-                <span v-if="percentage" class="font-bold text-accent shadow-neu-in py-2 px-4 mt-3 min-w-[80px] text-center" :class="classes">{{percentage}}</span>
+                <span v-if="percentage" class="font-bold px-2 py-1 text-accent shadow-neu-in min-w-[50px] text-center" :class="classes">{{percentage}}</span>
             </div>
 
     </div>

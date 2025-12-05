@@ -31,7 +31,7 @@ const socialLinks: SocialLink[] = [
 
 <template>
     <footer
-        class="flex w-full flex-col items-center justify-between gap-6 border-t border-slate-300/40 pb-3 text-xs text-slate-700 md:flex-row"
+        class="flex w-full flex-col items-center justify-between gap-6 border-t border-slate-300/40 pb-3 text-xs text-slate-700 md:flex-row absolute bottom-0"
     >
         <div class="flex items-center gap-4 text-slate-600">
             <a
@@ -40,7 +40,7 @@ const socialLinks: SocialLink[] = [
                 :href="link.href"
                 target="_blank"
                 rel="noreferrer"
-                class="neu-icon"
+                class="flex size-12 items-center justify-center rounded-full text-black pointer-events-none shadow-neu-in bg-gray-200"
             >
                 <component :is="link.icon" class="h-4 w-4" />
             </a>

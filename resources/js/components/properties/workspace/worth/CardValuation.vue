@@ -72,29 +72,40 @@ const statusLabel = computed(() =>
 
 <template>
     <section
-        class="flex flex-col gap-4 neu-surface rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4  rounded-[12px] transition-all duration-200 ease-in-out"
     >
         <header
-            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+            class="flex flex-col"
         >
             <p
-                class="text-xs font-semibold tracking-[0.32em] text-[#7c4dff] uppercase"
+                class="text-base font-semibold tracking-[0.32em]  uppercase"
             >
                 Valuation
             </p>
-            <span
-                class="inline-flex items-center gap-2 rounded-full bg-[#f4f5fa] px-3 py-1 text-xs font-semibold text-[#6b7280] shadow-[inset_4px_4px_12px_rgba(204,206,214,0.6),inset_-4px_-4px_12px_rgba(255,255,255,0.9)]"
-            >
+            <small class="text-xs text-[#6b7280]">
+                {{ fetchedCopy }}
+            </small>
+          <div class="flex gap-2 mt-2">
                 <span
-                    class="inline-flex h-2 w-2 rounded-full"
+                    class="shadow-neu-in active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-black ring ring-white"
+                >
+                <span
+                    class="inline-flex h-2 w-2 rounded-full mx-2"
                     :class="props.isStale ? 'bg-[#f59e0b]' : 'bg-[#1dbf7a]'"
                 />
                 {{ statusLabel }}
             </span>
+              <span
+                  class="shadow-neu-in active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-black ring ring-white"
+              >
+                Confidence
+                <span class="mx-2">{{ formattedConfidence }}</span>
+            </span>
+          </div>
         </header>
 
-        <div class="flex flex-col gap-3">
-            <p class="text-4xl font-semibold text-[#0d0d12]">
+        <div class="flex flex-col gap-3 mt-4">
+            <p class="text-4xl font-semibold text-[#0d0d12] shadow-neu-in rounded-[12px] p-4">
                 {{ formattedValue }}
             </p>
 
@@ -102,19 +113,5 @@ const statusLabel = computed(() =>
                 Range {{ formattedRange }}
             </p>
         </div>
-
-        <footer
-            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
-        >
-            <p class="text-sm text-[#6b7280]">
-                {{ fetchedCopy }}
-            </p>
-            <span
-                class="inline-flex items-center gap-2 rounded-[18px] bg-white px-4 py-2 text-xs font-semibold text-[#0d0d12] shadow-[8px_8px_20px_rgba(210,212,226,0.5),-8px_-8px_20px_rgba(255,255,255,0.95)]"
-            >
-                Confidence
-                <span class="text-[#7c4dff]">{{ formattedConfidence }}</span>
-            </span>
-        </footer>
     </section>
 </template>

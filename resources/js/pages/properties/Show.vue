@@ -279,7 +279,7 @@ const headerMetricCards = computed(() => {
             >
                 <section
                     :class="[
-                        'relative overflow-hidden px-6 sm:px-8 md:px-10',
+                        'relative overflow-hidden lg:px-6 md:px-6',
                     ]"
                 >
                     <div
@@ -379,9 +379,9 @@ const headerMetricCards = computed(() => {
                     :id="`module-${activeModule.id}`"
                     role="tabpanel"
                     :aria-labelledby="`tab-${activeModule.id}`"
-                    class="relative min-h-[420px] rounded-[12px]"
+                    class="relative min-h-[420px] rounded-[12px] mx-"
                 >
-                    <div class="w-fit">
+                    <div class=" lg:w-fit md:w-fit lg:m-0 md:m-0 mx-auto">
                         <NeuphormistTabs :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />
                     </div>
                     <KeepAlive>

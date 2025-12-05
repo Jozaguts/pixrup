@@ -28,11 +28,11 @@ onMounted(async () => {
                     <span
                         data-ns-animate
                         data-delay="0.1"
-                        class="mb-5 inline-block p-4 text-3xl font-bold text-primary"
+                        class="mb-5 inline-block p-4 lg:text-3xl text-xl md:text-3xl font-bold text-primary"
                     > AI-powered creation, built for speed.</span
                     >
                 <div
-                    class="mb-14 space-y-2  text-slate-800  dark:text-white"
+                    class="mb-14 space-y-2  text-slate-800  dark:text-white max-w-3/4 mx-auto"
                 >
                     <p
                         data-ns-animate
@@ -51,11 +51,11 @@ onMounted(async () => {
                 <!-- Left: Intro -->
 
                 <!-- Right: Features List -->
-                <div class="stack-cards js-stack-cards w-full  max-w-[940px] max-h-[400px]">
+                <div class="stack-cards js-stack-cards w-full">
                     <div
                         v-for="listing in listings"
                         :key="listing.id"
-                        class="stack-cards__item h-full  max-h-[400px] w-full bg-white/80  backdrop-blur dark:bg-[#1f252f] js-stack-cards__item relative z-0 my-6 flex min-h-[170px] flex-col space-y-4  rounded-[12px] p-8 shadow-sm md:flex-row dark:border-stroke-5"
+                        class="stack-cards__item h-full  md:max-w-[940px] md:max-h-[400px] lg:max-w-[940px] lg:max-h-[400px] bg-white/80  backdrop-blur dark:bg-[#1f252f] js-stack-cards__item relative z-0 my-6 flex min-h-[170px] flex-col space-y-4  rounded-[12px] p-8 shadow-sm md:flex-row dark:border-stroke-5"
                     >
                         <div
                             class="relative shrink-0 overflow-hidden p-2.5 md:w-2/5"
@@ -63,7 +63,7 @@ onMounted(async () => {
                             <img
                                 :src="listing.image"
                                 :alt="listing.title"
-                                class="h-full  max-h-[400px] w-full rounded-md object-cover md:rounded-lg"
+                                class=" md:max-w-[940px] md:max-h-[400px] lg:max-w-[940px] lg:max-h-[400px] rounded-md object-cover md:rounded-lg"
                             />
                         </div>
                         <div class="p-6">

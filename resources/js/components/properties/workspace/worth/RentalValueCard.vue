@@ -42,11 +42,11 @@ const noteCopy = computed(
 
 <template>
     <section
-        class="flex flex-col gap-4 neu-surface rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4  rounded-[26px]  transition-all duration-200 ease-in-out"
     >
         <header class="flex flex-col gap-1">
             <p
-                class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+                class="text-base font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
             >
                 Rental value
             </p>

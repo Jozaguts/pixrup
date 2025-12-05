@@ -92,7 +92,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 <template>
     <header>
         <div
-            class="navbar neu-bg-surface-color fixed top-6 left-1/2 z-20 flex w-full max-w-6xl -translate-x-1/2 items-center justify-between rounded-full px-3 py-2 shadow-lg backdrop-blur dark:bg-[#1f252f]"
+            class="navbar npo-form-shadow fixed top-6 md:left-1/2 lg:left-1/2 left-0 z-20 flex w-2/2 lg:w-full md:w-full md:max-w-6xl lg:max-w-6xl md:-translate-x-1/2 lg:-translate-x-1/2 items-center justify-between rounded-full p-4 shadow-lg backdrop-blur dark:bg-[#1f252f]"
         >
             <div>
                 <Link href="/">
@@ -125,7 +125,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                         <component
                             :is="item.external ? 'a' : Link"
                             :href="item.href"
-                            class="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-slate-600 dark:text-[#fcfcfc]"
+                            class=" neu-button active  flex items-center gap-1 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:text-[#fcfcfc]"
                             @click="closeMobileMenu"
                         >
                             <span>{{ item.label }}</span>
@@ -138,15 +138,15 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                 <component
                     :is="resolvePrimaryCta.external ? 'a' : Link"
                     :href="resolvePrimaryCta.href"
-                    class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                    class="neu-button active inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
                 >
                     <span>{{ resolvePrimaryCta.label }}</span>
                 </component>
             </div>
 
-            <div class="block xl:hidden">
+            <div class="block xl:hidden bg-gray-200">
                 <button
-                    class="flex size-12 flex-col items-center justify-center gap-[5px] rounded-full bg-white/80 text-slate-900 shadow-md transition hover:bg-white"
+                    class="flex size-12 flex-col items-center justify-center gap-[5px] rounded-[12px] neu-button  text-slate-900 shadow-md transition "
                     type="button"
                     @click="toggleMobileMenu"
                 >

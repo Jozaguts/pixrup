@@ -5,14 +5,14 @@ interface Props {
     beds?: number | null;
     baths?: number | null;
     squareFootage?: number | null;
-    yearBuilt?: number | null;
+    propertyType?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     beds: null,
     baths: null,
     squareFootage: null,
-    yearBuilt: null,
+    propertyType: null,
 });
 
 const details = computed(() => [
@@ -32,7 +32,7 @@ const details = computed(() => [
     },
     {
         id: 'squareFootage',
-        label: 'Sq Ft',
+        label: 'Sqft',
         value:
             props.squareFootage !== null && props.squareFootage !== undefined
                 ? Intl.NumberFormat('en-US', {
@@ -41,11 +41,11 @@ const details = computed(() => [
                 : '—',
     },
     {
-        id: 'yearBuilt',
-        label: 'Year built',
+        id: 'propertyType',
+        label: 'Property type',
         value:
-            props.yearBuilt !== null && props.yearBuilt !== undefined
-                ? props.yearBuilt
+            props.propertyType !== null && props.propertyType !== undefined
+                ? props.propertyType
                 : '—',
     },
 ]);
@@ -53,7 +53,7 @@ const details = computed(() => [
 
 <template>
     <section
-        class="flex flex-col gap-4 neu-surface rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4 rounded-[12px] p-6  transition-all duration-200 ease-in-out"
     >
         <header>
             <p
@@ -70,7 +70,7 @@ const details = computed(() => [
             <div
                 v-for="detail in details"
                 :key="detail.id"
-                class="rounded-[18px] bg-[#f4f5fa] px-4 py-3 text-sm text-[#6b7280] shadow-[inset_8px_8px_18px_rgba(210,212,226,0.55),inset_-8px_-8px_18px_rgba(255,255,255,0.95)]"
+                class="rounded-[12px]  px-4 py-3 text-sm text-[#6b7280] npo-form-shadow"
             >
                 <dt class="text-xs tracking-[0.28em] text-[#9ca3af] uppercase">
                     {{ detail.label }}

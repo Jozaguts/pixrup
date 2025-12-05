@@ -157,6 +157,7 @@ export default function useSpyHunt() {
         comparables,
         trend30d,
         formatAddress,
+        numberFormat,
         moneyFormat,
         formatComparable
     }

@@ -189,7 +189,7 @@ const handleAppraiseFullProperty = () => {
         />
     </Head>
 
-    <div class="relative min-h-screen px-4 text-slate-900 sm:px-6 lg:px-10">
+    <div class="min-h-screen px-4 text-slate-900 sm:px-6 lg:px-10">
         <FloatingRobot />
         <WelcomeBackground />
 
@@ -202,7 +202,7 @@ const handleAppraiseFullProperty = () => {
             />
 
             <main
-                class="flex flex-1 flex-col items-center justify-center gap-10 pt-32 text-center"
+                class="flex flex-1 flex-col items-center justify-center text-center mt-20"
             >
                 <HeroSection />
                 <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px]">
@@ -211,7 +211,6 @@ const handleAppraiseFullProperty = () => {
                         @place-selected="handlePlaceSelected"
                     />
                 </div>
-<!--             todo  remove and chang for android and apple icons  /-->
                 <ContinueButtons
                     :address-data="selectedAddress"
                     :is-authenticated="isAuthenticated"
@@ -219,19 +218,17 @@ const handleAppraiseFullProperty = () => {
                     @continue-app="isWorthModalOpen = false"
                 />
                 <WelcomeGallery :listings="listings" />
+                <WelcomeFooter />
             </main>
-
-            <WelcomeFooter />
         </div>
-
-        <WorthPreviewModal
-            :open="isWorthModalOpen && Boolean(selectedAddress)"
-            :address="selectedAddress?.formattedAddress"
-            :estimated-value="estimatedValue"
-            :comps="comparableProperties"
-            @update:open="(value) => (isWorthModalOpen = value)"
-            @appraise="handleAppraiseFullProperty"
-        />
-        <ThemeToggle />
+<!--        <WorthPreviewModal-->
+<!--            :open="isWorthModalOpen && Boolean(selectedAddress)"-->
+<!--            :address="selectedAddress?.formattedAddress"-->
+<!--            :estimated-value="estimatedValue"-->
+<!--            :comps="comparableProperties"-->
+<!--            @update:open="(value) => (isWorthModalOpen = value)"-->
+<!--            @appraise="handleAppraiseFullProperty"-->
+<!--        />-->
+<!--        <ThemeToggle />-->
     </div>
 </template>

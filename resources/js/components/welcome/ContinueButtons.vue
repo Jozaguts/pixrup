@@ -95,26 +95,9 @@ const handleContinueInApp = () => {
 
 <template>
     <div
-        class="mb-40 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center"
+        class="mb-40 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center my-2"
     >
         <img src="/images/Apple Icon.svg" alt="Apple Icon">
         <img src="/images/Android Icon.svg" alt="Android Icon">
-<!--        <Button-->
-<!--            size="lg"-->
-<!--            class="h-12 min-w-[200px] flex-1  text-white dark:text-white bg-slate-800"-->
-<!--            @click="handleContinueOnWeb"-->
-<!--        >-->
-<!--            <Icon name="mac" />-->
-<!--            Available on the app store-->
-<!--        </Button>-->
-<!--        <Button-->
-<!--            variant="secondary"-->
-<!--            size="lg"-->
-<!--            class="h-12 min-w-[200px] flex-1"-->
-<!--            :disabled="!hasSelection"-->
-<!--            @click="handleContinueInApp"-->
-<!--        >-->
-<!--            Continue in App-->
-<!--        </Button>-->
     </div>
 </template>

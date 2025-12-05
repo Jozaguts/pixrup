@@ -97,12 +97,12 @@ class PropertyController extends Controller
                 'email' => auth()->user()?->email,
             ],
             'summary' => [
-                'bedrooms' => data_get($property->metadata, 'summary.bedrooms'),
-                'bathrooms' => data_get($property->metadata, 'summary.bathrooms'),
+                'bedrooms' => $property->bedrooms,
+                'bathrooms' => $property->bathrooms,
                 'livingArea' => data_get($property->metadata, 'summary.livingArea'),
-                'lotSize' => data_get($property->metadata, 'summary.lotSize'),
+                'squareFootage' => $property->square_footage,
                 'yearBuilt' => data_get($property->metadata, 'summary.yearBuilt'),
-                'propertyType' => data_get($property->metadata, 'summary.propertyType'),
+                'propertyType' =>  $property->property_type
             ],
             'pricing' => [
                 'acquisition' => data_get($property->metadata, 'pricing.acquisition'),
