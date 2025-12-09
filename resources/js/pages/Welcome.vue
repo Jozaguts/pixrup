@@ -31,7 +31,7 @@ const navItems = [
     { label: 'Features', href: '#features' },
     { label: 'Pricing', href: '#pricing' },
     { label: 'Use cases', href: '#use-cases' },
-    { label: 'Resources', href: '#resources' },
+    { label: 'Blog', href: '#blog' },
 ];
 
 const primaryLink = { label: 'Sign up', href: 'register' };

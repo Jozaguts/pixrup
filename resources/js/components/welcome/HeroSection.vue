@@ -5,7 +5,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 const showSubtitle = ref(false);
 const caretVisible = ref(true);
 
-const heroText = 'Turn Any Property Into Potential.';
+const heroText = 'Turn Any Property Into Cash.';
 
 const textEl = ref<HTMLElement | null>(null);
 const caretEl = ref<HTMLElement | null>(null);
@@ -65,7 +65,7 @@ onBeforeUnmount(() => {
         class="flex  mx-auto flex-col items-center gap-4 text-center text-slate-900"
     >
         <h1
-            class="mt-40 flex max-w-3xl items-baseline md:text-4xl mg:text-4xl text-2xl leading-tight font-semibold"
+            class="mt-40 flex max-w-3xl items-baseline md:text-5xl mg:text-4xl text-2xl leading-tight font-semibold"
         >
             <span ref="textEl" class="hero-title__text">{{ heroText }}</span>
             <span
@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
         <div v-auto-animate="{ duration: 400 }">
             <p
                 v-if="showSubtitle"
-                class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl dark:text-[#fcfcfc]/60 my-2"
+                class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl dark:text-[#fcfcfc]/60 mb-15"
             >
                 Upload. Appraise. Reimagine. Share.
             </p>

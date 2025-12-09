@@ -21,14 +21,14 @@ onMounted(async () => {
 
 <template>
     <section
-        class="pt-14 pb-[220px] sm:pb-14 md:pt-16 md:pb-16 lg:pt-[88px] lg:pb-[88px] xl:pt-[100px] xl:pb-[100px]"
+        class="pt-0 pb-[220px] sm:pb-14 md:pt-0 md:pb-16 lg:pt-[0px] lg:pb-[88px] xl:pt-[0px] xl:pb-[100px]"
     >
-        <div class="main-container">
+        <div class="main-container mt-[200px]">
             <div class="lg:sticky lg:top-28">
                     <span
                         data-ns-animate
                         data-delay="0.1"
-                        class="mb-5 inline-block p-4 lg:text-3xl text-xl md:text-3xl font-bold text-primary"
+                        class="mb-5 inline-block p-4 lg:text-4xl text-xl md:text-3xl font-bold text-black"
                     > AI-powered creation, built for speed.</span
                     >
                 <div

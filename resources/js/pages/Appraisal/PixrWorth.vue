@@ -425,21 +425,23 @@ const isFetchDisabled = computed(
                             <div>
                                 <p class="text-sm font-medium text-foreground">
                                     {{
-                                        comparable.address ?? 'Unknown address'
+                                        comparable.address?.address_full ?? 'Unknown address'
                                     }}
                                 </p>
                             </div>
-                            <div class="text-sm text-muted-foreground">
+                            <div class="text-sm text-muted-foreground text-center">
+
                                 {{
                                     formatCurrency(
-                                        comparable.sale_price ?? null,
+                                        comparable.info.close_price ?? null
                                     )
                                 }}
                             </div>
+
                             <div class="text-sm text-muted-foreground">
                                 {{
-                                    comparable.distance_miles
-                                        ? comparable.distance_miles.toFixed(2) +
+                                    comparable.info?.distance_from_subject
+                                        ? comparable.info?.distance_from_subject.toFixed(2) +
                                           ' mi'
                                         : 'n/a'
                                 }}

@@ -17,10 +17,10 @@ const comparables = computed(() => {
     return props.comparables.map((comp) => {
         return {
             address: comp.address?.address_full,
-            beds: comp.info.beds,
-            baths: comp.info.baths,
-            sqft: useSpyHunt().numberFormat(comp.info.sqft),
-            distance: useSpyHunt().numberFormat(comp.info.distance_from_subject),
+            beds: comp.info?.beds,
+            baths: comp.info?.baths,
+            sqft: useSpyHunt().numberFormat(comp.info?.sqft ?? 0),
+            distance: useSpyHunt().numberFormat(comp.info?.distance_from_subject ?? 0),
         };
     });
 });
