@@ -6,7 +6,7 @@ use App\Domain\Properties\Entities\PropertyEntity;
 
 interface PropertyRepositoryInterface
 {
-    public function save(PropertyEntity $property): PropertyEntity;
+    public function save(PropertyEntity $propertyEntity): PropertyEntity;
 
     public function findById(int $id): ?PropertyEntity;
 
