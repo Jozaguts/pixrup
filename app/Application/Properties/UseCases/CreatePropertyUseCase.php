@@ -22,7 +22,6 @@ readonly class CreatePropertyUseCase
     {
         $propertyEntity = new PropertyEntity(
             id: null,
-            user_id: auth()->user()->id,
             title: $createPropertyDTO->title,
             status: $createPropertyDTO->status,
             address: $createPropertyDTO->address,

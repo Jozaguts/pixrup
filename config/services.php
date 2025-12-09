@@ -61,6 +61,8 @@ return [
         'aspect_ratio' => env('REPLICATE_ASPECT_RATIO', '4:3'),
         'max_images' => env('REPLICATE_MAX_IMAGES', 1),
         'wait_preference' => env('REPLICATE_WAIT_PREFERENCE', 'wait=60'),
+        'timeout' => env('REPLICATE_TIMEOUT', 120),
+        'retries' => env('REPLICATE_RETRIES', 2),
     ],
 
     'rentcast' => [

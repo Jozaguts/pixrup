@@ -43,7 +43,10 @@ class ReplicateImageService implements GlowUpImageProvider
 
         $this->http = Http::withToken($token)
             ->acceptJson()
-            ->baseUrl($baseUrl);
+            ->baseUrl($baseUrl)
+            ->timeout((int) config('services.replicate.timeout', 120))
+            ->connectTimeout(10)
+            ->retry((int) config('services.replicate.retries', 2), 2000);
 
         $this->modelOwner = config('services.replicate.model_owner');
         $this->model = trim(config('services.replicate.model', 'seedream-4'));
