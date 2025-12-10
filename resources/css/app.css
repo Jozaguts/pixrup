@@ -2,252 +2,48 @@
 
 /* --- Imports from your current setup --- */
 @import url('https://fonts.googleapis.com/css2?family=Kulim+Park:ital,wght@0,200;0,300;0,400;0,600;0,700;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet');
+/* import order 1 vars, 2 icons, 3 typog, 4 common 5 tailwind */
+@import './theme/variables.css';
+@import './theme/icon-font.css';
+@import './theme/typography.css';
+@import './theme/common.css';
+@import 'tailwindcss';  /* DONT MOVE*/
+@import './theme/base.css';
+@import './theme/button.css';
+@import './theme/badge.css';
+@import './theme/header.css';
+@import './theme/navigation-menu.css';
+/*@import './vendor/vanilla-infinite-marquee.min.css';*/
+/*@import './vendor/swiper.min.css';*/
+/*@import './vendor/leaflet.min.css';*/
+/*@import './custom-swiper';*/
+/*@import './number-animation';*/
 @import './inputs.css';
-@import 'tailwindcss';
 @import 'tw-animate-css';
-@import './home-page-33.css';
-
-/* @import neuphormism-shadows.css*/
-
-/* Tailwind v4 content sources (Laravel blade cache + pagination) */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 /* Dark variant helper */
 @custom-variant dark (&:is(.dark *));
 
-/* --- Tailwind theme token mapping (from your base file) --- */
-@theme inline {
-    --font-sans:
-        Mona Sans Helvetica Neue, ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
-
-    --font-kulim: 'Kulim Park', sans-serif;
-
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
-
-    --font-color-dark: #4a5568;
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
-
-    --color-sidebar: var(--sidebar-background);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
-}
-
 /* --- Tailwind v4 border compatibility (kept) --- */
-@layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
-
-    * {
-        @apply border-border outline-ring/50;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    body,
-    html {
-        --font-sans:
-            'Mona Sans', ui-sans-serif, system-ui, sans-serif,
-            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-            'Noto Color Emoji';
-        color: var(--font-color-dark) !important;
-    }
-
-    body {
-        @apply bg-background text-foreground;
-    }
+@utility font-kulim {
+    --font-kulim: 'Kulim Park', sans-serif;
 }
-
-/* -----------------------------------------------------------------------------
-   BRAND TOKENS
-   - Primary brand: #6e33ff
-   - Foreground: #000000 (strong contrast)
------------------------------------------------------------------------------ */
-
-:root {
-    /* --- Input shadows --- */
-    --neupho-input-shadow-focus:
-        inset 0.2rem 0.2rem 0.4rem #c8d0e7, inset -0.2rem -0.2rem 0.4rem #ffffff;
-    --neupho-input-shadow:
-        inset 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem #ffffff;
-    --neupho-container-shadow:
-            20px 20px 40px 0px #d4d7dd, -20px -20px 40px #f8fdff;
-    --neupho-btn-shadow: -4px -2px 4px 0 #ffffff, 4px 2px 6px 0 #dfe4ea;
-    --neupho-btn-focus-shadow:
-        2px 2px 2px 0 #dfe4ea inset, -2px -2px 2px 0 #ffffff inset;
-
-    --neupho-icon-shadow:
-        -6px -6px 12px  rgba(255, 255, 255, 0.7),
-        6px 6px 12px rgba(120, 90, 200, 0.3);
-    /* --- Brand & core --- */
-    --primary: #6e33ff; /* brand purple */
-    --primary-foreground: #ffffff; /* readable over purple */
-    --ring: var(--primary); /* focus ring uses brand */
-    --foreground: #1f2933; /* richer neutral for text */
-
-    /* --- Backgrounds / surfaces --- */
-    --background_legacy: #e8e8e8;
-    /*--background: #E6EAF0; !*#ebe8f3;  light neutral for app background *!*/
-    --background:#eee; /*#ebe8f3;  light neutral for app background */
-    --card: var(--background);
-    --popover: var(--background);
-
-    /* --- Neutral surfaces --- */
-    --secondary: hsl(0 0% 92.1%);
-    --secondary-foreground: var(--foreground);
-    --muted: hsl(0 0% 96.1%);
-    --muted-foreground: hsl(0 0% 45.1%);
-    --accent: hsl(0 0% 96.1%);
-    --accent-foreground: var(--foreground);
-    --destructive: hsl(0 84.2% 60.2%);
-    --destructive-foreground: hsl(0 0% 98%);
-
-    /* --- Borders/inputs --- */
-    --border: hsl(0 0% 92.8%);
-    --input: hsl(0 0% 89.8%);
-
-    /* --- Charts (optional, keep your palette) --- */
-    --chart-1: hsl(12 76% 61%);
-    --chart-2: hsl(173 58% 39%);
-    --chart-3: hsl(197 37% 24%);
-    --chart-4: hsl(43 74% 66%);
-    --chart-5: hsl(27 87% 67%);
-
-    /* --- Radius for general UI (neumo components override to 50px) --- */
-    --radius: 0.75rem;
-
-    /* --- Sidebar --- */
-    --sidebar-background: var(--background); /*#f9fafb;*/
-    --sidebar-foreground: #6b7280;
-    --sidebar-primary: var(--primary);
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #eceef7;
-    --sidebar-accent-foreground: #4b5563;
-    --sidebar-border: #dde1ef;
-    --sidebar-ring: var(--primary);
-    --sidebar: hsl(0 0% 98%);
-
-    /* --- Neumorphism --- */
-    --neu-surface: #e8e8e8;
-    --neu-dark: #c5c5c5;
-    --neu-light: #ffffff;
-    --neu-offset: 5px;
-    --neu-blur: 5px;
-    --neu-radius: 17px;
-    --neu-shadow-out:
-        0 1px 1px 1px rgba(255, 255, 255, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2),
-        0 4px 5px 0 rgba(0, 0, 0, 0.05);
-    --neu-shadow-in:
-        inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
-            var(--neu-dark),
-        inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
-            var(--neu-blur) var(--neu-light);
-}
-
-.dark {
-    /* Keep brand consistent in dark mode */
-    --primary: #222436;
-    --primary-foreground: #ffffff;
-    --ring: var(--primary);
-
-    /* Dark surfaces */
-    --background: #1c2230;
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(0 0% 3.9%);
-    --popover: hsl(0 0% 3.9%);
-
-    --secondary: hsl(0 0% 14.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(0 0% 16.08%);
-    --muted-foreground: hsl(0 0% 63.9%);
-    --accent: hsl(0 0% 14.9%);
-    --accent-foreground: hsl(0 0% 98%);
-    --destructive: hsl(0 84% 60%);
-    --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 14.9%);
-    --input: hsl(0 0% 14.9%);
-
-    --sidebar-background: hsl(240 5% 14%);
-    --sidebar-foreground: hsl(0 0% 95%);
-    --sidebar-primary: #7c4dff;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: hsl(0 0% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: var(--primary);
-    --sidebar: hsl(240 5.9% 10%);
-
-    --neu-surface: #1c2230;
-    --neu-dark: #0c0f16;
-    --neu-light: #2a3446;
-}
-
-/* -----------------------------------------------------------------------------
-   NEUMORPHISM (EXACT SPEC)
-   - Non-active: radius 50px; background #e0e0e0;
-     box-shadow:  20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-   - Active/Hover: inset 20px 20px 60px #bebebe, inset -20px -20px 60px #ffffff;
------------------------------------------------------------------------------ */
-
 @utility neu-surface {
     box-shadow: var(--neupho-container-shadow);
 }
 
 @utility shadow-neu-out {
     box-shadow:
-        -4px -2px 4px 0px #ffffff,
-        4px 2px 6px 0px #dfe4ea;
+            -4px -2px 4px 0px #ffffff,
+            4px 2px 6px 0px #dfe4ea;
 }
 
 @utility shadow-neu-in {
     box-shadow:
-        inset 2px 2px 5px #d1cccb,
-        inset -2px -2px 5px #ffffff;
+            inset 2px 2px 5px #d1cccb,
+            inset -2px -2px 5px #ffffff;
     /*box-shadow: var(--neu-shadow-in);*/
 }
 
@@ -256,15 +52,15 @@
 }
 
 @utility is-pressed {
-   box-sizing: inherit;
+    box-sizing: inherit;
 }
 
 @utility neu-focus {
     outline: none;
     box-shadow:
-        0 0 0 2px color-mix(in oklab, var(--ring, #6e33ff) 100%, transparent),
-        0 0 0 4px color-mix(in oklab, var(--ring, #6e33ff) 30%, transparent),
-        var(--neu-shadow-out);
+            0 0 0 2px color-mix(in oklab, var(--ring, #6e33ff) 100%, transparent),
+            0 0 0 4px color-mix(in oklab, var(--ring, #6e33ff) 30%, transparent),
+            var(--neu-shadow-out);
 }
 
 @layer components {

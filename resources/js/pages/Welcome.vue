@@ -173,16 +173,11 @@ const handlePlaceSelected = (selection: AddressSelection) => {
 
     isWorthModalOpen.value = true;
 };
-
-const handleAppraiseFullProperty = () => {
-    isWorthModalOpen.value = false;
-    navigateToWeb();
-};
 </script>
 <template>
     <Head title="Welcome">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap"
@@ -229,6 +224,6 @@ const handleAppraiseFullProperty = () => {
 <!--            @update:open="(value) => (isWorthModalOpen = value)"-->
 <!--            @appraise="handleAppraiseFullProperty"-->
 <!--        />-->
-<!--        <ThemeToggle />-->
+        <ThemeToggle />
     </div>
 </template>
