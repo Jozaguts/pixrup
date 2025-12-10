@@ -1,0 +1,92 @@
+/* =========================
+Font base styles
+=========================== */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+  body,
+  html {
+    --font-sans:
+            'Mona Sans', ui-sans-serif, system-ui, sans-serif,
+            'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+            'Noto Color Emoji';
+    color: var(--font-color-dark) !important;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+  .dark {
+    /* Keep brand consistent in dark mode */
+    --primary: #222436;
+    --primary-foreground: #ffffff;
+    --ring: var(--primary);
+
+    /* Dark surfaces */
+    --background: #1c2230;
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(0 0% 3.9%);
+    --popover: hsl(0 0% 3.9%);
+
+    --secondary: hsl(0 0% 14.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(0 0% 16.08%);
+    --muted-foreground: hsl(0 0% 63.9%);
+    --accent: hsl(0 0% 14.9%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 84% 60%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(0 0% 14.9%);
+    --input: hsl(0 0% 14.9%);
+
+    --sidebar-background: hsl(240 5% 14%);
+    --sidebar-foreground: hsl(0 0% 95%);
+    --sidebar-primary: #7c4dff;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: hsl(0 0% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(0 0% 15.9%);
+    --sidebar-ring: var(--primary);
+    --sidebar: hsl(240 5.9% 10%);
+
+    --neu-surface: #1c2230;
+    --neu-dark: #0c0f16;
+    --neu-light: #2a3446;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-inter-tight text-secondary dark:text-accent;
+  }
+
+  h1 {
+    @apply text-heading-4 sm:text-heading-3 md:text-heading-2 xl:text-heading-1 font-medium;
+  }
+  h2 {
+    @apply text-heading-5 sm:text-heading-4 md:text-heading-3 xl:text-heading-2;
+  }
+  h3 {
+    @apply text-heading-5 md:text-heading-4 xl:text-heading-3;
+  }
+  h4 {
+    @apply text-heading-4;
+  }
+  h5 {
+    @apply text-heading-5;
+  }
+  h6 {
+    @apply text-heading-6;
+  }
+  p {
+    @apply text-tagline-2 sm:text-tagline-1 text-secondary/60 dark:text-accent/60 font-normal;
+  }
+
+}
