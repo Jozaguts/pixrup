@@ -88,18 +88,19 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.dark .hero-title__text {
-    color: #fcfcfc;
-}
+
 .hero-title__text {
     display: inline-block;
     white-space: nowrap;
+    font-family: var(--font-mona);
 }
-
 .hero-title__caret {
     display: inline-block;
     margin-left: 0.1em;
     font-weight: 500;
     color: #6e33ff;
+}
+.dark .hero-title__text {
+    color: #fcfcfc;
 }
 </style>
