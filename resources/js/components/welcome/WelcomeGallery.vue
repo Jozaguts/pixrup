@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { initHomePage33Animations } from '@/lib/homePage33Animations';
 import { nextTick, onMounted } from 'vue';
-
-interface ListingCard {
-    id: number | string;
-    title: string;
-    image: string;
-    headline: string;
-    description: string;
-}
+import type { ServiceCard } from '@/components/template/services/types';
+import Card from '@/components/template/services/Card.vue';
 
 defineProps<{
-    listings: ListingCard[];
+    listings: ServiceCard[];
 }>();
 onMounted(async () => {
     await nextTick();
@@ -36,6 +30,9 @@ onMounted(async () => {
                         and PWA-ready for any team.
                     </p>
                 </div>
+            </div>
+            <div class="grid grid-cols-12 xl:gap-8 md:gap-8 gap-y-5">
+                <Card v-for="(card, idx) in listings" :key="idx" :title="card.title" :details="card.details" :link="card.link" :cta="card.cta" :shape="card.shape"/>
             </div>
         </div>
     </section>
