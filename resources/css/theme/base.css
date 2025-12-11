@@ -58,35 +58,89 @@ Font base styles
     --neu-dark: #0c0f16;
     --neu-light: #2a3446;
   }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-inter-tight text-secondary dark:text-accent;
-  }
-
-  h1 {
-    @apply text-heading-4 sm:text-heading-3 md:text-heading-2 xl:text-heading-1 font-medium;
-  }
-  h2 {
-    @apply text-heading-5 sm:text-heading-4 md:text-heading-3 xl:text-heading-2;
-  }
-  h3 {
-    @apply text-heading-5 md:text-heading-4 xl:text-heading-3;
-  }
-  h4 {
-    @apply text-heading-4;
-  }
-  h5 {
-    @apply text-heading-5;
-  }
-  h6 {
-    @apply text-heading-6;
-  }
-  p {
-    @apply text-tagline-2 sm:text-tagline-1 text-secondary/60 dark:text-accent/60 font-normal;
-  }
-
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-inter-tight);
+      color: var(--color-secondary);
+      &:where(.dark, .dark *) {
+        color: var(--color-accent);
+      }
+    }
+    h1 {
+      font-size: var(--text-heading-4);
+      line-height: var(--text-heading-4--line-height);
+      --tw-font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-medium);
+      @media (width >= 40rem) {
+        font-size: var(--text-heading-3);
+        line-height: var(--text-heading-3--line-height);
+      }
+      @media (width >= 48rem) {
+        font-size: var(--text-heading-2);
+        line-height: var(--text-heading-2--line-height);
+      }
+      @media (width >= 80rem) {
+        font-size: var(--text-heading-1);
+        line-height: var(--text-heading-1--line-height);
+      }
+    }
+    h2 {
+      font-size: var(--text-heading-5);
+      line-height: var(--text-heading-5--line-height);
+      @media (width >= 40rem) {
+        font-size: var(--text-heading-4);
+        line-height: var(--text-heading-4--line-height);
+      }
+      @media (width >= 48rem) {
+        font-size: var(--text-heading-3);
+        line-height: var(--text-heading-3--line-height);
+      }
+      @media (width >= 80rem) {
+        font-size: var(--text-heading-2);
+        line-height: var(--text-heading-2--line-height);
+      }
+    }
+    h3 {
+      font-size: var(--text-heading-5);
+      line-height: var(--text-heading-5--line-height);
+      @media (width >= 48rem) {
+        font-size: var(--text-heading-4);
+        line-height: var(--text-heading-4--line-height);
+      }
+      @media (width >= 80rem) {
+        font-size: var(--text-heading-3);
+        line-height: var(--text-heading-3--line-height);
+      }
+    }
+    h4 {
+      font-size: var(--text-heading-4);
+      line-height: var(--text-heading-4--line-height);
+    }
+    h5 {
+      font-size: var(--text-heading-5);
+      line-height: var(--text-heading-5--line-height);
+    }
+    h6 {
+      font-size: var(--text-heading-6);
+      line-height: var(--text-heading-6--line-height);
+    }
+    p {
+      font-size: var(--text-tagline-2);
+      line-height: var(--text-tagline-2--line-height);
+      --tw-font-weight: var(--font-weight-normal);
+      font-weight: var(--font-weight-normal);
+      color: color-mix(in srgb, #1a1a1c 60%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, var(--color-secondary) 60%, transparent);
+      }
+      @media (width >= 40rem) {
+        font-size: var(--text-tagline-1);
+        line-height: var(--text-tagline-1--line-height);
+      }
+      &:where(.dark, .dark *) {
+        color: color-mix(in srgb, #fcfcfc 60%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          color: color-mix(in oklab, var(--color-accent) 60%, transparent);
+        }
+      }
+    }
 }
