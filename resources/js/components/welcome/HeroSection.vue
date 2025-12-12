@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
 
 <template>
     <section
-        class="flex  mx-auto flex-col items-center gap-4 text-center text-slate-900"
+        class="flex  mx-auto flex-col items-center gap-4 text-center text-slate-900 z-[100]"
     >
         <h1
             class="mt-40 flex max-w-3xl items-baseline md:text-5xl mg:text-4xl text-2xl leading-tight font-semibold"

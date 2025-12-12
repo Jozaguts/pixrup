@@ -95,7 +95,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
             class="navbar shadow-neu-in !bg-[#eee]
             fixed top-6 md:left-1/2 lg:left-1/2 left-0
             w-2/2 lg:w-full md:w-full md:max-w-6xl lg:max-w-6xl
-            z-20 md:-translate-x-1/2 lg:-translate-x-1/2
+            z-[200] md:-translate-x-1/2 lg:-translate-x-1/2
             flex  items-center justify-between rounded-full p-4 shadow-lg backdrop-blur dark:bg-[#1f252f]"
         >
             <div>

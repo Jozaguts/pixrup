@@ -95,7 +95,7 @@ const handleContinueInApp = () => {
 
 <template>
     <div
-        class="mb-0 mt-20 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center"
+        class="mb-0 mt-20 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center z-100"
     >
         <img src="/images/Apple Icon.svg" alt="Apple Icon">
         <img src="/images/Android Icon.svg" alt="Android Icon">

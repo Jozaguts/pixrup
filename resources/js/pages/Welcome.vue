@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ThemeToggle from '@/components/ThemeToggle.vue';
 import AddressSearch, {
     type AddressSelection,
 } from '@/components/welcome/AddressSearch.vue';
@@ -9,13 +8,13 @@ import HeroSection from '@/components/welcome/HeroSection.vue';
 import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
-import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
-import {
+import WorthPreviewModal, {
     type ComparableProperty,
 } from '@/components/welcome/WorthPreviewModal.vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
+import GuestLayout from '@/layouts/GuestLayout.vue';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -27,15 +26,6 @@ const props = withDefaults(
 
 const page = usePage();
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
-
-const navItems = [
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Use cases', href: '#use-cases' },
-    { label: 'Blog', href: '#blog' },
-];
-
-const primaryLink = { label: 'Sign up', href: 'register' };
 
 const listings: ServiceCard [] = [
     {
@@ -153,57 +143,59 @@ const handlePlaceSelected = (selection: AddressSelection) => {
 
     isWorthModalOpen.value = true;
 };
+const handleAppraiseFullProperty = () => {
+    isWorthModalOpen.value = false;
+    navigateToWeb();
+};
+const navigateToWeb = () => {
+    if (!selectedAddress.value) {
+        return;
+    }
+
+    const destination = isAuthenticated.value ? '/dashboard' : '/register';
+    const query = buildQueryFromSelection(selectedAddress.value);
+
+    router.visit(`${destination}?${query}`);
+};
+const buildQueryFromSelection = (selection: AddressSelection) => {
+    const query = new URLSearchParams({
+        address: selection.formattedAddress,
+        lat: selection.location.lat.toString(),
+        lng: selection.location.lng.toString(),
+        placeId: selection.placeId,
+    });
+
+    return query.toString();
+};
 </script>
 <template>
-    <Head title="Welcome">
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap"
-        />
-    </Head>
-
-    <div class="min-h-screen px-4 text-slate-900 sm:px-6 lg:px-10">
-        <FloatingRobot />
-        <WelcomeBackground />
-
-        <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
-            <WelcomeNavbar
-                :is-authenticated="isAuthenticated"
-                :can-register="props.canRegister"
-                :nav-items="navItems"
-                :primary-link="primaryLink"
-            />
-
-            <main
-                class="flex flex-1 flex-col items-center justify-center text-center mt-20"
-            >
-                <HeroSection />
-                <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px]">
-                    <AddressSearch
-                        v-model="addressQuery"
-                        @place-selected="handlePlaceSelected"
-                    />
-                </div>
-                <ContinueButtons
-                    :address-data="selectedAddress"
-                    :is-authenticated="isAuthenticated"
-                    @continue-web="isWorthModalOpen = false"
-                    @continue-app="isWorthModalOpen = false"
+    <GuestLayout :can-register="props.canRegister">
+        <template #main>
+            <FloatingRobot />
+            <WelcomeBackground />
+            <HeroSection />
+            <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px] z-[100]">
+                <AddressSearch
+                    v-model="addressQuery"
+                    @place-selected="handlePlaceSelected"
                 />
-                <WelcomeGallery :listings="listings" />
-                <WelcomeFooter />
-            </main>
-        </div>
-<!--        <WorthPreviewModal-->
-<!--            :open="isWorthModalOpen && Boolean(selectedAddress)"-->
-<!--            :address="selectedAddress?.formattedAddress"-->
-<!--            :estimated-value="estimatedValue"-->
-<!--            :comps="comparableProperties"-->
-<!--            @update:open="(value) => (isWorthModalOpen = value)"-->
-<!--            @appraise="handleAppraiseFullProperty"-->
-<!--        />-->
-        <ThemeToggle />
-    </div>
+            </div>
+            <ContinueButtons
+                :address-data="selectedAddress"
+                :is-authenticated="isAuthenticated"
+                @continue-web="isWorthModalOpen = false"
+                @continue-app="isWorthModalOpen = false"
+            />
+            <WelcomeGallery :listings="listings" />
+            <WelcomeFooter />
+            <WorthPreviewModal
+                :open="isWorthModalOpen && Boolean(selectedAddress)"
+                :address="selectedAddress?.formattedAddress"
+                :estimated-value="estimatedValue"
+                :comps="comparableProperties"
+                @update:open="(value) => (isWorthModalOpen = value)"
+                @appraise="handleAppraiseFullProperty"
+            />
+        </template>
+    </GuestLayout>
 </template>

@@ -1,4 +1,18 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import GuestLayout from '@/layouts/GuestLayout.vue';
+const props = withDefaults(
+    defineProps<{
+        canRegister: boolean;
+    }>(),
+    {
+        canRegister: true,
+    },
+);
+</script>
 <template>
-    <h2 class="text-primary">services</h2>
+    <GuestLayout :can-register="props.canRegister">
+        <template #main>
+            <h2 class="text-primary">services</h2>
+        </template>
+    </GuestLayout>
 </template>
