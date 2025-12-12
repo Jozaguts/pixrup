@@ -403,12 +403,12 @@ const visitLink = (link?: string) => {
             </DashboardSection>
 
             <DashboardSection title="Your properties" description="Track status, values, and jump back into each project." class="flex flex-col gap-6 py-5">
-               <CardDisplay class="gap-0 items-stretch">
+               <CardDisplay class="gap-0 grid grid-cols-12">
                    <PropertyCard
                        v-for="property in resolvedProperties"
                        :key="property.id"
                        :item="property"
-                       class="cols-span-1 sm:cols-span-3"
+                       class="cols-span-12 md:cols-span-3"
                    />
                </CardDisplay>
             </DashboardSection>

@@ -10,6 +10,7 @@ class DashboardController extends Controller
     public function index()
     {
         $properties = Property::with('latestWorth')
+            ->take(4)
             ->get()
             ->map(function (Property $property) {
                 $status = in_array($property->status, ['in-progress', 'ready', 'pending', 'draft'], true)
