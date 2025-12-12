@@ -2,6 +2,55 @@
 Font base styles
 =========================== */
 @layer base {
+  :root{
+    /* neuphormist    */
+    --neu-surface: #E8E8E8;
+    --on-surface: #1a1a1c;
+    --neu-dark: #c5c5c5;
+    --neu-light: #ffffff;
+    --neu-offset: 5px;
+    --neu-blur: 5px;
+    --neu-radius: 17px;
+    --neu-shadow-out:
+            0 1px 1px 1px rgba(255, 255, 255, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2),
+            0 4px 5px 0 rgba(0, 0, 0, 0.05);
+    --neu-shadow-in:
+            inset var(--neu-offset) var(--neu-offset) var(--neu-blur)
+            var(--neu-dark),
+            inset calc(var(--neu-offset) * -1) calc(var(--neu-offset) * -1)
+            var(--neu-blur) var(--neu-light);
+
+    --font-color-dark: white;
+    /* --- Input shadows --- */
+    --neupho-input-shadow-focus:
+            inset 0.2rem 0.2rem 0.4rem #c8d0e7, inset -0.2rem -0.2rem 0.4rem #ffffff;
+    --neupho-input-shadow:
+            inset 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem #ffffff;
+    --neupho-container-shadow:
+            20px 20px 40px 0px #d4d7dd, -20px -20px 40px #f8fdff;
+    --neupho-btn-shadow: -4px -2px 4px 0 #ffffff, 4px 2px 6px 0 #dfe4ea;
+    --neupho-btn-focus-shadow:
+            2px 2px 2px 0 #dfe4ea inset, -2px -2px 2px 0 #ffffff inset;
+
+    --neupho-icon-shadow:
+            -6px -6px 12px  rgba(255, 255, 255, 0.7),
+            6px 6px 12px rgba(120, 90, 200, 0.3);
+    --shadow-neu-in:
+            inset 2px 2px 5px #d1cccb,
+            inset -2px -2px 5px #ffffff;
+    --shadow-neu-out:
+            -4px -2px 4px 0px #ffffff,
+            4px 2px 6px 0px #dfe4ea;
+
+    --neu-button-shadow: -2.3px -2.3px 4px rgba(255,255,255, 0.2),
+    -6.3px -6.3px 10px rgba(255,255,255, 0.3),
+    -15.1px -15.1px 25px rgba(255,255,255, 0.4),
+    -50px -50px 85px rgba(0255,255,255, 0.07),
+    2px 2px 4px rgba(0, 0, 0, 0.024),
+    6px 6px 10px rgba(0, 0, 0, 0.035),
+    15px 15px 25px rgba(0, 0, 0, 0.046),
+    50px 50px 85px rgba(0, 0, 0, 0.07);
+  }
   *,
   ::after,
   ::before,
@@ -21,43 +70,7 @@ Font base styles
   body {
     @apply bg-background text-foreground;
   }
-  .dark {
-    /* Keep brand consistent in dark mode */
-    --primary: #222436;
-    --primary-foreground: #ffffff;
-    --ring: var(--primary);
 
-    /* Dark surfaces */
-    --background: #1c2230;
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(0 0% 3.9%);
-    --popover: hsl(0 0% 3.9%);
-
-    --secondary: hsl(0 0% 14.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(0 0% 16.08%);
-    --muted-foreground: hsl(0 0% 63.9%);
-    --accent: hsl(0 0% 14.9%);
-    --accent-foreground: hsl(0 0% 98%);
-    --destructive: hsl(0 84% 60%);
-    --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 14.9%);
-    --input: hsl(0 0% 14.9%);
-
-    --sidebar-background: hsl(240 5% 14%);
-    --sidebar-foreground: hsl(0 0% 95%);
-    --sidebar-primary: #7c4dff;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: hsl(0 0% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: var(--primary);
-    --sidebar: hsl(240 5.9% 10%);
-
-    --neu-surface: #1c2230;
-    --neu-dark: #0c0f16;
-    --neu-light: #2a3446;
-  }
     h1, h2, h3, h4, h5, h6 {
       font-family: var(--font-inter-tight);
       color: var(--color-secondary);
@@ -143,4 +156,52 @@ Font base styles
         }
       }
     }
+  .dark {
+    /* Keep brand consistent in dark mode */
+    --primary: #222436;
+    --primary-foreground: #ffffff;
+    --ring: var(--primary);
+
+    /* Dark surfaces */
+    --background: #1c2230;
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(0 0% 3.9%);
+    --popover: hsl(0 0% 3.9%);
+
+    --secondary: hsl(0 0% 14.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(0 0% 16.08%);
+    --muted-foreground: hsl(0 0% 63.9%);
+    --accent: hsl(0 0% 14.9%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 84% 60%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(0 0% 14.9%);
+    --input: hsl(0 0% 14.9%);
+
+    --sidebar-background: hsl(240 5% 14%);
+    --sidebar-foreground: hsl(0 0% 95%);
+    --sidebar-primary: #7c4dff;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: hsl(0 0% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(0 0% 15.9%);
+    --sidebar-ring: var(--primary);
+    --sidebar: hsl(240 5.9% 10%);
+
+    --neu-surface: #1c2230;
+    --neu-dark: #0c0f16;
+    /*--neu-light: #2a3446;*/
+    --color-split-text: #fcfcfc;
+    --color-background: #0f1217;
+    --neu-button-shadow:
+            -2px -2px 4px rgba(255, 255, 255, 0.035),
+            -6px -6px 14px rgba(255, 255, 255, 0.05),
+            2px 2px 6px rgba(0, 0, 0, 0.45),
+            8px 8px 18px rgba(0, 0, 0, 0.65);
+    --neupho-btn-focus-shadow:
+            2px 2px 2px 0 rgba(0, 0, 0, 0.45) inset, -2px -2px 2px 0 rgba(255, 255, 255, 0.035) inset;
+    --shadow-neu-in:
+            2px 2px 2px 0 rgba(0, 0, 0, 0.8) inset, -2px -2px 2px 0 rgba(255, 255, 255, 0.035) inset;
+  }
 }

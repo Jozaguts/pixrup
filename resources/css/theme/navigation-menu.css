@@ -5,6 +5,7 @@
 
 /* Base navigation item styles */
 .navbar{
+  background-color: var(--neu-surface);
   @apply shadow-neu-in;
 }
 .nav-item {
