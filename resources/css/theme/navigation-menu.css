@@ -4,6 +4,9 @@
  */
 
 /* Base navigation item styles */
+.navbar{
+  @apply shadow-neu-in;
+}
 .nav-item {
   position: relative;
 }

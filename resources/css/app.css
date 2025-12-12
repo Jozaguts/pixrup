@@ -36,15 +36,11 @@
 
 @utility shadow-neu-out {
     box-shadow:
-            -4px -2px 4px 0px #ffffff,
-            4px 2px 6px 0px #dfe4ea;
+           var(--shadow-neu-out)
 }
 
 @utility shadow-neu-in {
-    box-shadow:
-            inset 2px 2px 5px #d1cccb,
-            inset -2px -2px 5px #ffffff;
-    /*box-shadow: var(--neu-shadow-in);*/
+    box-shadow: var(--shadow-neu-in);
 }
 
 @utility neu-center-shadow {
@@ -246,7 +242,4 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
     box-shadow: var(--neu-shadow-in);
     color: var(--foreground, #000);
-}
-.navbar {
-    background: var(--neu-surface);
 }

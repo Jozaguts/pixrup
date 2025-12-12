@@ -92,7 +92,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 <template>
     <header>
         <div
-            class="navbar shadow-neu-in !bg-[#eee]
+            class="navbar shadow-neu-in
             fixed top-6 md:left-1/2 lg:left-1/2 left-0
             w-2/2 lg:w-full md:w-full md:max-w-6xl lg:max-w-6xl
             z-[200] md:-translate-x-1/2 lg:-translate-x-1/2
@@ -129,7 +129,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                         <component
                             :is="item.external ? 'a' : Link"
                             :href="item.href"
-                            class=" neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:text-[#fcfcfc]"
+                            class=" neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:!text-[#fcfcfc]/60"
                             @click="closeMobileMenu"
                         >
                             <span>{{ item.label }}</span>
@@ -142,7 +142,7 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                 <component
                     :is="resolvePrimaryCta.external ? 'a' : Link"
                     :href="resolvePrimaryCta.href"
-                    class="neu-button inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                    class="neu-button inline-flex items-center justify-center rounded-full text-slate-600 dark:!text-[#fcfcfc]/60  px-6 py-2 text-sm font-semibold  transition hover:bg-slate-700"
                 >
                     <span>{{ resolvePrimaryCta.label }}</span>
                 </component>
