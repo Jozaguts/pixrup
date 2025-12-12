@@ -2,8 +2,10 @@
 import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
+import { gsap } from '@/lib/gsap';
+import { useHideNavbarOnScroll } from '@/lib/utils';
 
 interface NavItem {
     label: string;
@@ -22,13 +24,12 @@ const props = withDefaults(
         navItems: () => [],
     },
 );
-
+let gsap: gsap | null = null;
 const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
 const largeLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
-const compactLogo = new URL('../../../images/pixrup.png', import.meta.url)
-    .href;
+const compactLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
 
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
@@ -59,7 +60,7 @@ watch(
         closeMobileMenu();
     },
 );
-
+const navRef = ref<HTMLElement | null>(null)
 const resolvePrimaryCta = computed<NavItem>(() => {
     if (props.isAuthenticated) {
         return {
@@ -87,49 +88,35 @@ const resolvePrimaryCta = computed<NavItem>(() => {
         external: false,
     };
 });
+useHideNavbarOnScroll(navRef)
 </script>
 
 <template>
     <header>
         <div
-            class="navbar shadow-neu-in
-            fixed top-6 md:left-1/2 lg:left-1/2 left-0
-            w-2/2 lg:w-full md:w-full md:max-w-6xl lg:max-w-6xl
-            z-[200] md:-translate-x-1/2 lg:-translate-x-1/2
-            flex  items-center justify-between rounded-full p-4 shadow-lg backdrop-blur dark:bg-[#1f252f]"
+            ref="navRef"
+            class="navbar fixed top-6 left-0 z-[200] flex w-2/2 items-center justify-between rounded-full p-4 shadow-lg shadow-neu-in backdrop-blur md:left-1/2 md:w-full md:max-w-6xl md:-translate-x-1/2 lg:left-1/2 lg:w-full lg:max-w-6xl lg:-translate-x-1/2 dark:bg-[#1f252f]"
         >
             <div>
                 <Link href="/">
                     <span class="sr-only">Home</span>
-                    <figure class="hidden lg:block lg:max-w-[50px] ml-2">
+                    <figure class="ml-2 hidden lg:block lg:max-w-[50px]">
                         <img :src="largeLogo" alt="Pixrup" class="dark" />
                     </figure>
                     <figure class="block max-w-[44px] lg:hidden">
-                        <img
-                            :src="compactLogo"
-                            alt="Pixrup"
-                            class="block w-full dark:hidden"
-                        />
-                        <img
-                            :src="compactLogo"
-                            alt="Pixrup"
-                            class="hidden w-full invert dark:block"
-                        />
+                        <img :src="compactLogo" alt="Pixrup" class="block w-full dark:hidden" />
+                        <img :src="compactLogo" alt="Pixrup" class="hidden w-full invert dark:block" />
                     </figure>
                 </Link>
             </div>
 
             <nav class="hidden items-center xl:flex">
                 <ul class="flex items-center gap-1">
-                    <li
-                        v-for="item in menuItems"
-                        :key="item.label"
-                        class="relative cursor-pointer py-2.5 px-2"
-                    >
+                    <li v-for="item in menuItems" :key="item.label" class="relative cursor-pointer px-2 py-2.5">
                         <component
                             :is="item.external ? 'a' : Link"
                             :href="item.href"
-                            class=" neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:!text-[#fcfcfc]/60"
+                            class="neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:!text-[#fcfcfc]/60"
                             @click="closeMobileMenu"
                         >
                             <span>{{ item.label }}</span>
@@ -142,15 +129,15 @@ const resolvePrimaryCta = computed<NavItem>(() => {
                 <component
                     :is="resolvePrimaryCta.external ? 'a' : Link"
                     :href="resolvePrimaryCta.href"
-                    class="neu-button inline-flex items-center justify-center rounded-full text-slate-600 dark:!text-[#fcfcfc]/60  px-6 py-2 text-sm font-semibold  transition hover:bg-slate-700"
+                    class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-700 dark:!text-[#fcfcfc]/60"
                 >
                     <span>{{ resolvePrimaryCta.label }}</span>
                 </component>
             </div>
 
-            <div class="block xl:hidden bg-gray-200">
+            <div class="block bg-gray-200 xl:hidden">
                 <button
-                    class="flex size-12 flex-col items-center justify-center gap-[5px] rounded-[12px] neu-button  text-slate-900 shadow-md transition "
+                    class="neu-button flex size-12 flex-col items-center justify-center gap-[5px] rounded-[12px] text-slate-900 shadow-md transition"
                     type="button"
                     @click="toggleMobileMenu"
                 >
