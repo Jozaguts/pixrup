@@ -31,6 +31,7 @@
     --font-kulim: 'Kulim Park', sans-serif;
 }
 @utility neu-surface {
+    background-color: var(--neu-surface);
     box-shadow: var(--neupho-container-shadow);
 }
 
@@ -81,7 +82,7 @@
             inset -0.2rem -0.2rem 0.5rem var(--neu-surface);
     }
     .neu-btn {
-        @apply neu-surface shadow-neu-out;
+        @apply neu-surface;
         font-size: 18px;
         border-color: var(--neu-surface);
         color: color-mix(in oklab, var(--foreground, #000) 92%, #090909 8%);
@@ -140,16 +141,14 @@
     }
 
     .neu-card {
-        @apply neu-surface shadow-neu-out;
+        @apply neu-surface;
+        box-shadow: var(--shadow-neu-in);
+        color: var(--on-surface);
         padding: 1rem;
     }
 
-    .neu-card:hover {
-        @apply shadow-neu-in;
-    }
-
     .neu-switch {
-        @apply inline-flex items-center neu-surface shadow-neu-out;
+        @apply inline-flex items-center neu-surface;
         padding: 0.4rem;
         width: 64px;
         height: 50px;
