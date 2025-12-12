@@ -41,6 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 Route::get('services', function() {
     return Inertia::render('services/index');
 })->name('services');
+Route::get('blog', function() {
+    return Inertia::render('blog/index');
+})->name('blog');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.store');

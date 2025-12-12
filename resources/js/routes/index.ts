@@ -330,3 +330,77 @@ servicesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 })
 
 services.form = servicesForm
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+export const blog = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: blog.url(options),
+    method: 'get',
+})
+
+blog.definition = {
+    methods: ["get","head"],
+    url: '/blog',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+blog.url = (options?: RouteQueryOptions) => {
+    return blog.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+blog.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: blog.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+blog.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: blog.url(options),
+    method: 'head',
+})
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+const blogForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: blog.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+blogForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: blog.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:44
+* @route '/blog'
+*/
+blogForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: blog.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+blog.form = blogForm

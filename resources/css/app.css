@@ -17,7 +17,7 @@
 /*@import './vendor/vanilla-infinite-marquee.min.css';*/
 /*@import './vendor/swiper.min.css';*/
 /*@import './vendor/leaflet.min.css';*/
-/*@import './custom-swiper';*/
+@import './theme/custom-swiper.css';
 /*@import './number-animation';*/
 @import './inputs.css';
 @import 'tw-animate-css';
