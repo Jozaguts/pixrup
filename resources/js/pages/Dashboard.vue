@@ -9,14 +9,14 @@ import type {
     User,
 } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { Building2, Compass, MapPin, Plus, TrendingUp } from 'lucide-vue-next';
+import { TrendingUp } from 'lucide-vue-next';
 import { computed } from 'vue';
 import DashboardSection from '@/components/DashboardSection.vue';
 import { Icon } from '@iconify/vue';
 import CardDisplay from '@/components/card-display.vue';
 import PropertyCard from '@/components/properties/property-card.vue';
 
-type PropertyStatus = 'in-progress' | 'ready' | 'pending' | 'draft';
+
 
 type DashboardUser = User & {
     plan?: string | null;
@@ -86,36 +86,6 @@ const planDefinitions = {
     premium: { name: 'Premium', limit: 80 },
     enterprise: { name: 'Enterprise', limit: null },
 } as const;
-
-const statusStyles: Record<
-    PropertyStatus,
-    { label: string; badgeClass: string; dotClass: string }
-> = {
-    'in-progress': {
-        label: 'In Progress',
-        badgeClass:
-            'bg-[#FFF4DA] text-[#9A6B00] shadow-[inset_2px_2px_6px_rgba(226,189,116,0.4)]',
-        dotClass: 'bg-[#FFB74A]',
-    },
-    ready: {
-        label: 'Ready',
-        badgeClass:
-            'bg-[#E4F9F0] text-[#0B6B4F] shadow-[inset_2px_2px_6px_rgba(134,212,182,0.35)]',
-        dotClass: 'bg-[#1DBE78]',
-    },
-    pending: {
-        label: 'Pending Review',
-        badgeClass:
-            'bg-[#E9EDFF] text-[#2E3A8C] shadow-[inset_2px_2px_6px_rgba(124,137,224,0.35)]',
-        dotClass: 'bg-[#4C5FD5]',
-    },
-    draft: {
-        label: 'Draft',
-        badgeClass:
-            'bg-[#F1F2F6] text-[#4B5563] shadow-[inset_2px_2px_6px_rgba(163,169,187,0.35)]',
-        dotClass: 'bg-[#9CA3AF]',
-    },
-};
 
 const page = usePage<DashboardPageProps>();
 
@@ -288,24 +258,6 @@ const resolvedProperties = computed<DashboardProperty[]>(() => {
     return mockProperties;
 });
 
-const hasProperties = computed(() => resolvedProperties.value.length > 0);
-
-const isUsingMockData = computed(() => !Array.isArray(page.props.properties));
-
-const currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-});
-
-const formatCurrency = (value?: number) => {
-    if (value == null) {
-        return '—';
-    }
-
-    return currencyFormatter.format(value);
-};
-
 const openNewPropertyWizard = () => {
     router.visit('/properties/new');
 };
@@ -387,7 +339,7 @@ const visitLink = (link?: string) => {
                     >
                         <div class="flex items-center gap-3">
                             <div
-                                class="flex size-12 items-center justify-center rounded-full text-black pointer-events-none shadow-neu-in text-[#7C4DFF]"
+                                class="flex size-12 items-center justify-center rounded-full text-black pointer-events-none shadow-neu-in "
                             >
                                 <TrendingUp class="size-5" />
                             </div>

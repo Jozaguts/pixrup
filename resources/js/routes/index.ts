@@ -256,3 +256,77 @@ dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 })
 
 dashboard.form = dashboardForm
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+export const services = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: services.url(options),
+    method: 'get',
+})
+
+services.definition = {
+    methods: ["get","head"],
+    url: '/services',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+services.url = (options?: RouteQueryOptions) => {
+    return services.definition.url + queryParams(options)
+}
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+services.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: services.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+services.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: services.url(options),
+    method: 'head',
+})
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+const servicesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: services.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+servicesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: services.url(options),
+    method: 'get',
+})
+
+/**
+* @see routes/web.php:41
+* @route '/services'
+*/
+servicesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: services.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+services.form = servicesForm

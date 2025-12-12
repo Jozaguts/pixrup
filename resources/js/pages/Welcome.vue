@@ -10,10 +10,10 @@ import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
-import WorthPreviewModal, {
+import {
     type ComparableProperty,
 } from '@/components/welcome/WorthPreviewModal.vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
 const props = withDefaults(
@@ -93,28 +93,6 @@ const selectedAddress = ref<AddressSelection | null>(null);
 const estimatedValue = ref<number>();
 const comparableProperties = ref<ComparableProperty[]>([]);
 const isWorthModalOpen = ref(false);
-
-const buildQueryFromSelection = (selection: AddressSelection) => {
-    const query = new URLSearchParams({
-        address: selection.formattedAddress,
-        lat: selection.location.lat.toString(),
-        lng: selection.location.lng.toString(),
-        placeId: selection.placeId,
-    });
-
-    return query.toString();
-};
-
-const navigateToWeb = () => {
-    if (!selectedAddress.value) {
-        return;
-    }
-
-    const destination = isAuthenticated.value ? '/dashboard' : '/register';
-    const query = buildQueryFromSelection(selectedAddress.value);
-
-    router.visit(`${destination}?${query}`);
-};
 
 const createMockPreview = (selection: AddressSelection) => {
     const rawEstimate =

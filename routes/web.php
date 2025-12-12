@@ -19,9 +19,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
     Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
@@ -36,8 +37,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/v1/usage', UsageSummaryController::class)->name('usage.summary');
     Route::get('properties/{property}/fetch', [SpyHuntController::class, 'fetch'])->name('properties.spyhunt.fetch');
     Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');
-
 });
+Route::get('services', function() {
+    return Inertia::render('services/index');
+})->name('services');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.store');
