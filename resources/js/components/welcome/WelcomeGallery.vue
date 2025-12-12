@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { initHomePage33Animations } from '@/lib/homePage33Animations';
+import { initHomeAnimations } from '@/lib/homeAnimations';
 import { nextTick, onMounted } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
 import Card from '@/components/template/services/Card.vue';
@@ -9,7 +9,7 @@ defineProps<{
 }>();
 onMounted(async () => {
     await nextTick();
-    await initHomePage33Animations();
+    await initHomeAnimations();
 });
 </script>
 

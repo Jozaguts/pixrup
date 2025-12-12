@@ -40,12 +40,10 @@ const primaryLink = { label: 'Sign up', href: 'register' };
                 :primary-link="primaryLink"
             />
 
-            <main class="mt-20 flex flex-1 flex-col items-center justify-center text-center">
+            <main>
                 <slot name="main"></slot>
             </main>
         </div>
         <ThemeToggle />
     </div>
 </template>
-
-<style scoped></style>

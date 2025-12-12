@@ -89,7 +89,7 @@ const initRevealElements = () => {
     });
 };
 
-export const initHomePage33Animations = async () => {
+export const initHomeAnimations = async () => {
     await ensureSpringer();
     await ensureStackCards();
 

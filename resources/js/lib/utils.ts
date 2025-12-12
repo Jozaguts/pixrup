@@ -31,7 +31,6 @@ export function useHideNavbarOnScroll(navRef: Ref<HTMLElement | null>) {
             start: 0,
             end: 'max',
             onUpdate(self) {
-                console.log(self);
                 const scrollY = self.scroll()
                 if (scrollY <= ACTIVATION_OFFSET){
                     gsap.to(nav,{
