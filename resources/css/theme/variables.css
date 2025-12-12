@@ -144,9 +144,6 @@ All the varaiables are added here
         --foreground: #1f2933; /* richer neutral for text */
 
         /* --- Backgrounds / surfaces --- */
-        --background_legacy: #e8e8e8;
-        /*--background: #E6EAF0; !*#ebe8f3;  light neutral for app background *!*/
-        --background:#eee; /*#ebe8f3;  light neutral for app background */
         --card: var(--background);
         --popover: var(--background);
 

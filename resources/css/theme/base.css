@@ -5,6 +5,7 @@ Font base styles
   :root{
     /* neuphormist    */
     --neu-surface: #E8E8E8;
+    --background: #EEE;
     --on-surface: #1a1a1c;
     --neu-dark: #c5c5c5;
     --neu-light: #ffffff;
@@ -68,7 +69,7 @@ Font base styles
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
   }
 
     h1, h2, h3, h4, h5, h6 {
@@ -163,7 +164,7 @@ Font base styles
     --ring: var(--primary);
 
     /* Dark surfaces */
-    --background: #1c2230;
+    --background: #181d26;
     --foreground: hsl(0 0% 98%);
     --card: hsl(0 0% 3.9%);
     --popover: hsl(0 0% 3.9%);
@@ -193,7 +194,7 @@ Font base styles
     --neu-dark: #0c0f16;
     /*--neu-light: #2a3446;*/
     --color-split-text: #fcfcfc;
-    --color-background: #0f1217;
+    --color-background: #181d26;
     --neu-button-shadow:
             -2px -2px 4px rgba(255, 255, 255, 0.035),
             -6px -6px 14px rgba(255, 255, 255, 0.05),
