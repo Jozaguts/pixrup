@@ -171,31 +171,33 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
 <template>
     <GuestLayout :can-register="props.canRegister">
         <template #main>
-            <FloatingRobot />
-            <WelcomeBackground />
-            <HeroSection />
-            <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px] z-[100]">
-                <AddressSearch
-                    v-model="addressQuery"
-                    @place-selected="handlePlaceSelected"
+            <div class="mt-20 flex flex-1 flex-col items-center justify-center text-center">
+                <FloatingRobot />
+                <WelcomeBackground />
+                <HeroSection />
+                <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px] z-[100]">
+                    <AddressSearch
+                        v-model="addressQuery"
+                        @place-selected="handlePlaceSelected"
+                    />
+                </div>
+                <ContinueButtons
+                    :address-data="selectedAddress"
+                    :is-authenticated="isAuthenticated"
+                    @continue-web="isWorthModalOpen = false"
+                    @continue-app="isWorthModalOpen = false"
+                />
+                <WelcomeGallery :listings="listings" />
+                <WelcomeFooter />
+                <WorthPreviewModal
+                    :open="isWorthModalOpen && Boolean(selectedAddress)"
+                    :address="selectedAddress?.formattedAddress"
+                    :estimated-value="estimatedValue"
+                    :comps="comparableProperties"
+                    @update:open="(value) => (isWorthModalOpen = value)"
+                    @appraise="handleAppraiseFullProperty"
                 />
             </div>
-            <ContinueButtons
-                :address-data="selectedAddress"
-                :is-authenticated="isAuthenticated"
-                @continue-web="isWorthModalOpen = false"
-                @continue-app="isWorthModalOpen = false"
-            />
-            <WelcomeGallery :listings="listings" />
-            <WelcomeFooter />
-            <WorthPreviewModal
-                :open="isWorthModalOpen && Boolean(selectedAddress)"
-                :address="selectedAddress?.formattedAddress"
-                :estimated-value="estimatedValue"
-                :comps="comparableProperties"
-                @update:open="(value) => (isWorthModalOpen = value)"
-                @appraise="handleAppraiseFullProperty"
-            />
         </template>
     </GuestLayout>
 </template>
