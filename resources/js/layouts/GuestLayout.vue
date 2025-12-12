@@ -6,9 +6,11 @@ import { computed } from 'vue';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
+        title: string;
     }>(),
     {
         canRegister: true,
+        title:'Welcome',
     },
 );
 const page = usePage();
@@ -23,7 +25,7 @@ const primaryLink = { label: 'Sign up', href: 'register' };
 </script>
 
 <template>
-    <Head title="Welcome">
+    <Head :title="props.title">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
         <link
