@@ -19,7 +19,6 @@ onMounted(async () => {
 });
 const service_1 = new URL('../../../images/services-1.png', import.meta.url).href;
 const service_2 = new URL('../../../images/services-2.png', import.meta.url).href;
-const service_3 = new URL('../../../images/services-3.png', import.meta.url).href;
 </script>
 <template>
     <GuestLayout :can-register="props.canRegister" title="Service details">
