@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\GlowUp\GlowUpJobResource;
 use App\Interface\Properties\Http\Requests\CreatePropertyRequest;
 use App\Models\Property;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -57,7 +58,6 @@ class PropertyController extends Controller
     {
         return Inertia::render('properties/New');
     }
-
     public function show(Property $property): Response
     {
         $property->load('latestWorth');
@@ -119,8 +119,8 @@ class PropertyController extends Controller
                     ['id' => 'glowUp', 'label' => 'Glow-Up', 'module' => 'pixrGlowUp'],
                     ['id' => 'spyHunt', 'label' => 'SpyHunt', 'module' => 'pixrSpyHunt'],
                     ['id' => 'vision', 'label' => '3D Tour', 'module' => 'pixrVision'],
-                    ['id' => 'seal', 'label' => 'Report', 'module' => 'pixrSeal'],
-                    ['id' => 'collab', 'label' => 'Collab', 'module' => 'pixrCollab'],
+//                    ['id' => 'seal', 'label' => 'Report', 'module' => 'pixrSeal'],
+//                    ['id' => 'collab', 'label' => 'Collab', 'module' => 'pixrCollab'],
                 ],
                 'modules' => [
                     'overview' => [
@@ -148,16 +148,16 @@ class PropertyController extends Controller
                         'status' => 'ready',
                         'last_run_at' => now()->subDays(5)->toIso8601String(),
                     ],
-                    'pixrSeal' => [
-                        'endpoint' => "/api/properties/{$property->id}/report",
-                        'status' => $latestWorth ? 'ready' : 'draft',
-                        'last_run_at' => null,
-                    ],
-                    'pixrCollab' => [
-                        'endpoint' => "/api/properties/{$property->id}/collab/token",
-                        'status' => 'ready',
-                        'last_run_at' => now()->subMinutes(5)->toIso8601String(),
-                    ],
+//                    'pixrSeal' => [
+//                        'endpoint' => "/api/properties/{$property->id}/report",
+//                        'status' => $latestWorth ? 'ready' : 'draft',
+//                        'last_run_at' => null,
+//                    ],
+//                    'pixrCollab' => [
+//                        'endpoint' => "/api/properties/{$property->id}/collab/token",
+//                        'status' => 'ready',
+//                        'last_run_at' => now()->subMinutes(5)->toIso8601String(),
+//                    ],
                 ],
             ],
             'glowUp' => [
@@ -209,5 +209,9 @@ class PropertyController extends Controller
         return redirect()
             ->route('dashboard')
             ->with('status', 'property-created');
+    }
+    public function overview(): JsonResponse
+    {
+        return response()->json(['status' => 'overview']);
     }
 }

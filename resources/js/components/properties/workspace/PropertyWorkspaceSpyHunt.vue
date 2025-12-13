@@ -80,7 +80,7 @@ onMounted(() => {
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
         <section v-else-if="isReady">
             <div class="mt-10 md:grid lg:grid gap-4 md:grid-cols-12 lg:grid-cols-12 flex flex-col">
-                <div class="h-full min-h-[600px] rounded-[12px] col-span-1 md:col-span-9 lg:col-span-9 ">
+                <div class="shadow-neu-in p-6 bg-gray-200 rounded-[12px] mt-4 h-full min-h-[600px] rounded-[12px] col-span-1 md:col-span-9 lg:col-span-9 ">
                     <div class="flex flex-col lg:hidden md:hidden npo-form-shadow  p-4 rounded-[12px] mb-4 ">
                         <div class="relative mb-6 ">
                             <label for="labels-range-input" class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase">Radius</label>

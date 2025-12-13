@@ -148,11 +148,10 @@ const handleLogout = () => {
                                 <Link
                                     :href="item.href"
                                     :class="cn( item.isActive && '!shadow-neu-in',
-                                     item.isActive ? '' : 'active',
-                                     '!text-black font-semibold neu-button'
+                                     '!text-secondary font-semibold neu-button active dark:!text-accent'
                                      )"
                                 >
-                                    <Icon :icon="item.icon as string" class="!w-6 !h-6 text-black" />
+                                    <Icon :icon="item.icon as string" class="!w-6 !h-6" />
                                     <span>{{ item.title }}</span>
                                 </Link>
                             </SidebarMenuButton>

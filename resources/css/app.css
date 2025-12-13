@@ -17,7 +17,7 @@
 /*@import './vendor/vanilla-infinite-marquee.min.css';*/
 /*@import './vendor/swiper.min.css';*/
 /*@import './vendor/leaflet.min.css';*/
-/*@import './custom-swiper';*/
+@import './theme/custom-swiper.css';
 /*@import './number-animation';*/
 @import './inputs.css';
 @import 'tw-animate-css';
@@ -32,7 +32,6 @@
 }
 @utility neu-surface {
     background-color: var(--neu-surface);
-    box-shadow: var(--neupho-container-shadow);
 }
 
 @utility shadow-neu-out {

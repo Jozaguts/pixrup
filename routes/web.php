@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
     Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
+    Route::get('/properties/{property}/overview', [PropertyController::class, 'overview'])->name('properties.overview');
     Route::post('/properties/{property}/worth/fetch', [AppraisalPropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
     Route::post('/properties/{property}/worth/report', [LegacyPropertyWorthController::class, 'report'])->name('properties.worth.report');
     Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
@@ -41,6 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 Route::get('services', static function() {
     return Inertia::render('services/index', []);
 })->name('services');
+Route::get('blog', function() {
+    return Inertia::render('blog/index');
+})->name('blog');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.store');

@@ -15,6 +15,7 @@ onMounted(async () => {
 
 <template>
     <section
+        id="features"
         class="pt-0 pb-[220px] sm:pb-14 md:pt-0 md:pb-16 lg:pt-[0px] lg:pb-[88px] xl:pt-[0px] xl:pb-[100px]"
     >
         <div class="main-container mt-[200px]">

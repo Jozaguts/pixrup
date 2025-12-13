@@ -2,12 +2,11 @@
 
 namespace App\Infrastructure\Property\Providers;
 
+use App\Application\Properties\DTOs\DetailsAdvancedDTO;
 use App\Application\Properties\DTOs\PropertyWorthDTO;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Properties\Entities\PropertyEntity;
-use App\Models\Property;
 use GuzzleHttp\Promise\PromiseInterface;
-use http\Exception\RuntimeException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -109,5 +108,63 @@ class HouseCanaryProvider implements AppraisalProviderInterface
 
 
         return $full;
+    }
+
+    public function detailsAdvanced(PropertyEntity $property): DetailsAdvancedDTO
+    {
+        $params = $this->buildHCParams($property);
+
+        $valueResp = $this->get('/v3/property/details_advanced', [
+            'address' => $params['address'],
+        ])->json();
+
+        $subjectAddress =  $valueResp['subject_address'];
+         $publicRecords = $valueResp['public_records'];
+         $hc = $valueResp['hc'];
+         $assessment = $valueResp['assessment'];
+         $errors = $valueResp['errors'];
+
+         return new DetailsAdvancedDTO(
+            $subjectAddress,
+            $publicRecords,
+            $hc,
+            $assessment,
+            $errors
+        );
+    }
+
+    public function census(PropertyEntity $property)
+    {
+        // TODO: Implement census() method.
+    }
+
+    public function salesHistory(PropertyEntity $property)
+    {
+        // TODO: Implement salesHistory() method.
+    }
+
+    public function ownerOccupied(PropertyEntity $property)
+    {
+        // TODO: Implement ownerOccupied() method.
+    }
+
+    public function femaDisasterArea(PropertyEntity $property)
+    {
+        // TODO: Implement femaDisasterArea() method.
+    }
+
+    public function flood(PropertyEntity $property)
+    {
+        // TODO: Implement flood() method.
+    }
+
+    public function blockCrime(PropertyEntity $property)
+    {
+        // TODO: Implement blockCrime() method.
+    }
+
+    public function marketPulse(PropertyEntity $property, string $type = 'latest')
+    {
+        // TODO: Implement marketPulse() method.
     }
 }
