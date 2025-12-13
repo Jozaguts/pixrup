@@ -30,6 +30,10 @@
             type: Boolean,
             default: true,
         },
+        isDisabled: {
+            type: Boolean,
+            default: false,
+        },
     });
     const emit = defineEmits(['onchange']);
 
@@ -57,12 +61,13 @@
         <button
             v-for="item in props.items"
             :key="item.id"
-            @click="setActiveTab(item)"
+            @click="!props.isDisabled? setActiveTab(item) : null"
             :class="cn(
                 'tab relative flex items-center rounded-md px-6 py-3 transition-colors duration-200',
                 'text-neutral-500 hover:bg-neutral-200/60 hover:text-black',
                  'dark:text-neutral-400 dark:hover:bg-neutral-700/60',
                 value === item.id && 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100',
+                props.isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
                 props.class
             )"
         >

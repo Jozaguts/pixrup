@@ -8,8 +8,9 @@ import PropertyWorkspaceVision from '@/components/properties/workspace/PropertyW
 import PropertyWorkspaceWorth from '@/components/properties/workspace/PropertyWorkspaceWorth.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
+import {usePage} from "@inertiajs/vue3";
 import propertiesRoutes from '@/routes/properties';
-import type { BreadcrumbItem } from '@/types';
+import type {BreadcrumbItem, DashboardPageProps} from '@/types';
 import { Head } from '@inertiajs/vue3';
 import {
     Box,
@@ -50,6 +51,8 @@ interface WorkspaceModuleDefinition {
     description: string;
 }
 
+const page = usePage<DashboardPageProps>();
+const isExceeded = computed(() => page.props.flash?.limitExceeded ?? false);
 const modules: WorkspaceModuleDefinition[] = [
     {
         id: 'overview',
@@ -379,10 +382,10 @@ const headerMetricCards = computed(() => {
                     :id="`module-${activeModule.id}`"
                     role="tabpanel"
                     :aria-labelledby="`tab-${activeModule.id}`"
-                    class="relative min-h-[420px] rounded-[12px] mx-"
+                    class="relative min-h-[420px] rounded-[12px] mx-2"
                 >
                     <div class=" lg:w-fit md:w-fit lg:m-0 md:m-0 mx-auto">
-                        <NeuphormistTabs :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />
+                        <NeuphormistTabs :isDisabled="isExceeded" :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />
                     </div>
                     <KeepAlive>
                         <component
