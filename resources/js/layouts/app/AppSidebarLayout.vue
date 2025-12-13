@@ -7,6 +7,10 @@ import type { BreadcrumbItemType, DashboardPageProps } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { CheckCircle2, X } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
+import ToastAlert from "@/components/shared/ToastAlert.vue";
+import {LimitExceededToastProps as ToastProps} from "@/lib/shared/LimitExceededToastProps";
+import Swal from 'sweetalert2';
+
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -19,6 +23,7 @@ const page = usePage<DashboardPageProps>();
 const successToastStorageKey = 'pixrup:new-property-toast';
 const propertyToastMessage = ref('');
 const flashStatus = computed(() => page.props.flash?.status ?? null);
+const limitExceededStatus = computed(() => page.props.flash?.limitExceeded ?? false);
 
 onMounted(() => {
     if (typeof window === 'undefined') {
@@ -57,6 +62,13 @@ const dismissPropertyToast = () => {
 
 <template>
     <AppShell variant="sidebar">
+        <ToastAlert
+            :title="ToastProps.title"
+            :msg="ToastProps.description"
+            :type="ToastProps.type as 'success'"
+            :visible="limitExceededStatus"
+            redirect-url="/settings/billing"
+        />
         <AppSidebar />
         <AppContent variant="sidebar" class="overflow-x-hidden">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />

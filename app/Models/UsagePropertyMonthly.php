@@ -5,11 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
+use App\Observers\UsagePropertyMonthlyObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+/**
+ * @property User $user
+ */
+#[ObservedBy(UsagePropertyMonthlyObserver::class)]
 class UsagePropertyMonthly extends Model
 {
     use HasFactory;
 
+    public string $period_key = '';
     protected $fillable = [
         'account_scope_type',
         'account_scope_id',

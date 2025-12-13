@@ -26,6 +26,7 @@ export type AppPageProps<
     sidebarOpen: boolean;
     mustVerifyEmail: boolean;
     flash: {
+        limitExceeded?: boolean;
         status?: string | null;
         glowupJob?: GlowUpJobPayload | null;
     };

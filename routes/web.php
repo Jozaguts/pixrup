@@ -38,8 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('properties/{property}/fetch', [SpyHuntController::class, 'fetch'])->name('properties.spyhunt.fetch');
     Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');
 });
-Route::get('services', function() {
-    return Inertia::render('services/index');
+Route::get('services', static function() {
+    return Inertia::render('services/index', []);
 })->name('services');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
@@ -79,3 +79,9 @@ Route::middleware( ['auth', 'verified'])
             'storeLogo'
         ])->name('pdf.logos.new');
     });
+
+Route::middleware(['auth','verified'])->prefix('plan')->group(function () {
+    Route::get('/upgrade', static function(){
+        return Inertia::render('plan/upgrade/Index',[]);
+    })->name('plan.upgrade');
+});

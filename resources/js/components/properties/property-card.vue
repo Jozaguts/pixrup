@@ -17,7 +17,7 @@
                     <div class="flex flex-wrap items-center gap-4 text-sm text-[#475569]">
                         <div class="flex flex-col">
                             <span class="text-xs tracking-wide text-[#9CA3AF] uppercase"> Estimated value </span>
-                            <span class="font-semibold">_ &nbsp;$108K</span>
+                            <span class="font-semibold">_ &nbsp;{{props.item?.estimatedValue}}</span>
                         </div><!---->
                     </div>
 

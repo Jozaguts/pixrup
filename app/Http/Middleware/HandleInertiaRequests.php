@@ -34,7 +34,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/shared-data
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function share(Request $request): array
     {
@@ -53,6 +53,11 @@ class HandleInertiaRequests extends Middleware
                 $userPayload['plan_usage'] = $planUsage;
             }
         }
+
+        $periodKey = $planUsage['period_key'] ?? now()->format('Y-m');
+        $cacheKey = generateMonthlyUsageCacheKey($user?->getKey() ?? 'guest', $periodKey);
+        $cachePayload = cache()->get($cacheKey);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -65,6 +70,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'status' => $request->session()->get('status'),
                 'glowupJob' => $request->session()->get('glowupJob'),
+                'limitExceeded' =>$cachePayload['limitExceeded'] ?? false,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

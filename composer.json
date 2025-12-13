@@ -20,6 +20,7 @@
         "laravel/wayfinder": "^0.1.9",
         "league/flysystem-aws-s3-v3": "^3.24",
         "mailgun/mailgun-php": "^4.3",
+        "predis/predis": "^3.3",
         "pusher/pusher-php-server": "^7.2",
         "sentry/sentry-laravel": "^4.18"
     },
@@ -39,7 +40,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/index.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
