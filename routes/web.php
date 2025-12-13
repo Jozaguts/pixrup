@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
     Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
+    Route::get('/properties/{property}/overview', [PropertyController::class, 'overview'])->name('properties.overview');
     Route::post('/properties/{property}/worth/fetch', [AppraisalPropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
     Route::post('/properties/{property}/worth/report', [LegacyPropertyWorthController::class, 'report'])->name('properties.worth.report');
     Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');

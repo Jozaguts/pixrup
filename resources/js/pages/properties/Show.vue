@@ -91,22 +91,22 @@ const modules: WorkspaceModuleDefinition[] = [
         component: PropertyWorkspaceVision,
         description: 'Immersive tour and assets management.',
     },
-    {
-        id: 'pixrSeal',
-        label: 'PixrSeal',
-        subtitle: 'Report Builder',
-        icon: 'mdi:certificate-outline',
-        component: PropertyWorkspaceSeal,
-        description: 'Generate investor-ready docs and shareables.',
-    },
-    {
-        id: 'pixrCollab',
-        label: 'PixrCollab',
-        subtitle: 'Realtime Chat',
-        icon: 'mdi:account-group',
-        component: PropertyWorkspaceCollab,
-        description: 'Collaborate with partners and clients live.',
-    },
+    // {
+    //     id: 'pixrSeal',
+    //     label: 'PixrSeal',
+    //     subtitle: 'Report Builder',
+    //     icon: 'mdi:certificate-outline',
+    //     component: PropertyWorkspaceSeal,
+    //     description: 'Generate investor-ready docs and shareables.',
+    // },
+    // {
+    //     id: 'pixrCollab',
+    //     label: 'PixrCollab',
+    //     subtitle: 'Realtime Chat',
+    //     icon: 'mdi:account-group',
+    //     component: PropertyWorkspaceCollab,
+    //     description: 'Collaborate with partners and clients live.',
+    // },
 ];
 
 const activeModuleId = ref<ModuleId>('overview');
