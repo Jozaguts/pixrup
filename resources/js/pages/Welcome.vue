@@ -210,16 +210,17 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                             >
                                 <!-- contact info cards  -->
                                 <div data-ns-animate data-delay="0.4" class="flex flex-col gap-8 md:flex-row lg:flex-col">
+
                                     <!-- contact info two  -->
                                     <div
-                                        class="card-item bg-secondary  rounded-[12px] p-11 w-full md:max-w-[371px] text-center relative overflow-hidden"
+                                        class="card-item bg-secondary dark:bg-background-6 rounded-[20px] p-11 w-full md:max-w-[371px] text-center relative overflow-hidden"
                                     >
                                         <!-- bg overlay  -->
                                         <figure
                                             class="absolute size-[350px] select-none pointer-events-none overflow-hidden top-[-206px] left-[-36px] rotate-[62deg]"
                                         >
                                             <img
-                                                src="images/gradient/gradient-25.png"
+                                                src="images/gradient/gradient-17.png"
                                                 alt="Decorative gradient overlay"
                                                 class="size-full object-cover"
                                             />
@@ -237,24 +238,32 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                                             <div class="space-y-2.5">
                                                 <p class="text-heading-6 text-accent">Email Us</p>
                                                 <p class="text-accent/60">
-                                                    <a href="mailto:hello@nextsaaS.com">hello@nextsaaS.com</a>
+                                                    <a href="mailto:hello@nextsaaS.com">hello@pixrup.com</a>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
+
+
+
                                 </div>
 
                                 <!-- contact form  -->
                                 <div
                                     data-ns-animate
                                     data-delay="0.3"
-                                    class="max-w-[847px] w-full mx-auto neu-card  p-6 md:p-8 lg:p-11"
+                                    class="max-w-[847px] w-full mx-auto bg-white dark:bg-background-6 rounded-4xl p-6 md:p-8 lg:p-11"
                                 >
                                     <form action="/index.html" method="POST" class="space-y-8">
                                         <!-- name and phone number  -->
                                         <div class="flex items-center flex-col md:flex-row gap-8 justify-between">
                                             <!--  name -->
-                                            <div class="space-y-2 lg:max-w-[364px] w-full npo-input-wrapper">
+                                            <div class="space-y-2 lg:max-w-[364px] w-full">
+                                                <label
+                                                    for="fullname"
+                                                    class="block text-tagline-2 text-secondary dark:text-accent font-medium"
+                                                >Your name</label
+                                                >
                                                 <input
                                                     type="text"
                                                     id="fullname"
@@ -262,13 +271,17 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                                                     placeholder="Enter your name"
                                                     required
                                                     autocomplete="name"
-                                                    class="npo-input w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px]   border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                    class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
                                                 />
                                             </div>
 
                                             <!-- number -->
-                                            <div class="space-y-2 max-w-[364px] w-full npo-input-wrapper">
-
+                                            <div class="space-y-2 max-w-[364px] w-full">
+                                                <label
+                                                    for="number"
+                                                    class="block text-tagline-2 text-secondary dark:text-accent font-medium"
+                                                >Your number</label
+                                                >
                                                 <input
                                                     type="text"
                                                     id="number"
@@ -276,13 +289,18 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                                                     placeholder="Enter your number"
                                                     required
                                                     autocomplete="tel"
-                                                    class="w-full npo-input px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px]  border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                    class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
                                                 />
                                             </div>
                                         </div>
 
                                         <!-- email  -->
-                                        <div class="space-y-2 npo-input-wrapper">
+                                        <div class="space-y-2">
+                                            <label
+                                                for="email"
+                                                class="block text-tagline-2 text-secondary dark:text-accent font-medium"
+                                            >Email address</label
+                                            >
                                             <input
                                                 type="email"
                                                 id="email"
@@ -290,38 +308,48 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                                                 placeholder="Enter your email"
                                                 required
                                                 autocomplete="email"
-                                                class="w-full px-[18px] npo-input dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px]  border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
                                             />
                                         </div>
 
                                         <!-- subject  -->
-                                        <div class="space-y-2 npo-input-wrapper">
+                                        <div class="space-y-2">
+                                            <label
+                                                for="subject"
+                                                class="block text-tagline-2 text-secondary dark:text-accent font-medium"
+                                            >Subject</label
+                                            >
                                             <input
                                                 type="text"
                                                 id="subject"
                                                 name="subject"
                                                 placeholder="Enter your subject"
                                                 required
-                                                class="w-full px-[18px] npo-input dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px]  border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
                                             />
                                         </div>
 
                                         <!-- message -->
-                                        <div class="space-y-2 npo-input-wrapper">
+                                        <div class="space-y-2">
+                                            <label
+                                                for="message"
+                                                class="block text-tagline-2 text-secondary dark:text-accent font-medium"
+                                            >Write message</label
+                                            >
                                             <textarea
                                                 id="message"
                                                 name="message"
                                                 rows="7"
                                                 placeholder="Enter your messages"
                                                 required
-                                                class="w-full px-[18px]  npo-input py-3 rounded-xl border  dark:border-stroke-7 border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary dark:focus-visible:border-stroke-4/20 placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                class="w-full px-[18px] py-3 rounded-xl border dark:bg-background-6 dark:border-stroke-7 border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary dark:focus-visible:border-stroke-4/20 placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
                                             ></textarea>
                                         </div>
 
                                         <!-- terms checkbox -->
                                         <fieldset class="flex items-center gap-2 mb-4">
-                                            <label for="terms" class="flex items-center gap-x-3  npo-input-wrapper">
-                                                <input id="terms" type="checkbox" class="sr-only peer npo-input" required />
+                                            <label for="terms" class="flex items-center gap-x-3">
+                                                <input id="terms" type="checkbox" class="sr-only peer" required />
                                                 <span
                                                     class="size-4 rounded-full border border-stroke-3 dark:border-stroke-7 relative after:absolute after:size-2.5 after:bg-primary-500 after:rounded-full after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:opacity-0 peer-checked:after:opacity-100 peer-checked:border-primary-500 cursor-pointer"
                                                 ></span>
@@ -340,7 +368,7 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                                         <!-- submit button -->
                                         <button
                                             type="submit"
-                                            class="btn neu-button dark:!text-gray-200 btn-md btn-secondary w-full hover:btn-primary before:content-none first-letter:uppercase "
+                                            class="btn btn-md btn-secondary w-full hover:btn-primary dark:btn-accent before:content-none first-letter:uppercase"
                                         >
                                             Submit
                                         </button>

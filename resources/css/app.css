@@ -32,7 +32,6 @@
 }
 @utility neu-surface {
     background-color: var(--neu-surface);
-    box-shadow: var(--neupho-container-shadow);
 }
 
 @utility shadow-neu-out {
