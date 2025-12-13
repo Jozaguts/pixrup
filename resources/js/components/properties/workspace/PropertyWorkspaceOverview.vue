@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import {
-    Activity,
     CalendarClock,
     ClipboardList,
-    Home,
-    Ruler,
-    VenetianMask,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
@@ -18,47 +14,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const cards = computed(() => {
-    const summary = props.property.summary ?? {};
-    const pricing = props.property.pricing ?? {};
-
-    return [
-        {
-            id: 'propertyType',
-            label: 'Property Type',
-            value: summary.propertyType ?? 'Not specified',
-            icon: Home,
-        },
-        {
-            id: 'bedBath',
-            label: 'Beds / Baths',
-            value:
-                summary.bedrooms || summary.bathrooms
-                    ? `${summary.bedrooms ?? '—'} bd • ${summary.bathrooms ?? '—'} ba`
-                    : '—',
-            icon: VenetianMask,
-        },
-        {
-            id: 'livingArea',
-            label: 'Living Area',
-            value: summary.livingArea
-                ? `${Intl.NumberFormat('en-US').format(summary.livingArea)} sq ft`
-                : '—',
-            icon: Ruler,
-        },
-        {
-            id: 'valuation',
-            label: 'Current Estimate',
-            value: pricing.currentEstimate
-                ? `$${Intl.NumberFormat('en-US', {
-                      maximumFractionDigits: 0,
-                  }).format(pricing.currentEstimate)}`
-                : '—',
-            icon: Activity,
-        },
-    ];
-});
 
 const lastRunCopy = computed(() => {
     if (!props.meta?.last_run_at) {
@@ -95,26 +50,6 @@ const lastRunCopy = computed(() => {
                     <span>{{ lastRunCopy }}</span>
                 </div>
             </div>
-
-            <dl class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <div
-                    v-for="card in cards"
-                    :key="card.id"
-                    class="flex items-center gap-3 px-4 py-5"
-                >
-                    <component :is="card.icon" class="h-5 w-5 text-[#7c4dff]" />
-                    <div>
-                        <dt
-                            class="text-xs tracking-[0.3em] text-gray-400 uppercase"
-                        >
-                            {{ card.label }}
-                        </dt>
-                        <dd class="text-sm font-semibold text-[#1f2937]">
-                            {{ card.value }}
-                        </dd>
-                    </div>
-                </div>
-            </dl>
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
