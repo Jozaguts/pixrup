@@ -334,7 +334,7 @@ const formatDate = (input?: string | null) => {
 <template>
     <section class="flex flex-col gap-6">
         <header
-            class="flex flex-col gap-4 neu-surface rounded-3xl p-6 shadow-neu-out md:flex-row md:items-center md:justify-between"
+            class="flex flex-col gap-4  rounded-3xl p-6 md:flex-row md:items-center md:justify-between"
         >
             <div>
                 <p
@@ -351,7 +351,7 @@ const formatDate = (input?: string | null) => {
                 </p>
             </div>
             <div
-                class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-neu-in"
+                class="flex items-center gap-3 rounded-2xl  px-4 py-3 shadow-neu-in"
             >
                 <Sparkles class="h-5 w-5 text-[#7c4dff]" />
                 <div>
@@ -373,9 +373,9 @@ const formatDate = (input?: string | null) => {
         <div
             class="grid h-[calc(100vh-120px)] gap-6 lg:grid-cols-[1.15fr_0.85fr]"
         >
-            <div class="custom-scroll min-h-0 space-y-6 overflow-y-auto">
+            <div class="custom-scroll min-h-0 space-y-6 overflow-y-auto p-6 npo-form-shadow rounded-[12px]">
                 <article
-                    class="space-y-6 neu-surface rounded-3xl p-6 shadow-neu-out"
+                    class="space-y-6"
                 >
                     <div
                         class="flex flex-wrap items-center justify-between gap-4"
@@ -590,7 +590,7 @@ const formatDate = (input?: string | null) => {
 
                 <article
                     v-if="activeJob && activeJob.status !== 'done'"
-                    class="space-y-4 neu-surface rounded-3xl p-6 shadow-neu-out"
+                    class="space-y-4  rounded-3xl p-6 "
                 >
                     <div class="flex items-center justify-between">
                         <div>
@@ -630,7 +630,7 @@ const formatDate = (input?: string | null) => {
 
                 <article
                     v-if="latestCompletedJob"
-                    class="space-y-5 neu-surface rounded-3xl p-6 shadow-neu-out"
+                    class="space-y-5 rounded-3xl p-6 "
                 >
                     <div class="flex items-center justify-between">
                         <div>
@@ -699,7 +699,7 @@ const formatDate = (input?: string | null) => {
             </div>
 
             <aside
-                class="min-h-0 space-y-4 overflow-hidden neu-surface rounded-3xl p-6 shadow-neu-out"
+                class="min-h-0 space-y-4 overflow-hidden   p-6 npo-form-shadow rounded-[12px] "
             >
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-[#1f2937]">
