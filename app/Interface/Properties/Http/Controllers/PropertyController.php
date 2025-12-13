@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\GlowUp\GlowUpJobResource;
 use App\Interface\Properties\Http\Requests\CreatePropertyRequest;
 use App\Models\Property;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -57,7 +58,6 @@ class PropertyController extends Controller
     {
         return Inertia::render('properties/New');
     }
-
     public function show(Property $property): Response
     {
         $property->load('latestWorth');
@@ -209,5 +209,9 @@ class PropertyController extends Controller
         return redirect()
             ->route('dashboard')
             ->with('status', 'property-created');
+    }
+    public function overview(): JsonResponse
+    {
+        return response()->json(['status' => 'overview']);
     }
 }

@@ -26,6 +26,22 @@ const lastRunCopy = computed(() => {
         minute: '2-digit',
     })}`;
 });
+const loading = ref(false);
+const overview = ref<any>();
+async function loadOverView() {
+    loading.value = true;
+    const res = await fetch(propertiesRoutes.overview.get(props.property.id).url, {
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+    });
+    const json = await res.json();
+    overview.value = json.data as SpyHunt;
+    overview.value = [spyhunt.value.property.lat, spyhunt.value.property.lng];
+
+    loading.value = false;
+}
 </script>
 
 <template>
