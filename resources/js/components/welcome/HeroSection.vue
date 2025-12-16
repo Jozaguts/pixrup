@@ -76,10 +76,10 @@ onBeforeUnmount(() => {
                 >|</span
             >
         </h1>
-        <div v-auto-animate="{ duration: 400 }">
+        <div v-auto-animate="{ duration: 600 }" class="min-h-[36px]" >
             <p
-                v-if="showSubtitle"
-                class="max-w-2xl text-base text-slate-800 sm:text-lg lg:text-3xl dark:text-[#fcfcfc]/60 mb-15"
+                v-show="showSubtitle"
+                class="max-w-2xl  text-base text-slate-800 sm:text-lg lg:text-3xl dark:text-[#fcfcfc]/60"
             >
                 Upload. Appraise. Reimagine. Share.
             </p>

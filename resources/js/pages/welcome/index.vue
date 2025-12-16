@@ -15,6 +15,7 @@ import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
 import GuestLayout from '@/layouts/GuestLayout.vue';
+import UseCaseContainer from '@/pages/welcome/use-cases/UseCaseContainer.vue';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -167,7 +168,6 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
 
     return query.toString();
 };
-const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).href;
 </script>
 <template>
     <GuestLayout :can-register="props.canRegister" title="Welcome">
@@ -176,7 +176,7 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                 <FloatingRobot />
                 <WelcomeBackground />
                 <HeroSection />
-                <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px] z-[100]">
+                <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px] z-[100] mt-15">
                     <AddressSearch
                         v-model="addressQuery"
                         @place-selected="handlePlaceSelected"
@@ -189,6 +189,24 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                     @continue-app="isWorthModalOpen = false"
                 />
                 <WelcomeGallery :listings="listings" />
+                <UseCaseContainer />
+                <section
+                    class="pt-7 pb-14 md:pb-16 lg:pb-20 xl:pb-[100px]"
+                    aria-label="Contact Information and Form"
+                >
+                    <div class="main-container">
+                        <div class="space-y-[70px]">
+                            <div class="max-w-[780px] mx-auto text-center space-y-3">
+                                <h2 data-ns-animate data-delay="0.2">Pricing.</h2>
+                                <p data-ns-animate data-delay="0.3">
+                                    Whether you have a question, need technical assistance, or just want some guidance, our
+                                    support team is here to help. We're available around the clock to provide quick and
+                                    friendly support.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <section
                     class="pt-7 pb-14 md:pb-16 lg:pb-20 xl:pb-[100px]"
                     aria-label="Contact Information and Form"
@@ -196,8 +214,8 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                     <div class="main-container">
                         <div class="space-y-[70px]">
                             <!-- heading  -->
-                            <div class="max-w-[680px] mx-auto text-center space-y-3">
-                                <h2 data-ns-animate data-delay="0.2">Reach out to our support team for help.</h2>
+                            <div class="max-w-[780px] mx-auto text-center space-y-3">
+                                <h2 data-ns-animate data-delay="0.2">Reach out to our support team.</h2>
                                 <p data-ns-animate data-delay="0.3">
                                     Whether you have a question, need technical assistance, or just want some guidance, our
                                     support team is here to help. We're available around the clock to provide quick and
@@ -209,44 +227,6 @@ const gradient = new URL('.images/gradient/gradient-22.png', import.meta.url).hr
                                 class="flex lg:items-start flex-col justify-center items-center gap-10 lg:flex-row lg:gap-8 xl:gap-[70px]"
                             >
                                 <!-- contact info cards  -->
-                                <div data-ns-animate data-delay="0.4" class="flex flex-col gap-8 md:flex-row lg:flex-col">
-
-                                    <!-- contact info two  -->
-                                    <div
-                                        class="card-item bg-secondary dark:bg-background-6 rounded-[20px] p-11 w-full md:max-w-[371px] text-center relative overflow-hidden"
-                                    >
-                                        <!-- bg overlay  -->
-                                        <figure
-                                            class="absolute size-[350px] select-none pointer-events-none overflow-hidden top-[-206px] left-[-36px] rotate-[62deg]"
-                                        >
-                                            <img
-                                                src="images/gradient/gradient-17.png"
-                                                alt="Decorative gradient overlay"
-                                                class="size-full object-cover"
-                                            />
-                                        </figure>
-
-                                        <div class="space-y-6">
-                                            <figure class="size-10 overflow-hidden mx-auto">
-                                                <img
-                                                    src="images/icons/mail-open.svg"
-                                                    alt="Email icon"
-                                                    class="size-full object-cover"
-                                                />
-                                            </figure>
-
-                                            <div class="space-y-2.5">
-                                                <p class="text-heading-6 text-accent">Email Us</p>
-                                                <p class="text-accent/60">
-                                                    <a href="mailto:hello@nextsaaS.com">hello@pixrup.com</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
 
                                 <!-- contact form  -->
                                 <div

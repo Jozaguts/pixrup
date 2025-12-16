@@ -16,12 +16,14 @@ const props = withDefaults(
 const page = usePage();
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
 const navItems = [
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Use cases', href: '#use-cases' },
+    { label: 'Features', href: 'features' },
+    { label: 'Use cases', href: 'use-cases' },
+    { label: 'Pricing', href: 'pricing' },
     { label: 'Blog', href: '/blog' },
+    { label: 'Support', href: 'support' },
 ];
 const primaryLink = { label: 'Sign up', href: 'register' };
+
 </script>
 
 <template>

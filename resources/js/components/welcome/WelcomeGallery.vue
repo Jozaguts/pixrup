@@ -18,10 +18,10 @@ onMounted(async () => {
         id="features"
         class="pt-0 pb-[220px] sm:pb-14 md:pt-0 md:pb-16 lg:pt-[0px] lg:pb-[88px] xl:pt-[0px] xl:pb-[100px]"
     >
-        <div class="main-container mt-[200px]">
-            <div class="text-center space-y-5 mb-[70px]">
-                <span data-ns-animate data-delay="0.2" class="badge badge-primary">Our Services</span>
-                <div class="space-y-3">
+        <div class="main-container mt-[200px]" >
+            <div class="text-center space-y-5 mb-[70px]" >
+                <span data-ns-animate data-delay="0.2" class="badge badge-primary">Features</span>
+                <div class="space-y-3" >
                     <h2 data-ns-animate data-delay="0.3" class="max-w-[878px] mx-auto">
                         AI-powered creation, built for speed.
                     </h2>
@@ -32,7 +32,7 @@ onMounted(async () => {
                     </p>
                 </div>
             </div>
-            <div class="grid grid-cols-12 xl:gap-8 md:gap-8 gap-y-5">
+            <div class="grid grid-cols-12 xl:gap-8 md:gap-8 gap-y-5"   >
                 <Card v-for="(card, idx) in listings" :key="idx" :title="card.title" :details="card.details" :link="card.link" :cta="card.cta" :shape="card.shape"/>
             </div>
         </div>

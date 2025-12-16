@@ -2,7 +2,6 @@ import { InertiaLinkProps } from '@inertiajs/vue3';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { onMounted, onUnmounted, Ref } from 'vue';
-import gsap from 'gsap'
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(...inputs));
@@ -24,7 +23,6 @@ export function useHideNavbarOnScroll(navRef: Ref<HTMLElement | null>) {
     onMounted(()=>{
         const nav = navRef.value
         if (!nav) return
-        const NAV_HEIGHT =  nav.offsetHeight
         const ACTIVATION_OFFSET = 200;
         gsap.set(nav, {y:0, zIndex:9999})
         trigger = ScrollTrigger.create({

@@ -14,7 +14,7 @@ use App\Interface\Auth\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('welcome/index', [
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');

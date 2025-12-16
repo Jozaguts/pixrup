@@ -2,10 +2,10 @@
 import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
-import { gsap } from '@/lib/gsap';
 import { useHideNavbarOnScroll } from '@/lib/utils';
+import { gsap } from '@/lib/gsap';
 
 interface NavItem {
     label: string;
@@ -24,19 +24,40 @@ const props = withDefaults(
         navItems: () => [],
     },
 );
-let gsap: gsap | null = null;
+
 const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
 const largeLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
 const compactLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
-
+const page = usePage();
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
 const closeMobileMenu = () => {
     isMobileMenuOpen.value = false;
+};
+
+const scrollTo = (id: string) => {
+    const target = document.getElementById(id)
+    if (!target) return
+    let margin = 0;
+    const nav = document.querySelector('nav')
+    const offset = nav?.offsetHeight ?? 80
+    if(id === 'features'){
+        margin = 200;
+    }
+    const y =
+        target.getBoundingClientRect().top +
+        window.scrollY -
+        offset
+
+    gsap.to(window, {
+        duration: 0.9,
+        scrollTo: y + margin,
+        ease: 'power3.out',
+    })
 };
 
 watch(isMobileMenuOpen, (isOpen) => {
@@ -46,21 +67,13 @@ watch(isMobileMenuOpen, (isOpen) => {
 
     document.body.classList.toggle('overflow-hidden', isOpen);
 });
-
-onBeforeUnmount(() => {
-    if (typeof document !== 'undefined') {
-        document.body.classList.remove('overflow-hidden');
-    }
-});
-
-const page = usePage();
 watch(
     () => page.url,
     () => {
         closeMobileMenu();
     },
 );
-const navRef = ref<HTMLElement | null>(null)
+const navRef = ref<HTMLElement | null>(null);
 const resolvePrimaryCta = computed<NavItem>(() => {
     if (props.isAuthenticated) {
         return {
@@ -88,7 +101,12 @@ const resolvePrimaryCta = computed<NavItem>(() => {
         external: false,
     };
 });
-useHideNavbarOnScroll(navRef)
+useHideNavbarOnScroll(navRef);
+onBeforeUnmount(() => {
+    if (typeof document !== 'undefined') {
+        document.body.classList.remove('overflow-hidden');
+    }
+});
 </script>
 
 <template>
@@ -113,14 +131,13 @@ useHideNavbarOnScroll(navRef)
             <nav class="hidden items-center xl:flex">
                 <ul class="flex items-center gap-1">
                     <li v-for="item in menuItems" :key="item.label" class="relative cursor-pointer px-2 py-2.5">
-                        <component
-                            :is="item.external ? 'a' : Link"
-                            :href="item.href"
+                        <button
+                            type="button"
                             class="neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:!text-[#fcfcfc]/60"
-                            @click="closeMobileMenu"
+                            @click="() => scrollTo(item.href)"
                         >
                             <span>{{ item.label }}</span>
-                        </component>
+                        </button>
                     </li>
                 </ul>
             </nav>
