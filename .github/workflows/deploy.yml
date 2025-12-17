@@ -6,7 +6,6 @@ on:
 
 jobs:
   deploy:
-    if: github.ref_name == matrix.branch
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,18 +29,22 @@ jobs:
 
     steps:
       - name: 🧩 Checkout
+        if: ${{ github.ref_name == matrix.branch }}
         uses: actions/checkout@v4
 
       - name: 🛠️ Setup Node
+        if: ${{ github.ref_name == matrix.branch }}
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
 
       - name: 📦 Install Node Dependencies
+        if: ${{ github.ref_name == matrix.branch }}
         run: npm ci
 
       - name: 🧱 Build Frontend
+        if: ${{ github.ref_name == matrix.branch }}
         run: ${{ matrix.build_cmd }}
         env:
           VITE_APP_NAME: ${{ matrix.app_name }}
@@ -55,6 +58,7 @@ jobs:
           VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
 
       - name: 🔐 Setup SSH
+        if: ${{ github.ref_name == matrix.branch }}
         run: |
           set -euo pipefail
           mkdir -p ~/.ssh
@@ -69,6 +73,7 @@ jobs:
           echo "✅ SSH private key decoded and ready"
 
       - name: 📜 SSH Debug Logs
+        if: ${{ github.ref_name == matrix.branch }}
         run: |
           set -euo pipefail
           echo "📂 ~/.ssh directory listing:"
@@ -89,10 +94,12 @@ jobs:
           rm -f ~/.ssh/id_ed25519.pub
 
       - name: 🔍 Test SSH Connection
+        if: ${{ github.ref_name == matrix.branch }}
         run: |
           ssh -v -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
 
       - name: 🚀 Deploy Laravel App
+        if: ${{ github.ref_name == matrix.branch }}
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
@@ -203,6 +210,7 @@ jobs:
           EOF
 
       - name: 📤 Upload Built Assets
+        if: ${{ github.ref_name == matrix.branch }}
         run: |
           set -euo pipefail
 
@@ -222,6 +230,7 @@ jobs:
           rsync -az --delete -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" bootstrap/ssr/ ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:${{ matrix.deploy_path }}/bootstrap/ssr/
 
       - name: ♻️ Restart Services
+        if: ${{ github.ref_name == matrix.branch }}
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
