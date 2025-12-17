@@ -16,6 +16,7 @@ import { computed, ref } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import UseCaseContainer from '@/pages/welcome/use-cases/UseCaseContainer.vue';
+import PricingContainer from '@/pages/welcome/pricing/PricingContainer.vue';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -190,23 +191,7 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                 />
                 <WelcomeGallery :listings="listings" />
                 <UseCaseContainer />
-                <section
-                    class="pt-7 pb-14 md:pb-16 lg:pb-20 xl:pb-[100px]"
-                    aria-label="Contact Information and Form"
-                >
-                    <div class="main-container">
-                        <div class="space-y-[70px]">
-                            <div class="max-w-[780px] mx-auto text-center space-y-3">
-                                <h2 data-ns-animate data-delay="0.2">Pricing.</h2>
-                                <p data-ns-animate data-delay="0.3">
-                                    Whether you have a question, need technical assistance, or just want some guidance, our
-                                    support team is here to help. We're available around the clock to provide quick and
-                                    friendly support.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <PricingContainer />
                 <section
                     class="pt-7 pb-14 md:pb-16 lg:pb-20 xl:pb-[100px]"
                     aria-label="Contact Information and Form"
