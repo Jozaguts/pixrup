@@ -209,6 +209,7 @@ jobs:
             mv .env.new .env
 
             echo "🚀 Running migrations and caches"
+            echo "testing"
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
