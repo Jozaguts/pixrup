@@ -6,6 +6,7 @@ on:
 
 jobs:
   deploy:
+    if: github.ref_name == matrix.branch
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,6 +31,28 @@ jobs:
     steps:
       - name: 🧩 Checkout
         uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 📦 Install Node Dependencies
+        run: npm ci
+
+      - name: 🧱 Build Frontend
+        run: ${{ matrix.build_cmd }}
+        env:
+          VITE_APP_NAME: ${{ matrix.app_name }}
+          VITE_PUSHER_APP_ID: ${{ secrets.PUSHER_APP_ID }}
+          VITE_PUSHER_APP_KEY: ${{ secrets.PUSHER_APP_KEY }}
+          VITE_PUSHER_APP_SECRET: ${{ secrets.PUSHER_APP_SECRET }}
+          VITE_PUSHER_APP_CLUSTER: ${{ vars.PUSHER_APP_CLUSTER }}
+          VITE_PUSHER_HOST: ''
+          VITE_PUSHER_PORT: ${{ vars.PUSHER_PORT }}
+          VITE_PUSHER_SCHEME: ${{ vars.PUSHER_SCHEME }}
+          VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
 
       - name: 🔐 Setup SSH
         run: |
@@ -71,11 +94,6 @@ jobs:
 
       - name: 🚀 Deploy Laravel App
         run: |
-          if [ "${{ github.ref_name }}" != "${{ matrix.branch }}" ]; then
-            echo "Skipping deploy: current branch (${{ github.ref_name }}) != matrix branch (${{ matrix.branch }})"
-            exit 0
-          fi
-
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
             set -Eeuo pipefail
             trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
@@ -84,7 +102,7 @@ jobs:
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
             git fetch --prune origin
             git reset --hard origin/${{ github.ref_name }}
-            git clean -xfd
+            git clean -xfd -e public/build -e bootstrap/ssr
 
             echo "🧩 Updating dependencies"
             composer install --no-dev --prefer-dist --optimize-autoloader
@@ -168,11 +186,6 @@ jobs:
               grep '^APP_KEY=' .env >> .env.new
             fi
             mv .env.new .env
-            
-            echo "⚙️ Building frontend"
-            
-            npm ci
-            ${{ matrix.build_cmd }}
 
             echo "🚀 Running migrations and caches"
             php artisan migrate --force
@@ -184,12 +197,45 @@ jobs:
             if [ "${{ github.ref_name }}" = "stg" ]; then
               echo "🔍 Enabling Telescope and Horizon (staging)"
               php artisan telescope:publish --ansi || true
+            fi
+
+            echo "✅ Deploy tasks completed (awaiting asset sync and service restart)"
+          EOF
+
+      - name: 📤 Upload Built Assets
+        run: |
+          set -euo pipefail
+
+          if [ ! -d public/build ]; then
+            echo "❌ public/build not found. Did the Vite build run?"
+            exit 1
+          fi
+
+          if [ ! -d bootstrap/ssr ]; then
+            echo "❌ bootstrap/ssr not found. SSR build output is missing."
+            exit 1
+          fi
+
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "mkdir -p '${{ matrix.deploy_path }}/public/build' '${{ matrix.deploy_path }}/bootstrap/ssr'"
+
+          rsync -az --delete -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" public/build/ ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:${{ matrix.deploy_path }}/public/build/
+          rsync -az --delete -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" bootstrap/ssr/ ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:${{ matrix.deploy_path }}/bootstrap/ssr/
+
+      - name: ♻️ Restart Services
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            set -Eeuo pipefail
+            cd "${{ matrix.deploy_path }}"
+
+            if [ "${{ github.ref_name }}" = "stg" ]; then
+              echo "🔁 Restarting Horizon (staging)"
               sudo systemctl restart horizon-stg
             else
-              echo "🧱 Production mode — Horizon worker active"
+              echo "🔁 Restarting Horizon (production)"
               sudo systemctl restart horizon-prod
             fi
 
+            echo "🔁 Restarting PHP-FPM"
             sudo systemctl restart ${{ matrix.php_fpm }}
-            echo "✅ Deploy completed successfully!"
+            echo "✅ Services restarted"
           EOF
