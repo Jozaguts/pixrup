@@ -67,7 +67,7 @@ jobs:
           VITE_PUSHER_PORT: ${{ vars.PUSHER_PORT }}
           VITE_PUSHER_SCHEME: ${{ vars.PUSHER_SCHEME }}
           VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
-          APP_KEY: base64:4fWes+uJeayQMZT6ZX0hgqP/d9vywgq6Z9erjRzCQhc=
+          APP_KEY: ${{ secrets.APP_KEY }}
           APP_ENV: ${{ matrix.env }}
           APP_DEBUG: false
 
