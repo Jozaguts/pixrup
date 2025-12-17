@@ -32,6 +32,17 @@ jobs:
         if: ${{ github.ref_name == matrix.branch }}
         uses: actions/checkout@v4
 
+      - name: 🐘 Setup PHP
+        if: ${{ github.ref_name == matrix.branch }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: 📦 Install PHP Dependencies
+        if: ${{ github.ref_name == matrix.branch }}
+        run: composer install --no-dev --no-interaction --prefer-dist
+
       - name: 🛠️ Setup Node
         if: ${{ github.ref_name == matrix.branch }}
         uses: actions/setup-node@v4
@@ -56,6 +67,9 @@ jobs:
           VITE_PUSHER_PORT: ${{ vars.PUSHER_PORT }}
           VITE_PUSHER_SCHEME: ${{ vars.PUSHER_SCHEME }}
           VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
+          APP_KEY: base64:4fWes+uJeayQMZT6ZX0hgqP/d9vywgq6Z9erjRzCQhc=
+          APP_ENV: ${{ matrix.env }}
+          APP_DEBUG: false
 
       - name: 🔐 Setup SSH
         if: ${{ github.ref_name == matrix.branch }}
