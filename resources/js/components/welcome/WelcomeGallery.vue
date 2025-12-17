@@ -16,9 +16,9 @@ onMounted(async () => {
 <template>
     <section
         id="features"
-        class="pt-0 pb-[220px] sm:pb-14 md:pt-0 md:pb-16 lg:pt-[0px] lg:pb-[88px] xl:pt-[0px] xl:pb-[100px]"
+        class="pt-0 pb-20 md:pb-[220px] md:pt-0  lg:pt-[0px] xl:pt-[0px] xl:pb-[100px]"
     >
-        <div class="main-container mt-[200px]" >
+        <div class="main-container mt-20 md:mt-[200px]" >
             <div class="text-center space-y-5 mb-[70px]" >
                 <span data-ns-animate data-delay="0.2" class="badge badge-primary">Features</span>
                 <div class="space-y-3" >
