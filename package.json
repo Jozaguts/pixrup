@@ -8,8 +8,8 @@
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
-        "build:staging": "vite build --mode staging",
-        "build:prod": "vite build --mode production"
+        "build:staging": "NODE_OPTIONS=--max-old-space-size=4096 vite build --mode staging",
+        "build:prod": "NODE_OPTIONS=--max-old-space-size=4096 vite build --mode production"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
