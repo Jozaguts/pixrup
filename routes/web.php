@@ -45,7 +45,7 @@ Route::get('services', static function() {
 })->name('services');
 Route::prefix('blog')->group(function () {
      Route::get('/', [BlogController::class, 'index'])->name('blog.index');
-     Route::get('/{slug}', [BlogController::class, 'show'])->name('blog.index');
+     Route::get('/{slug}', [BlogController::class, 'show'])->name('blog.show');
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');

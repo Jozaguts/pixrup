@@ -81,26 +81,26 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 index.form = indexForm
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-export const index = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(args, options),
+export const show = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
     method: 'get',
 })
 
-index.definition = {
+show.definition = {
     methods: ["get","head"],
     url: '/blog/{slug}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-index.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
+show.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { slug: args }
     }
@@ -117,58 +117,58 @@ index.url = (args: { slug: string | number } | [slug: string | number ] | string
         slug: args.slug,
     }
 
-    return index.definition.url
+    return show.definition.url
             .replace('{slug}', parsedArgs.slug.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-index.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(args, options),
+show.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: show.url(args, options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-index.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(args, options),
+show.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: show.url(args, options),
     method: 'head',
 })
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-const indexForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(args, options),
+const showForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-indexForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(args, options),
+showForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\BlogController::index
+* @see \App\Http\Controllers\BlogController::show
 * @see app/Http/Controllers/BlogController.php:14
 * @route '/blog/{slug}'
 */
-indexForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(args, {
+showForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -177,10 +177,11 @@ indexForm.head = (args: { slug: string | number } | [slug: string | number ] | s
     method: 'get',
 })
 
-index.form = indexForm
+show.form = showForm
 
 const blog = {
     index: Object.assign(index, index),
+    show: Object.assign(show, show),
 }
 
 export default blog
