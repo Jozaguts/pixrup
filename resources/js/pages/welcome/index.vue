@@ -31,7 +31,7 @@ const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
 
 const listings: ServiceCard [] = [
     {
-        title: 'Pix Worth',
+        title: 'Pixr Worth',
         details: 'Get accurate property estimates with real local comparables ready for your report.',
         cta: 'read more',
         link:'/services',
@@ -39,7 +39,7 @@ const listings: ServiceCard [] = [
 
     },
     {
-        title: 'Pix Transform',
+        title: 'Pixr Glow Up',
         details:
             'Upload a photo, try different styles, and generate stunning “before & after” renders in seconds.',
         cta: 'read more',
@@ -47,7 +47,7 @@ const listings: ServiceCard [] = [
         shape:'ns-shape-48'
     },
     {
-        title: 'Pix Treasure',
+        title: 'Pixr SpyHunt',
         details:
             'Explore square footage, recent sales, and local trends on a map to spot undervalued properties fast.',
         cta: 'read more',
@@ -56,7 +56,7 @@ const listings: ServiceCard [] = [
     },
     {
 
-        title: 'Pix Closer',
+        title: 'Pixr Vision',
         cta: 'read more',
         link:'/services',
         details:
