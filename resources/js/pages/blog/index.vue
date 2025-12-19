@@ -3,6 +3,7 @@ import GuestLayout from '@/layouts/GuestLayout.vue';
 import { nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { initHomeAnimations } from '@/lib/homeAnimations';
 import OurBlogs from '@/pages/blog/our-blogs.vue';
+import Swiper from 'swiper';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -11,12 +12,12 @@ const props = withDefaults(
         canRegister: true,
     },
 );
-let swiperInstance = null;
+let swiperInstance: Swiper | null = null;
 onMounted(async () => {
     await nextTick();
     await initHomeAnimations();
     const Swiper = (await import('swiper')).default;
-    const { Autoplay, Pagination } = await import('swiper/modules')
+    const { Autoplay, Pagination } = await import('swiper/modules');
     await Promise.all([import('swiper/css'), import('swiper/css/pagination'), import('swiper/css/autoplay')]);
     swiperInstance = new Swiper('.blog-article-swiper', {
         modules: [Autoplay, Pagination], // 👈 CLAVE

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\UsageSummaryController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GlowUp\GlowUpJobController;
 use App\Http\Controllers\Properties\PropertyWorthController as LegacyPropertyWorthController;
@@ -42,9 +43,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 Route::get('services', static function() {
     return Inertia::render('services/index', []);
 })->name('services');
-Route::get('blog', function() {
-    return Inertia::render('blog/index');
-})->name('blog');
+Route::prefix('blog')->group(function () {
+     Route::get('/', [BlogController::class, 'index'])->name('blog.index');
+     Route::get('/{slug}', [BlogController::class, 'show'])->name('blog.index');
+});
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.store');

@@ -2,6 +2,7 @@ import DashboardController from './DashboardController'
 import Properties from './Properties'
 import GlowUp from './GlowUp'
 import Api from './Api'
+import BlogController from './BlogController'
 import Settings from './Settings'
 import Reports from './Reports'
 
@@ -10,6 +11,7 @@ const Controllers = {
     Properties: Object.assign(Properties, Properties),
     GlowUp: Object.assign(GlowUp, GlowUp),
     Api: Object.assign(Api, Api),
+    BlogController: Object.assign(BlogController, BlogController),
     Settings: Object.assign(Settings, Settings),
     Reports: Object.assign(Reports, Reports),
 }
