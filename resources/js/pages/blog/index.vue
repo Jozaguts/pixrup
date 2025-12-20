@@ -77,15 +77,15 @@ onBeforeUnmount(() => {
                                 >Blog</a
                             >
                         </span>
-                        <h1 data-ns-animate data-delay="0.2" class="font-normal lg:text-heading-2">Blog</h1>
+
                     </div>
                 </div>
             </section>
-            <section class="pt-7 pb-14 sm:pt-16 md:pt-20 md:pb-16 lg:pt-24 lg:pb-[88px] xl:pt-32 xl:pb-[100px]">
+            <section class="pb-14 md:pb-16 lg:pb-[88px] xl:pb-[100px]">
                 <div class="main-container">
                     <div class="space-y-10 md:space-y-[70px]">
                         <h2 data-ns-animate data-delay="0.2" class="mx-auto max-w-[700px] text-center">
-                            Latest articles published by NextSaaS
+                            Latest articles published
                         </h2>
                         <div class="relative" data-ns-animate data-delay="0.3">
                             <div class="swiper blog-article-swiper">

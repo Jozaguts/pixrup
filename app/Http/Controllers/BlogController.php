@@ -13,6 +13,9 @@ class BlogController extends Controller
 
     public function show(): \Inertia\Response
     {
+        $params = [
+
+        ];
         return  Inertia::render('blog/show');
     }
 

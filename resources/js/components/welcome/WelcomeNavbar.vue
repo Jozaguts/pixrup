@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, router, usePage} from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
 import { useHideNavbarOnScroll } from '@/lib/utils';
@@ -40,24 +40,25 @@ const closeMobileMenu = () => {
 };
 
 const scrollTo = (id: string) => {
-    const target = document.getElementById(id)
-    if (!target) return
+    if (id === 'blog') {
+        router.visit(id);
+    }
+    const target = document.getElementById(id);
+
+    if (!target) return;
     let margin = 0;
-    const nav = document.querySelector('nav')
-    const offset = nav?.offsetHeight ?? 80
-    if(id === 'features'){
+    const nav = document.querySelector('nav');
+    const offset = nav?.offsetHeight ?? 80;
+    if (id === 'features') {
         margin = 200;
     }
-    const y =
-        target.getBoundingClientRect().top +
-        window.scrollY -
-        offset
+    const y = target.getBoundingClientRect().top + window.scrollY - offset;
 
     gsap.to(window, {
         duration: 0.9,
         scrollTo: y + margin,
         ease: 'power3.out',
-    })
+    });
 };
 
 watch(isMobileMenuOpen, (isOpen) => {

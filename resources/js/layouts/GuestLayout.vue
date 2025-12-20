@@ -19,7 +19,7 @@ const navItems = [
     { label: 'Features', href: 'features' },
     { label: 'Use cases', href: 'use-cases' },
     { label: 'Pricing', href: 'pricing' },
-    { label: 'Blog', href: '/blog' },
+    { label: 'Blog', href: 'blog' },
     { label: 'Support', href: 'support' },
 ];
 const primaryLink = { label: 'Sign up', href: 'register' };
