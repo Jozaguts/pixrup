@@ -147,8 +147,9 @@ const handleLogout = () => {
                             >
                                 <Link
                                     :href="item.href"
-                                    :class="cn( item.isActive && '!shadow-neu-in',
-                                     '!text-secondary font-semibold neu-button active dark:!text-accent'
+                                    :class="cn(
+                                        item.isActive ? 'shadow-neu-in! bg-gray-200!' :'active',
+                                     'text-secondary! font-semibold neu-button dark:text-accent!'
                                      )"
                                 >
                                     <Icon :icon="item.icon as string" class="!w-6 !h-6" />

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle, LockIcon, LucideMail, User2Icon } from 'lucide-vue-next';
+import { LoaderCircle } from 'lucide-vue-next';
 import { Icon } from '@iconify/vue';
 </script>
 
@@ -17,7 +17,7 @@ import { Icon } from '@iconify/vue';
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="outline"
-                class="neu-button flex w-full items-center justify-center gap-3 p-6 py-7 text-sm"
+                class="neu-button !text-black dark:!text-white flex w-full items-center justify-center gap-3 p-6 py-7 text-sm"
                 tabindex="1"
             >
                 <svg
@@ -107,7 +107,7 @@ import { Icon } from '@iconify/vue';
 
                 <Button
                     type="submit"
-                    class="neu-button mt-2 w-full p-3 py-6 text-muted-foreground"
+                    class="neu-button mt-2 w-full p-3 py-6 text-muted-foreground text-black! dark:text-white!"
                     tabindex="6"
                     :disabled="processing"
                     data-test="register-user-button"
@@ -116,6 +116,7 @@ import { Icon } from '@iconify/vue';
                         v-if="processing"
                         class="h-4 w-4 animate-spin"
                     />
+                    <Icon icon="ph:arrow-bend-down-right" class="inline text-black w-4 h-4"  v-else/>
                     Create account
                 </Button>
 
@@ -127,11 +128,11 @@ import { Icon } from '@iconify/vue';
                     </p>
                 </div>
 
-                <div class="text-center text-sm text-muted-foreground">
+                <div class="text-center text-sm text-black! dark:text-white/65!">
                     Already have an account?
                     <TextLink
                         :href="auth.login.show()"
-                        class="underline underline-offset-4"
+                        class="underline underline-offset-4 text-black! dark:text-white!"
                         :tabindex="6"
                         >Log in</TextLink
                     >

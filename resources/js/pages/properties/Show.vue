@@ -382,7 +382,7 @@ const headerMetricCards = computed(() => {
                     class="relative min-h-[420px] rounded-[12px] mx-"
                 >
                     <div class=" lg:w-fit md:w-fit lg:m-0 md:m-0 mx-auto">
-                        <NeuphormistTabs :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />
+                        <NeuphormistTabs :isDisabled="true" :items="modules" :value="activeModule.id" @onchange=" v => activeModuleId  = v.id " />
                     </div>
                     <KeepAlive>
                         <component

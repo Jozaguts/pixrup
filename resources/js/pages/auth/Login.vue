@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle, LockIcon, LucideMail } from 'lucide-vue-next';
+import { LoaderCircle } from 'lucide-vue-next';
+import { Icon } from '@iconify/vue';
 
 defineProps<{
     status?: string;
@@ -34,7 +35,7 @@ defineProps<{
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="ghost"
-                class="neu-button mb-2 flex w-full items-center justify-center p-3 py-6"
+                class="neu-button !text-black dark:!text-white mb-2 flex w-full items-center justify-center p-3 py-6"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +122,7 @@ defineProps<{
 
                 <Button
                     type="submit"
-                    class="neu-button mt-2 w-full p-3 py-6"
+                    class="neu-button mt-2 w-full p-3 py-6 !text-black dark:!text-white"
                     :tabindex="4"
                     :disabled="processing"
                     data-test="login-button"
@@ -130,12 +131,13 @@ defineProps<{
                         v-if="processing"
                         class="h-4 w-4 animate-spin"
                     />
+                    <Icon icon="ph:sign-in" class="inline text-black w-4 h-4"  v-else/>
                     Sign in
                 </Button>
             </div>
 
             <div
-                class="text-center text-sm text-muted-foreground"
+                class="text-center text-sm text-black!"
                 v-if="canRegister"
             >
                 Don't have an account?
@@ -144,13 +146,16 @@ defineProps<{
                 >
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-center text-sm text-black!">
                 Dont have an account?
                 <TextLink
                     :href="auth.register.show()"
                     class="underline underline-offset-4"
                     :tabindex="6"
-                    >Sign up</TextLink
+                    >
+                    Sign up
+                    <Icon icon="ph:link-simple-horizontal-light" class="inline" />
+                    </TextLink
                 >
             </div>
         </Form>

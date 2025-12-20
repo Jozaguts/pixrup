@@ -9,7 +9,6 @@ import { CheckCircle2, X } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
 import ToastAlert from "@/components/shared/ToastAlert.vue";
 import {LimitExceededToastProps as ToastProps} from "@/lib/shared/LimitExceededToastProps";
-import Swal from 'sweetalert2';
 
 
 interface Props {
@@ -67,7 +66,7 @@ const dismissPropertyToast = () => {
             :msg="ToastProps.description"
             :type="ToastProps.type as 'success'"
             :visible="limitExceededStatus"
-            redirect-url="/settings/billing"
+            redirect-url="/plan/upgrade"
         />
         <AppSidebar />
         <AppContent variant="sidebar" class="overflow-x-hidden">

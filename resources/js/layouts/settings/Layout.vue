@@ -53,7 +53,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         variant="ghost"
                         :class="cn(
                             'w-full justify-start',
-                             'px-4 py-6 bg-transparent shadow-neu-in',
+                             'px-4 py-6 bg-transparent shadow-neu-in text-black! dark:text-neutral-100',
                              urlIsActive(item.href, currentPath) && 'neu-button active' ,
                         )"
                         as-child
