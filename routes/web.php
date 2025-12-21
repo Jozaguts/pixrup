@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\UsageSummaryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\GlowUp\GlowUpJobController;
 use App\Http\Controllers\Properties\PropertyWorthController as LegacyPropertyWorthController;
 use App\Interface\Properties\Http\Controllers\PropertyController;
@@ -41,8 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');
 });
 Route::get('services', static function() {
-    return Inertia::render('services/index', []);
-})->name('services');
+   Route::get('services', [FeaturesController::class ,'index'])->name('services.index');
+   Route::get('{slug}', [FeaturesController::class ,'show'])->name('services.show');
+});
 Route::prefix('blog')->group(function () {
      Route::get('/', [BlogController::class, 'index'])->name('blog.index');
      Route::get('/{slug}', [BlogController::class, 'show'])->name('blog.show');

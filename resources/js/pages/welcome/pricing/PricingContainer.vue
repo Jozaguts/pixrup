@@ -8,22 +8,12 @@ const isMonthlyPrice = ref(false)
     <section class="relative pb-20 md:pb-[100px] lg:pb-[150px] xl:pb-[200px] pt-[100px]" id="pricing">
         <div class="main-container flex flex-col gap-[70px]">
             <div class="flex flex-col items-center text-center">
-                <span data-ns-animate data-delay="0.2" class="badge badge-primary mb-5"> Our Pricing </span>
+                <span data-ns-animate data-delay="0.2" class="badge badge-primary mb-5"> Pricing </span>
                 <h2 data-ns-animate data-delay="0.3" class="max-w-[650px] mx-auto mb-8">
                     Select the pricing plan that best suits your needs.
                 </h2>
 
                 <div data-ns-animate data-delay="0.4" class="relative z-0">
-        <span
-            data-ns-animate
-            data-delay="1"
-            data-duration="1.2"
-            data-direction="up"
-            data-offset="200"
-            class="absolute z-11 -right-6 -top-2.5 bg-secondary dark:bg-accent text-accent dark:text-secondary inline-block font-normal capitalize text-tagline-2 px-3.5 py-1.5 shadow-xs rounded-[36px] rotate-[20deg] w-[90px]"
-        >
-          save 40%
-        </span>
                     <label
                         class="relative inline-flex items-center cursor-pointer z-[10] bg-white dark:bg-background-9 py-6 px-[57px] rounded-full"
                     >

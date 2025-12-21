@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
-import { Link, router, usePage} from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
 import { useHideNavbarOnScroll } from '@/lib/utils';
@@ -51,6 +51,12 @@ const scrollTo = (id: string) => {
     const offset = nav?.offsetHeight ?? 80;
     if (id === 'features') {
         margin = 200;
+    }
+    if (id === 'pricing') {
+        margin = 120;
+    }
+    if (id === 'support') {
+        margin = 50;
     }
     const y = target.getBoundingClientRect().top + window.scrollY - offset;
 

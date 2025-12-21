@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import AddressSearch, {
-    type AddressSelection,
-} from '@/components/welcome/AddressSearch.vue';
+import AddressSearch, { type AddressSelection } from '@/components/welcome/AddressSearch.vue';
 import ContinueButtons from '@/components/welcome/ContinueButtons.vue';
 import FloatingRobot from '@/components/welcome/FloatingRobot.vue';
 import HeroSection from '@/components/welcome/HeroSection.vue';
 import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
 import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
-import WorthPreviewModal, {
-    type ComparableProperty,
-} from '@/components/welcome/WorthPreviewModal.vue';
+import WorthPreviewModal, { type ComparableProperty } from '@/components/welcome/WorthPreviewModal.vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
@@ -29,39 +25,34 @@ const props = withDefaults(
 const page = usePage();
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
 
-const listings: ServiceCard [] = [
+const listings: ServiceCard[] = [
     {
         title: 'Pixr Worth',
         details: 'Get accurate property estimates with real local comparables ready for your report.',
         cta: 'read more',
-        link:'/services',
-        shape:'ns-shape-47'
-
+        link: '/services',
+        shape: 'ns-shape-47',
     },
     {
         title: 'Pixr Glow Up',
-        details:
-            'Upload a photo, try different styles, and generate stunning “before & after” renders in seconds.',
+        details: 'Upload a photo, try different styles, and generate stunning “before & after” renders in seconds.',
         cta: 'read more',
-        link:'/services',
-        shape:'ns-shape-48'
+        link: '/services',
+        shape: 'ns-shape-48',
     },
     {
         title: 'Pixr SpyHunt',
-        details:
-            'Explore square footage, recent sales, and local trends on a map to spot undervalued properties fast.',
+        details: 'Explore square footage, recent sales, and local trends on a map to spot undervalued properties fast.',
         cta: 'read more',
-        link:'/services',
-        shape:'ns-shape-49'
+        link: '/services',
+        shape: 'ns-shape-49',
     },
     {
-
         title: 'Pixr Vision',
         cta: 'read more',
-        link:'/services',
-        details:
-            'Collaborate with teammates in real time — comments, mentions, and shared files in one place.',
-        shape:'ns-shape-50'
+        link: '/services',
+        details: 'Collaborate with teammates in real time — comments, mentions, and shared files in one place.',
+        shape: 'ns-shape-50',
     },
     // {
     //     title: 'Pix AiVision',
@@ -88,21 +79,14 @@ const isWorthModalOpen = ref(false);
 
 const createMockPreview = (selection: AddressSelection) => {
     const rawEstimate =
-        Math.round(
-            (Math.abs(selection.location.lat) +
-                Math.abs(selection.location.lng)) *
-                14000,
-        ) + 225000;
+        Math.round((Math.abs(selection.location.lat) + Math.abs(selection.location.lng)) * 14000) + 225000;
 
     const estimate = Math.min(Math.max(rawEstimate, 185000), 1750000);
 
-    const [streetSegment = '', citySegment = '', stateSegment = ''] =
-        selection.formattedAddress.split(',');
+    const [streetSegment = '', citySegment = '', stateSegment = ''] = selection.formattedAddress.split(',');
 
     const trimmedStreet = streetSegment.trim();
-    const cityState = [citySegment?.trim(), stateSegment?.trim()]
-        .filter(Boolean)
-        .join(', ');
+    const cityState = [citySegment?.trim(), stateSegment?.trim()].filter(Boolean).join(', ');
 
     const numericPortion = Number.parseInt(trimmedStreet, 10);
     const streetOnly = trimmedStreet.replace(/^\d+\s*/, '').trim();
@@ -118,16 +102,12 @@ const createMockPreview = (selection: AddressSelection) => {
     const comps: ComparableProperty[] = [
         {
             id: `${selection.placeId}-comp-a`,
-            address: `${buildComparableStreet(4, 'Unit A')}${
-                cityState ? ` · ${cityState}` : ''
-            }`,
+            address: `${buildComparableStreet(4, 'Unit A')}${cityState ? ` · ${cityState}` : ''}`,
             value: Math.round(estimate * 0.97),
         },
         {
             id: `${selection.placeId}-comp-b`,
-            address: `${buildComparableStreet(-3, 'Unit B')}${
-                cityState ? ` · ${cityState}` : ''
-            }`,
+            address: `${buildComparableStreet(-3, 'Unit B')}${cityState ? ` · ${cityState}` : ''}`,
             value: Math.round(estimate * 1.02),
         },
     ];
@@ -177,11 +157,8 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                 <FloatingRobot />
                 <WelcomeBackground />
                 <HeroSection />
-                <div class="bg-white/90 neu-bg-surface-color w-full max-w-lg rounded-[12px] z-[100] mt-15">
-                    <AddressSearch
-                        v-model="addressQuery"
-                        @place-selected="handlePlaceSelected"
-                    />
+                <div class="neu-bg-surface-color z-[100] mt-15 w-full max-w-lg rounded-[12px] bg-white/90">
+                    <AddressSearch v-model="addressQuery" @place-selected="handlePlaceSelected" />
                 </div>
                 <ContinueButtons
                     :address-data="selectedAddress"
@@ -193,23 +170,24 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                 <UseCaseContainer />
                 <PricingContainer />
                 <section
+                    id="support"
                     class="pt-7 pb-14 md:pb-16 lg:pb-20 xl:pb-[100px]"
                     aria-label="Contact Information and Form"
                 >
                     <div class="main-container">
                         <div class="space-y-[70px]">
                             <!-- heading  -->
-                            <div class="max-w-[780px] mx-auto text-center space-y-3">
+                            <div class="mx-auto max-w-[780px] space-y-3 text-center">
+                                <span data-ns-animate data-delay="0.2" class="mb-5 badge badge-primary"> Support </span>
                                 <h2 data-ns-animate data-delay="0.2">Reach out to our support team.</h2>
                                 <p data-ns-animate data-delay="0.3">
-                                    Whether you have a question, need technical assistance, or just want some guidance, our
-                                    support team is here to help. We're available around the clock to provide quick and
-                                    friendly support.
+                                    Whether you have a question, need technical assistance, or just want some guidance,
+                                    our support team is here to help. We're available around the clock to provide quick
+                                    and friendly support.
                                 </p>
                             </div>
-
                             <div
-                                class="flex lg:items-start flex-col justify-center items-center gap-10 lg:flex-row lg:gap-8 xl:gap-[70px]"
+                                class="flex flex-col items-center justify-center gap-10 lg:flex-row lg:items-start lg:gap-8 xl:gap-[70px]"
                             >
                                 <!-- contact info cards  -->
 
@@ -217,17 +195,17 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                 <div
                                     data-ns-animate
                                     data-delay="0.3"
-                                    class="max-w-[847px] w-full mx-auto bg-white dark:bg-background-6 rounded-4xl p-6 md:p-8 lg:p-11"
+                                    class="mx-auto w-full max-w-[847px] rounded-4xl bg-white p-6 md:p-8 lg:p-11 dark:bg-background-6"
                                 >
                                     <form action="/index.html" method="POST" class="space-y-8">
                                         <!-- name and phone number  -->
-                                        <div class="flex items-center flex-col md:flex-row gap-8 justify-between">
+                                        <div class="flex flex-col items-center justify-between gap-8 md:flex-row">
                                             <!--  name -->
-                                            <div class="space-y-2 lg:max-w-[364px] w-full">
+                                            <div class="w-full space-y-2 lg:max-w-[364px]">
                                                 <label
                                                     for="fullname"
-                                                    class="block text-tagline-2 text-secondary dark:text-accent font-medium"
-                                                >Your name</label
+                                                    class="block text-tagline-2 font-medium text-secondary dark:text-accent"
+                                                    >Your name</label
                                                 >
                                                 <input
                                                     type="text"
@@ -236,16 +214,16 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                                     placeholder="Enter your name"
                                                     required
                                                     autocomplete="name"
-                                                    class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                    class="h-[48px] w-full rounded-full border border-stroke-3 bg-background-1 px-[18px] py-3 text-tagline-2 font-normal placeholder:text-tagline-2 placeholder:font-normal placeholder:text-secondary/60 focus:border-secondary focus:outline-none xl:h-[41px] dark:border-stroke-7 dark:bg-background-6 dark:text-accent dark:placeholder:text-accent/60 dark:focus-visible:border-stroke-4/20"
                                                 />
                                             </div>
 
                                             <!-- number -->
-                                            <div class="space-y-2 max-w-[364px] w-full">
+                                            <div class="w-full max-w-[364px] space-y-2">
                                                 <label
                                                     for="number"
-                                                    class="block text-tagline-2 text-secondary dark:text-accent font-medium"
-                                                >Your number</label
+                                                    class="block text-tagline-2 font-medium text-secondary dark:text-accent"
+                                                    >Your number</label
                                                 >
                                                 <input
                                                     type="text"
@@ -254,7 +232,7 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                                     placeholder="Enter your number"
                                                     required
                                                     autocomplete="tel"
-                                                    class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                    class="h-[48px] w-full rounded-full border border-stroke-3 bg-background-1 px-[18px] py-3 text-tagline-2 font-normal placeholder:text-tagline-2 placeholder:font-normal placeholder:text-secondary/60 focus:border-secondary focus:outline-none xl:h-[41px] dark:border-stroke-7 dark:bg-background-6 dark:text-accent dark:placeholder:text-accent/60 dark:focus-visible:border-stroke-4/20"
                                                 />
                                             </div>
                                         </div>
@@ -263,8 +241,8 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                         <div class="space-y-2">
                                             <label
                                                 for="email"
-                                                class="block text-tagline-2 text-secondary dark:text-accent font-medium"
-                                            >Email address</label
+                                                class="block text-tagline-2 font-medium text-secondary dark:text-accent"
+                                                >Email address</label
                                             >
                                             <input
                                                 type="email"
@@ -273,7 +251,7 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                                 placeholder="Enter your email"
                                                 required
                                                 autocomplete="email"
-                                                class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                class="h-[48px] w-full rounded-full border border-stroke-3 bg-background-1 px-[18px] py-3 text-tagline-2 font-normal placeholder:text-tagline-2 placeholder:font-normal placeholder:text-secondary/60 focus:border-secondary focus:outline-none xl:h-[41px] dark:border-stroke-7 dark:bg-background-6 dark:text-accent dark:placeholder:text-accent/60 dark:focus-visible:border-stroke-4/20"
                                             />
                                         </div>
 
@@ -281,8 +259,8 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                         <div class="space-y-2">
                                             <label
                                                 for="subject"
-                                                class="block text-tagline-2 text-secondary dark:text-accent font-medium"
-                                            >Subject</label
+                                                class="block text-tagline-2 font-medium text-secondary dark:text-accent"
+                                                >Subject</label
                                             >
                                             <input
                                                 type="text"
@@ -290,7 +268,7 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                                 name="subject"
                                                 placeholder="Enter your subject"
                                                 required
-                                                class="w-full px-[18px] dark:focus-visible:border-stroke-4/20 dark:border-stroke-7 py-3 h-[48px] xl:h-[41px] rounded-full dark:bg-background-6 border border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                class="h-[48px] w-full rounded-full border border-stroke-3 bg-background-1 px-[18px] py-3 text-tagline-2 font-normal placeholder:text-tagline-2 placeholder:font-normal placeholder:text-secondary/60 focus:border-secondary focus:outline-none xl:h-[41px] dark:border-stroke-7 dark:bg-background-6 dark:text-accent dark:placeholder:text-accent/60 dark:focus-visible:border-stroke-4/20"
                                             />
                                         </div>
 
@@ -298,8 +276,8 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                         <div class="space-y-2">
                                             <label
                                                 for="message"
-                                                class="block text-tagline-2 text-secondary dark:text-accent font-medium"
-                                            >Write message</label
+                                                class="block text-tagline-2 font-medium text-secondary dark:text-accent"
+                                                >Write message</label
                                             >
                                             <textarea
                                                 id="message"
@@ -307,25 +285,25 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                                 rows="7"
                                                 placeholder="Enter your messages"
                                                 required
-                                                class="w-full px-[18px] py-3 rounded-xl border dark:bg-background-6 dark:border-stroke-7 border-stroke-3 bg-background-1 text-tagline-2 placeholder:text-secondary/60 focus:outline-none focus:border-secondary dark:focus-visible:border-stroke-4/20 placeholder:text-tagline-2 dark:placeholder:text-accent/60 dark:text-accent placeholder:font-normal font-normal"
+                                                class="w-full rounded-xl border border-stroke-3 bg-background-1 px-[18px] py-3 text-tagline-2 font-normal placeholder:text-tagline-2 placeholder:font-normal placeholder:text-secondary/60 focus:border-secondary focus:outline-none dark:border-stroke-7 dark:bg-background-6 dark:text-accent dark:placeholder:text-accent/60 dark:focus-visible:border-stroke-4/20"
                                             ></textarea>
                                         </div>
 
                                         <!-- terms checkbox -->
-                                        <fieldset class="flex items-center gap-2 mb-4">
+                                        <fieldset class="mb-4 flex items-center gap-2">
                                             <label for="terms" class="flex items-center gap-x-3">
-                                                <input id="terms" type="checkbox" class="sr-only peer" required />
+                                                <input id="terms" type="checkbox" class="peer sr-only" required />
                                                 <span
-                                                    class="size-4 rounded-full border border-stroke-3 dark:border-stroke-7 relative after:absolute after:size-2.5 after:bg-primary-500 after:rounded-full after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:opacity-0 peer-checked:after:opacity-100 peer-checked:border-primary-500 cursor-pointer"
+                                                    class="relative size-4 cursor-pointer rounded-full border border-stroke-3 peer-checked:border-primary-500 after:absolute after:top-1/2 after:left-1/2 after:size-2.5 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-primary-500 after:opacity-0 peer-checked:after:opacity-100 dark:border-stroke-7"
                                                 ></span>
                                             </label>
                                             <label
                                                 for="terms"
-                                                class="text-tagline-3 cursor-pointer text-secondary/60 dark:text-accent/60"
+                                                class="cursor-pointer text-tagline-3 text-secondary/60 dark:text-accent/60"
                                             >
                                                 I agree with the
-                                                <a href="#" class="text-primary-500 underline text-tagline-3"
-                                                >terms and conditions</a
+                                                <a href="#" class="text-tagline-3 text-primary-500 underline"
+                                                    >terms and conditions</a
                                                 >
                                             </label>
                                         </fieldset>
@@ -333,7 +311,7 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                                         <!-- submit button -->
                                         <button
                                             type="submit"
-                                            class="btn btn-md btn-secondary w-full hover:btn-primary dark:btn-accent before:content-none first-letter:uppercase"
+                                            class="btn btn-md w-full btn-secondary first-letter:uppercase before:content-none hover:btn-primary dark:btn-accent"
                                         >
                                             Submit
                                         </button>
