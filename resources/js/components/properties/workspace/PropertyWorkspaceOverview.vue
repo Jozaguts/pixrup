@@ -38,10 +38,10 @@ async function loadOverView() {
     });
     const json = await res.json();
     overview.value = json.data as SpyHunt;
-    overview.value = [spyhunt.value.property.lat, spyhunt.value.property.lng];
 
     loading.value = false;
 }
+loadOverView()
 </script>
 
 <template>

@@ -41,9 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('properties/{property}/fetch', [SpyHuntController::class, 'fetch'])->name('properties.spyhunt.fetch');
     Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');
 });
-Route::get('services', static function() {
-   Route::get('services', [FeaturesController::class ,'index'])->name('services.index');
-   Route::get('{slug}', [FeaturesController::class ,'show'])->name('services.show');
+Route::prefix('features')->group( static function() {
+    Route::get('/', [FeaturesController::class ,'index'])->name('features.index');
+    Route::get('{slug}', [FeaturesController::class ,'show'])->name('features.show');
 });
 Route::prefix('blog')->group(function () {
      Route::get('/', [BlogController::class, 'index'])->name('blog.index');

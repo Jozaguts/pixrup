@@ -8,11 +8,12 @@ import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
 import WorthPreviewModal, { type ComparableProperty } from '@/components/welcome/WorthPreviewModal.vue';
 import { router, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import type { ServiceCard } from '@/components/template/services/types';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import UseCaseContainer from '@/pages/welcome/use-cases/UseCaseContainer.vue';
 import PricingContainer from '@/pages/welcome/pricing/PricingContainer.vue';
+import featuresRoutes from '@/routes/features/index';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -21,55 +22,13 @@ const props = withDefaults(
         canRegister: true,
     },
 );
+const featureState = ref<{ loading: boolean; data: ServiceCard[] | null | [] }>({
+    loading: false,
+    data: [],
+});
 
 const page = usePage();
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
-
-const listings: ServiceCard[] = [
-    {
-        title: 'Pixr Worth',
-        details: 'Get accurate property estimates with real local comparables ready for your report.',
-        cta: 'read more',
-        link: '/services',
-        shape: 'ns-shape-47',
-    },
-    {
-        title: 'Pixr Glow Up',
-        details: 'Upload a photo, try different styles, and generate stunning “before & after” renders in seconds.',
-        cta: 'read more',
-        link: '/services',
-        shape: 'ns-shape-48',
-    },
-    {
-        title: 'Pixr SpyHunt',
-        details: 'Explore square footage, recent sales, and local trends on a map to spot undervalued properties fast.',
-        cta: 'read more',
-        link: '/services',
-        shape: 'ns-shape-49',
-    },
-    {
-        title: 'Pixr Vision',
-        cta: 'read more',
-        link: '/services',
-        details: 'Collaborate with teammates in real time — comments, mentions, and shared files in one place.',
-        shape: 'ns-shape-50',
-    },
-    // {
-    //     title: 'Pix AiVision',
-    //     details:
-    //         'Embed Matterport links seamlessly and let your clients explore properties in full detail.',
-    //     cta: 'read more',
-    //     link:'/services',
-    // },
-    // {
-    //
-    //     title: 'Pix Seal',
-    //     details:
-    //         'Generate sleek, professional PDFs with your logo and colors — ready to share or print instantly.',
-    //     cta: 'read more',
-    //     link:'/services',
-    // },
-];
 
 const addressQuery = ref('');
 const selectedAddress = ref<AddressSelection | null>(null);
@@ -149,6 +108,17 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
 
     return query.toString();
 };
+onMounted(async () => {
+    try {
+        featureState.value.loading = true;
+        const res = await fetch(featuresRoutes.index().url);
+        featureState.value.data = await res.json();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        featureState.value.loading = false;
+    }
+});
 </script>
 <template>
     <GuestLayout :can-register="props.canRegister" title="Welcome">
@@ -166,7 +136,11 @@ const buildQueryFromSelection = (selection: AddressSelection) => {
                     @continue-web="isWorthModalOpen = false"
                     @continue-app="isWorthModalOpen = false"
                 />
-                <WelcomeGallery :listings="listings" />
+                <div>
+                    <p class="text-primary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus ducimus ipsum iusto maxime nisi officia pariatur quam vel voluptates? Cumque pariatur, soluta! Ab adipisci, alias asperiores aspernatur consequuntur culpa deserunt dicta, ea eaque eius facilis incidunt maiores quis quisquam repellat suscipit vitae voluptas? Animi architecto delectus deleniti distinctio eaque, eius enim error fugit, illo in ipsa itaque iure labore libero minima minus, odit placeat quae quasi qui quis ratione reprehenderit sed ullam unde vel veniam. Aliquam exercitationem id nisi perferendis voluptates. Aut delectus eius expedita iure maxime minima nihil non officiis provident quam quo sint unde, vel veniam voluptate.  </p>
+                </div>
+
+                <WelcomeGallery :listings="featureState.data" v-if="!featureState.loading" />
                 <UseCaseContainer />
                 <PricingContainer />
                 <section

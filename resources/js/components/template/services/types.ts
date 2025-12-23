@@ -1,7 +1,8 @@
 export type ServiceCard = {
-    title: string
-    details: string
-    link: string
-    cta: string,
-    shape: string,
-}
+    title: string;
+    description: string;
+    slug: string;
+    cta: string;
+    icon: string;
+};
+
