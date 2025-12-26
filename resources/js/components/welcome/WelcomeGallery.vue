@@ -11,7 +11,6 @@ onMounted(async () => {
     await nextTick();
     await initHomeAnimations();
 });
-console.log(props);
 </script>
 
 <template>

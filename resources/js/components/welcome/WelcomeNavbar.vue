@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
 import { useHideNavbarOnScroll } from '@/lib/utils';
 import { gsap } from '@/lib/gsap';
@@ -40,6 +39,9 @@ const closeMobileMenu = () => {
 };
 
 const scrollTo = (id: string) => {
+    if (page.url !== '/') {
+        router.visit('/');
+    }
     if (id === 'blog') {
         router.visit(id);
     }
@@ -81,32 +83,8 @@ watch(
     },
 );
 const navRef = ref<HTMLElement | null>(null);
-const resolvePrimaryCta = computed<NavItem>(() => {
-    if (props.isAuthenticated) {
-        return {
-            label: 'Dashboard',
-            href: dashboard(),
-            external: false,
-        };
-    }
-
-    if (props.primaryLink) {
-        return props.primaryLink as NavItem;
-    }
-
-    if (props.canRegister) {
-        return {
-            label: 'Get started',
-            href: auth.register.show(),
-            external: false,
-        };
-    }
-
-    return {
-        label: 'Log in',
-        href: auth.login.show(),
-        external: false,
-    };
+const resolvePrimaryCta = computed<string>(() => {
+    return props.isAuthenticated ? 'Dashboard' : 'Get started';
 });
 useHideNavbarOnScroll(navRef);
 onBeforeUnmount(() => {
@@ -150,13 +128,11 @@ onBeforeUnmount(() => {
             </nav>
 
             <div class="hidden items-center justify-center xl:flex">
-                <component
-                    :is="resolvePrimaryCta.external ? 'a' : Link"
-                    :href="resolvePrimaryCta.href"
+                <a
+                    :href="auth.login.show().url"
                     class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-700 dark:!text-[#fcfcfc]/60"
+                    >{{ resolvePrimaryCta }}</a
                 >
-                    <span>{{ resolvePrimaryCta.label }}</span>
-                </component>
             </div>
 
             <div class="block bg-gray-200 xl:hidden">
