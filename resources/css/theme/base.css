@@ -6,6 +6,7 @@ Font base styles
     /* neuphormist    */
     --neu-surface: #E8E8E8;
     --background: #EEE;
+    --foreground-color: #1f2933;
     --text-color: #222436;
     --on-surface: #1a1a1c;
     --neu-dark: #c5c5c5;
@@ -162,7 +163,7 @@ Font base styles
     /* Keep brand consistent in dark mode */
     --text-color: #ffffff;
     --primary: #222436;
-    --primary-foreground: #ffffff;
+    --foreground-color: hsl(0 0% 98%);
     --ring: var(--primary);
 
     /* Dark surfaces */

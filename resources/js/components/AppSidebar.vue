@@ -20,7 +20,7 @@ import type { AppPageProps, NavItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { User } from 'lucide-vue-next';
 import { computed } from 'vue';
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 import { Icon } from '@iconify/vue';
 type ExtendedPageProps = AppPageProps<{
     appMeta?: {
@@ -78,16 +78,16 @@ const navGroups = computed(() => {
                     href: '/billing',
                     icon: 'mdi:file-document-arrow-right-outline',
                 },
-                {
-                    title: 'Tutorials',
-                    href: '/tutorials',
-                    icon: 'material-symbols-light:school-outline-rounded',
-                },
-                {
-                    title: 'Support',
-                    href: '/support',
-                    icon: 'material-symbols-light:contact-support-outline-rounded',
-                },
+                // {
+                //     title: 'Tutorials',
+                //     href: '/tutorials',
+                //     icon: 'material-symbols-light:school-outline-rounded',
+                // },
+                // {
+                //     title: 'Support',
+                //     href: '/support',
+                //     icon: 'material-symbols-light:contact-support-outline-rounded',
+                // },
             ]),
         },
     ];
@@ -136,33 +136,26 @@ const handleLogout = () => {
             <template v-for="(group, index) in navGroups" :key="group.key">
                 <SidebarGroup>
                     <SidebarMenu>
-                        <SidebarMenuItem
-                            v-for="item in group.items"
-                            :key="item.title"
-                        >
-                            <SidebarMenuButton
-                                as-child
-                                :is-active="item.isActive"
-                                :tooltip="item.title"
-                            >
+                        <SidebarMenuItem v-for="item in group.items" :key="item.title">
+                            <SidebarMenuButton as-child :is-active="item.isActive" :tooltip="item.title">
                                 <Link
                                     :href="item.href"
-                                    :class="cn(
-                                        item.isActive ? 'shadow-neu-in! bg-gray-200!' :'active',
-                                     'text-secondary! font-semibold neu-button dark:text-accent!'
-                                     )"
+                                    :data-active="item.isActive"
+                                    :class="
+                                        cn(
+                                            'neu-button font-semibold text-accent data-[active=true]:!shadow-neu-in',
+                                            'data-[active=true]:!bg-surface',
+                                        )
+                                    "
                                 >
-                                    <Icon :icon="item.icon as string" class="!w-6 !h-6" />
+                                    <Icon :icon="item.icon as string" class="!h-6 !w-6" />
                                     <span>{{ item.title }}</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarGroup>
-                <SidebarSeparator
-                    v-if="index < navGroups.length - 1"
-                    class="my-1 opacity-60"
-                />
+                <SidebarSeparator v-if="index < navGroups.length - 1" class="my-1 opacity-60" />
             </template>
         </SidebarContent>
 

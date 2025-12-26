@@ -36,7 +36,7 @@ defineProps<Props>();
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
             <Link
-                class="neu-btn block w-full"
+                class="neu-btn text-accent block w-full"
                 :href="edit()"
                 prefetch
                 as="button"
@@ -49,7 +49,7 @@ defineProps<Props>();
     <DropdownMenuSeparator />
     <DropdownMenuItem :as-child="true">
         <Link
-            class="neu-btn block w-full"
+            class="neu-btn text-accent block w-full"
             :href="auth.logout()"
             @click="handleLogout"
             as="button"

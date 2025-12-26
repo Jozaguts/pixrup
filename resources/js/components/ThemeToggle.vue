@@ -55,10 +55,10 @@ const themeSwitcher: ThemeSwitcher = {
             '(prefers-color-scheme: light)',
         ).matches;
         const storedTheme = localStorage.getItem('color-theme');
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
         const isDark = storedTheme === 'dark' || (!storedTheme && prefersDark);
-        // this.setTheme(isDark ? 'dark' : 'light');
-        this.setTheme('light');
+        this.setTheme(isDark ? 'dark' : 'light');
+
     },
     bindEvents() {
         const { toggleBtn } = this.elements;

@@ -74,9 +74,9 @@ const dismissPropertyToast = () => {
             <Transition name="fade-slide">
                 <div
                     v-if="propertyToastMessage"
-                    class="mb-4 flex flex-col gap-3 neu-surface rounded-[24px] px-5 py-4 text-sm text-[#1f2933] md:flex-row md:items-center md:justify-between"
+                    class="mb-4 flex flex-col gap-3 neu-surface rounded-[24px] px-5 py-4 text-sm text-accent md:flex-row md:items-center md:justify-between"
                 >
-                    <div class="flex items-center gap-3 text-[#1f2933]">
+                    <div class="flex items-center gap-3 text-accent">
                         <CheckCircle2 class="size-5 text-[#1fbf75]" />
                         <span class="font-semibold">
                             {{ propertyToastMessage }}
@@ -84,7 +84,7 @@ const dismissPropertyToast = () => {
                     </div>
                     <button
                         type="button"
-                        class="neu-btn inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-xs font-semibold text-[#6b7280] transition-all hover:text-[#1f2933]"
+                        class="neu-btn inline-flex items-center gap-1 rounded-2xl px-3 py-2 text-xs font-semibold text-accent"
                         @click="dismissPropertyToast"
                     >
                         <X class="size-4" />

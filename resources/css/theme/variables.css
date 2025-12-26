@@ -9,14 +9,14 @@ All the varaiables are added here
     --font-mona: 'Mona Sans', sans-serif;
     /* =============== COLORS =============== */
     --color-primary: #6e33ff;
-    --color-foreground: #1f2933;
+    --color-foreground: var(--foreground-color);
     --color-primary-foreground: #ffffff;
     --color-info: #16b1ff;
     --color-success: #56ca00;
     --color-warning: #ffb400;
     --color-error: #ff4c51;
-    --color-background: #eee;
-    --color-surface: #E8E8E8;
+    --color-background: var(--background);
+    --color-surface: var(--neu-surface);
     --color-dark: #2e263d;
     --color-primary-50: #f4f2fe;
     --color-primary-100: #ece8ff;
@@ -28,7 +28,7 @@ All the varaiables are added here
     --color-primary-700: #6d1fe2;
     --color-primary-800: #5a19be;
     --color-secondary: #1a1a1c;
-    --color-accent: #fcfcfc;
+    --color-accent:  var(--foreground-color);
     --color-split-text: #1a1a1c;
     --color-background-1: #fcfcfd;
     --color-background-2: #f9fafb;
@@ -59,7 +59,7 @@ All the varaiables are added here
     --color-ns-cyan-light: #cdf5f8;
     --color-ns-yellow-light: #fdf7bc;
 
-    --color-gradient-1: linear-gradient(135deg, #a585ff 0%, #ffc2ad 100%);
+    --color-gradient-1: linear-gradient(135deg, #6e33ff 0%, #864ffe 100%);
     --color-gradient-2: linear-gradient(135deg, #f9eb57 0%, #f99988 100%);
     --color-gradient-3: linear-gradient(135deg, #83e7ee 0%, #f9eb57 100%);
     --color-gradient-4: linear-gradient(135deg, #864ffe 0%, #23eed6 100%);

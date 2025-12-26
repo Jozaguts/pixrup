@@ -15,12 +15,12 @@
 <template>
     <section :class="cn('flex flex-col md:px-5 sm:px-0 w-full p-2', props.sectionClass)">
         <header v-if="props.title || props.description" class="flex flex-col gap-2">
-            <h2 :class="cn('text-lg font-semibold md:text-xl text-black',props.titleClass)">{{props.title}}</h2>
-            <p :class="cn('text-sm text-[#6b7280]',props.descriptionClass)">
+            <h2 :class="cn('text-lg font-semibold md:text-xl text-accent',props.titleClass)">{{props.title}}</h2>
+            <p :class="cn('text-sm text-accent/50',props.descriptionClass)">
                {{props.description}}
             </p>
         </header>
-        <div :class="cn('border-b-2 border-gray-200 pb-6', props.class)">
+        <div :class="cn('', props.class)">
             <slot/>
         </div>
     </section>
