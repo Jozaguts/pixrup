@@ -6,6 +6,7 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import { Icon } from '@iconify/vue';
 </script>
 
@@ -17,7 +18,7 @@ import { Icon } from '@iconify/vue';
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="outline"
-                class="neu-button !text-black dark:!text-white flex w-full items-center justify-center gap-3 p-6 py-7 text-sm"
+                class="neu-button flex w-full items-center justify-center gap-3 p-6 py-7 text-sm"
                 tabindex="1"
             >
                 <svg
@@ -107,7 +108,7 @@ import { Icon } from '@iconify/vue';
 
                 <Button
                     type="submit"
-                    class="neu-button mt-2 w-full p-3 py-6 text-muted-foreground text-black! dark:text-white!"
+                    class="neu-button mt-2 w-full p-3 py-6 text-muted-foreground"
                     tabindex="6"
                     :disabled="processing"
                     data-test="register-user-button"
@@ -128,16 +129,17 @@ import { Icon } from '@iconify/vue';
                     </p>
                 </div>
 
-                <div class="text-center text-sm text-black! dark:text-white/65!">
+                <div class="text-center text-sm text-muted-foreground">
                     Already have an account?
                     <TextLink
                         :href="auth.login.show()"
-                        class="underline underline-offset-4 text-black! dark:text-white!"
+                        class="underline underline-offset-4"
                         :tabindex="6"
                         >Log in</TextLink
                     >
                 </div>
             </div>
         </Form>
+        <ThemeToggle />
     </AuthBase>
 </template>

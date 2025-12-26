@@ -63,7 +63,7 @@
 }
 
 .neu-button {
-    color: inherit;
+    color: var(--text-color);
     position: relative;
     background: inherit;
     outline: none;
