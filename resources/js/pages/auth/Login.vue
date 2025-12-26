@@ -7,8 +7,8 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import auth from '@/routes/auth';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
-import { Icon } from '@iconify/vue';
+import { LoaderCircle} from 'lucide-vue-next';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 
 defineProps<{
     status?: string;
@@ -18,31 +18,20 @@ defineProps<{
 </script>
 
 <template>
-    <AuthBase
-        title="Log in to your account"
-        description="Enter your email and password below to log in"
-    >
+    <AuthBase title="Log in to your account" description="Enter your email and password below to log in">
         <Head title="Log in" />
 
-        <div
-            v-if="status"
-            class="mb-2 text-center text-sm font-medium text-green-600"
-        >
+        <div v-if="status" class="mb-2 text-center text-sm font-medium text-green-600">
             {{ status }}
         </div>
-        <div class="">
+        <div>
             <Button
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="ghost"
-                class="neu-button !text-black dark:!text-white mb-2 flex w-full items-center justify-center p-3 py-6"
+                class="neu-button mb-2 flex w-full items-center justify-center p-3 py-6"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 16 16"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16">
                     <!-- Icon from Material Icon Theme by Material Extensions - https://github.com/material-extensions/vscode-material-icon-theme/blob/main/LICENSE -->
                     <g fill="none" fill-rule="evenodd" clip-rule="evenodd">
                         <path
@@ -111,10 +100,7 @@ defineProps<{
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <Label
-                        for="remember"
-                        class="flex items-center space-x-3 font-kulim"
-                    >
+                    <Label for="remember" class="flex items-center space-x-3 font-kulim">
                         <Checkbox id="remember" name="remember" :tabindex="3" />
                         <span>Remember me</span>
                     </Label>
@@ -122,42 +108,28 @@ defineProps<{
 
                 <Button
                     type="submit"
-                    class="neu-button mt-2 w-full p-3 py-6 !text-black dark:!text-white"
+                    class="neu-button mt-2 w-full p-3 py-6"
                     :tabindex="4"
                     :disabled="processing"
                     data-test="login-button"
                 >
-                    <LoaderCircle
-                        v-if="processing"
-                        class="h-4 w-4 animate-spin"
-                    />
-                    <Icon icon="ph:sign-in" class="inline text-black w-4 h-4"  v-else/>
+                    <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                     Sign in
                 </Button>
             </div>
 
-            <div
-                class="text-center text-sm text-black!"
-                v-if="canRegister"
-            >
+            <div class="text-muted-foreground text-center text-sm" v-if="canRegister">
                 Don't have an account?
-                <TextLink :href="auth.register.show()" :tabindex="5"
+                <TextLink :href="auth.register.show()" :tabindex="5">Sign up</TextLink>
+            </div>
+
+            <div class="text-muted-foreground text-center text-sm">
+                Dont have an account?
+                <TextLink :href="auth.register.show()" class="underline underline-offset-4" :tabindex="6"
                     >Sign up</TextLink
                 >
             </div>
-
-            <div class="text-center text-sm text-black!">
-                Dont have an account?
-                <TextLink
-                    :href="auth.register.show()"
-                    class="underline underline-offset-4"
-                    :tabindex="6"
-                    >
-                    Sign up
-                    <Icon icon="ph:link-simple-horizontal-light" class="inline" />
-                    </TextLink
-                >
-            </div>
         </Form>
+        <ThemeToggle />
     </AuthBase>
 </template>
