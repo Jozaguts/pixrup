@@ -35,7 +35,7 @@ console.log(props);
                     v-for="(card, idx) in listings"
                     :key="idx"
                     :title="card.title"
-                    :description="card?.description"
+                    :excerpt="card?.excerpt"
                     :slug="card?.slug"
                     cta="read more"
                     :icon="card?.icon"

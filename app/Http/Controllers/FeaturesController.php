@@ -15,8 +15,10 @@ class FeaturesController extends Controller
        return response()->json(Feature::all());
     }
 
-    public function show(Request $request): Response
+    public function show(Feature $feature): Response
     {
-        return Inertia::render('services/show');
+        return Inertia::render('features/show', [
+            'feature' => $feature
+        ]);
     }
 }

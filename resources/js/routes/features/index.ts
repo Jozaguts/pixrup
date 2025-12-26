@@ -83,51 +83,57 @@ index.form = indexForm
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-export const show = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 show.definition = {
     methods: ["get","head"],
-    url: '/features/{slug}',
+    url: '/features/{feature}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-show.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
+show.url = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { slug: args }
+        args = { feature: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+        args = { feature: args.slug }
     }
 
     if (Array.isArray(args)) {
         args = {
-            slug: args[0],
+            feature: args[0],
         }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        slug: args.slug,
+        feature: typeof args.feature === 'object'
+        ? args.feature.slug
+        : args.feature,
     }
 
     return show.definition.url
-            .replace('{slug}', parsedArgs.slug.toString())
+            .replace('{feature}', parsedArgs.feature.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-show.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -135,9 +141,9 @@ show.get = (args: { slug: string | number } | [slug: string | number ] | string 
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-show.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -145,9 +151,9 @@ show.head = (args: { slug: string | number } | [slug: string | number ] | string
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-const showForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -155,9 +161,9 @@ const showForm = (args: { slug: string | number } | [slug: string | number ] | s
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-showForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
@@ -165,9 +171,9 @@ showForm.get = (args: { slug: string | number } | [slug: string | number ] | str
 /**
 * @see \App\Http\Controllers\FeaturesController::show
 * @see app/Http/Controllers/FeaturesController.php:18
-* @route '/features/{slug}'
+* @route '/features/{feature}'
 */
-showForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { feature: string | { slug: string } } | [feature: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

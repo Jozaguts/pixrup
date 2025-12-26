@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ServiceCard } from '@/components/template/services/types';
 
-const { title, description, slug, cta, icon = 'ns-shape-47' } = defineProps<ServiceCard>();
+const { title, excerpt, slug, cta, icon = 'ns-shape-47' } = defineProps<ServiceCard>();
 </script>
 
 <template>
@@ -14,11 +14,13 @@ const { title, description, slug, cta, icon = 'ns-shape-47' } = defineProps<Serv
             </div>
             <div class="space-y-2">
                 <h3 class="text-heading-5">{{ title }}</h3>
-                <p class="mx-auto max-w-[361px]" v-html="description"></p>
+                <p class="mx-auto max-w-[361px]">
+                    {{ excerpt }}
+                </p>
             </div>
             <div>
                 <a
-                    :href="'features/'+slug"
+                    :href="'features/' + slug"
                     class="btn-gray-200 btn btn-md border-1 border-accent hover:btn-secondary dark:btn-transparent dark:hover:btn-accent"
                     ><span>{{ cta }}</span></a
                 >

@@ -15,6 +15,11 @@ class Feature extends Model
         'icon',
         'is_active',
         'sort_order',
+        'content'
+    ];
+
+    protected $casts = [
+        'content' => 'array',
     ];
 
     protected static function booted()

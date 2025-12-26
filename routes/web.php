@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 });
 Route::prefix('features')->group( static function() {
     Route::get('/', [FeaturesController::class ,'index'])->name('features.index');
-    Route::get('{slug}', [FeaturesController::class ,'show'])->name('features.show');
+    Route::get('{feature:slug}', [FeaturesController::class ,'show'])->name('features.show');
 });
 Route::prefix('blog')->group(function () {
      Route::get('/', [BlogController::class, 'index'])->name('blog.index');
