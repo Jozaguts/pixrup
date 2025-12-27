@@ -1,10 +1,10 @@
 <template>
-    <div class="p-6 max-w-xl shadow-soft rounded-[12px]">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+    <div class="npo-form-shadow max-w-xl rounded-[12px] p-6 text-accent">
+        <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-accent">Recent Activity</h2>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 text-indigo-500"
+                class="h-5 w-5 text-indigo-500"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -17,19 +17,19 @@
             </svg>
         </div>
 
-        <div class="space-y-4 shadow-neu-in bg-gray-200 rounded-[12px] p-4 px-8 npo-form">
+        <div class="npo-form space-y-4 rounded-[12px] bg-surface p-4 px-8 ">
             <div
                 v-for="(log, index) in logs"
                 :key="index"
-                class="shadow-sm bg-background rounded-lg p-4 border-l-4 border-gray-200 hover:border-primary-400 transition-colors duration-200"
+                class="rounded-lg border-l-4 border-gray-200 bg-background p-4 shadow-sm transition-colors duration-200 hover:border-primary-400"
             >
-        <span class="text-xs font-medium tracking-widest text-gray-400 uppercase">
-          {{ log.timestamp }}
-        </span>
-                <h3 class="text-sm font-semibold text-gray-900 mt-1">
+                <span class="text-xs font-medium tracking-widest text-gray-400 uppercase">
+                    {{ log.timestamp }}
+                </span>
+                <h3 class="mt-1 text-sm font-semibold text-gray-900">
                     {{ log.title }}
                 </h3>
-                <p class="text-sm text-gray-600 mt-1">
+                <p class="mt-1 text-sm text-gray-600">
                     {{ log.body }}
                 </p>
             </div>
@@ -38,9 +38,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const logs = ref( [
+const logs = ref([
     {
         id: 'appraisal',
         title: 'Appraisal refreshed',
@@ -63,8 +63,9 @@ const logs = ref( [
 </script>
 
 <style scoped>
- .shadow-soft {
-     box-shadow: -5px -5px 15px rgba(255, 255, 255, 0.8),
-     5px 5px 15px rgba(0, 0, 0, 0.1);
- }
+.shadow-soft {
+    box-shadow:
+        -5px -5px 15px rgba(255, 255, 255, 0.8),
+        5px 5px 15px rgba(0, 0, 0, 0.1);
+}
 </style>

@@ -41,7 +41,7 @@ async function loadOverView() {
 
     loading.value = false;
 }
-loadOverView()
+loadOverView();
 </script>
 
 <template>
@@ -61,8 +61,8 @@ loadOverView()
             </div>
         </header>
 
-        <section class="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
-            <article class="neo-shadow flex flex-col gap-5 rounded-[12px] p-6">
+        <section class="grid gap-6 h-100">
+            <article class="npo-form-shadow flex flex-col gap-5 rounded-[12px] p-6 text-accent">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Key Investment Signals</h3>
@@ -73,31 +73,8 @@ loadOverView()
                     <ClipboardList class="h-5 w-5 text-[#7c4dff]" />
                 </header>
 
-                <ul class="space-y-4 rounded-[12px] bg-gray-200 p-4 px-6 text-sm text-gray-600 shadow-neu-in">
-                    <li class="rounded-[12px] bg-background p-4 shadow-md">
-                        PixrWorth signals potential 4.9% appreciation in the next 90 days compared to the ZIP median.
-                    </li>
-                    <li class="rounded-[12px] bg-background p-4 shadow-md">
-                        Glow-Up scenario #2 increases ARV by $68K with minimal structural changes and quick cosmetic
-                        upgrades.
-                    </li>
-                    <li class="rounded-[12px] bg-background p-4 shadow-md">
-                        SpyHunt flagged two competing listings going under contract within 7 days — move fast on
-                        staging.
-                    </li>
-                </ul>
-            </article>
 
-            <aside class="p-3">
-                <PropertyOverviewLogs />
-            </aside>
+            </article>
         </section>
     </div>
 </template>
-<style scoped>
-.neo-shadow {
-    box-shadow:
-        -5px -5px 15px rgba(255, 255, 255, 0.8),
-        5px 5px 15px rgba(0, 0, 0, 0.1);
-}
-</style>
