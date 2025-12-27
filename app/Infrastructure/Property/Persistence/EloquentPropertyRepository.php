@@ -23,10 +23,7 @@ class EloquentPropertyRepository implements PropertyRepositoryInterface
             'lat' => $propertyEntity->lat,
             'lng' => $propertyEntity->lng,
             'place_id' => $propertyEntity->place_id,
-            'metadata' => [
-                'source' => 'ui',
-                'created_via' => 'wizard',
-            ],
+            'metadata' => $propertyEntity->metadata,
             'property_type' => $propertyEntity->property_type,
             'bedrooms' => $propertyEntity->bedrooms,
             'bathrooms' => $propertyEntity->bathrooms,

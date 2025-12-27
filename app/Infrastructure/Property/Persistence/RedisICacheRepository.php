@@ -10,10 +10,10 @@ use App\Application\Properties\DTOs\SourceDTO;
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
 use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
-use App\Domain\Properties\Repositories\SpyHuntCacheRepositoryInterface;
+use App\Domain\Properties\Repositories\ICacheStore;
 use Illuminate\Support\Facades\Redis;
 
-class RedisSpyHuntCacheRepository implements SpyHuntCacheRepositoryInterface
+class RedisICacheRepository implements ICacheStore
 {
     private function key(int $propertyId): string
     {
@@ -44,7 +44,7 @@ class RedisSpyHuntCacheRepository implements SpyHuntCacheRepositoryInterface
 
     }
 
-    public function put(int $propertyId, SpyHuntDataDTO $data, int $ttlInSeconds): void
+    public function put(int $propertyId, mixed $data, int $ttlInSeconds): void
     {
         Redis::setex(
             $this->key($propertyId), $ttlInSeconds,json_encode($data->toArray())

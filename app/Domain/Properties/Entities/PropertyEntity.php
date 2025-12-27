@@ -18,7 +18,10 @@ class PropertyEntity
         public ?float $lat,
         public ?float $lng,
         public ?string $place_id,
-        public mixed $metadata,
+        public mixed $metadata = [
+            'source' => 'ui',
+            'created_via' => 'wizard',
+        ],
         public string $property_type,
         public string $bedrooms,
         public string $bathrooms,

@@ -30,7 +30,7 @@ const loading = ref(false);
 const overview = ref<any>();
 async function loadOverView() {
     loading.value = true;
-    const res = await fetch(propertiesRoutes.overview.get(props.property.id).url, {
+    const res = await fetch(propertiesRoutes.overview.get(props.property.id as number).url, {
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
