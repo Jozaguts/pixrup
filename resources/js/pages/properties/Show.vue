@@ -127,8 +127,8 @@ const statusTokens: Record<
 > = {
     'in-progress': {
         label: 'In Progress',
-        badge: 'bg-[#FFF4DA] text-[#9A6B00] shadow-[inset_4px_4px_12px_rgba(226,189,116,0.35)]',
-        dot: 'bg-[#FFB74A]',
+        badge: 'bg-surface text-accent shadow-neu-in ',
+        dot: 'bg-primary',
     },
     ready: {
         label: 'Ready',
@@ -184,15 +184,6 @@ const propertyStatus = computed(() => {
 
 const activateModule = (id: ModuleId) => {
     activeModuleId.value = id;
-};
-
-const handleAction = (action: WorkspaceAction) => {
-    if (modules.some((module) => module.id === action.module)) {
-        activateModule(action.module as ModuleId);
-        return;
-    }
-
-    // Placeholder: integrate action handlers per module here.
 };
 
 const activeModule = computed(
@@ -288,19 +279,19 @@ const headerMetricCards = computed(() => {
                         <div class="space-y-6">
                             <div class="space-y-2">
                                 <p
-                                    class="text-xs font-medium tracking-[0.35em] text-gray-400 uppercase"
+                                    class="text-xs font-medium tracking-[0.35em] text-accent uppercase "
                                 >
                                     Property Workspace
                                 </p>
                                 <h1
-                                    class="text-2xl font-semibold tracking-tight text-[#1f2937] sm:text-3xl md:text-4xl"
+                                    class="text-2xl font-semibold tracking-tight text-accent/50 sm:text-3xl md:text-4xl"
                                 >
                                     {{ props.property.title ?? 'Property' }}
                                 </h1>
                             </div>
 
                             <div
-                                class="flex flex-col gap-4 text-sm text-gray-600 sm:text-base"
+                                class="flex flex-col gap-4 text-sm text-accent sm:text-base"
                             >
                                 <div class="flex flex-wrap items-center gap-4">
                                     <span
@@ -315,7 +306,7 @@ const headerMetricCards = computed(() => {
                                     </span>
 
                                     <div
-                                        class="flex items-center gap-2 text-gray-500"
+                                        class="flex items-center gap-2 text-accent/50"
                                     >
                                         <CalendarClock class="h-4 w-4" />
                                         <span
@@ -350,11 +341,11 @@ const headerMetricCards = computed(() => {
                         </div>
 
                         <div class="flex w-full flex-col gap-5 lg:w-auto">
-                            <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="grid gap-4 sm:grid-cols-2 ">
                                 <div
                                     v-for="metric in headerMetricCards"
                                     :key="metric.id"
-                                    class="flex items-center gap-3 rounded-[12px] px-4 py-3 text-sm text-gray-600 shadow-sm"
+                                    class="flex items-center gap-4 rounded-[12px] p-4 text-sm text-accent bg-surface shadow-neu-in"
                                 >
                                          <component
                                              :is="metric.icon"
@@ -362,11 +353,11 @@ const headerMetricCards = computed(() => {
                                          />
                                     <div>
                                         <p
-                                            class="text-xs tracking-[0.25em] text-gray-400 uppercase"
+                                            class="text-xs tracking-[0.25em] text-accent uppercase"
                                         >
                                             {{ metric.label }}
                                         </p>
-                                        <p class="font-semibold text-[#1f2937]">
+                                        <p class="font-semibold text-accent/50">
                                             {{ metric.value }}
                                         </p>
                                     </div>
