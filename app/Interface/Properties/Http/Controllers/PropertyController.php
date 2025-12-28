@@ -3,6 +3,7 @@
 namespace App\Interface\Properties\Http\Controllers;
 
 use App\Application\Properties\DTOs\CreatePropertyDTO;
+use App\Application\Properties\UseCases\CreatePropertyOverviewUseCase;
 use App\Application\Properties\UseCases\CreatePropertyUseCase;
 use App\Application\Usage\Services\UsageSummaryService;
 use App\Http\Controllers\Controller;
@@ -210,8 +211,10 @@ class PropertyController extends Controller
             ->route('dashboard')
             ->with('status', 'property-created');
     }
-    public function overview(): JsonResponse
+    public function overview(Property $property, CreatePropertyOverviewUseCase $useCase): JsonResponse
     {
+        $propertyEntity = $property->toEntity();
+        $overview = $useCase->execute($propertyEntity);
         return response()->json(['status' => 'overview']);
     }
 }
