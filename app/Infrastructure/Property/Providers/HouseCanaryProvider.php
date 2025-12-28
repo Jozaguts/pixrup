@@ -6,6 +6,7 @@ use App\Application\Properties\DTOs\DetailsAdvancedDTO;
 use App\Application\Properties\DTOs\PropertyWorthDTO;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Properties\Entities\PropertyEntity;
+use App\Domain\Properties\ValueObjects\PropertyAddressVO;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
@@ -89,25 +90,7 @@ class HouseCanaryProvider implements AppraisalProviderInterface
     }
     private function buildHCParams(PropertyEntity $property): array
     {
-        return [
-            'address' => $this->extractStreet($property),
-            'city' => $property->city,
-            'state' => $property->state,
-            'zipcode' => $property->postal_code,
-        ];
-    }
-    private function extractStreet(PropertyEntity $property): string
-    {
-        $full = $property->address;
-        $suffix = ", {$property->city}, {$property->state} {$property->postal_code}";
-
-
-        if (str_ends_with($full, $suffix)) {
-            return substr($full, 0, -strlen($suffix));
-        }
-
-
-        return $full;
+        return  PropertyAddressVO::fromProperty($property)->toHouseCanaryParams();
     }
 
     public function detailsAdvanced(PropertyEntity $property): DetailsAdvancedDTO

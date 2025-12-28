@@ -14,7 +14,7 @@ use App\Domain\Properties\Repositories\ICacheStore;
 use App\Models\SpyHuntCache;
 use Illuminate\Support\Carbon;
 
-class SpyHuntRepository implements ICacheStore
+class EloquentSpyHuntRepository implements ICacheStore
 {
 
     public function get(int $propertyId, $filters =[]): ?SpyHuntDataDTO

@@ -41,9 +41,9 @@ public function __construct(
             'square_footage' => $this->square_footage,
         ];
     }
-    public static function fromArray(array $raw): PropertyDTO
+    public static function fromArray(array $raw): self
     {
-        return new  PropertyDTO(
+        return new self(
             $raw['title'],
             $raw['status'],
             $raw['address'],

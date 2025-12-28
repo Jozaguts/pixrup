@@ -9,8 +9,8 @@ use JsonException;
 readonly class CompositeCacheRepository implements ICacheStore
 {
     public function __construct(
-        private RedisICacheRepository $redis,
-        private SpyHuntRepository $eloquent
+        private SpyHuntCacheRepository $redis,
+        private EloquentSpyHuntRepository $eloquent
     ){}
 
     /**

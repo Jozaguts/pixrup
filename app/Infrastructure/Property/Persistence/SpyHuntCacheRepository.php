@@ -13,7 +13,7 @@ use App\Application\Properties\DTOs\ValueEstimateDTO;
 use App\Domain\Properties\Repositories\ICacheStore;
 use Illuminate\Support\Facades\Redis;
 
-class RedisICacheRepository implements ICacheStore
+class SpyHuntCacheRepository implements ICacheStore
 {
     private function key(int $propertyId): string
     {

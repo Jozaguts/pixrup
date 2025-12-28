@@ -2,9 +2,9 @@
 
 namespace App\Domain\Properties\ValueObjects;
 
-class Coordinates
+readonly class Coordinates
 {
-    public function __construct(public readonly float $latitude, public readonly float $longitude)
+    public function __construct(public float $latitude, public float $longitude)
     {
         if($this->latitude < -90 || $this->latitude > 90) {
             throw new \InvalidArgumentException('Latitude must be between -90 and 90 degrees.');

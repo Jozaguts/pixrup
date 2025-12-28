@@ -9,8 +9,8 @@ use App\Domain\Properties\Repositories\ICacheStore;
 use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
 use App\Infrastructure\Property\Persistence\EloquentPropertyPhotoRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyRepository;
-use App\Infrastructure\Property\Persistence\RedisICacheRepository;
-use App\Infrastructure\Property\Persistence\SpyHuntRepository;
+use App\Infrastructure\Property\Persistence\SpyHuntCacheRepository;
+use App\Infrastructure\Property\Persistence\EloquentSpyHuntRepository;
 use App\Infrastructure\Property\Persistence\CompositeCacheRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,8 +33,8 @@ class PropertyServiceProvider extends ServiceProvider
         $this->app->bind(
             ICacheStore::class, function($app){
                 return new CompositeCacheRepository(
-                    $app->make(RedisICacheRepository::class),
-                    $app->make(SpyHuntRepository::class)
+                    $app->make(SpyHuntCacheRepository::class),
+                    $app->make(EloquentSpyHuntRepository::class)
                 );
         });
         $this->app->bind(
