@@ -2,16 +2,18 @@
 
 namespace App\Infrastructure\Property\Providers;
 
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Properties\Repositories\PropertyPhotoRepositoryInterface;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
-use App\Domain\Properties\Repositories\ICacheStore;
 use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
+use App\Infrastructure\Property\Persistence\CompositeCacheRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyPhotoRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyRepository;
-use App\Infrastructure\Property\Persistence\SpyHuntCacheRepository;
-use App\Infrastructure\Property\Persistence\EloquentSpyHuntRepository;
-use App\Infrastructure\Property\Persistence\CompositeCacheRepository;
+use App\Infrastructure\Property\SpyHunt\Persistence\EloquentSpyHuntRepository;
+use App\Infrastructure\Property\SpyHunt\Persistence\RedisSpyHuntCache;
+use App\Infrastructure\Shared\Persistence\RedisKeyValueStore;
 use Illuminate\Support\ServiceProvider;
 
 class PropertyServiceProvider extends ServiceProvider
@@ -31,9 +33,9 @@ class PropertyServiceProvider extends ServiceProvider
             fn () => new RentCastMarketDataProvider(config('services.rentcast.api_key'))
         );
         $this->app->bind(
-            ICacheStore::class, function($app){
+            SpyHuntCache::class, function($app){
                 return new CompositeCacheRepository(
-                    $app->make(SpyHuntCacheRepository::class),
+                    $app->make(RedisSpyHuntCache::class),
                     $app->make(EloquentSpyHuntRepository::class)
                 );
         });
@@ -48,5 +50,6 @@ class PropertyServiceProvider extends ServiceProvider
                 };
             }
         );
+        $this->app->bind(KeyValueStore::class, RedisKeyValueStore::class);
     }
 }

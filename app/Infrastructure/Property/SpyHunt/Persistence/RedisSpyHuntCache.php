@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Property\Persistence;
+namespace App\Infrastructure\Property\SpyHunt\Persistence;
 
 use App\Application\Properties\DTOs\ComparableDTO;
 use App\Application\Properties\DTOs\FiltersDTO;
@@ -10,22 +10,24 @@ use App\Application\Properties\DTOs\SourceDTO;
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
 use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
-use App\Domain\Properties\Repositories\ICacheStore;
-use Illuminate\Support\Facades\Redis;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Shared\Contracts\Cache\KeyValueStore;
+use JsonException;
 
-class SpyHuntCacheRepository implements ICacheStore
+final readonly class RedisSpyHuntCache implements SpyHuntCache
 {
+    public function __construct(private KeyValueStore $store) {}
     private function key(int $propertyId): string
     {
         return "spyhunt:property:{$propertyId}";
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function get(int $propertyId, $filters = []): ?SpyHuntDataDTO
     {
-        $raw = Redis::get($this->key($propertyId));
+        $raw = $this->store->get($this->key($propertyId));
 
         if (!$raw) {
             return null;
@@ -44,15 +46,20 @@ class SpyHuntCacheRepository implements ICacheStore
 
     }
 
-    public function put(int $propertyId, mixed $data, int $ttlInSeconds): void
+    /**
+     * @throws JsonException
+     */
+    public function put(int $propertyId, mixed $data, int $ttlSeconds): void
     {
-        Redis::setex(
-            $this->key($propertyId), $ttlInSeconds,json_encode($data->toArray())
+        $this->store->put(
+            $this->key($propertyId),
+            json_encode($data->toArray(), JSON_THROW_ON_ERROR),
+            $ttlSeconds
         );
     }
 
     public function forget(int $propertyId): void
     {
-        Redis::del($this->key($propertyId));
+        $this->store->forget($this->key($propertyId));
     }
 }

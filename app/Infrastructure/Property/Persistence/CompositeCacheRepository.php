@@ -3,19 +3,15 @@
 namespace App\Infrastructure\Property\Persistence;
 
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
-use App\Domain\Properties\Repositories\ICacheStore;
-use JsonException;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
 
-readonly class CompositeCacheRepository implements ICacheStore
+readonly class CompositeCacheRepository implements SpyHuntCache
 {
     public function __construct(
-        private SpyHuntCacheRepository $redis,
-        private EloquentSpyHuntRepository $eloquent
+        private SpyHuntCache $redis,
+        private SpyHuntCache $eloquent
     ){}
 
-    /**
-     * @throws JsonException
-     */
     public function get(int $propertyId, array $filters = []): ?SpyHuntDataDTO
     {
         $data = $this->redis->get($propertyId, $filters);
@@ -33,10 +29,10 @@ readonly class CompositeCacheRepository implements ICacheStore
         return null;
     }
 
-    public function put(int $propertyId, mixed $data, int $ttlInSeconds = 86400): void
+    public function put(int $propertyId, mixed $data, int $ttlSeconds = 86400): void
     {
-        $this->redis->put($propertyId,$data, $ttlInSeconds);
-        $this->eloquent->put($propertyId, $data, $ttlInSeconds);
+        $this->redis->put($propertyId,$data, $ttlSeconds);
+        $this->eloquent->put($propertyId, $data, $ttlSeconds);
     }
 
     public function forget(int $propertyId): void

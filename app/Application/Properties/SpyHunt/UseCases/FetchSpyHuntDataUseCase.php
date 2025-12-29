@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Properties\UseCases;
+namespace App\Application\Properties\SpyHunt\UseCases;
 
 use App\Application\Properties\DTOs\ComparableDTO;
 use App\Application\Properties\DTOs\FiltersDTO;
@@ -10,22 +10,21 @@ use App\Application\Properties\DTOs\SourceDTO;
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
 use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
 use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
 use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
-use App\Domain\Properties\Repositories\ICacheStore;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Domain\Usage\Enums\UsageAction;
 use App\Models\Property;
 use App\Models\User;
-use Illuminate\Support\Carbon;
 
 readonly class FetchSpyHuntDataUseCase
 {
     public function __construct(
         private PropertyRepositoryInterface $propertyRepository,
         private SpyHuntMarketDataProviderInterface $marketDataProvider,
-        private ICacheStore $cacheRepository,
+        private SpyHuntCache $cacheRepository,
         private MonthlyPropertyUsageService $usageService,
     ) {}
 

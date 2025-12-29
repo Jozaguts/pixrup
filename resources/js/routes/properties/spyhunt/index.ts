@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 export const fetch = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ fetch.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 fetch.url = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,7 +43,7 @@ fetch.url = (args: { property: string | number } | [property: string | number ] 
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 fetch.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ fetch.get = (args: { property: string | number } | [property: string | number ] 
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 fetch.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -63,7 +63,7 @@ fetch.head = (args: { property: string | number } | [property: string | number ]
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 const fetchForm = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -73,7 +73,7 @@ const fetchForm = (args: { property: string | number } | [property: string | num
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 fetchForm.get = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -83,7 +83,7 @@ fetchForm.get = (args: { property: string | number } | [property: string | numbe
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\SpyHuntController::fetch
-* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:16
+* @see app/Interface/Properties/Http/Controllers/SpyHuntController.php:15
 * @route '/properties/{property}/fetch'
 */
 fetchForm.head = (args: { property: string | number } | [property: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

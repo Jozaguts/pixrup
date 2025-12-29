@@ -3,10 +3,9 @@
 namespace App\Interface\Properties\Http\Controllers;
 
 
-use App\Application\Properties\UseCases\FetchSpyHuntDataUseCase;
+use App\Application\Properties\SpyHunt\UseCases\FetchSpyHuntDataUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SpyHuntFilterRequest;
-use Inertia\Inertia;
 
 class SpyHuntController extends Controller
 {
