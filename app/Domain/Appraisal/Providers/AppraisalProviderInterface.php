@@ -29,12 +29,5 @@ interface AppraisalProviderInterface
     public function fetchValue(PropertyEntity $property): PropertyWorthDTO;
 
     public function detailsAdvanced(PropertyEntity $property);
-    public function census(PropertyEntity $property);
-    public function salesHistory(PropertyEntity $property);
-    public function ownerOccupied(PropertyEntity $property);
-    public function femaDisasterArea(PropertyEntity $property);
-    public function flood(PropertyEntity $property);
-    public function blockCrime(PropertyEntity $property);
-    public function marketPulse(PropertyEntity $property, string $type = 'latest');
 
 }

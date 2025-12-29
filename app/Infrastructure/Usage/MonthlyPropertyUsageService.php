@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Application\Usage\Services;
+namespace App\Infrastructure\Usage;
 
+use App\Application\Usage\Services\PlanResolver;
+use App\Application\Usage\Services\UsagePeriodService;
+use App\Application\Usage\Services\UsageScopeResolver;
 use App\Domain\Properties\Entities\PropertyEntity;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Domain\Usage\Enums\UsageAction;
@@ -14,7 +17,6 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 readonly class MonthlyPropertyUsageService
 {

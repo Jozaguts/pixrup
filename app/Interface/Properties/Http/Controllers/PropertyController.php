@@ -3,7 +3,7 @@
 namespace App\Interface\Properties\Http\Controllers;
 
 use App\Application\Properties\DTOs\CreatePropertyDTO;
-use App\Application\Properties\UseCases\CreatePropertyOverviewUseCase;
+use App\Application\Properties\Overview\UseCases\CreatePropertyOverviewUseCase;
 use App\Application\Properties\UseCases\CreatePropertyUseCase;
 use App\Application\Usage\Services\UsageSummaryService;
 use App\Http\Controllers\Controller;

@@ -4,31 +4,25 @@ namespace App\Infrastructure\Property\Providers;
 
 use App\Application\Properties\DTOs\DetailsAdvancedDTO;
 use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Application\Properties\Overview\DTOs\OverviewDTO;
 use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Properties\Entities\PropertyEntity;
 use App\Domain\Properties\ValueObjects\PropertyAddressVO;
-use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
+use App\Infrastructure\Integrations\HouseCanary\HouseCanaryClient;
+use Illuminate\Http\Client\ConnectionException;
 
-class HouseCanaryProvider implements AppraisalProviderInterface
+readonly class HouseCanaryProvider implements AppraisalProviderInterface
 {
-    private PendingRequest $client;
-    public function __construct() {
-        $this->client = Http::withBasicAuth(
-            config('services.house_canary.api_key'),
-            config('services.house_canary.secret')
-        )
-            ->baseUrl(config('services.house_canary.base_url'))
-            ->acceptJson();
-    }
+    public function __construct(private HouseCanaryClient $client) {}
 
+    /**
+     * @throws ConnectionException
+     */
     public function fetchValue(PropertyEntity $property): PropertyWorthDTO
     {
         $params = $this->buildHCParams($property);
 
-        $valueResp = $this->get('/v2/property/value', [
+        $valueResp = $this->client->get('/v2/property/value', [
             'address' => $params['address'],
             'city'    => $params['city'],
             'state'   => $params['state'],
@@ -42,7 +36,7 @@ class HouseCanaryProvider implements AppraisalProviderInterface
         $fsd  = $value['fsd'];
 
         // COMPS
-        $compsResp = $this->get('/v3/property/comps_sale', [
+        $compsResp = $this->client->get('/v3/property/comps_sale', [
             'address' => $params['address'],
             'city'    => $params['city'],
             'state'   => $params['state'],
@@ -51,7 +45,7 @@ class HouseCanaryProvider implements AppraisalProviderInterface
         ])->json();
         $comps = $compsResp['sales_comps'];
 
-        $historyResp = $this->get('/v3/property/historical_value', [
+        $historyResp = $this->client->get('/v3/property/historical_value', [
             'address' => $params['address'],
             'city'    => $params['city'],
             'state'   => $params['state'],
@@ -77,27 +71,19 @@ class HouseCanaryProvider implements AppraisalProviderInterface
             trend30: $trend30
         );
     }
-    private function get(string $endpoint, $params = []): PromiseInterface|Response
-    {
-        $response = $this->client->get($endpoint, $params);
-
-        if ($response->failed()) {
-            throw new \RuntimeException(
-                "HouseCanary error {$response->status()}: " . $response->body()
-            );
-        }
-        return $response;
-    }
     private function buildHCParams(PropertyEntity $property): array
     {
         return  PropertyAddressVO::fromProperty($property)->toHouseCanaryParams();
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function detailsAdvanced(PropertyEntity $property): DetailsAdvancedDTO
     {
         $params = $this->buildHCParams($property);
 
-        $valueResp = $this->get('/v3/property/details_advanced', [
+        $valueResp = $this->client->get('/v3/property/details_advanced', [
             'address' => $params['address'],
         ])->json();
 
@@ -116,37 +102,46 @@ class HouseCanaryProvider implements AppraisalProviderInterface
         );
     }
 
-    public function census(PropertyEntity $property)
+    /**
+     * @throws ConnectionException
+     */
+    public function fetchOverview(PropertyEntity $property): OverviewDTO
+    {
+        $params = $this->buildHCParams($property);
+        $valueResp = $this->client->get('/v3/property/overview', []);
+    }
+
+    private function census(PropertyEntity $property)
     {
         // TODO: Implement census() method.
     }
 
-    public function salesHistory(PropertyEntity $property)
+    private function salesHistory(PropertyEntity $property)
     {
         // TODO: Implement salesHistory() method.
     }
 
-    public function ownerOccupied(PropertyEntity $property)
+    private function ownerOccupied(PropertyEntity $property)
     {
         // TODO: Implement ownerOccupied() method.
     }
 
-    public function femaDisasterArea(PropertyEntity $property)
+    private function femaDisasterArea(PropertyEntity $property)
     {
         // TODO: Implement femaDisasterArea() method.
     }
 
-    public function flood(PropertyEntity $property)
+    private function flood(PropertyEntity $property)
     {
         // TODO: Implement flood() method.
     }
 
-    public function blockCrime(PropertyEntity $property)
+    private function blockCrime(PropertyEntity $property)
     {
         // TODO: Implement blockCrime() method.
     }
 
-    public function marketPulse(PropertyEntity $property, string $type = 'latest')
+    private function marketPulse(PropertyEntity $property, string $type = 'latest')
     {
         // TODO: Implement marketPulse() method.
     }

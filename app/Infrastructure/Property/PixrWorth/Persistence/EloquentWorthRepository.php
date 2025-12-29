@@ -7,11 +7,11 @@
  * Expected Result: Implements the property worth repository interface using Laravel models.
  */
 
-namespace App\Infrastructure\Property\Persistence;
+namespace App\Infrastructure\Property\PixrWorth\Persistence;
 
 use App\Application\Properties\DTOs\PropertyWorthDTO;
+use App\Application\Properties\PixrWorth\Contracts\WorthRepository;
 use App\Domain\Appraisal\Entities\AppraisalSnapshot as PropertyWorthEntity;
-use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
 use App\Models\PropertyWorth;
 use Carbon\Carbon;
 
@@ -21,7 +21,7 @@ use Carbon\Carbon;
  * Returns: Not applicable.
  * Expected Result: Enables application services to retrieve and store valuations.
  */
-class EloquentPropertyWorthRepository implements PropertyWorthRepositoryInterface
+final class EloquentWorthRepository implements WorthRepository
 {
     /**
      * Description: Fetch the latest valuation within the freshness threshold for a property.
@@ -29,7 +29,7 @@ class EloquentPropertyWorthRepository implements PropertyWorthRepositoryInterfac
      * Returns: ?PropertyWorthEntity
      * Expected Result: Returns domain entity when a fresh record exists, otherwise null.
      */
-    public function findLatestWithin(int $propertyId, Carbon $threshold): ?PropertyWorthEntity
+    public function findFresh(int $propertyId, \DateTimeInterface $threshold): ?PropertyWorthDTO
     {
         $record = PropertyWorth::query()
             ->where('property_id', $propertyId)
@@ -49,7 +49,16 @@ class EloquentPropertyWorthRepository implements PropertyWorthRepositoryInterfac
             return null;
         }
 
-        return $this->mapModelToEntity($record);
+        return new PropertyWorthDTO(
+            value: $record->value,
+            value_low: $record->value_low,
+            value_high: $record->value_high,
+            confidence: $record->confidence,
+            comparables: $record->comparables,
+            provider: $record->provider,
+            fetched_at: $record->fetched_at,
+            cached_at: $fetchedAt,
+        );
     }
 
     /**
@@ -58,7 +67,7 @@ class EloquentPropertyWorthRepository implements PropertyWorthRepositoryInterfac
      * Returns: PropertyWorthEntity
      * Expected Result: Newly stored valuation represented as a domain entity.
      */
-    public function saveFromDto(int $propertyId, PropertyWorthDTO $dto): PropertyWorthEntity
+    public function save(int $propertyId, PropertyWorthDTO $dto): void
     {
         $record = new PropertyWorth();
         $record->property_id = $propertyId;
@@ -70,28 +79,5 @@ class EloquentPropertyWorthRepository implements PropertyWorthRepositoryInterfac
         $record->provider = $dto->provider;
         $record->fetched_at = $dto->fetched_at;
         $record->save();
-
-        return $this->mapModelToEntity($record);
-    }
-
-    /**
-     * Description: Convert an Eloquent model instance into a domain entity representation.
-     * Parameters: AppraisalSnapshot $model Persisted model instance.
-     * Returns: PropertyWorthEntity
-     * Expected Result: Domain entity mirrors the model's persisted state.
-     */
-    private function mapModelToEntity(PropertyWorth $model): PropertyWorthEntity
-    {
-        return new PropertyWorthEntity(
-            value: (float) $model->value,
-            value_low: (float) $model->value_low,
-            value_high: (float) $model->value_high,
-            confidence: ((float) $model->confidence) / 100,
-            comparables: $model->comparables ?? [],
-            provider: (string) $model->provider,
-            fetched_at: Carbon::parse($model->fetched_at ?? $model->created_at),
-            created_at: Carbon::parse($model->created_at),
-            updated_at: Carbon::parse($model->updated_at),
-        );
     }
 }

@@ -5,7 +5,6 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\GlowUp\GlowUpJobController;
-use App\Http\Controllers\Properties\PropertyWorthController as LegacyPropertyWorthController;
 use App\Interface\Properties\Http\Controllers\PropertyController;
 use App\Interface\Properties\Http\Controllers\SpyHuntController;
 use Inertia\Inertia;
@@ -31,7 +30,6 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
     Route::get('/properties/{property}/overview', [PropertyController::class, 'overview'])->name('properties.overview');
     Route::post('/properties/{property}/worth/fetch', [AppraisalPropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
-    Route::post('/properties/{property}/worth/report', [LegacyPropertyWorthController::class, 'report'])->name('properties.worth.report');
     Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
     Route::get('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'index'])->name('properties.glowup.jobs.index');
     Route::post('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'store'])->name('properties.glowup.jobs.store');

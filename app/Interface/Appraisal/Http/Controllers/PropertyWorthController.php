@@ -10,13 +10,15 @@
 namespace App\Interface\Appraisal\Http\Controllers;
 
 use App\Application\Properties\DTOs\PropertyWorthDTO;
-use App\Application\Properties\UseCases\FetchPropertyWorthUseCase;
+use App\Application\Properties\PixrWorth\UseCases\AppraisePropertyWorthUseCase;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Description: Controller responsible for orchestrating PixrWorth fetch operations.
@@ -28,37 +30,25 @@ class PropertyWorthController extends Controller
 {
     /**
      * Description: Fetch and return property valuation (mock or real).
-     * Parameters: Request $request Incoming HTTP request; Property $property Target property; FetchPropertyWorthUseCase $useCase Use case executing valuation logic.
+     * Parameters: Request $request Incoming HTTP request; Property $property Target property; AppraisePropertyWorthUseCase $useCase Use case executing valuation logic.
      * Returns: InertiaResponse|\Symfony\Component\HttpFoundation\Response
      * Expected Result: Responds with Inertia component containing valuation data or error details.
      */
     public function fetch(
         Request $request,
         Property $property,
-        FetchPropertyWorthUseCase $useCase
-    ): \Symfony\Component\HttpFoundation\Response {
+        AppraisePropertyWorthUseCase $useCase
+    ): Response {
         try {
-            $dto = $useCase->execute($property);
+            $dto = $useCase->execute($property->toEntity());
 
-            /** @var InertiaResponse $inertia */
             $inertia = Inertia::render('Appraisal/PixrWorth', [
                 'worth' => $this->transformDto($dto),
                 'property' => $this->transformProperty($property),
             ]);
 
             return $inertia->toResponse($request);
-        } catch (FeatureLimitExceededException $exception) {
-            $inertia = Inertia::render('Appraisal/PixrWorth', [
-                'worth' => null,
-                'property' => $this->transformProperty($property),
-                'errors' => [
-                    'worth' => $exception->getMessage(),
-                ],
-                'usage' => $exception->context(),
-            ]);
-
-            return $inertia->toResponse($request)->setStatusCode(403);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return Inertia::render('Appraisal/PixrWorth', [
                 'worth' => null,
                 'property' => $this->transformProperty($property),

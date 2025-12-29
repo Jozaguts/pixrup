@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PropertyWorth extends Model
 {
-    use HasFactory;
 
     protected $fillable = [
         'property_id',
