@@ -43,7 +43,7 @@ readonly class FetchSpyHuntDataUseCase
 
         $eloquentProperty = Property::find($propertyId);
 
-        $this->usageService->ensureUsage($user, $eloquentProperty, UsageAction::SPY_HUNT);
+        $this->usageService->ensureUsage($user, $eloquentProperty->toEntity(), UsageAction::SPY_HUNT);
 
 
         /**

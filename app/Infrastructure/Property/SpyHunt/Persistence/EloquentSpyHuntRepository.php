@@ -14,7 +14,7 @@ use App\Models\SpyHuntCache as SpyHuntCacheModel;
 use Illuminate\Support\Carbon;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
 
-class EloquentSpyHuntRepository implements SpyHuntCache
+final class EloquentSpyHuntRepository implements SpyHuntCache
 {
 
     public function get(int $propertyId, $filters =[]): ?SpyHuntDataDTO
