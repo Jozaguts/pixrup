@@ -4,7 +4,6 @@ namespace App\Infrastructure\Shared\Persistence;
 
 use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use Illuminate\Redis\RedisManager;
-use JsonException;
 
 class RedisKeyValueStore implements KeyValueStore
 {
