@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Property\Providers;
+namespace App\Infrastructure\Property\SpyHunt\Providers;
 
 use App\Application\Properties\DTOs\SpyHuntRawResponseDTO;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntMarketDataProviderInterface;

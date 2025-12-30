@@ -21,6 +21,7 @@ use App\Infrastructure\Property\Persistence\EloquentPropertyPhotoRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyRepository;
 use App\Infrastructure\Property\PixrWorth\Persistence\EloquentWorthRepository;
 use App\Infrastructure\Property\PixrWorth\Providers\HouseCanaryWorthProvider;
+use App\Infrastructure\Property\SpyHunt\Providers\RentCastMarketDataProvider;
 use App\Infrastructure\Property\SpyHunt\Persistence\EloquentSpyHuntRepository;
 use App\Infrastructure\Property\SpyHunt\Persistence\RedisSpyHuntCache;
 use App\Infrastructure\Shared\Persistence\RedisKeyValueStore;
