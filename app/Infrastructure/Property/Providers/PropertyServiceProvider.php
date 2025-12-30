@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Property\Providers;
 
 use App\Application\Auth\Contracts\CurrentUserProvider;
-use App\Application\Properties\Overview\Contracts\OverviewCache;
+use App\Application\Properties\Overview\Contracts\OverviewRepository;
 use App\Application\Properties\PixrWorth\Contracts\WorthProvider;
 use App\Application\Properties\PixrWorth\Contracts\WorthRepository;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
@@ -16,7 +16,7 @@ use App\Infrastructure\Auth\Providers\LaravelCurrentUserProvider;
 use App\Infrastructure\Property\Overview\Persistence\EloquentOverviewRepository;
 use App\Infrastructure\Property\Overview\Persistence\RedisOverviewCache;
 use App\Infrastructure\Property\SpyHunt\Persistence\CompositeSpyHuntCacheRepository;
-use App\Infrastructure\Property\Persistence\CompositeOverviewCache;
+use App\Infrastructure\Property\Overview\Persistence\CompositeOverviewRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyPhotoRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyRepository;
 use App\Infrastructure\Property\PixrWorth\Persistence\EloquentWorthRepository;
@@ -52,8 +52,8 @@ class PropertyServiceProvider extends ServiceProvider
                 );
         });
         $this->app->bind(KeyValueStore::class, RedisKeyValueStore::class);
-        $this->app->bind(OverviewCache::class, function ($app) {
-            return new CompositeOverviewCache(
+        $this->app->bind(OverviewRepository::class, function ($app) {
+            return new CompositeOverviewRepository(
                 redis: $app->make(RedisOverviewCache::class),
                 eloquent: $app->make(EloquentOverviewRepository::class),
             );

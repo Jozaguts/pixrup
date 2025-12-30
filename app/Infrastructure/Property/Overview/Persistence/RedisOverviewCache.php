@@ -2,12 +2,12 @@
 
 namespace App\Infrastructure\Property\Overview\Persistence;
 
-use App\Application\Properties\Overview\Contracts\OverviewCache;
+use App\Application\Properties\Overview\Contracts\OverviewRepository;
 use App\Application\Properties\Overview\Dtos\OverviewDTO;
 use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use JsonException;
 
-final readonly class RedisOverviewCache implements OverviewCache
+final readonly class RedisOverviewCache implements OverviewRepository
 {
     public function __construct(private KeyValueStore $store) {}
 

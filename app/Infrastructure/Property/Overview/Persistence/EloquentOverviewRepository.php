@@ -2,11 +2,11 @@
 
 namespace App\Infrastructure\Property\Overview\Persistence;
 
-use App\Application\Properties\Overview\Contracts\OverviewCache;
+use App\Application\Properties\Overview\Contracts\OverviewRepository;
 use App\Application\Properties\Overview\DTOs\OverviewDTO;
 use App\Models\Property;
 
-final class EloquentOverviewRepository implements OverviewCache
+final class EloquentOverviewRepository implements OverviewRepository
 {
     public function get(int $propertyId, array $filters = []): ?OverviewDTO
     {
