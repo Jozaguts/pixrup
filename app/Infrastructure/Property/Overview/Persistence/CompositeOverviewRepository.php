@@ -3,35 +3,34 @@
 namespace App\Infrastructure\Property\Overview\Persistence;
 
 use App\Application\Properties\Overview\Contracts\OverviewRepository;
-use App\Application\Properties\Overview\DTOs\OverviewDTO;
+use App\Application\Properties\Overview\DTOs\PropertyOverviewSnapshotDTO;
 
 final readonly class CompositeOverviewRepository implements OverviewRepository
 {
     public function __construct(
         private OverviewRepository $redis,
         private OverviewRepository $eloquent,
-        private int $ttlSeconds = 86400,
     ) {}
-    public function get(int $propertyId, array $filters = []): ?OverviewDTO
+
+    public function get(int $propertyId): ?PropertyOverviewSnapshotDTO
     {
-        $data = $this->redis->get($propertyId, $filters);
+        $data = $this->redis->get($propertyId);
         if ($data) {
             return $data;
         }
 
-        $data = $this->eloquent->get($propertyId, $filters);
+        $data = $this->eloquent->get($propertyId);
         if ($data) {
-            $this->redis->put($propertyId, $data, $this->ttlSeconds);
-            return $data;
+            $this->redis->save($data);
         }
 
-        return null;
+        return $data;
     }
 
-    public function put(int $propertyId, OverviewDTO $data, int $ttlSeconds): void
+    public function save(PropertyOverviewSnapshotDTO $dto): void
     {
-        $this->redis->put($propertyId, $data, $ttlSeconds);
-        $this->eloquent->put($propertyId, $data, $ttlSeconds);
+        $this->redis->save($dto);
+        $this->eloquent->save($dto);
     }
 
     public function forget(int $propertyId): void

@@ -4,6 +4,8 @@ namespace App\Infrastructure\Property\Providers;
 
 use App\Application\Auth\Contracts\CurrentUserProvider;
 use App\Application\Properties\Overview\Contracts\OverviewRepository;
+use App\Application\Properties\Overview\Contracts\OverviewProvider;
+use App\Application\Properties\Overview\Contracts\MsaMarketPulseRepository;
 use App\Application\Properties\PixrWorth\Contracts\WorthProvider;
 use App\Application\Properties\PixrWorth\Contracts\WorthRepository;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
@@ -15,14 +17,18 @@ use App\Application\Properties\SpyHunt\Contracts\SpyHuntMarketDataProviderInterf
 use App\Infrastructure\Auth\Providers\LaravelCurrentUserProvider;
 use App\Infrastructure\Property\Overview\Persistence\EloquentOverviewRepository;
 use App\Infrastructure\Property\Overview\Persistence\RedisOverviewCache;
+use App\Infrastructure\Property\Overview\Persistence\RedisMsaMarketPulseCache;
 use App\Infrastructure\Property\SpyHunt\Persistence\CompositeSpyHuntCacheRepository;
 use App\Infrastructure\Property\Overview\Persistence\CompositeOverviewRepository;
+use App\Infrastructure\Property\Overview\Persistence\CompositeMsaMarketPulseRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyPhotoRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyRepository;
 use App\Infrastructure\Property\PixrWorth\Persistence\EloquentWorthRepository;
 use App\Infrastructure\Property\PixrWorth\Providers\HouseCanaryWorthProvider;
+use App\Infrastructure\Property\Overview\Providers\HouseCanaryOverviewProvider;
 use App\Infrastructure\Property\SpyHunt\Providers\RentCastMarketDataProvider;
 use App\Infrastructure\Property\SpyHunt\Persistence\EloquentSpyHuntRepository;
+use App\Infrastructure\Property\Overview\Persistence\EloquentMsaMarketPulseRepository;
 use App\Infrastructure\Property\SpyHunt\Persistence\RedisSpyHuntCache;
 use App\Infrastructure\Shared\Persistence\RedisKeyValueStore;
 use App\Infrastructure\Usage\MonthlyUsageGuard;
@@ -58,6 +64,13 @@ class PropertyServiceProvider extends ServiceProvider
                 eloquent: $app->make(EloquentOverviewRepository::class),
             );
         });
+        $this->app->bind(MsaMarketPulseRepository::class, function ($app) {
+            return new CompositeMsaMarketPulseRepository(
+                redis: $app->make(RedisMsaMarketPulseCache::class),
+                eloquent: $app->make(EloquentMsaMarketPulseRepository::class),
+            );
+        });
+        $this->app->bind(OverviewProvider::class, HouseCanaryOverviewProvider::class);
         $this->app->bind(WorthProvider::class, HouseCanaryWorthProvider::class);
         $this->app->bind(WorthRepository::class, EloquentWorthRepository::class);
         $this->app->bind(CurrentUserProvider::class, LaravelCurrentUserProvider::class);

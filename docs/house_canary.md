@@ -8,6 +8,120 @@ Source: Census TIGER Data
 Pricing Tier: Included with Subscription
 
 Updated: Annually
+ response:
+    ```
+[
+  {
+    "property/census": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "msa": "38060",
+        "msa_name": "San Francisco-Oakland-Berkeley, CA",
+        "tribal_land": "string",
+        "tract": "060750201004",
+        "block": "060750313013007",
+        "block_group": "060750201004",
+        "county_name": "San Francisco",
+        "fips": "06075"
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  },
+  {
+    "property/census": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "msa": "38060",
+        "msa_name": "San Francisco-Oakland-Berkeley, CA",
+        "tribal_land": "string",
+        "tract": "060750201004",
+        "block": "060750313013007",
+        "block_group": "060750201004",
+        "county_name": "San Francisco",
+        "fips": "06075"
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  }
+]
+    ```
+
+
+
 
 GET
 Rental Comparables
@@ -68,6 +182,145 @@ Pricing Tier: Basic
 
 Updated: Daily
 
+```
+[
+  {
+    "property/fema_disaster_area": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "data_current_to": "2023-08-10",
+        "in_disaster_area": true,
+        "details": [
+          {
+            "declared_date": "2023-07-15",
+            "end_date": "2023-08-05T12:00:00Z",
+            "fema_disaster_num": 12345,
+            "fips": "12345",
+            "start_date": "2023-06-30T08:00:00Z",
+            "title": "Severe Storm and Flood",
+            "type": "Flood"
+          },
+          {
+            "declared_date": "2023-07-15",
+            "end_date": "2023-08-05T12:00:00Z",
+            "fema_disaster_num": 12345,
+            "fips": "12345",
+            "start_date": "2023-06-30T08:00:00Z",
+            "title": "Severe Storm and Flood",
+            "type": "Flood"
+          }
+        ]
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  },
+  {
+    "property/fema_disaster_area": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "data_current_to": "2023-08-10",
+        "in_disaster_area": true,
+        "details": [
+          {
+            "declared_date": "2023-07-15",
+            "end_date": "2023-08-05T12:00:00Z",
+            "fema_disaster_num": 12345,
+            "fips": "12345",
+            "start_date": "2023-06-30T08:00:00Z",
+            "title": "Severe Storm and Flood",
+            "type": "Flood"
+          },
+          {
+            "declared_date": "2023-07-15",
+            "end_date": "2023-08-05T12:00:00Z",
+            "fema_disaster_num": 12345,
+            "fips": "12345",
+            "start_date": "2023-06-30T08:00:00Z",
+            "title": "Severe Storm and Flood",
+            "type": "Flood"
+          }
+        ]
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  }
+]
+```
+
 GET
 Flood Risk Information
 https://api.housecanary.com/v2/property/flood?slug=123-Main-St-Apt-1-San-Francisco&address=123 Main St&unit=Apt 1&city=San Francisco&state=CA&zipcode=94105
@@ -76,6 +329,109 @@ Retrieve FEMA flood risk data for properties, essential for evaluating potential
 Source: FEMA
 
 Pricing Tier: Basic
+
+```
+[
+  {
+    "property/flood": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "effective_date": "2023-08-10",
+        "flood_risk": "Moderate",
+        "zone": "AE",
+        "panel_number": "12345C0123E"
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  },
+  {
+    "property/flood": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "effective_date": "2023-08-10",
+        "flood_risk": "Moderate",
+        "zone": "AE",
+        "panel_number": "12345C0123E"
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  }
+]
+```
 
 GET
 HOA Fees
@@ -155,6 +511,103 @@ Pricing Tier: Basic
 
 Updated: Annually
 
+```
+[
+  {
+    "property/owner_occupied": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "owner_occupied": true
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  },
+  {
+    "property/owner_occupied": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "owner_occupied": true
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  }
+]
+```
+
 GET
 Rental Value Forecast
 https://api.housecanary.com/v2/property/rental_value_forecast?slug=123-Main-St-Apt-1-San-Francisco&address=123 Main St&unit=Apt 1&city=San Francisco&state=CA&zipcode=94105
@@ -214,6 +667,164 @@ Source: Public Records
 Pricing Tier: Basic
 
 Updated: Daily
+```
+[
+  {
+    "property/sales_history": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": [
+        {
+          "amount": 350000,
+          "apn": "123456789",
+          "event_type": "Sale",
+          "fips": "06001",
+          "grantee_1": "Smith",
+          "grantee_1_forenames": "John",
+          "grantee_2": "Johnson",
+          "grantee_2_forenames": "Jane",
+          "grantor_1": "Bank of Example",
+          "grantor_2": "Mortgage Corp",
+          "record_book": "12345",
+          "record_date": "2023-08-10",
+          "record_doc": "987654",
+          "record_page": "789"
+        },
+        {
+          "amount": 350000,
+          "apn": "123456789",
+          "event_type": "Sale",
+          "fips": "06001",
+          "grantee_1": "Smith",
+          "grantee_1_forenames": "John",
+          "grantee_2": "Johnson",
+          "grantee_2_forenames": "Jane",
+          "grantor_1": "Bank of Example",
+          "grantor_2": "Mortgage Corp",
+          "record_book": "12345",
+          "record_date": "2023-08-10",
+          "record_doc": "987654",
+          "record_page": "789"
+        }
+      ]
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  },
+  {
+    "property/sales_history": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": [
+        {
+          "amount": 350000,
+          "apn": "123456789",
+          "event_type": "Sale",
+          "fips": "06001",
+          "grantee_1": "Smith",
+          "grantee_1_forenames": "John",
+          "grantee_2": "Johnson",
+          "grantee_2_forenames": "Jane",
+          "grantor_1": "Bank of Example",
+          "grantor_2": "Mortgage Corp",
+          "record_book": "12345",
+          "record_date": "2023-08-10",
+          "record_doc": "987654",
+          "record_page": "789"
+        },
+        {
+          "amount": 350000,
+          "apn": "123456789",
+          "event_type": "Sale",
+          "fips": "06001",
+          "grantee_1": "Smith",
+          "grantee_1_forenames": "John",
+          "grantee_2": "Johnson",
+          "grantee_2_forenames": "Jane",
+          "grantor_1": "Bank of Example",
+          "grantor_2": "Mortgage Corp",
+          "record_book": "12345",
+          "record_date": "2023-08-10",
+          "record_doc": "987654",
+          "record_page": "789"
+        }
+      ]
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  }
+]
+```
 
 
 GET
@@ -298,6 +909,140 @@ Access crime data from the past two years near a specific block, including perce
 Pricing Tier: Basic
 
 Updated: Monthly
+```
+[
+  {
+    "property/block_crime": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "all": {
+          "incidents": 120,
+          "county_percentile": 75,
+          "nation_percentile": 60
+        },
+        "property": {
+          "incidents": 30,
+          "county_percentile": 50,
+          "nation_percentile": 40
+        },
+        "violent": {
+          "incidents": 15,
+          "county_percentile": 70,
+          "nation_percentile": 55
+        },
+        "other": {
+          "incidents": 45,
+          "county_percentile": 25,
+          "nation_percentile": 30
+        }
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  },
+  {
+    "property/block_crime": {
+      "api_code_description": "ok",
+      "api_code": 0,
+      "result": {
+        "all": {
+          "incidents": 120,
+          "county_percentile": 75,
+          "nation_percentile": 60
+        },
+        "property": {
+          "incidents": 30,
+          "county_percentile": 50,
+          "nation_percentile": 40
+        },
+        "violent": {
+          "incidents": 15,
+          "county_percentile": 70,
+          "nation_percentile": 55
+        },
+        "other": {
+          "incidents": 45,
+          "county_percentile": 25,
+          "nation_percentile": 30
+        }
+      }
+    },
+    "address_info": {
+      "address_full": "123 Main St San Francisco CA 94132",
+      "slug": "123-Main-St-Apt-1-San-Francisco",
+      "address": "123 Main St",
+      "unit": "Apt 1",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "94132",
+      "zipcode_plus4": "1234",
+      "block_id": "060750313013007",
+      "blockgroup_id": "060750201004",
+      "county_fips": "06075",
+      "metrodiv": "41860",
+      "msa": "41860",
+      "geo_precision": "rooftop",
+      "lat": 37.789,
+      "lng": -122.401,
+      "status": {
+        "match": true,
+        "details": [
+          "Address fully verified",
+          "Address fully verified"
+        ],
+        "requested_item": {
+          "zipcode": "94132",
+          "address": "123+Main+St"
+        },
+        "changes": [
+          "State added or changed",
+          "State added or changed"
+        ],
+        "errors": [
+          "string",
+          "string"
+        ]
+      }
+    }
+  }
+]
+```
 
 GET
 Value Historical From Address
@@ -343,6 +1088,70 @@ Access the latest insights into rental supply and demand changes seen through ac
 Source: HouseCanary
 
 Pricing Tier: Included with Subscription
+
+```
+{
+  "geoInfo": {
+    "msa": "38060",
+    "msaName": "San Francisco-Oakland-Berkeley, CA"
+  },
+  "listingStats": {
+    "daysOnMarketMedian": 50,
+    "daysOnMarketMedianMovingAvg": 54,
+    "daysOnMarketNotContractMedian": 45,
+    "daysOnMarketNotContractMedianMovingAvg": 48,
+    "daysToCloseMedian": 66,
+    "daysToCloseMedianMovingAvg": 63,
+    "daysToContractMedian": 36,
+    "daysToContractMedianMovingAvg": 42,
+    "daysToFirstPriceDropMedian": 42,
+    "daysToFirstPriceDropMedianMovingAvg": 43,
+    "eventdate": "2021-01-01",
+    "listingsClosedCount": 112,
+    "listingsClosedCountMovingAvg": 165,
+    "listingsNewCount": 339,
+    "listingsNewCountMovingAvg": 296,
+    "listingsOnMarketCount": 2636,
+    "listingsOnMarketCountMovingAvg": 2516,
+    "listingsPriceChangeCount": 112,
+    "listingsPriceChangeCountMovingAvg": 165,
+    "listingsPriceDropCount": 95,
+    "listingsPriceDropCountMovingAvg": 86,
+    "listingsPriceDropPercent": 3.6,
+    "listingsPriceDropPercentMovingAvg": 3.43,
+    "listingsRemovedCount": null,
+    "listingsRemovedCountMovingAvg": null,
+    "listingsRemovedPercent": null,
+    "listingsRemovedPercentMovingAvg": null,
+    "listingsUnderContractCount": 278,
+    "listingsUnderContractCountMovingAvg": 230,
+    "listingsUnderContractPercent": 34.79,
+    "listingsUnderContractPercentMovingAvg": 32.43,
+    "monthsOfSupplyMedian": 2.59,
+    "monthsOfSupplyMedianMovingAvg": 2.47,
+    "priceChangePercentMedian": -2.86,
+    "priceChangePercentMedianMovingAvg": -3.7,
+    "priceClosedMedian": 1005000,
+    "priceClosedMedianMovingAvg": 1051060,
+    "priceNewListMedian": 1200000,
+    "priceNewListMedianMovingAvg": 1173833,
+    "priceOnMarketMedian": 1099844,
+    "priceOnMarketMedianMovingAvg": 1096425,
+    "pricePerSqftClosedMedian": 608.46,
+    "pricePerSqftClosedMedianMovingAvg": 651.62,
+    "pricePerSqftNewListMedian": 694.61,
+    "pricePerSqftNewListMedianMovingAvg": 699.52,
+    "pricePerSqftOnMarketMedian": 664.72,
+    "pricePerSqftOnMarketMedianMovingAvg": 659.75,
+    "saleToListPriceMedian": 98.27,
+    "saleToListPriceMedianMovingAvg": 98.8,
+    "saleToListPriceOriginalMedian": 96.1,
+    "saleToListPriceOriginalMedianMovingAvg": 97.08
+  }
+}
+```
+
+
 
 Updated: Weekly
 GET

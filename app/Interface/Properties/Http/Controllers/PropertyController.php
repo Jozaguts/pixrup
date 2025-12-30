@@ -213,8 +213,8 @@ class PropertyController extends Controller
     }
     public function overview(Property $property, CreatePropertyOverviewUseCase $useCase): JsonResponse
     {
-        $propertyEntity = $property->toEntity();
-        $overview = $useCase->execute($propertyEntity);
-        return response()->json(['status' => 'overview']);
+        $overview = $useCase->execute($property->toEntity());
+
+        return response()->json($overview);
     }
 }

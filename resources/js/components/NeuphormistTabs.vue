@@ -40,7 +40,7 @@ const emit = defineEmits(['onchange']);
 const activeTab: Ref<IndexType> = ref('address');
 
 function setActiveTab(item: TabItem) {
-        if(props.isDisabled) return;
+        // if(props.isDisabled) return;
     emit('onchange', item);
     if (props.togglable) {
         activeTab.value = item.id;
