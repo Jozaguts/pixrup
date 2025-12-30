@@ -48,6 +48,12 @@ class PropertyWorthController extends Controller
             ]);
 
             return $inertia->toResponse($request);
+        } catch (FeatureLimitExceededException $e) {
+            return Inertia::render('Appraisal/PixrWorth', [
+                'worth' => null,
+                'property' => $this->transformProperty($property),
+                'errors' => ['worth' => $e->getMessage()],
+            ])->toResponse($request)->setStatusCode(403);
         } catch (Throwable $e) {
             return Inertia::render('Appraisal/PixrWorth', [
                 'worth' => null,

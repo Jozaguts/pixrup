@@ -9,7 +9,6 @@ use App\Application\Properties\PixrWorth\Contracts\WorthRepository;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
 use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use App\Application\Usage\Contracts\UsageGuard;
-use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
 use App\Domain\Properties\Repositories\PropertyPhotoRepositoryInterface;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
 use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
@@ -51,17 +50,6 @@ class PropertyServiceProvider extends ServiceProvider
                     $app->make(EloquentSpyHuntRepository::class)
                 );
         });
-        $this->app->bind(
-            AppraisalProviderInterface::class,
-            function ($app) {
-                $provider = config('services.appraisal.provider', 'mock');
-
-                return match ($provider) {
-                    'housecanary' => $app->make(HouseCanaryProvider::class),
-                    default => $app->make(MockAppraisalProvider::class),
-                };
-            }
-        );
         $this->app->bind(KeyValueStore::class, RedisKeyValueStore::class);
         $this->app->bind(OverviewCache::class, function ($app) {
             return new CompositeOverviewCache(

@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
-use App\Domain\Appraisal\Repositories\PropertyWorthRepositoryInterface;
 use App\Domain\GlowUp\Contracts\GlowUpImageProvider;
 use App\Infrastructure\GlowUp\Providers\FakeAiImageService;
 use App\Infrastructure\GlowUp\Providers\ReplicateImageService;
@@ -14,9 +12,6 @@ use App\Http\Responses\PasswordResetResponse as AppPasswordResetResponse;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use App\Infrastructure\Appraisal\Persistence\EloquentPropertyWorthRepository;
-use App\Infrastructure\Appraisal\Providers\HouseCanaryProvider;
-use App\Infrastructure\Appraisal\Providers\MockAppraisalProvider;
 use Laravel\Fortify\Contracts\PasswordResetResponse as FortifyPasswordResetResponse;
 use Laravel\Fortify\Http\Responses\RedirectAsIntended as FortifyRedirectAsIntended;
 use Laravel\Fortify\Http\Requests\VerifyEmailRequest as FortifyVerifyEmailRequest;

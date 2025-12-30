@@ -12,16 +12,18 @@ use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
-class GlowUpJobService
+readonly class GlowUpJobService
 {
     public function __construct(
-        private readonly MonthlyPropertyUsageService $usageService,
+        private MonthlyPropertyUsageService $usageService,
     ) {
     }
 
     /**
      * @throws FeatureLimitExceededException
+     * @throws Throwable
      */
     public function create(
         Property $property,
@@ -29,7 +31,7 @@ class GlowUpJobService
         UploadedFile $image,
         array $payload,
     ): GlowupJob {
-        $this->usageService->ensureUsage($user, $property, UsageAction::GLOW_UP);
+        $this->usageService->ensureUsage($user, $property->toEntity(), UsageAction::GLOW_UP);
 
         $disk = $this->disk();
         try {

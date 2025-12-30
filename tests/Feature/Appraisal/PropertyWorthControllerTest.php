@@ -1,7 +1,8 @@
 <?php
 
-use App\Domain\Appraisal\Providers\AppraisalProviderInterface;
-use App\Infrastructure\Property\Providers\MockAppraisalProvider;
+use App\Application\Properties\PixrWorth\Contracts\WorthProvider;
+use App\Domain\Properties\Entities\PropertyEntity;
+use App\Infrastructure\Property\PixrWorth\Providers\MockWorthProvider;
 use App\Models\Property;
 use App\Models\UsagePropertyMonthly;
 use App\Models\User;
@@ -15,7 +16,7 @@ test('property worth endpoint returns valuation payload', function (): void {
     $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
-    app()->instance(AppraisalProviderInterface::class, new MockAppraisalProvider());
+    app()->instance(WorthProvider::class, new MockWorthProvider());
 
     $response = $this->withHeaders([
         'X-Inertia' => 'true',
@@ -43,7 +44,7 @@ test('property worth endpoint enforces plan limits', function (): void {
 
     $this->actingAs($user);
 
-    app()->instance(AppraisalProviderInterface::class, new MockAppraisalProvider());
+    app()->instance(WorthProvider::class, new MockWorthProvider());
 
     $response = $this->withHeaders([
         'X-Inertia' => 'true',
@@ -64,13 +65,14 @@ test('property worth endpoint reuses cached valuations', function (): void {
     $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
-    $provider = \Mockery::mock(AppraisalProviderInterface::class);
+    $provider = \Mockery::mock(WorthProvider::class);
 
-    $sampleProvider = new MockAppraisalProvider();
-    $provider->shouldReceive('fetchValue')
+    $sampleProvider = new MockWorthProvider();
+    $provider->shouldReceive('appraisal')
         ->once()
-        ->andReturn($sampleProvider->fetchValue($property->toEntity()));
-    app()->instance(AppraisalProviderInterface::class, $provider);
+        ->with(\Mockery::on(fn ($arg) => $arg instanceof PropertyEntity && $arg->id === $property->id))
+        ->andReturn($sampleProvider->appraisal($property->toEntity()));
+    app()->instance(WorthProvider::class, $provider);
 
     $headers = [
         'X-Inertia' => 'true',
