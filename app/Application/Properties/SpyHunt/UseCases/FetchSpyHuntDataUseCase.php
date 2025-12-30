@@ -10,10 +10,10 @@ use App\Application\Properties\DTOs\SourceDTO;
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
 use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
-use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
 use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
-use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntMarketDataProviderInterface;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Domain\Usage\Enums\UsageAction;
 use App\Models\Property;
@@ -24,7 +24,7 @@ readonly class FetchSpyHuntDataUseCase
     public function __construct(
         private PropertyRepositoryInterface $propertyRepository,
         private SpyHuntMarketDataProviderInterface $marketDataProvider,
-        private SpyHuntCache $cacheRepository,
+        private SpyHuntCacheRepository $cacheRepository,
         private MonthlyPropertyUsageService $usageService,
     ) {}
 

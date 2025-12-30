@@ -12,9 +12,9 @@ use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
 use App\Models\SpyHuntCache as SpyHuntCacheModel;
 use Illuminate\Support\Carbon;
-use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
 
-final class EloquentSpyHuntRepository implements SpyHuntCache
+final class EloquentSpyHuntRepository implements SpyHuntCacheRepository
 {
 
     public function get(int $propertyId, $filters =[]): ?SpyHuntDataDTO

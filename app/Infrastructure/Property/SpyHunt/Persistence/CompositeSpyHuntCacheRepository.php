@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Infrastructure\Property\Persistence;
+namespace App\Infrastructure\Property\SpyHunt\Persistence;
 
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
-use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
 
-readonly class CompositeCacheRepository implements SpyHuntCache
+readonly class CompositeSpyHuntCacheRepository implements SpyHuntCacheRepository
 {
     public function __construct(
-        private SpyHuntCache $redis,
-        private SpyHuntCache $eloquent
+        private SpyHuntCacheRepository $redis,
+        private SpyHuntCacheRepository $eloquent
     ){}
 
     public function get(int $propertyId, array $filters = []): ?SpyHuntDataDTO

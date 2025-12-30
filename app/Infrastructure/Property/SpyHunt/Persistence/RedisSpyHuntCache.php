@@ -10,11 +10,11 @@ use App\Application\Properties\DTOs\SourceDTO;
 use App\Application\Properties\DTOs\SpyHuntDataDTO;
 use App\Application\Properties\DTOs\StatsDTO;
 use App\Application\Properties\DTOs\ValueEstimateDTO;
-use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
 use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use JsonException;
 
-final readonly class RedisSpyHuntCache implements SpyHuntCache
+final readonly class RedisSpyHuntCache implements SpyHuntCacheRepository
 {
     public function __construct(private KeyValueStore $store) {}
     private function key(int $propertyId): string

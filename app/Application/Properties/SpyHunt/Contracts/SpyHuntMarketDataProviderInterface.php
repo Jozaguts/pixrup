@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Properties\Repositories;
+namespace App\Application\Properties\SpyHunt\Contracts;
 
 use App\Application\Properties\DTOs\SpyHuntRawResponseDTO;
 use App\Domain\Properties\ValueObjects\Coordinates;

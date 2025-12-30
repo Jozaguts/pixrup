@@ -6,16 +6,16 @@ use App\Application\Auth\Contracts\CurrentUserProvider;
 use App\Application\Properties\Overview\Contracts\OverviewCache;
 use App\Application\Properties\PixrWorth\Contracts\WorthProvider;
 use App\Application\Properties\PixrWorth\Contracts\WorthRepository;
-use App\Application\Properties\SpyHunt\Contracts\SpyHuntCache;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
 use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use App\Application\Usage\Contracts\UsageGuard;
 use App\Domain\Properties\Repositories\PropertyPhotoRepositoryInterface;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
-use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntMarketDataProviderInterface;
 use App\Infrastructure\Auth\Providers\LaravelCurrentUserProvider;
 use App\Infrastructure\Property\Overview\Persistence\EloquentOverviewRepository;
 use App\Infrastructure\Property\Overview\Persistence\RedisOverviewCache;
-use App\Infrastructure\Property\Persistence\CompositeCacheRepository;
+use App\Infrastructure\Property\SpyHunt\Persistence\CompositeSpyHuntCacheRepository;
 use App\Infrastructure\Property\Persistence\CompositeOverviewCache;
 use App\Infrastructure\Property\Persistence\EloquentPropertyPhotoRepository;
 use App\Infrastructure\Property\Persistence\EloquentPropertyRepository;
@@ -44,8 +44,8 @@ class PropertyServiceProvider extends ServiceProvider
             fn () => new RentCastMarketDataProvider(config('services.rentcast.api_key'))
         );
         $this->app->bind(
-            SpyHuntCache::class, function($app){
-                return new CompositeCacheRepository(
+            SpyHuntCacheRepository::class, function($app){
+                return new CompositeSpyHuntCacheRepository(
                     $app->make(RedisSpyHuntCache::class),
                     $app->make(EloquentSpyHuntRepository::class)
                 );

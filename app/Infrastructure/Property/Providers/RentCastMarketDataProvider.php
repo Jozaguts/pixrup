@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Property\Providers;
 
 use App\Application\Properties\DTOs\SpyHuntRawResponseDTO;
-use App\Domain\Properties\Repositories\SpyHuntMarketDataProviderInterface;
+use App\Application\Properties\SpyHunt\Contracts\SpyHuntMarketDataProviderInterface;
 use App\Domain\Properties\ValueObjects\Coordinates;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Cache;
