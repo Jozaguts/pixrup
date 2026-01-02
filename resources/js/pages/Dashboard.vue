@@ -270,7 +270,7 @@ const visitLink = (link?: string) => {
                 </div>
             </section>
 
-            <DashboardSection class="flex items-stretch gap-6">
+            <DashboardSection class="flex flex-col items-stretch gap-6 md:flex-row lg:flex-row">
                 <!-- Quick Actions -->
                 <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 shadow-neu-in">
                     <h3 class="text-sm font-semibold tracking-wide text-accent uppercase">Quick actions</h3>
@@ -331,7 +331,7 @@ const visitLink = (link?: string) => {
                         </div>
                     </div>
                     <p
-                        class="rounded-[12px] bg-surface shadow-neu-in p-3 px-5 text-sm font-medium text-accent/50 ring-1 ring-accent-300"
+                        class="ring-accent-300 rounded-[12px] bg-surface p-3 px-5 text-sm font-medium text-accent/50 ring-1 shadow-neu-in"
                         :class="{
                             'text-[#1f2933]': usageState === 'success',
                             'text-[#9A6B00]': usageState === 'warning',
@@ -348,12 +348,12 @@ const visitLink = (link?: string) => {
                 description="Track status, values, and jump back into each project."
                 class="flex flex-col gap-6 py-5"
             >
-                <CardDisplay class="grid grid-cols-12 gap-0">
+                <CardDisplay class="lg:grid-cols-12 md:grid-cols-12 grid gap-0">
                     <PropertyCard
                         v-for="property in resolvedProperties"
                         :key="property.id"
                         :item="property"
-                        class="cols-span-12 md:cols-span-3"
+                        class="cols-span-12 md:cols-span-3 "
                     />
                 </CardDisplay>
             </DashboardSection>
