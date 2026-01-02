@@ -13,7 +13,7 @@ const {open} = useSidebar()
   <div
     data-slot="sidebar-group"
     data-sidebar="group"
-    :class="cn(`relative  pt-4 flex w-full min-w-0 flex-col px-${open ? '3 ':'0'}`, props.class)"
+    :class="cn(`relative flex w-full min-w-0 flex-col px-${open ? '3 ':'0'}`, props.class)"
   >
     <slot/>
   </div>

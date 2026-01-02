@@ -132,7 +132,7 @@ const handleLogout = () => {
             </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent class="">
+        <SidebarContent>
             <template v-for="(group, index) in navGroups" :key="group.key">
                 <SidebarGroup>
                     <SidebarMenu>
@@ -144,7 +144,7 @@ const handleLogout = () => {
                                     :class="
                                         cn(
                                             'neu-button font-semibold text-accent data-[active=true]:!shadow-neu-in',
-                                            'data-[active=true]:!bg-surface',
+                                            'data-[active=true]:!bg-background',
                                         )
                                     "
                                 >
@@ -159,7 +159,7 @@ const handleLogout = () => {
             </template>
         </SidebarContent>
 
-        <SidebarFooter class="">
+        <SidebarFooter>
             <NavUser />
         </SidebarFooter>
     </Sidebar>

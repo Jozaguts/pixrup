@@ -42,6 +42,7 @@ All the varaiables are added here
     --color-background-10: #ebebeb;
     --color-background-11: #b5b5b9;
     --color-background-12: #eaeceb;
+    --color-sidebar: var(--color-surface);
     --color-stroke-1: #dfe4eb;
     --color-stroke-2: #e3e7ed;
     --color-stroke-3: #d7dde5;
@@ -170,15 +171,4 @@ All the varaiables are added here
 
         /* --- Radius for general UI (neumo components override to 50px) --- */
         --radius: 0.75rem;
-
-        /* --- Sidebar --- */
-        --sidebar-background: var(--background); /*#f9fafb;*/
-        --sidebar-foreground: #6b7280;
-        --sidebar-primary: var(--primary);
-        --sidebar-primary-foreground: #ffffff;
-        --sidebar-accent: #eceef7;
-        --sidebar-accent-foreground: #4b5563;
-        --sidebar-border: #dde1ef;
-        --sidebar-ring: var(--primary);
-        --sidebar: hsl(0 0% 98%);
 }
