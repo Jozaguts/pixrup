@@ -33,7 +33,7 @@ const handleInput = (event: Event) => {
     <label class="flex w-full flex-col gap-2">
         <span
             v-if="props.label"
-            class="text-sm font-semibold text-[#6b7280]"
+            class="text-sm font-semibold text-accent/50"
         >
             {{ props.label }}
         </span>

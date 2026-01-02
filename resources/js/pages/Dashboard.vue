@@ -257,7 +257,7 @@ const visitLink = (link?: string) => {
 <template>
     <Head title="Dashboard" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex flex-col gap-6 text-[#1f2933]">
+        <div class="flex flex-col gap-6 text-accent">
             <section
                 class="flex flex-col gap-6 rounded-[12px] p-6 md:flex-row md:items-center md:justify-between md:gap-10"
             >
@@ -266,7 +266,7 @@ const visitLink = (link?: string) => {
                         Welcome back, {{ firstName }}
                         <Icon icon="mdi:hand-wave-outline" class="ml-2 inline h-8 w-8" />
                     </h1>
-                    <p class="text-md ml-2 text-[#6b7280] md:text-base">Here’s your property summary.</p>
+                    <p class="text-md ml-2 text-accent/50 md:text-base">Here’s your property summary.</p>
                 </div>
             </section>
 
@@ -333,7 +333,7 @@ const visitLink = (link?: string) => {
                     <p
                         class="ring-accent-300 rounded-[12px] bg-surface p-3 px-5 text-sm font-medium text-accent/50 ring-1 shadow-neu-in"
                         :class="{
-                            'text-[#1f2933]': usageState === 'success',
+                            'text-accent': usageState === 'success',
                             'text-[#9A6B00]': usageState === 'warning',
                             'text-[#B91C1C]': usageState === 'danger',
                         }"

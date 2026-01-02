@@ -46,7 +46,7 @@ const noteCopy = computed(
     >
         <header class="flex flex-col gap-1">
             <p
-                class="text-base font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+                class="text-base font-semibold tracking-[0.3em] text-accent/50 uppercase"
             >
                 Rental value
             </p>
@@ -59,13 +59,13 @@ const noteCopy = computed(
             <p class="text-3xl font-semibold text-[#16b1ff]">
                 {{ formattedRental }}
             </p>
-            <p class="text-sm text-[#6b7280]">
+            <p class="text-sm text-accent/50">
                 {{ occupancyCopy }}
             </p>
         </div>
 
         <p
-            class="rounded-[20px] bg-[#f4f5fa] px-4 py-3 text-sm text-[#6b7280] shadow-[inset_8px_8px_20px_rgba(210,212,226,0.55),inset_-8px_-8px_20px_rgba(255,255,255,0.95)]"
+            class="rounded-[20px] bg-[#f4f5fa] px-4 py-3 text-sm text-accent/50 shadow-[inset_8px_8px_20px_rgba(210,212,226,0.55),inset_-8px_-8px_20px_rgba(255,255,255,0.95)]"
         >
             {{ noteCopy }}
         </p>

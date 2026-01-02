@@ -17,7 +17,7 @@ const classes = computed(() => {
     <div class="npo-form-shadow flex justify-between rounded-[12px] p-2 min-h-[140px]">
             <div class="flex flex-col  items-start">
                 <h3
-                    class="text-sm font-semibold tracking-wide text-[#6b7280] uppercase"
+                    class="text-sm font-semibold tracking-wide text-accent/50 uppercase"
                 >
                     {{label}}
                 </h3>

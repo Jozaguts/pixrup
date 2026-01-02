@@ -61,7 +61,7 @@ const handleOpenChange = (value: boolean) => {
                     >
                         {{ props.address }}
                     </DialogTitle>
-                    <DialogDescription class="text-left text-sm text-slate-500">
+                    <DialogDescription class="text-left text-sm text-accent">
                         Quick PixrWorth preview
                     </DialogDescription>
                 </CardHeader>
@@ -69,14 +69,14 @@ const handleOpenChange = (value: boolean) => {
                 <CardContent class="grid gap-6 px-6 py-6">
                     <section class="grid gap-1.5">
                         <p
-                            class="text-xs font-medium tracking-wide text-slate-500 uppercase"
+                            class="text-xs font-medium tracking-wide text-accent uppercase"
                         >
                             Estimated Value
                         </p>
                         <p class="text-3xl font-semibold text-slate-900">
                             {{ formattedEstimate ?? 'Coming soon' }}
                         </p>
-                        <p class="text-sm text-slate-500">
+                        <p class="text-sm text-accent">
                             Estimated using recent sales nearby. Connect
                             HouseCanary for live data.
                         </p>
@@ -84,7 +84,7 @@ const handleOpenChange = (value: boolean) => {
 
                     <section class="grid gap-3">
                         <p
-                            class="text-xs font-medium tracking-wide text-slate-500 uppercase"
+                            class="text-xs font-medium tracking-wide text-accent uppercase"
                         >
                             Comparable Properties
                         </p>
@@ -106,7 +106,7 @@ const handleOpenChange = (value: boolean) => {
 
                         <p
                             v-if="displayComps.length === 0"
-                            class="text-sm text-slate-500"
+                            class="text-sm text-accent"
                         >
                             Comparable properties will appear here when
                             available.

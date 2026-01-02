@@ -57,7 +57,7 @@ const details = computed(() => [
     >
         <header>
             <p
-                class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase"
+                class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase"
             >
                 Property details
             </p>
@@ -70,7 +70,7 @@ const details = computed(() => [
             <div
                 v-for="detail in details"
                 :key="detail.id"
-                class="rounded-[12px]  px-4 py-3 text-sm text-[#6b7280] npo-form-shadow"
+                class="rounded-[12px]  px-4 py-3 text-sm text-accent/50 npo-form-shadow"
             >
                 <dt class="text-xs tracking-[0.28em] text-[#9ca3af] uppercase">
                     {{ detail.label }}

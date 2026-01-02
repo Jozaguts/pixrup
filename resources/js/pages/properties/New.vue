@@ -699,9 +699,8 @@ const isNextDisabled = computed(() => {
         <section
             :class="
                 cn(
-                    'relative flex flex-1 flex-col',
-                    'min-h-[calc(100vh-8rem)] gap-6 rounded-none px-5 pt-6 pb-28',
-                    'm-5',
+                    'relative flex flex-1 flex-col npo-form-shadow rounded-[12px] p-4',
+                    'min-h-[calc(100vh-8rem)] gap-6 rounded-none  pt-6 pb-28',
                     'md:rounded-[12px] md:px-10 md:pt-10 md:pb-10',
                 )
             "
@@ -709,23 +708,23 @@ const isNextDisabled = computed(() => {
             <header class="flex flex-col gap-6">
                 <div class="flex flex-col gap-2">
                     <p
-                        class="text-xs tracking-wide text-[#9ca3af] uppercase md:text-sm"
+                        class="text-xs tracking-wide text-accent uppercase md:text-sm"
                     >
                         Guided wizard
                     </p>
                     <h1
-                        class="text-3xl font-semibold tracking-tight text-[#1f2933] md:text-4xl"
+                        class="text-3xl font-semibold tracking-tight text-accent md:text-4xl"
                     >
                         Create a new property
                     </h1>
-                    <p class="text-sm text-[#6b7280] md:text-base">
+                    <p class="text-sm text-accent/50 md:text-base">
                         Complete the three-step flow to add a property with
                         accurate location, rich media, and validated data.
                     </p>
                 </div>
 
                 <div class="flex flex-col gap-4">
-                    <div class="relative w-fit">
+                    <div class="relative md:w-fit lg:w-fit w-full">
                         <NeuphormistTabs
                             :value="currentStep.id"
                             :items="steps"
@@ -735,53 +734,25 @@ const isNextDisabled = computed(() => {
                     </div>
                 </div>
             </header>
-            <div class="mt-0 flex w-full flex-row">
-                <button
-                    type="button"
-                    class="flex items-center justify-center rounded-2xl px-6 py-3 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933]"
-                    :class="{
-                        'pointer-events-none opacity-40':
-                            currentStepIndex === 0 || isSubmitting,
-                    }"
-                    @click="handleBack"
-                >
-                    Back
-                </button>
-                <button
-                    type="button"
-                    class="neu-button relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white"
-                    :class="{
-                        'pointer-events-none opacity-60': isNextDisabled,
-                    }"
-                    :disabled="isNextDisabled"
-                    @click="handleNext"
-                >
-                    <Loader2
-                        v-if="isSubmitting"
-                        class="size-4 animate-spin text-white"
-                    />
-                    {{ isSubmitting ? 'Creating…' : nextLabel }}
-                </button>
-            </div>
             <Transition name="fade-slide" mode="out-in">
                 <section
                     v-if="currentStep.id === 'address'"
                     key="address-step"
-                    class="flex flex-1 flex-col gap-6 rounded-[28px] px-6 md:p-10"
+                    class="flex flex-1 flex-col gap-6 rounded-[12px]"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
-                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                            class="text-2xl font-semibold text-accent md:text-3xl"
                         >
                             Step 1 — Address
                         </h2>
-                        <p class="text-sm text-[#6b7280] md:text-base">
+                        <p class="text-sm text-accent/50 md:text-base">
                             Search the property via Google Places or use your
                             current location to auto-fill every field.
                         </p>
                     </div>
 
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-4 relative">
                         <AddressSearch
                             ref="addressSearchRef"
                             v-model="addressForm.query"
@@ -791,7 +762,7 @@ const isNextDisabled = computed(() => {
                         >
                             <button
                                 type="button"
-                                class="npo-form-shadow flex w-full items-center justify-center gap-2 rounded-[8px] px-3 py-2 font-semibold text-[#6b7280] transition-all duration-200 hover:text-[#1f2933] md:w-auto"
+                                class="npo-form-shadow absolute bottom-[-3em]  right-0 flex w-fit items-center justify-center gap-2 rounded-[8px] px-3 py-2 font-semibold text-accent transition-all duration-200 hover:text-accent/50 md:w-auto"
                                 :disabled="addressForm.isLocating"
                                 @click="useCurrentLocation"
                             >
@@ -817,19 +788,18 @@ const isNextDisabled = computed(() => {
                         :formatted-address="addressDetails.formattedAddress"
                     />
                 </section>
-
                 <section
                     v-else-if="currentStep.id === 'photos'"
                     key="photos-step"
-                    class="flex flex-1 flex-col gap-6 rounded-[28px] p-6 md:p-10"
+                    class="flex flex-1 flex-col gap-6 rounded-[12px]  "
                 >
                     <div class="flex flex-col gap-2">
                         <h2
-                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                            class="text-2xl font-semibold text-accent md:text-3xl"
                         >
                             Step 2 — Photos
                         </h2>
-                        <p class="text-sm text-[#6b7280] md:text-base">
+                        <p class="text-sm text-accent/50 md:text-base">
                             Upload crisp images or snap new photos from your
                             device. We automatically compress every file to keep
                             uploads light.
@@ -839,7 +809,7 @@ const isNextDisabled = computed(() => {
                     <div class="flex flex-col gap-3 md:flex-row">
                         <button
                             type="button"
-                            class="neu-button flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-medium !text-black transition-transform duration-200 ease-out transform hover:scale-105 md:w-auto"
+                            class="neu-button flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 font-medium text-accent transition-transform duration-200 ease-out transform hover:scale-105 md:w-auto"
                             :disabled="isProcessingPhotos"
                             @click="openUploadDialog"
                         >
@@ -848,7 +818,7 @@ const isNextDisabled = computed(() => {
                         </button>
                         <button
                             type="button"
-                            class="neu-button flex w-full items-center justify-center gap-2 rounded-[12px] px-4 py-3 font-medium !text-black md:w-auto transition-transform duration-200 ease-out transform hover:scale-105"
+                            class="neu-button flex w-full items-center justify-center gap-2 rounded-[12px] px-4 py-3 font-medium text-accent md:w-auto transition-transform duration-200 ease-out transform hover:scale-105"
                             :disabled="isProcessingPhotos"
                             @click="takePhoto"
                         >
@@ -878,11 +848,11 @@ const isNextDisabled = computed(() => {
                     />
 
                     <div
-                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-gray-200 p-6 shadow-neu-in"
+                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-background p-6 shadow-neu-in"
                     >
                         <div
                             v-if="!photoItems.length && !isProcessingPhotos"
-                            class="flex flex-1 flex-col items-center justify-center gap-3 text-center text-[#9ca3af]"
+                            class="flex flex-1 flex-col items-center justify-center gap-3 text-center text-accent/50"
                         >
                             <ImageIcon class="size-8" />
                             <p class="text-sm md:text-base">
@@ -906,11 +876,11 @@ const isNextDisabled = computed(() => {
                                     class="h-48 w-full rounded-t-[12px] object-cover"
                                 />
                                 <div
-                                    class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-[#6b7280]"
+                                    class="flex items-center justify-between gap-2 px-4 py-3 text-xs text-accent/50"
                                 >
                                     <div class="flex flex-col">
                                         <span
-                                            class="font-semibold text-[#1f2933]"
+                                            class="font-semibold text-accent"
                                         >
                                             {{ photo.name }}
                                         </span>
@@ -931,7 +901,7 @@ const isNextDisabled = computed(() => {
 
                         <div
                             v-if="isProcessingPhotos"
-                            class="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm text-[#6b7280] shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]"
+                            class="flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm text-accent/50 shadow-[inset_12px_12px_24px_rgba(200,206,224,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.9)]"
                         >
                             <Loader2
                                 class="size-4 animate-spin text-[#7C4DFF]"
@@ -947,31 +917,31 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else-if="currentStep.id === 'details'"
                     key="details-step"
-                    class="flex flex-1 flex-col gap-6 rounded-[28px] p-6 md:p-10"
+                    class="flex flex-1 flex-col gap-6 rounded-[12px]"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
-                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                            class="text-2xl font-semibold text-accent md:text-3xl"
                         >
                             Step 3 — Details
                         </h2>
-                        <p class="text-sm text-[#6b7280] md:text-base">
+                        <p class="text-sm text-accent/50 md:text-base">
                             Define the essential details of the property: type, number of bedrooms, bathrooms, and total square footage.
                         </p>
                     </div>
                     <div
-                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-gray-200 p-6 shadow-neu-in"
+                        class="flex flex-1 flex-col gap-4 rounded-[12px] npo-form-shadow p-6 "
                     >
 
-                        <div class="grid gap-8 grid-cols-2 ">
+                        <div class="grid md:gap-8 lg:gap-8 gap-4 md:grid-cols-2 lg:grid-cols-2 grid-cols-1">
                             <div>
-                                <label class="npo-form-label">Property type</label>
+                                <label class="npo-form-label text-accent">Property type</label>
                                 <div class="npo-input-wrapper py-3 px-2">
-                                    <Icon icon="material-symbols-light:home-work-outline" class="w-8 h-8 text-slate-500" />
+                                    <Icon icon="material-symbols-light:home-work-outline" class="w-8 h-8 text-accent" />
                                     <select v-model="detailsForm.propertyType"
                                             name="property-type"
                                             id="property-type"
-                                            class="mt-1 outline-[0] block w-full" required>
+                                            class="mt-1 outline-[0] block w-full bg-surface" required>
                                         <option value="Select an option"  disabled>Select an option</option>
                                         <option :selected="true" value="Single Family" >Single Family</option>
                                         <option value="Condo"  >Condo</option>
@@ -1033,15 +1003,15 @@ const isNextDisabled = computed(() => {
                 <section
                     v-else
                     key="summary-step"
-                    class="flex flex-1 flex-col gap-6 p-6 md:p-10"
+                    class="flex flex-1 flex-col gap-6"
                 >
                     <div class="flex flex-col gap-2">
                         <h2
-                            class="text-2xl font-semibold text-[#1f2933] md:text-3xl"
+                            class="text-2xl font-semibold text-accent md:text-3xl"
                         >
                             Step 3 — Confirmation
                         </h2>
-                        <p class="text-sm text-[#6b7280] md:text-base">
+                        <p class="text-sm text-accent/50 md:text-base">
                             Review the details before creating the property. If
                             you need to adjust anything, return to previous
                             steps without losing data.
@@ -1051,20 +1021,20 @@ const isNextDisabled = computed(() => {
                     <div
                         class="flex flex-col flex-wrap gap-5 py-5 relative"
                     >
-                        <div class="w-fit flex flex-row gap-3 px-4 py-3 bg-[#f4f5fa] npo-form-shadow rounded-[12px]">
-                            <p class="text-xs font-semibold text-[#1f2933]">
+                        <div class="w-fit flex flex-row gap-3 px-4 py-3 bg-surface npo-form-shadow rounded-[12px]">
+                            <p class="text-xs font-semibold text-accent">
                                 <Icon icon="mdi:location-on-outline" class="inline-block mr-2" />
                                 {{ addressDetails.formattedAddress || '—' }}
                             </p>
-                            <p class="text-xs font-semibold  border-l-2 border-gray-300 pl-4 text-[#1f2933]">
+                            <p class="text-xs font-semibold  border-l-2 border-gray-300 pl-4 text-accent">
                                 <Icon icon="mdi:office-building-location-outline" class="inline-block mr-2" />
                                 {{ addressDetails.lat || '—' }}, {{ addressDetails.lng || '—' }}
                             </p>
                         </div>
 
-                        <div class="flex flex-col gap-3 flex-1 w-full rounded-[12px] bg-gray-200 p-6 shadow-neu-in">
+                        <div class="flex flex-col gap-3 flex-1 w-full rounded-[12px] bg-background p-6 shadow-neu-in">
                             <span
-                                class="text-xs tracking-wide text-[#9ca3af] uppercase"
+                                class="text-xs tracking-wide text-accent uppercase"
                             >
                                 Photos
                             </span>
@@ -1082,10 +1052,10 @@ const isNextDisabled = computed(() => {
                                         class="h-[200px] w-full object-cover"
                                     />
                                     <div
-                                        class="absolute bg-white/90 bottom-0 left-0 right-0 flex items-center justify-center gap-2 px-4 py-3 text-xs text-[#6b7280]"
+                                        class="absolute bg-surface bottom-0 left-0 right-0 flex items-center justify-center gap-2 px-4 py-3 text-xs text-accent/50"
                                     >
                                         <span
-                                            class="font-semibold text-[#1f2933]"
+                                            class="font-semibold text-accent"
                                         >
                                             {{ photo.name }}
                                         </span>
@@ -1106,6 +1076,34 @@ const isNextDisabled = computed(() => {
                     </div>
                 </section>
             </Transition>
+            <div class="mt-0 flex w-full flex-row">
+                <button
+                    type="button"
+                    class="flex items-center justify-center rounded-2xl px-6 py-3 font-semibold text-accent"
+                    :class="{
+                        'pointer-events-none opacity-40':
+                            currentStepIndex === 0 || isSubmitting,
+                    }"
+                    @click="handleBack"
+                >
+                    Back
+                </button>
+                <button
+                    type="button"
+                    class="neu-button relative flex items-center justify-center gap-2 px-6 py-3 font-semibold text-accent"
+                    :class="{
+                        'pointer-events-none opacity-60': isNextDisabled,
+                    }"
+                    :disabled="isNextDisabled"
+                    @click="handleNext"
+                >
+                    <Loader2
+                        v-if="isSubmitting"
+                        class="size-4 animate-spin text-white"
+                    />
+                    {{ isSubmitting ? 'Creating…' : nextLabel }}
+                </button>
+            </div>
         </section>
     </AppLayout>
 </template>

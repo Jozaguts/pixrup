@@ -252,7 +252,7 @@ const idleCallout = computed(() =>
                     <h2 class="text-2xl font-semibold tracking-tight text-[#0d0d12]">
                         Instant property valuation and market confidence.
                     </h2>
-                    <p class="text-sm text-[#6b7280]">
+                    <p class="text-sm text-accent/50">
                         Fetch live AVM data, comps, and confidence scores with a single click.
                     </p>
                 </div>
@@ -269,7 +269,7 @@ const idleCallout = computed(() =>
                         />
                         {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
                     </button>
-                    <div v-if="lastFetchedLabel" class="mt-2 text-right text-sm text-[#6b7280]">
+                    <div v-if="lastFetchedLabel" class="mt-2 text-right text-sm text-accent/50">
                         Last fetched on {{ lastFetchedLabel }}
                     </div>
                 </div>
@@ -286,7 +286,7 @@ const idleCallout = computed(() =>
             </transition>
 
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,320px)_1fr]">
-                <div class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-[#6b7280]">
+                <div class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent/50">
                     <div class="flex items-center justify-between text-xs font-semibold tracking-[0.3em] uppercase">
                         <span>Plan usage</span>
                         <span class="inline-flex items-center gap-2">
@@ -301,7 +301,7 @@ const idleCallout = computed(() =>
                             :style="usageMeterStyle"
                         />
                     </div>
-                    <p class="text-xs text-[#6b7280]">
+                    <p class="text-xs text-accent/50">
                         {{ helperCopy }}
                     </p>
                     <a
@@ -325,7 +325,7 @@ const idleCallout = computed(() =>
                                 <h3 class="text-lg font-semibold text-[#0d0d12]">
                                     {{ stateTitle }}
                                 </h3>
-                                <p class="text-sm text-[#6b7280]">
+                                <p class="text-sm text-accent/50">
                                     {{ stateSubtitle }}
                                 </p>
                             </div>
@@ -379,7 +379,7 @@ const idleCallout = computed(() =>
                         <RentalValueCard v-if="hasRentalValue" :rental-value="rentalValue" />
                         <div
                             v-else
-                            class="flex flex-col  gap-2 rounded-[12px]  text-sm text-[#6b7280]"
+                            class="flex flex-col  gap-2 rounded-[12px]  text-sm text-accent/50"
                         >
                             <p class="text-base font-semibold tracking-[0.3em] text-[#0d0d12] uppercase">Rental value</p>
                             <p class="text-base text-[#0d0d12]">
@@ -394,7 +394,7 @@ const idleCallout = computed(() =>
                     <ComparablesTable :comparables="worth?.comparables ?? []" :is-loading="!worth?.comparables" />
 
                     <div
-                        class="flex flex-col gap-3 rounded-[12px] p-5 text-sm text-[#6b7280]"
+                        class="flex flex-col gap-3 rounded-[12px] p-5 text-sm text-accent/50"
                     >
                         <p class="text-sm ">
                             Sync this valuation with PixrSeal to include comps and trendline snapshots in investor
@@ -415,7 +415,7 @@ const idleCallout = computed(() =>
 
                 <div
                     v-else
-                    class="flex flex-col gap-3 rounded-[12px] bg-[#f4f5fa] p-6 text-sm text-[#6b7280] shadow-[inset_12px_12px_30px_rgba(210,212,226,0.6),inset_-12px_-12px_30px_rgba(255,255,255,0.92)]"
+                    class="flex flex-col gap-3 rounded-[12px] bg-[#f4f5fa] p-6 text-sm text-accent/50 shadow-[inset_12px_12px_30px_rgba(210,212,226,0.6),inset_-12px_-12px_30px_rgba(255,255,255,0.92)]"
                 >
                     <p class="text-base font-semibold text-[#0d0d12]">No valuation yet</p>
                     <p>
@@ -445,7 +445,7 @@ const idleCallout = computed(() =>
                         </div>
                     </header>
 
-                    <ul class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase">
+                    <ul class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
                         <li
                             class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
                         >

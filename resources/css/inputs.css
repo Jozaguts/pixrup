@@ -24,7 +24,6 @@
     background: transparent;
     outline: none;
     flex-grow: 1;
-    color: #333;
     font-size: 0.95rem;
 }
 
@@ -41,9 +40,9 @@
 }
 
 .npo-form-label {
-    @apply ml-2 font-kulim font-semibold capitalize;
+    @apply ml-2 font-kulim font-semibold capitalize text-accent/80;
     font-size: 0.875rem;
-    color: #374151;
+    line-height: 2;
 }
 
 .npo-input:-webkit-autofill,

@@ -72,7 +72,7 @@ const searchString = ref('');
                 <div
                     class="mb-2 flex items-center justify-between md:flex-col md:gap-1 lg:flex-col lg:items-start lg:gap-1"
                 >
-                    <p class="text-xs font-semibold tracking-[0.3em] text-[#6b7280] uppercase">Comparables</p>
+                    <p class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">Comparables</p>
                     <span
                         class="active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-black ring shadow-neu-in ring-white"
                     >
@@ -102,7 +102,7 @@ const searchString = ref('');
         </div>
         <p
             v-else
-            class="rounded-[22px] bg-[#f4f5fa] px-4 py-6 text-sm text-[#6b7280] shadow-[inset_10px_10px_24px_rgba(210,212,226,0.55),inset_-10px_-10px_24px_rgba(255,255,255,0.95)]"
+            class="rounded-[22px] bg-[#f4f5fa] px-4 py-6 text-sm text-accent/50 shadow-[inset_10px_10px_24px_rgba(210,212,226,0.55),inset_-10px_-10px_24px_rgba(255,255,255,0.95)]"
         >
             No comparables yet — fetch a valuation to populate nearby sale activity.
         </p>

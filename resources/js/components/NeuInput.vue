@@ -33,12 +33,12 @@ defineExpose({
 
         <div :class="cn('npo-input-wrapper py-3 px-2', 'group', error && 'bg-red-100', props.wrapperClass)">
 
-            <Icon v-if="props.icon"  :icon="props.icon" class="w-8 h-8 text-slate-500" />
+            <Icon v-if="props.icon"  :icon="props.icon" class="w-8 h-8 text-accent" />
             <input
                 v-bind="attrs"
                 ref="inputEl"
                 :class="
-                    cn('npo-input', 'flex-1', props.class, 'placeholder:text-[#9da3b0]')
+                    cn('npo-input', 'flex-1', props.class, 'placeholder:text-accent text-accent/80')
                 "
                 v-model="model"
                 :tabindex="props.tabIndex"

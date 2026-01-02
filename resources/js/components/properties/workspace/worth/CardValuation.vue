@@ -82,7 +82,7 @@ const statusLabel = computed(() =>
             >
                 Valuation
             </p>
-            <small class="text-xs text-[#6b7280]">
+            <small class="text-xs text-accent/50">
                 {{ fetchedCopy }}
             </small>
           <div class="flex gap-2 mt-2">
@@ -109,7 +109,7 @@ const statusLabel = computed(() =>
                 {{ formattedValue }}
             </p>
 
-            <p v-if="formattedRange" class="text-sm text-[#6b7280]">
+            <p v-if="formattedRange" class="text-sm text-accent/50">
                 Range {{ formattedRange }}
             </p>
         </div>
