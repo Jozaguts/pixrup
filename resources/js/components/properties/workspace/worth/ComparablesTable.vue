@@ -64,9 +64,7 @@ const searchString = ref('');
 </script>
 
 <template>
-    <section
-        class="flex flex-col gap-4 rounded-[12px] bg-gray-200 p-6 shadow-neu-in transition-all duration-200 ease-in-out"
-    >
+    <section class="npo-form-shadow flex flex-col gap-4 rounded-[12px] bg-surface p-6">
         <header class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <div
@@ -74,12 +72,12 @@ const searchString = ref('');
                 >
                     <p class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">Comparables</p>
                     <span
-                        class="active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-black ring shadow-neu-in ring-white"
+                        class="active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-accent ring shadow-neu-in ring-white"
                     >
                         {{ comparables.length }} homes
                     </span>
                 </div>
-                <h3 class="text-lg font-semibold text-[#0d0d12]">Nearby sales in the last 90 days</h3>
+                <h3 class="text-lg font-semibold text-accent">Nearby sales in the last 90 days</h3>
             </div>
         </header>
 
@@ -87,7 +85,7 @@ const searchString = ref('');
             <div
                 v-for="index in 3"
                 :key="`skeleton-${index}`"
-                class="h-16 animate-pulse rounded-[22px] bg-[#f4f5fa] shadow-[inset_12px_12px_28px_rgba(210,212,226,0.6),inset_-12px_-12px_28px_rgba(255,255,255,0.92)]"
+                class="h-16 animate-pulse rounded-[22px] bg-surface shadow-neu-in"
             />
         </div>
         <div v-else-if="hasComparables" class="overflow-hidden rounded-[12px]">
@@ -100,29 +98,23 @@ const searchString = ref('');
                 :search-value="searchString"
             ></data-table>
         </div>
-        <p
-            v-else
-            class="rounded-[22px] bg-[#f4f5fa] px-4 py-6 text-sm text-accent/50 shadow-[inset_10px_10px_24px_rgba(210,212,226,0.55),inset_-10px_-10px_24px_rgba(255,255,255,0.95)]"
-        >
+        <p v-else class="rounded-[22px] bg-surface px-4 py-6 text-sm text-accent/50">
             No comparables yet — fetch a valuation to populate nearby sale activity.
         </p>
     </section>
 </template>
 <style scoped>
 .soft-table {
-    --easy-table-header-background-color: #eee;  /* light bg */
-    --easy-table-header-font-color: #374151;/* dark gray */
-    --easy-table-body-row-background-color: #eee;
-    --easy-table-body-row-hover-background-color:var(--color-gray-200);
-    --easy-table-row-border: 1px solid #e5e7eb; /* light gray border */
+    --easy-table-header-background-color: var(--color-surface);
+    --easy-table-header-font-color: var(--foreground-color);
+    --easy-table-body-row-background-color: var(--color-surface);
+    --easy-table-body-row-hover-background-color: var(--color-surface);
+    --easy-table-row-border: 1px solid var(--color-background); /* light gray border */
     --easy-table-body-row-height: 72px; /* tall row to fit pdf thumbnail */
     --easy-table-header-item-padding: 1rem;
     --easy-table-border: none;
-    --easy-table-body-row-font-color:rgba(0, 0, 0, 0.60);
-    .easy-data-table__body-cell,
-    .easy-data-table__header-cell {
-        text-align: center !important;
-    }
-
+    --easy-table-body-row-hover-font-color: var(--on-surface-muted);
+    --easy-table-body-row-font-color: var(--on-surface);
+    .easy-data-table__body-cell, .easy-data-table__header-cell {text-align: center !important;};
 }
 </style>

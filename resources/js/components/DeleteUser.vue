@@ -24,7 +24,7 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
 </script>
 
 <template>
-    <div class="space-y-6 bg-gray-200 dark:bg-gray-700/75 p-5 rounded-md shadow-sm">
+    <div class="space-y-6 bg-surface dark:bg-gray-700/75 p-5 rounded-md shadow-sm">
         <HeadingSmall
             title="Delete account"
             description="Delete your account and all of its resources"

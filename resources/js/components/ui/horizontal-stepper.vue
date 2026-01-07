@@ -77,7 +77,7 @@
                     v-for="(step, index) in hashmapSteps" :key="index"
                     :label="step.title"
                     :icon="step.completed ? 'mdi:check-all' : step.icon"
-                    button-class="text-xs py-1 items-start justify-start w-full sm:text-[12px] text-black/80 disabled:text-black/50 disabled:font-light font-medium sm:whitespace-nowrap"
+                    button-class="text-xs py-1 items-start justify-start w-full sm:text-[12px] text-accent/80 disabled:text-accent/50 disabled:font-light font-medium sm:whitespace-nowrap"
                     :shadow="false"
                     icon-class="!w-5 !h-5 sm:!w-4 sm:!h-4"
                     :disabled="currentStep != step.id"
@@ -100,7 +100,7 @@
             <div :class="cn('w-full overflow-hidden', props.controlsPosition  === 'top' ? 'row-start-2' : 'row-start-3')">
                 <slot name="footer" :goToStep="goToStep" :nextStep="nextStep" :previousStep="previousStep" :activeStep="activeStep" :steps="stepsCount">
                     <div class="h-[50px] flex flex-row items-center justify-center-safe gap-4 w-full md:w-fit md:mx-auto rounded-[12px]">
-                        <button @click="previousStep" class="disabled:text-black/20 disabled:pointer-events-none hover:shadow-neu-in px-2 md:px-4 py-2 md:py-3 rounded-[12px] cursor-pointer">
+                        <button @click="previousStep" class="disabled:text-accent/20 disabled:pointer-events-none hover:shadow-neu-in px-2 md:px-4 py-2 md:py-3 rounded-[12px] cursor-pointer">
                             <Icon icon="mdi:chevron-double-left" class="w-6 h-6 ml-2 inline" />
                         </button>
                         <p class="flex flex-row">
@@ -110,7 +110,7 @@
                             :disabled="!activeStep?.completed && false"
                             :class="[
                             activeStep?.completed ? 'hover:shadow-neu-in' : '',
-                            'px-4 py-3 rounded-[12px] text-black ursor-pointer disabled:text-black/20 disabled:pointer-events-none',
+                            'px-4 py-3 rounded-[12px] text-accent ursor-pointer disabled:text-accent/20 disabled:pointer-events-none',
                             ]"
                         >
                             <Icon icon="mdi:chevron-double-right" class="w-6 h-6 ml-2 inline" />

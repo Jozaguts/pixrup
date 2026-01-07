@@ -22,8 +22,8 @@ const tabs = [
             :class="[
                 'relative flex items-center rounded-md px-6 py-3 transition-colors tab',
                 appearance === value
-                    ? 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100! text-black!'
-                    : 'hover:bg-neutral-200/60 hover:text-black dark:!text-neutral-400 dark:hover:bg-neutral-700/60',
+                    ? 'shadow-xs active dark:bg-neutral-700 dark:text-neutral-100! text-accent!'
+                    : 'hover:bg-neutral-200/60 hover:text-accent dark:!text-neutral-400 dark:hover:bg-neutral-700/60',
 
             ]"
         >

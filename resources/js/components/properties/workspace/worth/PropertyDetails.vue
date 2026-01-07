@@ -61,7 +61,7 @@ const details = computed(() => [
             >
                 Property details
             </p>
-            <h3 class="mt-1 text-lg font-semibold text-[#0d0d12]">
+            <h3 class="mt-1 text-lg font-semibold text-accent">
                 Subject snapshot
             </h3>
         </header>
@@ -75,7 +75,7 @@ const details = computed(() => [
                 <dt class="text-xs tracking-[0.28em] text-[#9ca3af] uppercase">
                     {{ detail.label }}
                 </dt>
-                <dd class="mt-1 text-base font-semibold text-[#0d0d12]">
+                <dd class="mt-1 text-base font-semibold text-accent">
                     {{ detail.value }}
                 </dd>
             </div>

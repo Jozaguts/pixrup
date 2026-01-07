@@ -103,7 +103,7 @@ export default function useSpyHunt() {
         return spyhunt.value.comps[mode.value].filter((comp) => comp.distance <= spyhunt.value.filters.defaults.radius)
     })
     const trend30d = computed(() =>{
-        const value =  spyhunt.value.market_snapshot.trend30d.toFixed(2)  + '%'
+        const value =  spyhunt.value.market_snapshot?.trend30d?.toFixed(2)  + '%'
         const propertyPricePerFt = spyhunt.value.value_estimate.price / spyhunt.value.property.square_footage
         const avgPerSqft = spyhunt.value.market_snapshot.avgPricePerFt
         const diff = propertyPricePerFt - avgPerSqft

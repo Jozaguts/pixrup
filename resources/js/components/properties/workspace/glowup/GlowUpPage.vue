@@ -342,7 +342,7 @@ const formatDate = (input?: string | null) => {
                 >
                     PixrGlowUp
                 </p>
-                <h2 class="mt-1 text-2xl font-semibold text-[#1f2937]">
+                <h2 class="mt-1 text-2xl font-semibold text-accent">
                     Before / After AI Studio
                 </h2>
                 <p class="text-sm text-gray-500">
@@ -360,7 +360,7 @@ const formatDate = (input?: string | null) => {
                     >
                         Monthly usage
                     </p>
-                    <p class="text-sm font-semibold text-[#1f2937]">
+                    <p class="text-sm font-semibold text-accent">
                         <span v-if="usage.limit !== null"
                             >{{ usage.used }} / {{ usage.limit }} GlowUps</span
                         >
@@ -386,7 +386,7 @@ const formatDate = (input?: string | null) => {
                             >
                                 1. Configure the space
                             </p>
-                            <h3 class="text-lg font-semibold text-[#1f2937]">
+                            <h3 class="text-lg font-semibold text-accent">
                                 Upload or capture a photo
                             </h3>
                             <p class="text-sm text-gray-500">
@@ -414,7 +414,7 @@ const formatDate = (input?: string | null) => {
                         @dragleave="handleDragLeave"
                     >
                         <CloudUpload class="mx-auto h-10 w-10 text-[#7c4dff]" />
-                        <p class="text-base font-semibold text-[#1f2937]">
+                        <p class="text-base font-semibold text-accent">
                             {{ selectedFileLabel }}
                         </p>
                         <p class="text-sm text-gray-500">
@@ -459,7 +459,7 @@ const formatDate = (input?: string | null) => {
                             Room type
                             <select
                                 v-model="createForm.room_type"
-                                class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-[#1f2937] shadow-inner focus:border-[#7c4dff] focus:outline-none"
+                                class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-accent shadow-inner focus:border-[#7c4dff] focus:outline-none"
                             >
                                 <option
                                     v-for="room in roomOptions"
@@ -476,7 +476,7 @@ const formatDate = (input?: string | null) => {
                             Desired style
                             <select
                                 v-model="createForm.style"
-                                class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-[#1f2937] shadow-inner focus:border-[#7c4dff] focus:outline-none"
+                                class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-accent shadow-inner focus:border-[#7c4dff] focus:outline-none"
                             >
                                 <option
                                     v-for="style in styleOptions"
@@ -572,7 +572,7 @@ const formatDate = (input?: string | null) => {
                             >
                             <span v-else>{{ usage.used }} renders</span>
                         </div>
-                        <div class="h-2 rounded-full bg-gray-200">
+                        <div class="h-2 rounded-full bg-surface">
                             <div
                                 class="h-2 rounded-full bg-gradient-to-r from-[#7c4dff] to-[#c084fc] transition-all"
                                 :style="{ width: `${usageProgress}%` }"
@@ -599,7 +599,7 @@ const formatDate = (input?: string | null) => {
                             >
                                 2. Processing
                             </p>
-                            <h3 class="text-lg font-semibold text-[#1f2937]">
+                            <h3 class="text-lg font-semibold text-accent">
                                 {{
                                     statusTokens[activeJob.status]?.label ??
                                     'Status'
@@ -639,7 +639,7 @@ const formatDate = (input?: string | null) => {
                             >
                                 3. Result
                             </p>
-                            <h3 class="text-lg font-semibold text-[#1f2937]">
+                            <h3 class="text-lg font-semibold text-accent">
                                 Before / After ready
                             </h3>
                         </div>
@@ -702,7 +702,7 @@ const formatDate = (input?: string | null) => {
                 class="min-h-0 space-y-4 overflow-hidden   p-6 npo-form-shadow rounded-[12px] "
             >
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-[#1f2937]">
+                    <h3 class="text-lg font-semibold text-accent">
                         GlowUp history
                     </h3>
                     <button
@@ -717,7 +717,7 @@ const formatDate = (input?: string | null) => {
                     v-if="jobs.length === 0"
                     class="rounded-2xl bg-[#f9fafb] p-6 text-center"
                 >
-                    <p class="font-semibold text-[#1f2937]">
+                    <p class="font-semibold text-accent">
                         No transformations yet
                     </p>
                     <p class="text-sm text-gray-500">
@@ -741,7 +741,7 @@ const formatDate = (input?: string | null) => {
                     >
                         <div class="flex items-center justify-between gap-3">
                             <div>
-                                <p class="text-sm font-semibold text-[#1f2937]">
+                                <p class="text-sm font-semibold text-accent">
                                     {{ job.room_type }} · {{ job.style }}
                                 </p>
                                 <p class="text-xs text-gray-500">

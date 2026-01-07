@@ -77,7 +77,7 @@ function handleImagePick(img: { uri: string; name: string }) {
     <div class="w-full px-2 md:px-5">
         <LogoSearchbar v-model:value="searchQuery" />
 
-        <p class="text-black/60 px-4 text-xs mt-4" v-if="visibleLogos.length > 0">
+        <p class="text-accent/60 px-4 text-xs mt-4" v-if="visibleLogos.length > 0">
             You can upload up to logos {{ maxLogos }} to your personal gallery ({{ visibleLogos.length }} uploaded).
         </p>
 

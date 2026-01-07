@@ -22,7 +22,7 @@ import NeuphormicButton from "@/components/neuphormic-button.vue";
             <NeuphormicButton
                 to="/dashboard"
                 label="Go back home"
-                class="text-black"
+                class="text-accent"
             />
         </div>
     </div>

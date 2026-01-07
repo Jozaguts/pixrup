@@ -17,6 +17,8 @@ All the varaiables are added here
     --color-error: #ff4c51;
     --color-background: var(--background);
     --color-surface: var(--neu-surface);
+    --color-on-surface: var(--on-surface);
+    --color-on-surface-muted: var(--on-surface-muted);
     --color-dark: #2e263d;
     --color-primary-50: #f4f2fe;
     --color-primary-100: #ece8ff;

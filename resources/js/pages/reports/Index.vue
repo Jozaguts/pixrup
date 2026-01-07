@@ -4,7 +4,7 @@
             title="Pixrup Reports"
             description="Manage your reports here."
             title-class="!text-3xl font-semibold"
-            description-class="text-md font-light text-black/60 mb-6"
+            description-class="text-md font-light text-accent/60 mb-6"
             class="w-full h-full"
         >
             <div class="flex flex-row items-center justify-between mb-6">
@@ -29,14 +29,14 @@
                     :search-value="searchString"
                 >
                     <template #header="header">
-                        <span class="text-black-4">
+                        <span class="text-accent-4">
                            {{ header.text.toUpperCase() }}
                         </span>
                     </template>
                     <template #item-thumbnail="{ name }">
                         <div class="flex flex-row items-center group">
-                            <Icon icon="ph:file-pdf-thin" class="w-8 h-8 text-black/80"></Icon>
-                            <span class="text-md font-semibold ml-2 text-black/80">
+                            <Icon icon="ph:file-pdf-thin" class="w-8 h-8 text-accent/80"></Icon>
+                            <span class="text-md font-semibold ml-2 text-accent/80">
                                 {{ name }}
                             </span>
                         </div>

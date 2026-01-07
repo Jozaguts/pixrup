@@ -35,7 +35,7 @@ const normalized = computed(() => {
 
 <template>
     <section
-        class="flex flex-col gap-4 neu-surface rounded-[26px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4 neu-surface rounded-[12px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
     >
         <header class="flex items-center justify-between">
             <div>
@@ -44,7 +44,7 @@ const normalized = computed(() => {
                 >
                     Analytics
                 </p>
-                <h3 class="text-lg font-semibold text-[#0d0d12]">
+                <h3 class="text-lg font-semibold text-accent">
                     {{ props.title }}
                 </h3>
             </div>
@@ -68,7 +68,7 @@ const normalized = computed(() => {
         </div>
         <p
             v-else
-            class="rounded-[22px] bg-[#f4f5fa] px-4 py-6 text-sm text-accent/50 shadow-[inset_10px_10px_24px_rgba(210,212,226,0.55),inset_-10px_-10px_24px_rgba(255,255,255,0.95)]"
+            class="rounded-[12px] bg-surface  px-4 py-6 text-sm text-accent/50 "
         >
             Trend data is not available yet. Fetch a valuation to unlock market
             momentum analytics.

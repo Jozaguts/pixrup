@@ -87,7 +87,7 @@ const statusLabel = computed(() =>
             </small>
           <div class="flex gap-2 mt-2">
                 <span
-                    class="shadow-neu-in active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-black ring ring-white"
+                    class="shadow-neu-in active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-accent ring ring-white"
                 >
                 <span
                     class="inline-flex h-2 w-2 rounded-full mx-2"
@@ -96,7 +96,7 @@ const statusLabel = computed(() =>
                 {{ statusLabel }}
             </span>
               <span
-                  class="shadow-neu-in active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-black ring ring-white"
+                  class="shadow-neu-in active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-accent ring ring-white"
               >
                 Confidence
                 <span class="mx-2">{{ formattedConfidence }}</span>
@@ -105,7 +105,7 @@ const statusLabel = computed(() =>
         </header>
 
         <div class="flex flex-col gap-3 mt-4">
-            <p class="text-4xl font-semibold text-[#0d0d12] shadow-neu-in rounded-[12px] p-4">
+            <p class="text-4xl font-semibold text-accent shadow-neu-in rounded-[12px] p-4">
                 {{ formattedValue }}
             </p>
 

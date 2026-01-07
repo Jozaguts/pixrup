@@ -22,7 +22,7 @@ const beforeStyle = computed(() => ({
             {{ props.label }}
         </p>
         <div
-            class="relative aspect-video w-full overflow-hidden rounded-2xl bg-gray-200 shadow-inner"
+            class="relative aspect-video w-full overflow-hidden rounded-2xl bg-surface shadow-inner"
         >
             <img
                 :src="props.after"

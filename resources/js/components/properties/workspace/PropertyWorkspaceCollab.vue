@@ -44,7 +44,7 @@ const messages = computed(() => [
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 text-[#1f2937]">
+    <div class="flex flex-col gap-6 text-accent">
         <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
@@ -90,7 +90,7 @@ const messages = computed(() => [
                             <span>{{ message.author }}</span>
                             <span>{{ message.timestamp }}</span>
                         </header>
-                        <p class="mt-2 text-sm text-[#1f2937]">
+                        <p class="mt-2 text-sm text-accent">
                             {{ message.body }}
                         </p>
                     </article>
@@ -127,7 +127,7 @@ const messages = computed(() => [
                         class="flex items-center justify-between neu-surface px-4 py-3 text-sm text-gray-600 shadow-neu-in"
                     >
                         <div>
-                            <p class="font-semibold text-[#1f2937]">
+                            <p class="font-semibold text-accent">
                                 {{ participant.name }}
                             </p>
                             <p

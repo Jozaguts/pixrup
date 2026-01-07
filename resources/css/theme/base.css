@@ -8,7 +8,8 @@ Font base styles
     --background: #EEE;
     --foreground-color: #1f2933;
     --text-color: #222436;
-    --on-surface: #1a1a1c;
+    --on-surface: #1A1A1A;
+    --on-surface-muted: #6B7280;
     --neu-dark: #c5c5c5;
     --neu-light: #ffffff;
     --neu-offset: 5px;
@@ -173,6 +174,8 @@ Font base styles
     /* Keep brand consistent in dark mode */
     --text-color: #ffffff;
     --primary: #222436;
+    --on-surface: #F2F4F8;
+    --on-surface-muted: #8A93A3;
     --foreground-color: hsl(0 0% 98%);
     --ring: var(--primary);
 

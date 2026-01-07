@@ -50,7 +50,7 @@ const noteCopy = computed(
             >
                 Rental value
             </p>
-            <h3 class="text-lg font-semibold text-[#0d0d12]">
+            <h3 class="text-lg font-semibold text-accent">
                 Potential monthly income
             </h3>
         </header>

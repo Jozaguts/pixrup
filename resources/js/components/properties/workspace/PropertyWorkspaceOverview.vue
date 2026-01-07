@@ -45,7 +45,7 @@ loadOverView();
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 text-[#1f2937]">
+    <div class="flex flex-col gap-6 text-accent">
         <header class="flex flex-col gap-4 rounded-[28px] p-6">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>

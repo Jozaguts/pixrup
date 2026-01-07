@@ -301,7 +301,7 @@ const visitLink = (link?: string) => {
                     <div class="flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
                             <div
-                                class="pointer-events-none flex size-12 items-center justify-center rounded-full text-black shadow-neu-in"
+                                class="pointer-events-none flex size-12 items-center justify-center rounded-full text-accent shadow-neu-in"
                             >
                                 <TrendingUp class="size-5 text-accent" />
                             </div>

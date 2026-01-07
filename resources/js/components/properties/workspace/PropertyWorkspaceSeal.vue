@@ -18,7 +18,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 text-[#1f2937]">
+    <div class="flex flex-col gap-6 text-accent">
         <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
@@ -63,7 +63,7 @@ const props = defineProps<Props>();
                         >
                             1. Overview
                         </p>
-                        <p class="mt-1 font-semibold text-[#1f2937]">
+                        <p class="mt-1 font-semibold text-accent">
                             Executive Summary
                         </p>
                         <p class="text-sm text-gray-500">
@@ -77,7 +77,7 @@ const props = defineProps<Props>();
                         >
                             2. Insights
                         </p>
-                        <p class="mt-1 font-semibold text-[#1f2937]">
+                        <p class="mt-1 font-semibold text-accent">
                             Valuation & Market Intel
                         </p>
                         <p class="text-sm text-gray-500">
@@ -91,7 +91,7 @@ const props = defineProps<Props>();
                         >
                             3. Visuals
                         </p>
-                        <p class="mt-1 font-semibold text-[#1f2937]">
+                        <p class="mt-1 font-semibold text-accent">
                             Glow-Up Storyboard
                         </p>
                         <p class="text-sm text-gray-500">
@@ -121,7 +121,7 @@ const props = defineProps<Props>();
 
                 <div class="space-y-4 text-sm text-gray-600">
                     <div class="neu-surface p-4 shadow-neu-out">
-                        <p class="font-semibold text-[#1f2937]">Branding</p>
+                        <p class="font-semibold text-accent">Branding</p>
                         <p class="text-sm text-gray-500">
                             Using Pixrup default, includes agent contact block
                             and disclaimers.
@@ -129,7 +129,7 @@ const props = defineProps<Props>();
                     </div>
 
                     <div class="neu-surface p-4 shadow-neu-out">
-                        <p class="font-semibold text-[#1f2937]">Distribution</p>
+                        <p class="font-semibold text-accent">Distribution</p>
                         <p class="text-sm text-gray-500">
                             Auto send to PixrCollab channel and investor
                             contacts.

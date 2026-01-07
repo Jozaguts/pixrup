@@ -4,7 +4,7 @@
             title="Pixrup Properties"
             description="Manage your properties here."
             title-class="!text-3xl font-semibold"
-            description-class="text-md font-light text-black/60 mb-6"
+            description-class="text-md font-light text-accent/60 mb-6"
             class="w-full h-full px-0"
         >
             <div class="flex flex-row items-center justify-between mb-6 gap-5">
@@ -31,7 +31,7 @@
                     :search-value="searchString"
                 >
                     <template #header="header">
-                        <span class="text-black/30 font-semibold !text-xs">
+                        <span class="text-accent/30 font-semibold !text-xs">
                            {{ header.text.toUpperCase() }}
                         </span>
                     </template>
@@ -58,7 +58,7 @@
                                 >
                                     {{ title }}
                                 </span>
-                                                        <span class="text-sm text-black/70 leading-tight truncate">
+                                                        <span class="text-sm text-accent/70 leading-tight truncate">
                                     {{ city }}
                                 </span>
                             </div>
@@ -74,10 +74,10 @@
                     <template #item-actions="{ links }">
                         <div class="flex flex-row items-center justify-start">
                             <a title="Explore property" :href="links.view" class="shadow-neu-out px-4 py-2 rounded-[12px] group mr-4">
-                                <Icon icon="ph:link-simple-horizontal-light" class="inline w-4 h-4 group-hover:text-black/80 text-black/50 transition all ease-in-out"/>
+                                <Icon icon="ph:link-simple-horizontal-light" class="inline w-4 h-4 group-hover:text-accent/80 text-accent/50 transition all ease-in-out"/>
                             </a>
                             <a title="Explore property" :href="links.report" class="shadow-neu-out px-4 py-2 rounded-[12px] group mr-4">
-                                <Icon icon="ph:megaphone-thin" class="inline w-4 h-4 group-hover:text-black/80 text-black/50 transition all ease-in-out"/>
+                                <Icon icon="ph:megaphone-thin" class="inline w-4 h-4 group-hover:text-accent/80 text-accent/50 transition all ease-in-out"/>
                             </a>
                         </div>
                     </template>

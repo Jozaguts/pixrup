@@ -16,7 +16,7 @@ const modelValue = defineModel('value', {
         placeholder="Search logos..."
         @keydown.esc="$emit('update:value','')"
     >
-        <button class="text-black" v-if="modelValue !== ''">
+        <button class="text-accent" v-if="modelValue !== ''">
             <Icon
                 icon="mdi:times"
                 class="h-5 w-5 text-gray-400"

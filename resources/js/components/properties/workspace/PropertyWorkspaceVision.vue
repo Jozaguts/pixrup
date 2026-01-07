@@ -18,7 +18,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 text-[#1f2937]">
+    <div class="flex flex-col gap-6 text-accent">
         <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
@@ -70,7 +70,7 @@ const props = defineProps<Props>();
                         >
                             Highlights
                         </p>
-                        <p class="mt-2 font-semibold text-[#1f2937]">
+                        <p class="mt-2 font-semibold text-accent">
                             18 callouts
                         </p>
                         <p class="mt-1 text-xs text-gray-500">
@@ -85,7 +85,7 @@ const props = defineProps<Props>();
                         >
                             Guided mode
                         </p>
-                        <p class="mt-2 font-semibold text-[#1f2937]">Enabled</p>
+                        <p class="mt-2 font-semibold text-accent">Enabled</p>
                         <p class="mt-1 text-xs text-gray-500">
                             Average watch time 4:12
                         </p>
@@ -98,7 +98,7 @@ const props = defineProps<Props>();
                         >
                             Captured via
                         </p>
-                        <p class="mt-2 font-semibold text-[#1f2937]">
+                        <p class="mt-2 font-semibold text-accent">
                             Matterport Pro3
                         </p>
                         <p class="mt-1 text-xs text-gray-500">
@@ -119,7 +119,7 @@ const props = defineProps<Props>();
                 <div
                     class="neu-surface p-4 text-sm text-gray-600 shadow-neu-out"
                 >
-                    <p class="font-semibold text-[#1f2937]">
+                    <p class="font-semibold text-accent">
                         PixrVision playlist
                     </p>
                     <p class="text-sm text-gray-500">
@@ -131,7 +131,7 @@ const props = defineProps<Props>();
                 <div
                     class="neu-surface p-4 text-sm text-gray-600 shadow-neu-out"
                 >
-                    <p class="font-semibold text-[#1f2937]">Share settings</p>
+                    <p class="font-semibold text-accent">Share settings</p>
                     <p class="text-sm text-gray-500">
                         Password protected link — expires in 7 days.
                     </p>

@@ -23,12 +23,12 @@
             class="relative z-50 w-11/12 max-w-md p-6 bg-white rounded-xl shadow-lg"
         >
             <h3 class="text-lg font-semibold mb-4">Select a file</h3>
-            <button class="absolute top-4 right-4 text-black hover:text-black/60" @click="closeModal">
+            <button class="absolute top-4 right-4 text-accent hover:text-accent/60" @click="closeModal">
                 ✕
             </button>
 
             <div class="relative mb-2 flex flex-col items-center justify-center bg-gray-100 border-2 border-black border-dashed w-full h-48 rounded-[12px]">
-                <p class="text-center mb-2 text-black font-medium text-sm">
+                <p class="text-center mb-2 text-accent font-medium text-sm">
                     Upload a new logo. <br>
                     <strong>Max file size:</strong> 2mb <br>
                     <strong>Formats accepted:</strong> png, jpg, jpeg<br>
@@ -48,13 +48,13 @@
             </div>
             <button :disabled="!file || errors.length > 0" :class="[
                         'px-5 py-4 w-full bg-black text-white rounded-[8px] shadow-md hover:bg-gray-800 mt-2',
-                        'disabled:shadow-none disabled:bg-black/10 disabled:text-black/50 disabled:cursor-not-allowed'
+                        'disabled:shadow-none disabled:bg-black/10 disabled:text-accent/50 disabled:cursor-not-allowed'
                        ]"
                     @click="handleFileSave">
                 Save logo
             </button>
 
-            <ul class="mt-2 text-black/80 text-xs list-item list-inside text-center">
+            <ul class="mt-2 text-accent/80 text-xs list-item list-inside text-center">
                 <li v-for="(error, index) in errors" :key="index">{{ error }}.</li>
             </ul>
         </div>
@@ -88,7 +88,7 @@ const showModal = ref(false);
 
 const resolvedWrapperClass=cn([
     'relative flex h-24 w-24 cursor-pointer flex-col items-center justify-center'
-    ,'rounded-[12px] border-2 border-dashed border-black bg-gray-200',
+    ,'rounded-[12px] border-2 border-dashed border-black bg-surface',
     'hover:bg-gray-300 hover:font-semibold',
     props.wrapperClass
 ]);

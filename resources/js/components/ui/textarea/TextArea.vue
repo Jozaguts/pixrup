@@ -38,7 +38,7 @@ const handleInput = (event: Event) => {
             {{ props.label }}
         </span>
         <textarea
-            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-[#1f2937] shadow-inner outline-none transition focus:border-[#7c4dff] disabled:cursor-not-allowed disabled:opacity-60"
+            class="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-accent shadow-inner outline-none transition focus:border-[#7c4dff] disabled:cursor-not-allowed disabled:opacity-60"
             :rows="props.rows"
             :placeholder="props.placeholder"
             :value="props.modelValue"

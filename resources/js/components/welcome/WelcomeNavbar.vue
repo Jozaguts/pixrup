@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
                 >
             </div>
 
-            <div class="block bg-gray-200 xl:hidden">
+            <div class="block bg-surface xl:hidden">
                 <button
                     class="neu-button flex size-12 flex-col items-center justify-center gap-[5px] rounded-[12px] text-slate-900 shadow-md transition"
                     type="button"

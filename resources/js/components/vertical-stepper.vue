@@ -8,7 +8,7 @@
                         class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-semibold"
                         :class="{
               'bg-blue-600 text-white': currentStep === i,
-              'bg-gray-200 text-gray-600': currentStep !== i,
+              'bg-surface text-gray-600': currentStep !== i,
             }"
                     >
                         {{ i + 1 }}

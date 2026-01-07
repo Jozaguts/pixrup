@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
 import { usePlanUsage } from '@/composables/usePlanUsage';
 import propertiesRoutes from '@/routes/properties';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { AlertCircle, ArrowRight, Gauge, LineChart, Loader2, RefreshCw, ShieldCheck } from 'lucide-vue-next';
 import { computed } from 'vue';
-import type {
-    PropertyWorkspaceProperty,
-    WorkspaceModuleMeta,
-    WorthComparable,
-    WorthStatusState,
-    WorthTrendPoint,
-} from './types';
+import type { PropertyWorkspaceProperty, WorkspaceModuleMeta, WorthStatusState, WorthTrendPoint } from './types';
 import AnalyticsChart from './worth/AnalyticsChart.vue';
 import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
@@ -244,12 +237,12 @@ const idleCallout = computed(() =>
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 text-[#0d0d12] mt-4">
-        <header class="flex flex-col gap-5 rounded-[12px] lg:p-6 md:p-6 transition-all duration-200 ease-in-out">
+    <div class="mt-4 flex flex-col gap-6 text-accent">
+        <header class="flex flex-col gap-5 rounded-[12px] transition-all duration-200 ease-in-out md:p-6 lg:p-6">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div class="space-y-2">
                     <p class="text-xs tracking-[0.28em] text-[#7c4dff] uppercase">AI Appraisal</p>
-                    <h2 class="text-2xl font-semibold tracking-tight text-[#0d0d12]">
+                    <h2 class="text-2xl font-semibold tracking-tight text-accent">
                         Instant property valuation and market confidence.
                     </h2>
                     <p class="text-sm text-accent/50">
@@ -260,7 +253,7 @@ const idleCallout = computed(() =>
                 <div class="flex w-full flex-col lg:max-w-sm">
                     <button
                         type="button"
-                        class="neu-button flex transform cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium !text-black transition-transform duration-200 ease-out hover:scale-110"
+                        class="neu-button flex transform cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent"
                         @click="handleFetch"
                     >
                         <component
@@ -278,7 +271,7 @@ const idleCallout = computed(() =>
             <transition name="fade">
                 <div
                     v-if="showSuccessBanner"
-                    class="flex items-center gap-3 rounded-[12px] bg-white px-4 py-3 text-sm text-[#0d0d12]"
+                    class="flex items-center gap-3 rounded-[12px] bg-surface px-4 py-3 text-sm text-accent"
                 >
                     <ShieldCheck class="h-5 w-5 text-[#1dbf7a]" />
                     <span>{{ successMessage }}</span>
@@ -295,7 +288,7 @@ const idleCallout = computed(() =>
                         </span>
                     </div>
 
-                    <div class="relative h-3 w-full overflow-hidden rounded-full !bg-[#e4e6ee] shadow-inner">
+                    <div class="relative h-3 w-full overflow-hidden rounded-full bg-surface shadow-neu-in">
                         <div
                             class="h-full rounded-[12px] bg-gradient-to-r from-[#7c4dff] to-[#16b1ff]"
                             :style="usageMeterStyle"
@@ -307,7 +300,7 @@ const idleCallout = computed(() =>
                     <a
                         v-if="isUsageLimitReached"
                         :href="upgradeHref"
-                        class="inline-flex items-center justify-center gap-2 self-start rounded-[12px] bg-white px-4 py-2 text-xs font-semibold text-[#7c4dff] shadow-[8px_8px_20px_rgba(210,212,226,0.5),-8px_-8px_20px_rgba(255,255,255,0.95)] transition-all duration-200 ease-in-out hover:shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                        class="inline-flex items-center justify-center gap-2 self-start rounded-[12px] bg-background px-4 py-2 text-xs font-semibold text-[#7c4dff] shadow-[8px_8px_20px_rgba(210,212,226,0.5),-8px_-8px_20px_rgba(255,255,255,0.95)] transition-all duration-200 ease-in-out hover:shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
                     >
                         Upgrade plan
                         <ArrowRight class="h-4 w-4" />
@@ -317,12 +310,12 @@ const idleCallout = computed(() =>
         </header>
 
         <section class="grid gap-6 lg:grid-cols-2">
-            <article class="npo-form-shadow flex flex-col gap-5 rounded-[12px] p-6 text-sm text-[#0d0d12]">
+            <article class="npo-form-shadow flex flex-col gap-5 rounded-[12px] p-6 text-sm text-accent">
                 <header class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                    <div class="flex flex-col w-full">
-                        <div class="flex justify-between items-center">
+                    <div class="flex w-full flex-col">
+                        <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-lg font-semibold text-[#0d0d12]">
+                                <h3 class="text-lg font-semibold text-accent">
                                     {{ stateTitle }}
                                 </h3>
                                 <p class="text-sm text-accent/50">
@@ -330,7 +323,7 @@ const idleCallout = computed(() =>
                                 </p>
                             </div>
                             <div
-                                class="pointer-events-none flex size-12 items-center justify-center rounded-full text-black shadow-neu-in"
+                                class="pointer-events-none flex size-12 items-center justify-center rounded-full text-accent shadow-neu-in"
                             >
                                 <LineChart class="h-6 w-6" />
                             </div>
@@ -339,17 +332,13 @@ const idleCallout = computed(() =>
                 </header>
 
                 <div v-if="state === 'loading'" class="space-y-4">
-                    <div
-                        class="h-40 animate-pulse rounded-[12px] bg-[#f4f5fa] shadow-[inset_12px_12px_30px_rgba(210,212,226,0.6),inset_-12px_-12px_30px_rgba(255,255,255,0.92)]"
-                    />
-                    <div
-                        class="h-32 animate-pulse rounded-[12px] bg-[#f4f5fa] shadow-[inset_12px_12px_30px_rgba(210,212,226,0.6),inset_-12px_-12px_30px_rgba(255,255,255,0.92)]"
-                    />
+                    <div class="h-40 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    <div class="h-32 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
                 </div>
 
                 <div
                     v-else-if="state === 'error'"
-                    class="flex flex-col gap-4 rounded-[12px] bg-[#fff5f5] p-6 text-[#9a1b1b] shadow-[12px_12px_28px_rgba(244,200,200,0.55),-12px_-12px_28px_rgba(255,255,255,0.95)]"
+                    class="flex flex-col gap-4 rounded-[12px] bg-surface p-6 shadow-neu-in"
                 >
                     <div class="flex items-center gap-3 text-sm">
                         <AlertCircle class="h-5 w-5" />
@@ -358,7 +347,7 @@ const idleCallout = computed(() =>
 
                     <button
                         type="button"
-                        class="inline-flex items-center gap-2 self-start rounded-[12px] bg-white px-4 py-2 text-sm font-semibold text-[#9a1b1b] shadow-[8px_8px_20px_rgba(245,216,216,0.6),-8px_-8px_20px_rgba(255,255,255,0.95)] transition hover:shadow-[inset_8px_8px_18px_rgba(236,187,187,0.55),inset_-8px_-8px_18px_rgba(255,247,247,0.9)]"
+                        class="inline-flex items-center gap-2 self-start rounded-[12px] bg-sruface px-4 py-2 text-sm font-semibold text-[#9a1b1b]"
                         @click="handleRetry"
                     >
                         Retry
@@ -366,7 +355,7 @@ const idleCallout = computed(() =>
                     </button>
                 </div>
                 <template v-else-if="state === 'success' || state === 'cached'">
-                    <div class="grid gap-4 lg:grid-cols-[1.3fr_1fr] rounded-[12px]">
+                    <div class="grid gap-4 rounded-[12px] lg:grid-cols-[1.3fr_1fr]">
                         <CardValuation
                             :value="worth?.value ?? null"
                             :value-low="valueLow"
@@ -377,12 +366,9 @@ const idleCallout = computed(() =>
                         />
 
                         <RentalValueCard v-if="hasRentalValue" :rental-value="rentalValue" />
-                        <div
-                            v-else
-                            class="flex flex-col  gap-2 rounded-[12px]  text-sm text-accent/50"
-                        >
-                            <p class="text-base font-semibold tracking-[0.3em] text-[#0d0d12] uppercase">Rental value</p>
-                            <p class="text-base text-[#0d0d12]">
+                        <div v-else class="flex flex-col gap-2 rounded-[12px] text-sm text-accent/50">
+                            <p class="text-base font-semibold tracking-[0.3em] text-accent uppercase">Rental value</p>
+                            <p class="text-base text-accent">
                                 Rental projections are not available yet. Fetch a fresh valuation or add rental data to
                                 unlock this card.
                             </p>
@@ -393,10 +379,8 @@ const idleCallout = computed(() =>
 
                     <ComparablesTable :comparables="worth?.comparables ?? []" :is-loading="!worth?.comparables" />
 
-                    <div
-                        class="flex flex-col gap-3 rounded-[12px] p-5 text-sm text-accent/50"
-                    >
-                        <p class="text-sm ">
+                    <div class="flex flex-col gap-3 rounded-[12px] p-5 text-sm text-accent/50">
+                        <p class="text-sm">
                             Sync this valuation with PixrSeal to include comps and trendline snapshots in investor
                             reports.
                         </p>
@@ -404,7 +388,7 @@ const idleCallout = computed(() =>
                         <button
                             type="button"
                             :disabled="isReportDisabled"
-                            class="neu-button flex items-center justify-center gap-2 rounded-[12px] px-4 text-sm !text-black cursor-pointer !bg-transparent py-4 font-medium active"
+                            class="neu-button active flex cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent"
                             @click="handleAddToReport"
                         >
                             Add to report
@@ -415,9 +399,9 @@ const idleCallout = computed(() =>
 
                 <div
                     v-else
-                    class="flex flex-col gap-3 rounded-[12px] bg-[#f4f5fa] p-6 text-sm text-accent/50 shadow-[inset_12px_12px_30px_rgba(210,212,226,0.6),inset_-12px_-12px_30px_rgba(255,255,255,0.92)]"
+                    class="flex flex-col gap-3 rounded-[12px] bg-[#f4f5fa] p-6 text-sm text-accent/50 shadow-neu-in"
                 >
-                    <p class="text-base font-semibold text-[#0d0d12]">No valuation yet</p>
+                    <p class="text-base font-semibold text-accent">No valuation yet</p>
                     <p>
                         {{ idleCallout }}
                     </p>
@@ -433,55 +417,42 @@ const idleCallout = computed(() =>
                 </div>
             </article>
 
-            <aside class="flex flex-col gap-4 npo-form-shadow rounded-[12px] ">
-                <section class="flex flex-col gap-4  p-6">
+            <aside class="npo-form-shadow flex flex-col gap-4 rounded-[12px]">
+                <section class="flex flex-col gap-4 p-6">
                     <header class="flex items-center justify-between">
-                        <h3 class="text-base font-semibold text-[#0d0d12]">Module signals</h3>
+                        <h3 class="text-base font-semibold text-accent">Module signals</h3>
 
                         <div
-                            class="pointer-events-none flex size-12 items-center justify-center rounded-full text-black shadow-neu-in"
+                            class="pointer-events-none flex size-12 items-center justify-center rounded-full text-accent shadow-neu-in"
                         >
                             <RefreshCw class="h-5 w-5" />
                         </div>
                     </header>
 
                     <ul class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
-                        <li
-                            class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
-                        >
+                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Status</span>
                             <span class="text-[#7c4dff]">{{ moduleStatusLabel }}</span>
                         </li>
-                        <li
-                            class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
-                        >
+                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Local state</span>
-                            <span class="text-[#0d0d12]">{{ state }}</span>
+                            <span class="text-accent">{{ state }}</span>
                         </li>
-                        <li
-                            class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
-                        >
+                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Comparables</span>
-                            <span class="text-[#0d0d12]">{{ worth?.comparables?.length }}</span>
+                            <span class="text-accent">{{ worth?.comparables?.length }}</span>
                         </li>
-                        <li
-                            class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
-                        >
+                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Trend points</span>
-                            <span class="text-[#0d0d12]">{{ trendCount }}</span>
+                            <span class="text-accent">{{ trendCount }}</span>
                         </li>
-                        <li
-                            class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
-                        >
+                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Plan remaining</span>
-                            <span class="text-[#0d0d12]"> {{ remaining }} / {{ usage.total }} </span>
+                            <span class="text-accent"> {{ remaining }} / {{ usage.total }} </span>
                         </li>
-                        <li
-                            v-if="lastFetchedLabel"
-                            class="flex rounded-[12px] shadow-neu-in p-4 justify-between"
-                        >
+                        <li v-if="lastFetchedLabel" class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Last fetched</span>
-                            <span class="text-[#0d0d12]">{{ lastFetchedLabel }}</span>
+                            <span class="text-accent">{{ lastFetchedLabel }}</span>
                         </li>
                     </ul>
                 </section>

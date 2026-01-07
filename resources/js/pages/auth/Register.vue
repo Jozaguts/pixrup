@@ -117,7 +117,7 @@ import { Icon } from '@iconify/vue';
                         v-if="processing"
                         class="h-4 w-4 animate-spin"
                     />
-                    <Icon icon="ph:arrow-bend-down-right" class="inline text-black w-4 h-4"  v-else/>
+                    <Icon icon="ph:arrow-bend-down-right" class="inline text-accent w-4 h-4"  v-else/>
                     Create account
                 </Button>
 

@@ -32,7 +32,7 @@ const useResolveClasses = (props: Props) => {
     const menuWrapperClasses = computed(() =>
         cn([
             'hidden md:flex md:flex-col',
-            'relative bg-gray-200 md:gap-y-2 sm:gap-x-2',
+            'relative bg-surface md:gap-y-2 sm:gap-x-2',
             'w-full h-full col-span-1',
             'items-center justify-start md:py-4 sm:py-0',
             props.menuWrapperClass
