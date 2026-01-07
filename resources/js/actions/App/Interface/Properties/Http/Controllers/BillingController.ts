@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 export const account = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ account.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 account.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ account.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 accountForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -80,6 +80,62 @@ accountForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 account.form = accountForm
 
-const BillingController = { account }
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::store
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @route '/billing/payment-method'
+*/
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/billing/payment-method',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::store
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @route '/billing/payment-method'
+*/
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::store
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @route '/billing/payment-method'
+*/
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::store
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @route '/billing/payment-method'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::store
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @route '/billing/payment-method'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
+
+const BillingController = { account, store }
 
 export default BillingController

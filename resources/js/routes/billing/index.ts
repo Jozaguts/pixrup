@@ -1,7 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import paymentMethod from './payment-method'
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 export const account = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +17,7 @@ account.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 account.url = (options?: RouteQueryOptions) => {
@@ -25,7 +26,7 @@ account.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +36,7 @@ account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +46,7 @@ account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +56,7 @@ const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +66,7 @@ accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:11
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
 * @route '/billing/account'
 */
 accountForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,6 +83,7 @@ account.form = accountForm
 
 const billing = {
     account: Object.assign(account, account),
+    paymentMethod: Object.assign(paymentMethod, paymentMethod),
 }
 
 export default billing
