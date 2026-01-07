@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/v1/usage', UsageSummaryController::class)->name('usage.summary');
     Route::get('properties/{property}/fetch', [SpyHuntController::class, 'fetch'])->name('properties.spyhunt.fetch');
     Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');
+    require __DIR__.'/billing/routes.php';
 });
 Route::prefix('features')->group( static function() {
     Route::get('/', [FeaturesController::class ,'index'])->name('features.index');

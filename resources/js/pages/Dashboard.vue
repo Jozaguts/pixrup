@@ -24,48 +24,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const mockProperties: DashboardProperty[] = [
-    {
-        id: 1,
-        title: 'Skyline Loft Renovation',
-        address: '455 Grand Ave, Brooklyn, NY',
-        status: 'in-progress',
-        estimatedValue: 1120000,
-        progress: 68,
-        thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=720&q=80',
-        links: {
-            view: '/properties/1',
-            report: '/properties/1/report',
-        },
-    },
-    {
-        id: 2,
-        title: 'Palm Heights Villas',
-        address: '920 Ocean Drive, Miami, FL',
-        status: 'ready',
-        estimatedValue: 1780000,
-        progress: 100,
-        thumbnail: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=720&q=80',
-        links: {
-            view: '/properties/2',
-            report: '/properties/2/report',
-        },
-    },
-    {
-        id: 3,
-        title: 'Lakeside Retreat',
-        address: '88 Maplewood Lane, Austin, TX',
-        status: 'pending',
-        estimatedValue: 640000,
-        progress: 42,
-        thumbnail: null,
-        links: {
-            view: '/properties/3',
-            report: '/properties/3/report',
-        },
-    },
-];
-
 const planDefinitions = {
     free: { name: 'Free', limit: 1 },
     micro: { name: 'Micro', limit: 5 },
@@ -238,7 +196,7 @@ const resolvedProperties = computed<DashboardProperty[]>(() => {
         return provided;
     }
 
-    return mockProperties;
+    return [];
 });
 
 const openNewPropertyWizard = () => {

@@ -18,7 +18,7 @@ import auth from '@/routes/auth';
 import { edit as editProfile } from '@/routes/profile';
 import type { AppPageProps, NavItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { User } from 'lucide-vue-next';
+import { LogOut, User } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { cn } from '@/lib/utils';
 import { Icon } from '@iconify/vue';
@@ -75,19 +75,9 @@ const navGroups = computed(() => {
             items: withState([
                 {
                     title: 'Billing',
-                    href: '/billing',
+                    href: '/billing/account',
                     icon: 'mdi:file-document-arrow-right-outline',
                 },
-                // {
-                //     title: 'Tutorials',
-                //     href: '/tutorials',
-                //     icon: 'material-symbols-light:school-outline-rounded',
-                // },
-                // {
-                //     title: 'Support',
-                //     href: '/support',
-                //     icon: 'material-symbols-light:contact-support-outline-rounded',
-                // },
             ]),
         },
     ];
