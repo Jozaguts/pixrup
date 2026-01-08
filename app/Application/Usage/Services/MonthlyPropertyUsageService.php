@@ -8,10 +8,9 @@ use App\Domain\Usage\Enums\UsageAction;
 use App\Domain\Usage\ValueObjects\PlanInfo;
 use App\Domain\Usage\ValueObjects\UsagePeriod;
 use App\Domain\Usage\ValueObjects\UsageScope;
-use App\Models\UsagePropertyMonthly;
+use App\Domain\Usage\ValueObjects\UsageSummary;
 use App\Models\User;
 use Carbon\CarbonImmutable;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -33,8 +32,9 @@ readonly class MonthlyPropertyUsageService
         $period = $this->periodService->current();
         $scope = $this->scopeResolver->resolve($user);
         $plan = $this->planResolver->resolve($user);
+        $bucket = $plan->bucketForAction($action);
 
-        DB::transaction(function () use ($user, $property, $action, $period, $scope, $plan): void {
+        DB::transaction(function () use ($user, $property, $action, $period, $scope, $plan, $bucket): void {
             $lockedUser = User::query()
                 ->whereKey($user->getKey())
                 ->lockForUpdate()
@@ -42,56 +42,26 @@ readonly class MonthlyPropertyUsageService
 
             $this->refreshWindow($lockedUser, $period);
 
-            $existing = UsagePropertyMonthly::query()
-                ->where('account_scope_type', $scope->type)
-                ->where('account_scope_id', $scope->id)
-                ->where('property_id', $property->id)
-                ->where('period_key', $period->key)
-                ->first();
+            $used = $this->usedForBucket($lockedUser, $bucket);
 
-            if ($existing !== null) {
-                $this->logOutcome('already_counted', $scope, $user, $property, $action, $period);
-
-                return;
-            }
-
-            if ($plan->limit !== null && $lockedUser->usage_count >= $plan->limit) {
+            if (! $plan->allows($bucket, $used)) {
                 $this->logOutcome('blocked', $scope, $user, $property, $action, $period, [
-                    'limit' => $plan->limit,
-                    'used' => $lockedUser->usage_count,
+                    'bucket' => $bucket,
+                    'limit' => $plan->limitForBucket($bucket),
+                    'used' => $used,
                 ]);
 
-                throw $this->limitException($plan, $lockedUser->usage_count, $period);
+                throw $this->limitException($plan, $bucket, $lockedUser, $period);
             }
 
-            try {
-                UsagePropertyMonthly::query()->create([
-                    'account_scope_type' => $scope->type,
-                    'account_scope_id' => $scope->id,
-                    'user_id' => $user->getKey(),
-                    'property_id' => $property->id,
-                    'period_key' => $period->key,
-                    'plan_snapshot' => $plan->tier,
-                    'action_first' => $action->value,
-                    'first_action_at' => CarbonImmutable::now('UTC'),
-                ]);
-            } catch (QueryException $exception) {
-                if ($exception->getCode() !== '23000') {
-                    throw $exception;
-                }
-
-                $this->logOutcome('already_counted', $scope, $user, $property, $action, $period);
-
-                return;
-            }
-
-            $lockedUser->usage_count = (int) $lockedUser->usage_count + 1;
+            $nextUsed = $this->incrementBucket($lockedUser, $bucket);
             $lockedUser->usage_reset_at = $period->resetsAt->toDateTimeString();
             $lockedUser->save();
 
             $this->logOutcome('counted', $scope, $user, $property, $action, $period, [
-                'used' => $lockedUser->usage_count,
-                'limit' => $plan->limit,
+                'bucket' => $bucket,
+                'used' => $nextUsed,
+                'limit' => $plan->limitForBucket($bucket),
             ]);
         });
     }
@@ -103,15 +73,30 @@ readonly class MonthlyPropertyUsageService
             : null;
 
         if ($resetAt === null || $resetAt->ne($period->resetsAt)) {
-            $currentCount = UsagePropertyMonthly::query()
-                ->where('account_scope_type', 'user')
-                ->where('account_scope_id', $user->getKey())
-                ->where('period_key', $period->key)
-                ->count();
-
-            $user->usage_count = $currentCount;
+            $user->used_docs = 0;
+            $user->used_renders = 0;
             $user->usage_reset_at = $period->resetsAt->toDateTimeString();
         }
+    }
+
+    private function usedForBucket(User $user, string $bucket): int
+    {
+        return $bucket === 'renders'
+            ? (int) $user->used_renders
+            : (int) $user->used_docs;
+    }
+
+    private function incrementBucket(User $user, string $bucket): int
+    {
+        if ($bucket === 'renders') {
+            $user->used_renders = (int) $user->used_renders + 1;
+
+            return (int) $user->used_renders;
+        }
+
+        $user->used_docs = (int) $user->used_docs + 1;
+
+        return (int) $user->used_docs;
     }
 
     private function logOutcome(
@@ -135,21 +120,63 @@ readonly class MonthlyPropertyUsageService
         ]);
     }
 
-    private function limitException(PlanInfo $plan, int $used, UsagePeriod $period): FeatureLimitExceededException
+    private function limitException(
+        PlanInfo $plan,
+        string $bucket,
+        User $user,
+        UsagePeriod $period
+    ): FeatureLimitExceededException
     {
         return new FeatureLimitExceededException(
             'You have reached your monthly property usage limit.',
-            [
-                'plan' => [
-                    'tier' => $plan->tier,
-                    'label' => $plan->label,
-                    'limit' => $plan->limit,
-                ],
-                'used' => $used,
-                'remaining' => $plan->limit !== null ? max(0, $plan->limit - $used) : null,
-                'period_key' => $period->key,
-                'resets_at' => $period->resetsAt->toIso8601String(),
+            $this->summaryPayload($plan, $user, $period, $bucket),
+        );
+    }
+
+    private function summaryPayload(
+        PlanInfo $plan,
+        User $user,
+        UsagePeriod $period,
+        string $bucket
+    ): array {
+        $usedDocs = (int) $user->used_docs;
+        $usedRenders = (int) $user->used_renders;
+        $docsLimit = $plan->limitForBucket('docs');
+        $rendersLimit = $plan->limitForBucket('renders');
+
+        $summary = new UsageSummary(
+            tier: $plan->tier,
+            planLabel: $plan->label,
+            periodKey: $period->key,
+            resetsAt: $period->resetsAt,
+            docs: [
+                'limit' => $docsLimit,
+                'used' => $usedDocs,
+                'remaining' => $this->remaining($docsLimit, $usedDocs),
+            ],
+            renders: [
+                'limit' => $rendersLimit,
+                'used' => $usedRenders,
+                'remaining' => $this->remaining($rendersLimit, $usedRenders),
             ],
         );
+
+        return [
+            'bucket' => $bucket,
+            ...$summary->toArray(),
+        ];
+    }
+
+    private function remaining(int $limit, int $used): ?int
+    {
+        if ($limit === -1) {
+            return null;
+        }
+
+        if ($limit === 0) {
+            return 0;
+        }
+
+        return max(0, $limit - $used);
     }
 }
