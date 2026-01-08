@@ -3,7 +3,6 @@
 namespace App\Application\Usage\Services;
 
 use App\Domain\Usage\ValueObjects\UsageSummary;
-use App\Models\UsagePropertyMonthly;
 use App\Models\User;
 
 class UsageSummaryService
@@ -19,24 +18,46 @@ class UsageSummaryService
         $plan = $this->planResolver->resolve($user);
         $period = $this->periodService->current();
 
-        $used = UsagePropertyMonthly::query()
-            ->where('account_scope_type', 'user')
-            ->where('account_scope_id', $user->getKey())
-            ->where('period_key', $period->key)
-            ->count();
+        $usedDocs = (int) $user->used_docs;
+        $usedRenders = (int) $user->used_renders;
 
-        $remaining = $plan->limit !== null
-            ? max(0, $plan->limit - $used)
-            : null;
+        $docsLimit = $plan->limitForBucket('docs');         // -1 unlimited, 0 blocked, >0 quota
+        $rendersLimit = $plan->limitForBucket('renders');
+
+        $remainingDocs = $this->remaining($docsLimit, $usedDocs);
+        $remainingRenders = $this->remaining($rendersLimit, $usedRenders);
 
         return new UsageSummary(
-            $plan->tier,
-            $plan->label,
-            $plan->limit,
-            $used,
-            $remaining,
-            $period->key,
-            $period->resetsAt,
+            tier: $plan->tier,
+            planLabel: $plan->label,
+            periodKey: $period->key,
+            resetsAt: $period->resetsAt,
+            docs: [
+                'limit' => $docsLimit,
+                'used' => $usedDocs,
+                'remaining' => $remainingDocs,
+            ],
+            renders: [
+                'limit' => $rendersLimit,
+                'used' => $usedRenders,
+                'remaining' => $remainingRenders,
+            ],
         );
+    }
+
+    /**
+     * @return int|null  null = unlimited, 0..n = remaining
+     */
+    private function remaining(int $limit, int $used): ?int
+    {
+        if ($limit === -1) {
+            return null; // unlimited
+        }
+
+        if ($limit === 0) {
+            return 0; // blocked
+        }
+
+        return max(0, $limit - $used);
     }
 }
