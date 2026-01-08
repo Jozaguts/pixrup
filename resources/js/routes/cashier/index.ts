@@ -98,65 +98,8 @@ paymentForm.head = (args: { id: string | number } | [id: string | number ] | str
 
 payment.form = paymentForm
 
-/**
-* @see \Laravel\Cashier\Http\Controllers\WebhookController::webhook
-* @see vendor/laravel/cashier/src/Http/Controllers/WebhookController.php:40
-* @route '/stripe/webhook'
-*/
-export const webhook = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: webhook.url(options),
-    method: 'post',
-})
-
-webhook.definition = {
-    methods: ["post"],
-    url: '/stripe/webhook',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \Laravel\Cashier\Http\Controllers\WebhookController::webhook
-* @see vendor/laravel/cashier/src/Http/Controllers/WebhookController.php:40
-* @route '/stripe/webhook'
-*/
-webhook.url = (options?: RouteQueryOptions) => {
-    return webhook.definition.url + queryParams(options)
-}
-
-/**
-* @see \Laravel\Cashier\Http\Controllers\WebhookController::webhook
-* @see vendor/laravel/cashier/src/Http/Controllers/WebhookController.php:40
-* @route '/stripe/webhook'
-*/
-webhook.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: webhook.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Laravel\Cashier\Http\Controllers\WebhookController::webhook
-* @see vendor/laravel/cashier/src/Http/Controllers/WebhookController.php:40
-* @route '/stripe/webhook'
-*/
-const webhookForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: webhook.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Laravel\Cashier\Http\Controllers\WebhookController::webhook
-* @see vendor/laravel/cashier/src/Http/Controllers/WebhookController.php:40
-* @route '/stripe/webhook'
-*/
-webhookForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: webhook.url(options),
-    method: 'post',
-})
-
-webhook.form = webhookForm
-
 const cashier = {
     payment: Object.assign(payment, payment),
-    webhook: Object.assign(webhook, webhook),
 }
 
 export default cashier

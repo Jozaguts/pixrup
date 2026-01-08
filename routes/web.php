@@ -7,6 +7,7 @@ use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\GlowUp\GlowUpJobController;
 use App\Interface\Properties\Http\Controllers\PropertyController;
 use App\Interface\Properties\Http\Controllers\SpyHuntController;
+use App\Http\Controllers\Billing\StripeWebhookController;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Interface\Appraisal\Http\Controllers\PropertyWorthController as AppraisalPropertyWorthController;
@@ -20,6 +21,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 
 Route::middleware(['auth', 'verified'])->group(function (): void {

@@ -1,3 +1,4 @@
+import Billing from './Billing'
 import DashboardController from './DashboardController'
 import GlowUp from './GlowUp'
 import Api from './Api'
@@ -7,6 +8,7 @@ import Settings from './Settings'
 import Reports from './Reports'
 
 const Controllers = {
+    Billing: Object.assign(Billing, Billing),
     DashboardController: Object.assign(DashboardController, DashboardController),
     GlowUp: Object.assign(GlowUp, GlowUp),
     Api: Object.assign(Api, Api),
