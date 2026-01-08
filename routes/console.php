@@ -22,6 +22,8 @@ Schedule::call(static function () use ($timezone): void {
         ->orWhere('usage_reset_at', '<=', $now->toDateTimeString())
         ->update([
             'usage_count' => 0,
+            'used_docs' => 0,
+            'used_renders' => 0,
             'usage_reset_at' => $nextReset->toDateTimeString(),
         ]);
 

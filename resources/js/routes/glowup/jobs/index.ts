@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
-* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:113
 * @route '/glowup/jobs/{glowupJob}/attach'
 */
 export const attach = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ attach.definition = {
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
-* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:113
 * @route '/glowup/jobs/{glowupJob}/attach'
 */
 attach.url = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ attach.url = (args: { glowupJob: number | { id: number } } | [glowupJob: number 
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
-* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:113
 * @route '/glowup/jobs/{glowupJob}/attach'
 */
 attach.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -140,7 +140,7 @@ attach.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
-* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:113
 * @route '/glowup/jobs/{glowupJob}/attach'
 */
 const attachForm = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -150,7 +150,7 @@ const attachForm = (args: { glowupJob: number | { id: number } } | [glowupJob: n
 
 /**
 * @see \App\Http\Controllers\GlowUp\GlowUpJobController::attach
-* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:116
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:113
 * @route '/glowup/jobs/{glowupJob}/attach'
 */
 attachForm.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
