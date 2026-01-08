@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
-import type { BreadcrumbItem, DashboardPageProps, DashboardProperty, PlanUsagePayload, User } from '@/types';
+import type {
+    BreadcrumbItem,
+    DashboardPageProps,
+    DashboardProperty,
+    PlanUsagePayload,
+    UsageBucketPayload,
+    User,
+} from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { TrendingUp } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -25,14 +32,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const planDefinitions = {
-    free: { name: 'Free', limit: 1 },
-    micro: { name: 'Micro', limit: 5 },
-    starter: { name: 'Starter', limit: 12 },
-    pro: { name: 'Professional', limit: 25 },
-    professional: { name: 'Professional', limit: 25 },
-    business: { name: 'Business', limit: 50 },
-    premium: { name: 'Premium', limit: 80 },
-    enterprise: { name: 'Enterprise', limit: null },
+    price_starter: { name: 'Starter' },
+    price_pro: { name: 'Pro' },
+    price_enterprise: { name: 'Enterprise' },
+    starter: { name: 'Starter' },
+    pro: { name: 'Pro' },
+    professional: { name: 'Professional' },
+    enterprise: { name: 'Enterprise' },
 } as const;
 
 const page = usePage<DashboardPageProps>();
@@ -42,10 +48,12 @@ const user = computed<DashboardUser | null>(() => {
 });
 
 const planUsage = computed<PlanUsagePayload | null>(() => page.props.planUsage ?? null);
+const docsUsage = computed<UsageBucketPayload | null>(() => planUsage.value?.usage?.docs ?? null);
+const rendersUsage = computed<UsageBucketPayload | null>(() => planUsage.value?.usage?.renders ?? null);
 
 const planKey = computed(() => {
     const plan = user.value?.plan_tier ?? user.value?.plan;
-    return typeof plan === 'string' && plan.length > 0 ? plan.toLowerCase() : 'professional';
+    return typeof plan === 'string' && plan.length > 0 ? plan.toLowerCase() : 'price_starter';
 });
 
 const formatTitle = (value: string) =>
@@ -60,69 +68,21 @@ const planDetails = computed(() => {
     if (usagePlan) {
         return {
             label: usagePlan.label ?? formatTitle(usagePlan.tier),
-            limit: planUsage.value?.limit ?? usagePlan.limit ?? null,
         };
     }
 
-    const key = planKey.value;
+    const key = planKey.value.replace(/^price_/, '');
     const preset = planDefinitions[key as keyof typeof planDefinitions];
-    const fallbackLimit = preset?.limit === undefined ? 20 : (preset?.limit ?? null);
 
     return {
         label: preset?.name ?? formatTitle(key),
-        limit: fallbackLimit,
     };
 });
 
-const usageCount = computed(() => planUsage.value?.used ?? 0);
+type UsageState = 'success' | 'warning' | 'danger' | 'blocked' | 'unlimited';
 
-const usageLimit = computed(() => planUsage.value?.limit ?? planDetails.value.limit ?? null);
-
-const usageLimitLabel = computed(() => {
-    const limit = usageLimit.value;
-    return limit == null ? 'Unlimited' : `${limit}`;
-});
-
-const remainingSlots = computed(() => {
-    if (planUsage.value?.remaining !== undefined) {
-        const remaining = planUsage.value.remaining;
-        if (remaining === null) {
-            return null;
-        }
-
-        return Math.max(remaining, 0);
-    }
-
-    const limit = usageLimit.value;
-    if (!limit) {
-        return null;
-    }
-
-    return Math.max(limit - usageCount.value, 0);
-});
-
-const usagePercent = computed(() => {
-    const limit = usageLimit.value;
-    if (!limit || limit <= 0) {
-        return 0;
-    }
-
-    const percent = Math.round((usageCount.value / limit) * 100);
-    return Math.max(0, Math.min(100, percent));
-});
-
-const usageState = computed<'success' | 'warning' | 'danger'>(() => {
-    if (usagePercent.value >= 100) {
-        return 'danger';
-    }
-    if (usagePercent.value >= 80) {
-        return 'warning';
-    }
-    return 'success';
-});
-
-const progressGradient = computed(() => {
-    switch (usageState.value) {
+const stateToGradient = (state: UsageState) => {
+    switch (state) {
         case 'warning':
             return 'from-[#FFE29A] to-[#FFB74A]';
         case 'danger':
@@ -130,41 +90,81 @@ const progressGradient = computed(() => {
         default:
             return 'from-[#6e33ff] to-[#864ffe]';
     }
-});
+};
 
-const usageMessage = computed(() => {
-    if (usageLimit.value == null) {
-        return 'Unlimited monthly property usage—enjoy full access to your tools.';
+const stateToTextClass = (state: UsageState) => {
+    switch (state) {
+        case 'warning':
+            return 'text-[#9A6B00]';
+        case 'danger':
+        case 'blocked':
+            return 'text-[#B91C1C]';
+        default:
+            return 'text-accent';
     }
+};
 
-    if (usageState.value === 'danger') {
-        return 'You reached your monthly property usage limit. Upgrade to keep generating reports and AI outputs.';
-    }
+const buildUsageStats = (bucket: UsageBucketPayload | null, label: string, unit: string) => {
+    const limit = bucket?.limit ?? 0;
+    const used = bucket?.used ?? 0;
+    const isUnlimited = bucket?.is_unlimited ?? limit === -1;
+    const isBlocked = bucket?.is_blocked ?? limit === 0;
+    const remaining =
+        bucket?.remaining ??
+        (isUnlimited ? null : isBlocked ? 0 : Math.max(0, limit - used));
+    const percentUsed =
+        bucket?.percent_used ??
+        (limit > 0 ? Math.round((used / limit) * 100) : 0);
+    const state: UsageState = isBlocked
+        ? 'blocked'
+        : isUnlimited
+            ? 'unlimited'
+            : percentUsed >= 100
+                ? 'danger'
+                : percentUsed >= 80
+                    ? 'warning'
+                    : 'success';
+    const limitLabel = isUnlimited ? 'Unlimited' : `${limit}`;
+    const remainingLabel = isUnlimited ? 'Unlimited' : `${remaining ?? 0}`;
+    const percentText = isUnlimited ? 'Unlimited usage' : `${percentUsed}% of monthly ${unit} usage`;
+    const remainingText = isUnlimited
+        ? 'Unlimited capacity'
+        : `${remaining ?? 0} ${unit} left`;
+    const message = isBlocked
+        ? `${label} are not included in your current plan.`
+        : isUnlimited
+            ? `Unlimited ${unit} this month.`
+            : state === 'danger'
+                ? `You reached your monthly ${unit} limit.`
+                : state === 'warning'
+                    ? `You're close to your monthly ${unit} limit.`
+                    : `Great pace! You still have ${remaining ?? 0} ${unit} left this month.`;
 
-    if (usageState.value === 'warning') {
-        return 'You are close to your monthly usage limit. Consider upgrading for more capacity.';
-    }
+    return {
+        label,
+        used,
+        limit,
+        remaining,
+        limitLabel,
+        remainingLabel,
+        percentUsed,
+        percentText,
+        remainingText,
+        message,
+        state,
+        progressGradient: stateToGradient(state),
+        textClass: stateToTextClass(state),
+        isUnlimited,
+        isBlocked,
+    };
+};
 
-    const slots = remainingSlots.value ?? 0;
-    return `Great pace! You still have ${slots} property use${slots === 1 ? '' : 's'} left this month.`;
-});
-
-const usagePercentText = computed(() => {
-    if (usageLimit.value == null) {
-        return 'Unlimited plan';
-    }
-
-    return `${usagePercent.value}% of monthly usage`;
-});
-
-const remainingSlotsText = computed(() => {
-    if (usageLimit.value == null) {
-        return 'Unlimited capacity';
-    }
-
-    const slots = remainingSlots.value ?? 0;
-    return `${slots} use${slots === 1 ? '' : 's'} left`;
-});
+const docsStats = computed(() => buildUsageStats(docsUsage.value, 'Docs', 'docs'));
+const rendersStats = computed(() => buildUsageStats(rendersUsage.value, 'Renders', 'renders'));
+const usageBuckets = computed(() => [
+    { key: 'docs', stats: docsStats.value },
+    { key: 'renders', stats: rendersStats.value },
+]);
 
 const usageResetLabel = computed(() => {
     const resetAt = planUsage.value?.resets_at;
@@ -269,35 +269,42 @@ const visitLink = (link?: string) => {
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs tracking-wide text-accent uppercase">Properties used this month</p>
-                            <p class="text-lg font-semibold text-accent">{{ usageCount }} / {{ usageLimitLabel }}</p>
+                            <p class="text-xs tracking-wide text-accent uppercase">Monthly reset</p>
                             <p v-if="usageResetLabel" class="text-xs text-accent/50">Resets {{ usageResetLabel }}</p>
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-3">
-                        <div class="relative h-3 w-full overflow-hidden rounded-full bg-surface shadow-neu-in">
-                            <div
-                                class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r transition-all duration-500 ease-out"
-                                :class="progressGradient"
-                                :style="{ width: `${usagePercent}%` }"
-                            />
-                        </div>
-                        <div class="flex items-center justify-between text-xs text-accent/50">
-                            <span>{{ usagePercentText }}</span>
-                            <span>{{ remainingSlotsText }}</span>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div
+                            v-for="bucket in usageBuckets"
+                            :key="bucket.key"
+                            class="flex flex-col gap-3 rounded-[12px] bg-surface p-4 shadow-neu-in"
+                        >
+                            <div class="flex items-center justify-between">
+                                <p class="text-xs tracking-wide text-accent uppercase">{{ bucket.stats.label }}</p>
+                                <p class="text-sm font-semibold text-accent">
+                                    {{ bucket.stats.used }} / {{ bucket.stats.limitLabel }}
+                                </p>
+                            </div>
+                            <div class="relative h-3 w-full overflow-hidden rounded-full bg-surface shadow-neu-in">
+                                <div
+                                    class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r transition-all duration-500 ease-out"
+                                    :class="bucket.stats.progressGradient"
+                                    :style="{ width: `${bucket.stats.percentUsed}%` }"
+                                />
+                            </div>
+                            <div class="flex items-center justify-between text-xs text-accent/50">
+                                <span>{{ bucket.stats.percentText }}</span>
+                                <span>{{ bucket.stats.remainingText }}</span>
+                            </div>
+                            <p
+                                class="ring-accent-300 rounded-[12px] bg-surface p-3 px-4 text-sm font-medium text-accent/50 ring-1 shadow-neu-in"
+                                :class="bucket.stats.textClass"
+                            >
+                                {{ bucket.stats.message }}
+                            </p>
                         </div>
                     </div>
-                    <p
-                        class="ring-accent-300 rounded-[12px] bg-surface p-3 px-5 text-sm font-medium text-accent/50 ring-1 shadow-neu-in"
-                        :class="{
-                            'text-accent': usageState === 'success',
-                            'text-[#9A6B00]': usageState === 'warning',
-                            'text-[#B91C1C]': usageState === 'danger',
-                        }"
-                    >
-                        {{ usageMessage }}
-                    </p>
                 </div>
             </DashboardSection>
 
