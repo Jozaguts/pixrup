@@ -50,6 +50,7 @@ const sortJobs = (input: GlowUpJob[]) =>
 
 export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
     const initialState = glowUp.value;
+    const initialUsage = initialState?.usage ?? null;
     const jobs = ref<GlowUpJob[]>(
         sortJobs((initialState?.jobs ?? []).map(normalizeJob)),
     );
@@ -58,9 +59,14 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
     );
 
     const usage = reactive<GlowUpUsage>({
-        used: initialState?.usage?.used ?? 0,
-        limit: initialState?.usage?.limit ?? null,
-        reset_at: initialState?.usage?.reset_at ?? null,
+        used: initialUsage?.used ?? 0,
+        limit: initialUsage?.limit ?? 0,
+        remaining: initialUsage?.remaining ?? null,
+        is_unlimited: initialUsage?.is_unlimited ?? false,
+        is_blocked: initialUsage?.is_blocked ?? false,
+        can_use: initialUsage?.can_use ?? true,
+        percent_used: initialUsage?.percent_used ?? 0,
+        reset_at: initialUsage?.reset_at ?? null,
     });
 
     const previewUrl = ref<string | null>(null);
@@ -91,19 +97,42 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         NonNullable<typeof window.Echo>['private']
     > | null = null;
 
-    const limitReached = computed(
-        () =>
-            usage.limit !== null &&
-            usage.limit > 0 &&
-            usage.used >= usage.limit,
-    );
+    const syncUsage = () => {
+        usage.is_unlimited = usage.limit === -1;
+        usage.is_blocked = usage.limit === 0;
+
+        if (usage.is_unlimited) {
+            usage.remaining = null;
+            usage.percent_used = null;
+            usage.can_use = true;
+            return;
+        }
+
+        if (usage.is_blocked) {
+            usage.remaining = 0;
+            usage.percent_used = 0;
+            usage.can_use = false;
+            return;
+        }
+
+        usage.remaining = Math.max(0, usage.limit - usage.used);
+        usage.percent_used =
+            usage.limit > 0
+                ? Math.min(100, Math.round((usage.used / usage.limit) * 100))
+                : 0;
+        usage.can_use = usage.used < usage.limit;
+    };
+
+    syncUsage();
+
+    const limitReached = computed(() => !usage.can_use);
 
     const remaining = computed(() => {
-        if (usage.limit === null) {
+        if (usage.is_unlimited) {
             return Infinity;
         }
 
-        return Math.max(0, usage.limit - usage.used);
+        return Math.max(0, usage.remaining ?? 0);
     });
 
     const activeJob = computed(
@@ -134,13 +163,10 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             activeJobId.value = incoming.id;
         }
 
-        if (
-            incoming.usage_recorded_at &&
-            !countedJobIds.has(incoming.id) &&
-            usage.limit !== null
-        ) {
+        if (incoming.usage_recorded_at && !countedJobIds.has(incoming.id)) {
             countedJobIds.add(incoming.id);
-            usage.used = Math.min(usage.limit, (usage.used ?? 0) + 1);
+            usage.used = Math.max(0, (usage.used ?? 0) + 1);
+            syncUsage();
         }
     };
 
@@ -275,8 +301,14 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
 
             if (state?.usage) {
                 usage.used = state.usage.used ?? 0;
-                usage.limit = state.usage.limit ?? null;
+                usage.limit = state.usage.limit ?? 0;
+                usage.remaining = state.usage.remaining ?? null;
+                usage.is_unlimited = state.usage.is_unlimited ?? false;
+                usage.is_blocked = state.usage.is_blocked ?? false;
+                usage.can_use = state.usage.can_use ?? true;
+                usage.percent_used = state.usage.percent_used ?? 0;
                 usage.reset_at = state.usage.reset_at ?? null;
+                syncUsage();
             }
 
             if (!createForm.room_type && state?.options?.room_types?.length) {
