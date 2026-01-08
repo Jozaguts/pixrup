@@ -38,30 +38,43 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
         $user = $request->user();
         $planUsage = null;
         $userPayload = $user?->toArray();
+        $limitExceeded = false;
 
         if ($user !== null) {
             $planUsage = app(UsageSummaryService::class)->forUser($user)->toArray();
 
             if ($userPayload !== null && $planUsage !== null) {
-                $userPayload['property_usage_limit'] = $planUsage['limit'];
-                $userPayload['property_usage_count'] = $planUsage['used'];
+                $docsUsage = $planUsage['usage']['docs'] ?? null;
+                $userPayload['property_usage_limit'] = $docsUsage['limit'] ?? null;
+                $userPayload['property_usage_count'] = $docsUsage['used'] ?? null;
                 $userPayload['usage_reset_at'] = $planUsage['resets_at'] ?? null;
                 $userPayload['plan_usage'] = $planUsage;
             }
-        }
 
-        $periodKey = $planUsage['period_key'] ?? now()->format('Y-m');
-        $cacheKey = generateMonthlyUsageCacheKey($user?->getKey() ?? 'guest', $periodKey);
-        $cachePayload = cache()->get($cacheKey);
+            if ($planUsage !== null) {
+                foreach (['docs', 'renders'] as $bucket) {
+                    $usage = $planUsage['usage'][$bucket] ?? null;
+                    if (! is_array($usage)) {
+                        continue;
+                    }
+
+                    $limit = (int) ($usage['limit'] ?? 0);
+                    $used = (int) ($usage['used'] ?? 0);
+
+                    if ($limit > 0 && $used >= $limit) {
+                        $limitExceeded = true;
+                        break;
+                    }
+                }
+            }
+        }
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $userPayload,
             ],
@@ -70,7 +83,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'status' => $request->session()->get('status'),
                 'glowupJob' => $request->session()->get('glowupJob'),
-                'limitExceeded' => $cachePayload['limitExceeded'] ?? false,
+                'limitExceeded' => $limitExceeded,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

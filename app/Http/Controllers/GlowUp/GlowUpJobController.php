@@ -55,10 +55,7 @@ class GlowUpJobController extends Controller
         return (new GlowUpJobResource($glowupJob))->response();
     }
 
-    public function store(
-        CreateGlowUpJobRequest $request,
-        Property $property,
-    ): JsonResponse|RedirectResponse {
+    public function store(CreateGlowUpJobRequest $request, Property $property): JsonResponse|RedirectResponse {
         $image = $request->file('image');
 
         if ($image === null) {
