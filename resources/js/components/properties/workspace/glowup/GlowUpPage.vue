@@ -67,11 +67,17 @@ const maxUpload = computed(
 );
 
 const usageProgress = computed(() => {
-    if (!usage.limit || usage.limit <= 0) {
+    if (usage.is_unlimited || usage.is_blocked) {
         return 0;
     }
 
-    return Math.min(100, Math.round((usage.used / usage.limit) * 100));
+    if (typeof usage.percent_used === 'number') {
+        return Math.min(100, Math.max(0, usage.percent_used));
+    }
+
+    return usage.limit > 0
+        ? Math.min(100, Math.round((usage.used / usage.limit) * 100))
+        : 0;
 });
 
 const selectedFileLabel = computed(
@@ -361,10 +367,10 @@ const formatDate = (input?: string | null) => {
                         Monthly usage
                     </p>
                     <p class="text-sm font-semibold text-accent">
-                        <span v-if="usage.limit !== null"
-                            >{{ usage.used }} / {{ usage.limit }} GlowUps</span
-                        >
-                        <span v-else>{{ usage.used }} renders</span>
+                            <span v-if="!usage.is_unlimited"
+                                >{{ usage.used }} / {{ usage.limit }} GlowUps</span
+                            >
+                            <span v-else>{{ usage.used }} renders</span>
                     </p>
                 </div>
             </div>
@@ -567,7 +573,7 @@ const formatDate = (input?: string | null) => {
                             class="flex items-center justify-between text-sm text-gray-600"
                         >
                             <span>Credit usage</span>
-                            <span v-if="usage.limit !== null"
+                            <span v-if="!usage.is_unlimited"
                                 >{{ usage.used }} / {{ usage.limit }}</span
                             >
                             <span v-else>{{ usage.used }} renders</span>
