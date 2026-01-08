@@ -43,8 +43,8 @@ Font base styles
             inset 2px 2px 5px #d1cccb,
             inset -2px -2px 5px #ffffff;
     --shadow-neu-out:
-            -4px -2px 4px 0px #ffffff,
-            4px 2px 6px 0px #dfe4ea;
+            -6px -6px 12px rgba(255, 255, 255, 0.9),
+            6px  6px 16px rgba(163, 177, 198, 0.35);
     --npo-form-shadow:
             -2.3px -2.3px 3.8px rgba(255,255,255, 0.2),
             -6.3px -6.3px 10.6px rgba(255,255,255, 0.3),
@@ -221,5 +221,9 @@ Font base styles
             2px 2px 4px rgba(0, 0, 0, 0.4),
             6px 6px 12px rgba(0, 0, 0, 0.45),
             16px 16px 32px rgba(0, 0, 0, 0.55);
+
+    --shadow-neu-out:
+            -6px -6px 12px rgba(255, 255, 255, 0.06),
+            6px  6px 16px rgba(0, 0, 0, 0.6);
   }
 }

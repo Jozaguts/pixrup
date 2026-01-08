@@ -136,6 +136,128 @@ storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 
 store.form = storeForm
 
-const BillingController = { account, store }
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @route '/billing/payment-method/default'
+*/
+export const updateDefault = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: updateDefault.url(options),
+    method: 'post',
+})
+
+updateDefault.definition = {
+    methods: ["post"],
+    url: '/billing/payment-method/default',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @route '/billing/payment-method/default'
+*/
+updateDefault.url = (options?: RouteQueryOptions) => {
+    return updateDefault.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @route '/billing/payment-method/default'
+*/
+updateDefault.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: updateDefault.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @route '/billing/payment-method/default'
+*/
+const updateDefaultForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateDefault.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @route '/billing/payment-method/default'
+*/
+updateDefaultForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: updateDefault.url(options),
+    method: 'post',
+})
+
+updateDefault.form = updateDefaultForm
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @route '/billing/payment-method'
+*/
+export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(options),
+    method: 'delete',
+})
+
+destroy.definition = {
+    methods: ["delete"],
+    url: '/billing/payment-method',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @route '/billing/payment-method'
+*/
+destroy.url = (options?: RouteQueryOptions) => {
+    return destroy.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @route '/billing/payment-method'
+*/
+destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @route '/billing/payment-method'
+*/
+const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @route '/billing/payment-method'
+*/
+destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy.form = destroyForm
+
+const BillingController = { account, store, updateDefault, destroy }
 
 export default BillingController

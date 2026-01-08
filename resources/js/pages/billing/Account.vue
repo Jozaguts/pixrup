@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { CreditCard, FolderOpen, Sparkles } from 'lucide-vue-next';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import PaymentMethodCard from '@/components/billing/PaymentMethodCard.vue';
 
 interface BillingOrder {
     date: string;
@@ -19,8 +20,8 @@ interface BillingPlan {
 
 interface BillingPaymentMethod {
     id: string;
-    brand: string;
-    last4: string;
+    brand?: string | null;
+    last4?: string | null;
     exp_month?: number | null;
     exp_year?: number | null;
 }
@@ -31,7 +32,8 @@ interface SetupIntentPayload {
 
 interface Props {
     stripeKey?: string | null;
-    paymentMethod?: BillingPaymentMethod | null;
+    paymentMethods?: BillingPaymentMethod[];
+    defaultPaymentMethodId?: string | null;
     setupIntent?: SetupIntentPayload | null;
     orderHistory?: BillingOrder[];
     activePlan?: BillingPlan | null;
@@ -48,11 +50,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const orderHistory = computed(() => props.orderHistory ?? []);
 const activePlan = computed(() => props.activePlan ?? null);
-const paymentMethod = computed(() => props.paymentMethod ?? null);
+const paymentMethods = computed(() => props.paymentMethods ?? []);
+const defaultPaymentMethodId = computed(() => props.defaultPaymentMethodId ?? null);
 
 const hasOrderHistory = computed(() => orderHistory.value.length > 0);
 const hasActivePlan = computed(() => Boolean(activePlan.value));
-const hasPaymentMethod = computed(() => Boolean(paymentMethod.value));
+const hasPaymentMethod = computed(() => paymentMethods.value.length > 0);
 
 const cardHolderName = ref('');
 const stripeError = ref<string | null>(null);
@@ -65,10 +68,11 @@ const paymentForm = useForm({
 const paymentMethodError = computed(() => paymentForm.errors.payment_method ?? null);
 
 const canCollectPayment = computed(
-    () =>
-        !hasPaymentMethod.value &&
-        Boolean(props.stripeKey) &&
-        Boolean(props.setupIntent?.client_secret),
+    () => Boolean(props.stripeKey) && Boolean(props.setupIntent?.client_secret),
+);
+const showPaymentForm = ref(false);
+const shouldMountStripe = computed(
+    () => showPaymentForm.value && canCollectPayment.value,
 );
 
 let stripeInstance: any = null;
@@ -100,7 +104,7 @@ const loadStripeScript = async (): Promise<void> => {
 };
 
 const mountStripeCard = async () => {
-    if (!canCollectPayment.value || stripeReady.value) {
+    if (!shouldMountStripe.value || stripeReady.value) {
         return;
     }
 
@@ -147,7 +151,7 @@ const destroyStripeCard = () => {
 };
 
 const handleAddPaymentMethod = async () => {
-    if (!canCollectPayment.value || !stripeInstance || !stripeCardElement) {
+    if (!shouldMountStripe.value || !stripeInstance || !stripeCardElement) {
         return;
     }
 
@@ -186,6 +190,9 @@ const handleAddPaymentMethod = async () => {
     paymentForm.payment_method = paymentMethodId;
     paymentForm.post(billingRoutes.paymentMethod.store().url, {
         preserveScroll: true,
+        onSuccess: () => {
+            showPaymentForm.value = false;
+        },
         onFinish: () => {
             paymentForm.reset('payment_method');
         },
@@ -193,10 +200,16 @@ const handleAddPaymentMethod = async () => {
 };
 
 onMounted(() => {
-    mountStripeCard();
+    if (shouldMountStripe.value) {
+        mountStripeCard();
+    }
 });
 
-watch(canCollectPayment, (value) => {
+watch(hasPaymentMethod, (value) => {
+    showPaymentForm.value = !value;
+}, { immediate: true });
+
+watch(shouldMountStripe, (value) => {
     if (value) {
         mountStripeCard();
         return;
@@ -208,6 +221,10 @@ watch(canCollectPayment, (value) => {
 onBeforeUnmount(() => {
     destroyStripeCard();
 });
+
+const handleShowPaymentForm = () => {
+    showPaymentForm.value = true;
+};
 </script>
 
 <template>
@@ -294,7 +311,7 @@ onBeforeUnmount(() => {
                     </div>
                     <button
                         type="button"
-                        class="mt-auto inline-flex items-center justify-center rounded-[12px] border border-white/70 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-white uppercase"
+                        class="mt-auto inline-flex items-center justify-center rounded-[12px] border border-white/70 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-accent uppercase"
                     >
                         Cancel subscription
                     </button>
@@ -336,10 +353,17 @@ onBeforeUnmount(() => {
                         <p v-if="!canCollectPayment" class="text-xs text-accent/50">
                             Payment setup is unavailable. Please try again later.
                         </p>
+                        <button
+                            type="button"
+                            class="neu-button active rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in"
+                            @click="handleShowPaymentForm"
+                        >
+                            Add new payment method
+                        </button>
                     </div>
 
                     <form
-                        v-if="canCollectPayment"
+                        v-if="showPaymentForm && canCollectPayment"
                         class="flex flex-col gap-4 rounded-[14px] bg-background p-5 shadow-neu-in"
                         @submit.prevent="handleAddPaymentMethod"
                     >
@@ -382,27 +406,74 @@ onBeforeUnmount(() => {
                     </form>
                 </div>
 
-                <div v-else class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div class="flex items-center gap-4 rounded-[12px] bg-background p-4 shadow-neu-in">
-                        <div class="flex h-10 w-16 items-center justify-center rounded-[10px] bg-white text-sm font-semibold text-[#1a1f36] shadow-neu-in">
-                            {{ paymentMethod.brand ? paymentMethod.brand.toUpperCase() : 'CARD' }}
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-accent">
-                                {{ paymentMethod.brand }} ending in {{ paymentMethod.last4 }}
-                            </span>
-                            <span class="text-xs text-accent/50">
-                                {{ paymentMethod.exp_month && paymentMethod.exp_year ? `Exp ${paymentMethod.exp_month}/${paymentMethod.exp_year}` : 'Default card' }}
-                            </span>
-                        </div>
+                <div v-else class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <p class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
+                            Saved payment methods
+                        </p>
+                        <button
+                            type="button"
+                            class="neu-button active inline-flex items-center justify-center rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in"
+                            @click="handleShowPaymentForm"
+                        >
+                            Add new payment method
+                        </button>
                     </div>
-                    <button
-                        type="button"
-                        class="neu-button active inline-flex items-center justify-center rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in"
-                    >
-                        Remove
-                    </button>
+
+                    <div class="grid gap-3">
+                        <PaymentMethodCard
+                            v-for="method in paymentMethods"
+                            :key="method.id"
+                            :method="method"
+                            :is-default="method.id === defaultPaymentMethodId"
+                        />
+                    </div>
                 </div>
+                <form
+                    v-if="hasPaymentMethod && showPaymentForm && canCollectPayment"
+                    class="mt-4 flex flex-col gap-4 rounded-[14px] bg-background p-5 shadow-neu-in"
+                    @submit.prevent="handleAddPaymentMethod"
+                >
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
+                            Cardholder name
+                        </label>
+                        <input
+                            v-model="cardHolderName"
+                            type="text"
+                            placeholder="Name on card"
+                            class="rounded-[12px] bg-surface px-4 py-3 text-sm text-accent shadow-neu-in outline-none transition focus:ring-2 focus:ring-primary/40"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
+                            Card details
+                        </label>
+                        <div
+                            ref="cardElementRef"
+                            class="min-h-[48px] rounded-[12px] bg-surface px-4 py-3 text-sm text-accent shadow-neu-in"
+                        />
+                    </div>
+                    <p v-if="stripeError" class="text-xs text-primary">
+                        {{ stripeError }}
+                    </p>
+                    <p v-else-if="paymentMethodError" class="text-xs text-primary">
+                        {{ paymentMethodError }}
+                    </p>
+                    <button
+                        type="submit"
+                        :disabled="paymentForm.processing || !stripeReady"
+                        class="neu-button active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in disabled:cursor-not-allowed disabled:text-accent/50"
+                    >
+                        {{ paymentForm.processing ? 'Saving card...' : 'Save card' }}
+                    </button>
+                    <p v-if="!stripeReady" class="text-xs text-accent/50">
+                        Loading secure card form...
+                    </p>
+                </form>
+                <p v-else-if="hasPaymentMethod && showPaymentForm" class="text-xs text-accent/50">
+                    Payment setup is unavailable. Please try again later.
+                </p>
             </section>
         </section>
     </AppLayout>
