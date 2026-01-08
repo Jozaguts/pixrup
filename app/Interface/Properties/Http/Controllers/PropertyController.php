@@ -82,6 +82,16 @@ class PropertyController extends Controller
         $usageSummary = $authedUser
             ? app(UsageSummaryService::class)->forUser($authedUser)->toArray()
             : null;
+        $glowUpUsage = null;
+        if ($usageSummary !== null) {
+            $rendersUsage = $usageSummary['usage']['renders'] ?? null;
+            if (is_array($rendersUsage)) {
+                $glowUpUsage = [
+                    ...$rendersUsage,
+                    'reset_at' => $usageSummary['resets_at'] ?? null,
+                ];
+            }
+        }
 
         $propertyData = [
             'id' => $property->id,
@@ -163,13 +173,7 @@ class PropertyController extends Controller
             ],
             'glowUp' => [
                 'jobs' => $glowUpJobsPayload,
-                'usage' => $usageSummary
-                    ? [
-                        'used' => $usageSummary['used'],
-                        'limit' => $usageSummary['limit'],
-                        'reset_at' => $usageSummary['resets_at'],
-                    ]
-                    : null,
+                'usage' => $glowUpUsage,
                 'options' => [
                     'room_types' => config('glowup.room_types', []),
                     'styles' => config('glowup.styles', []),
