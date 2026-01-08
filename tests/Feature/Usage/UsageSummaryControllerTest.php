@@ -1,33 +1,16 @@
 <?php
 
-use App\Models\Property;
-use App\Models\UsagePropertyMonthly;
 use App\Models\User;
 
 test('usage summary endpoint returns current snapshot', function (): void {
     $user = User::factory()->create([
         'email_verified_at' => now(),
-        'plan' => 'professional',
+        'plan_tier' => 'PRICE_PRO',
+        'used_docs' => 3,
+        'used_renders' => 1,
     ]);
 
-    $property = Property::factory()->create([
-        'user_id' => $user->id,
-        'bedrooms' => 2,
-        'bathrooms' => 3,
-        'square_footage' => 900,
-    ]);
     $periodKey = now('UTC')->format('Y-m');
-
-    UsagePropertyMonthly::query()->create([
-        'account_scope_type' => 'user',
-        'account_scope_id' => $user->id,
-        'user_id' => $user->id,
-        'property_id' => $property->id,
-        'period_key' => $periodKey,
-        'plan_snapshot' => 'professional',
-        'action_first' => 'appraisal',
-        'first_action_at' => now('UTC'),
-    ]);
 
     $this->actingAs($user);
 
@@ -35,7 +18,8 @@ test('usage summary endpoint returns current snapshot', function (): void {
         ->get(route('usage.summary'));
 
     $response->assertOk()
-        ->assertJsonPath('used', 1)
-        ->assertJsonPath('plan.tier', 'professional')
+        ->assertJsonPath('usage.docs.used', 3)
+        ->assertJsonPath('usage.renders.used', 1)
+        ->assertJsonPath('plan.tier', 'PRICE_PRO')
         ->assertJsonPath('period_key', $periodKey);
 });

@@ -1,10 +1,10 @@
 <?php
 
 use App\Application\Properties\PixrWorth\Contracts\WorthProvider;
+use App\Application\Usage\Services\UsagePeriodService;
 use App\Domain\Properties\Entities\PropertyEntity;
 use App\Infrastructure\Property\PixrWorth\Providers\MockWorthProvider;
 use App\Models\Property;
-use App\Models\UsagePropertyMonthly;
 use App\Models\User;
 
 /**
@@ -38,8 +38,12 @@ test('property worth endpoint returns valuation payload', function (): void {
  * Expected Result: Controller responds with Inertia error payload containing worth error message.
  */
 test('property worth endpoint enforces plan limits', function (): void {
-    config(['plans.tiers.professional.limit' => 0]);
-    $user = User::factory()->create(['plan' => 'professional']);
+    $resetsAt = app(UsagePeriodService::class)->current()->resetsAt->toDateTimeString();
+    $user = User::factory()->create([
+        'plan_tier' => 'PRICE_STARTER',
+        'used_docs' => 50,
+        'usage_reset_at' => $resetsAt,
+    ]);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
@@ -87,5 +91,6 @@ test('property worth endpoint reuses cached valuations', function (): void {
     $second->assertStatus(200)
         ->assertJsonPath('props.worth.value', $first->json('props.worth.value'));
 
-    expect(UsagePropertyMonthly::query()->count())->toBe(1);
+    $user->refresh();
+    expect($user->used_docs)->toBe(1);
 });
