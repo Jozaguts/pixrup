@@ -448,7 +448,10 @@ const idleCallout = computed(() =>
                         </li>
                         <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Plan remaining</span>
-                            <span class="text-accent"> {{ remaining }} / {{ usage.total }} </span>
+                            <span class="text-accent">
+                                <span v-if="usage.isUnlimited">Unlimited</span>
+                                <span v-else>{{ remaining ?? 0 }} / {{ usage.limit }}</span>
+                            </span>
                         </li>
                         <li v-if="lastFetchedLabel" class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Last fetched</span>
