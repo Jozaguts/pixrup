@@ -70,9 +70,9 @@ const searchString = ref('');
                 <div
                     class="mb-2 flex items-center justify-between md:flex-col md:gap-1 lg:flex-col lg:items-start lg:gap-1"
                 >
-                    <p class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">Comparables</p>
+                    <p class="text-xs font-semibold tracking-[0.3em] text-accent uppercase">Comparables</p>
                     <span
-                        class="active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-accent ring shadow-neu-in ring-white"
+                        class="active inline-flex items-center rounded-sm px-2 py-1 text-xs font-medium text-accent/50 ring shadow-neu-in ring-white"
                     >
                         {{ comparables.length }} homes
                     </span>

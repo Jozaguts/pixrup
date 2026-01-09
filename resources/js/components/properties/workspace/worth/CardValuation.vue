@@ -78,7 +78,7 @@ const statusLabel = computed(() =>
             class="flex flex-col"
         >
             <p
-                class="text-base font-semibold tracking-[0.32em]  uppercase"
+                class="text-accent font-semibold tracking-[0.32em]  uppercase"
             >
                 Valuation
             </p>
