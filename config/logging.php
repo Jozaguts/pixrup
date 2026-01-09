@@ -74,10 +74,10 @@ return [
         ],
 
         'usage' => [
-            'driver' => 'daily',
+            'driver' => env('LOG_USAGE_CHANNEL', 'daily'),
             'path' => storage_path('logs/usage.log'),
-            'level' => 'info',
-            'days' => 30,
+            'level' => env('LOG_USAGE_LEVEL', 'info'),
+            'days' => env('LOG_USAGE_DAYS', 30),
             'replace_placeholders' => true,
         ],
 
