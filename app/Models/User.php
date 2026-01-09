@@ -31,7 +31,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'provider_id',
         'role',
         'plan_tier',
-        'usage_count',
         'used_docs',
         'used_renders',
         'usage_reset_at',
@@ -49,6 +48,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+        'plan',
+        'usage_count',
     ];
 
     /**
