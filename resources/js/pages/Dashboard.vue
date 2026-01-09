@@ -18,7 +18,6 @@ import CardDisplay from '@/components/card-display.vue';
 import PropertyCard from '@/components/properties/property-card.vue';
 
 type DashboardUser = User & {
-    plan?: string | null;
     plan_tier?: string | null;
     property_usage_limit?: number | null;
     property_usage_count?: number | null;
@@ -35,10 +34,6 @@ const planDefinitions = {
     price_starter: { name: 'Starter' },
     price_pro: { name: 'Pro' },
     price_enterprise: { name: 'Enterprise' },
-    starter: { name: 'Starter' },
-    pro: { name: 'Pro' },
-    professional: { name: 'Professional' },
-    enterprise: { name: 'Enterprise' },
 } as const;
 
 const page = usePage<DashboardPageProps>();
@@ -52,7 +47,7 @@ const docsUsage = computed<UsageBucketPayload | null>(() => planUsage.value?.usa
 const rendersUsage = computed<UsageBucketPayload | null>(() => planUsage.value?.usage?.renders ?? null);
 
 const planKey = computed(() => {
-    const plan = user.value?.plan_tier ?? user.value?.plan;
+    const plan = user.value?.plan_tier;
     return typeof plan === 'string' && plan.length > 0 ? plan.toLowerCase() : 'price_starter';
 });
 
