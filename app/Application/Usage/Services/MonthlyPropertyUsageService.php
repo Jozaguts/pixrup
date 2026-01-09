@@ -2,6 +2,8 @@
 
 namespace App\Application\Usage\Services;
 
+use App\Application\Usage\Contracts\UsageEventLogger;
+use App\Application\Usage\Contracts\UsageUserStore;
 use App\Domain\Properties\Entities\PropertyEntity;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Domain\Usage\Enums\UsageAction;
@@ -11,13 +13,13 @@ use App\Domain\Usage\ValueObjects\UsageScope;
 use App\Domain\Usage\ValueObjects\UsageSummary;
 use App\Models\User;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 readonly class MonthlyPropertyUsageService
 {
     public function __construct(
+        private UsageUserStore $userStore,
+        private UsageEventLogger $eventLogger,
         private PlanResolver $planResolver,
         private UsageScopeResolver $scopeResolver,
         private UsagePeriodService $periodService,
@@ -34,11 +36,8 @@ readonly class MonthlyPropertyUsageService
         $plan = $this->planResolver->resolve($user);
         $bucket = $plan->bucketForAction($action);
 
-        DB::transaction(function () use ($user, $property, $action, $period, $scope, $plan, $bucket): void {
-            $lockedUser = User::query()
-                ->whereKey($user->getKey())
-                ->lockForUpdate()
-                ->firstOrFail();
+        $this->userStore->transaction(function () use ($user, $property, $action, $period, $scope, $plan, $bucket): void {
+            $lockedUser = $this->userStore->lock($user);
 
             $this->refreshWindow($lockedUser, $period);
 
@@ -56,7 +55,7 @@ readonly class MonthlyPropertyUsageService
 
             $nextUsed = $this->incrementBucket($lockedUser, $bucket);
             $lockedUser->usage_reset_at = $period->resetsAt->toDateTimeString();
-            $lockedUser->save();
+            $this->userStore->save($lockedUser);
 
             $this->logOutcome('counted', $scope, $user, $property, $action, $period, [
                 'bucket' => $bucket,
@@ -71,8 +70,9 @@ readonly class MonthlyPropertyUsageService
         $resetAt = $user->usage_reset_at
             ? CarbonImmutable::parse($user->usage_reset_at, 'UTC')
             : null;
+        $now = CarbonImmutable::now('UTC');
 
-        if ($resetAt === null || $resetAt->ne($period->resetsAt)) {
+        if ($resetAt === null || $resetAt->lessThanOrEqualTo($now)) {
             $user->used_docs = 0;
             $user->used_renders = 0;
             $user->usage_reset_at = $period->resetsAt->toDateTimeString();
@@ -108,16 +108,15 @@ readonly class MonthlyPropertyUsageService
         UsagePeriod $period,
         array $context = [],
     ): void {
-        Log::channel('usage')->info('usage.event', [
-            'outcome' => $outcome,
-            'scope_type' => $scope->type,
-            'scope_id' => $scope->id,
-            'user_id' => $user->getKey(),
-            'property_id' => $property->id,
-            'action' => $action->value,
-            'period_key' => $period->key,
-            'context' => $context,
-        ]);
+        $this->eventLogger->log(
+            $outcome,
+            $scope,
+            $user,
+            $property,
+            $action,
+            $period,
+            $context,
+        );
     }
 
     private function limitException(
