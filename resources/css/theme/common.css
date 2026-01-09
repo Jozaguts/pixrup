@@ -334,3 +334,16 @@ Common Styles all over the sites
 .slider-handle.no-transition .handle-circle {
     transition: none !important;
 }
+.soft-table {
+    --easy-table-header-background-color: var(--color-surface);
+    --easy-table-header-font-color: var(--foreground-color);
+    --easy-table-body-row-background-color: var(--color-surface);
+    --easy-table-body-row-hover-background-color: var(--color-surface);
+    --easy-table-row-border: 1px solid var(--color-background); /* light gray border */
+    --easy-table-body-row-height: 72px; /* tall row to fit pdf thumbnail */
+    --easy-table-header-item-padding: 1rem;
+    --easy-table-border: none;
+    --easy-table-body-row-hover-font-color: var(--on-surface-muted);
+    --easy-table-body-row-font-color: var(--on-surface);
+    .easy-data-table__body-cell, .easy-data-table__header-cell {text-align: center !important;};
+}

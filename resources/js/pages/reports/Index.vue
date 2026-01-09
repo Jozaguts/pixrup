@@ -111,19 +111,3 @@
  const searchString = ref('');
  const searchField = ref('name');
 </script>
-
-<style>
-.soft-table {
-    --easy-table-header-background-color: transparent;  /* light bg */
-    --easy-table-header-font-color: #374151;/* dark gray */
-    --easy-table-body-row-background-color: white;
-    --easy-table-row-border: 1px solid #e5e7eb;
-    --easy-table-body-row-height: 72px; /* tall row to fit pdf thumbnail */
-    --easy-table-header-item-padding: 1rem;
-    --easy-table-border: none;
-}
-
-.soft-table td, .pdf-table th {
-    padding: 0.5rem 1rem;
-}
-</style>
