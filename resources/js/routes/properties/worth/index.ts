@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:37
+* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:34
 * @route '/properties/{property}/worth/fetch'
 */
 export const fetch = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ fetch.definition = {
 
 /**
 * @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:37
+* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:34
 * @route '/properties/{property}/worth/fetch'
 */
 fetch.url = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ fetch.url = (args: { property: number | { id: number } } | [property: number | {
 
 /**
 * @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:37
+* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:34
 * @route '/properties/{property}/worth/fetch'
 */
 fetch.post = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ fetch.post = (args: { property: number | { id: number } } | [property: number | 
 
 /**
 * @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:37
+* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:34
 * @route '/properties/{property}/worth/fetch'
 */
 const fetchForm = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ const fetchForm = (args: { property: number | { id: number } } | [property: numb
 
 /**
 * @see \App\Interface\Appraisal\Http\Controllers\PropertyWorthController::fetch
-* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:37
+* @see app/Interface/Appraisal/Http/Controllers/PropertyWorthController.php:34
 * @route '/properties/{property}/worth/fetch'
 */
 fetchForm.post = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
