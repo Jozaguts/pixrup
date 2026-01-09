@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import ToastAlert from '@/components/shared/ToastAlert.vue';
 import { usePlanUsage } from '@/composables/usePlanUsage';
+import http from '@/lib/http';
 import propertiesRoutes from '@/routes/properties';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { AlertCircle, ArrowRight, Gauge, LineChart, Loader2, RefreshCw, ShieldCheck } from 'lucide-vue-next';
-import { computed } from 'vue';
-import type { PropertyWorkspaceProperty, WorkspaceModuleMeta, WorthStatusState, WorthTrendPoint } from './types';
+import { AlertCircle, ArrowRight, Gauge, LineChart, Loader2, RefreshCw } from 'lucide-vue-next';
+import { computed, nextTick, ref, watch } from 'vue';
+import type { PropertyWorkspaceProperty, WorkspaceModuleMeta, WorthResult, WorthStatusState, WorthTrendPoint } from './types';
 import AnalyticsChart from './worth/AnalyticsChart.vue';
 import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
@@ -21,18 +23,28 @@ const props = defineProps<Props>();
 
 const propertyId = computed(() => Number(props.property.id));
 
-const worth = computed(() => props.property.worth ?? null);
+const worthState = ref<WorthResult | null>(props.property.worth ?? null);
+const worth = computed(() => worthState.value);
 const hasWorth = computed(() => worth.value !== null && worth.value !== undefined);
 const hasComparables = computed(() => worth.value?.comparables.some((comp) => comp.sale_price !== null));
 
 const trendPoints = computed<WorthTrendPoint[]>(() => worth.value?.trend ?? []);
 const hasTrend = computed(() => trendPoints.value.length > 0);
 
-const fetchForm = useForm({});
 const reportForm = useForm({});
-const isFetchLoading = computed(() => fetchForm.processing);
+const isFetchLoading = ref(false);
 const isReportLoading = computed(() => reportForm.processing);
 const isBusy = computed(() => isFetchLoading.value || isReportLoading.value);
+const isWorthLoading = computed(() => isFetchLoading.value);
+
+watch(
+    () => props.property.worth,
+    (value) => {
+        if (!isFetchLoading.value) {
+            worthState.value = value ?? null;
+        }
+    },
+);
 
 const { usage, remaining, limitExceeded: isUsageLimitReached, percentUsed, usageLabel, helperCopy } = usePlanUsage();
 
@@ -42,8 +54,17 @@ const usageMeterStyle = computed(() => ({
 
 const page = usePage();
 const flashStatus = computed(() => page.props.flash?.status ?? null);
+const fetchErrorMessage = ref<string | null>(null);
+const fetchErrorCode = ref<string | null>(null);
+const fetchSuccessMessage = ref<string | null>(null);
+const showFetchErrorToast = ref(false);
+const showSuccessToast = ref(false);
 
 const successMessage = computed(() => {
+    if (fetchSuccessMessage.value) {
+        return fetchSuccessMessage.value;
+    }
+
     switch (flashStatus.value) {
         case 'worth-ready':
             return 'Appraisal completed successfully 🎯';
@@ -56,6 +77,10 @@ const successMessage = computed(() => {
 
 const errors = computed(() => page.props.errors ?? {});
 const errorMessage = computed(() => {
+    if (fetchErrorMessage.value) {
+        return fetchErrorMessage.value;
+    }
+
     const error = errors.value?.worth;
     if (typeof error === 'string' && error.trim().length > 0) {
         return error;
@@ -106,7 +131,7 @@ const isStale = computed(() => {
 });
 
 const state = computed<WorthStatusState>(() => {
-    if (isBusy.value) {
+    if (isWorthLoading.value) {
         return 'loading';
     }
 
@@ -155,11 +180,9 @@ const stateSubtitle = computed(() => {
     }
 });
 
-const showSuccessBanner = computed(
-    () => (state.value === 'success' || state.value === 'cached') && !!successMessage.value,
+const isFetchDisabled = computed(
+    () => isWorthLoading.value || isUsageLimitReached.value || Number.isNaN(propertyId.value),
 );
-
-const isFetchDisabled = computed(() => isBusy.value || isUsageLimitReached.value || Number.isNaN(propertyId.value));
 
 const isReportDisabled = computed(() => isBusy.value || !hasWorth.value || Number.isNaN(propertyId.value));
 
@@ -174,7 +197,34 @@ const hasRentalValue = computed(
     () => rentalValue.value !== null && rentalValue.value !== undefined && rentalValue.value > 0,
 );
 
-const handleFetch = () => {
+const normalizeWorthPayload = (payload: Partial<WorthResult>): WorthResult => ({
+    id: payload.id ?? worthState.value?.id ?? 0,
+    value: payload.value ?? null,
+    value_low: payload.value_low ?? null,
+    value_high: payload.value_high ?? null,
+    confidence: payload.confidence ?? null,
+    comparables: payload.comparables ?? [],
+    trend: payload.trend ?? worthState.value?.trend ?? [],
+    provider: payload.provider ?? null,
+    fetched_at: payload.fetched_at ?? null,
+    cached_at: payload.cached_at ?? null,
+    rental_value: payload.rental_value ?? worthState.value?.rental_value ?? null,
+});
+
+const triggerErrorToast = (message: string, code: string | null = null): void => {
+    fetchErrorMessage.value = message;
+    fetchErrorCode.value = code;
+    showFetchErrorToast.value = false;
+
+    nextTick(() => {
+        showFetchErrorToast.value = true;
+        window.setTimeout(() => {
+            showFetchErrorToast.value = false;
+        }, 5200);
+    });
+};
+
+const handleFetch = async () => {
     if (isFetchDisabled.value) {
         return;
     }
@@ -182,9 +232,34 @@ const handleFetch = () => {
     const route = propertiesRoutes.worth.fetch({
         property: propertyId.value,
     });
-    fetchForm.submit(route.method, route.url, {
-        preserveScroll: true,
-    });
+
+    isFetchLoading.value = true;
+    fetchErrorMessage.value = null;
+    fetchErrorCode.value = null;
+    fetchSuccessMessage.value = null;
+    showFetchErrorToast.value = false;
+
+    try {
+        const response = await http.post(route.url);
+        const payload = response?.data ?? {};
+        if (!payload?.worth) {
+            throw new Error('Worth payload missing');
+        }
+
+        worthState.value = normalizeWorthPayload(payload.worth as Partial<WorthResult>);
+        fetchSuccessMessage.value = 'Appraisal completed successfully 🎯';
+    } catch (error: unknown) {
+        const response = (error as { response?: { data?: { message?: string; code?: string } } })?.response;
+        const message =
+            typeof response?.data?.message === 'string' && response.data.message.trim().length > 0
+                ? response.data.message
+                : 'We couldn’t retrieve data. Please try again later.';
+        const code = typeof response?.data?.code === 'string' ? response.data.code : null;
+
+        triggerErrorToast(message, code);
+    } finally {
+        isFetchLoading.value = false;
+    }
 };
 
 const handleRetry = () => {
@@ -234,10 +309,44 @@ const idleCallout = computed(() =>
         ? 'Usage limit reached — upgrade your plan to fetch a fresh valuation.'
         : 'No valuation yet — click “Fetch Valuation” to pull the latest data.',
 );
+
+watch(successMessage, (value, previous) => {
+    if (!value || value === previous) {
+        return;
+    }
+
+    showSuccessToast.value = false;
+
+    nextTick(() => {
+        showSuccessToast.value = true;
+        window.setTimeout(() => {
+            showSuccessToast.value = false;
+        }, 4200);
+    });
+});
 </script>
 
 <template>
     <div class="mt-4 flex flex-col gap-6 text-accent">
+        <ToastAlert
+            :visible="showFetchErrorToast"
+            type="error"
+            :title="fetchErrorCode === 'limit' ? 'Plan limit reached' : 'Unable to fetch valuation'"
+            :msg="errorDisplayMessage"
+            :timer="5200"
+            :show-confirm-button="false"
+            :show-close-button="true"
+            :redirect-url="fetchErrorCode === 'limit' ? upgradeHref : undefined"
+        />
+        <ToastAlert
+            :visible="showSuccessToast"
+            type="success"
+            title="Appraisal ready"
+            :msg="successMessage ?? ''"
+            :timer="4200"
+            :show-confirm-button="false"
+            :show-close-button="true"
+        />
         <header class="flex flex-col gap-5 rounded-[12px] transition-all duration-200 ease-in-out md:p-6 lg:p-6">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div class="space-y-2">
@@ -253,7 +362,8 @@ const idleCallout = computed(() =>
                 <div class="flex w-full flex-col lg:max-w-sm">
                     <button
                         type="button"
-                        class="neu-button flex transform cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent"
+                        :disabled="isFetchDisabled"
+                        class="neu-button flex transform cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent disabled:cursor-not-allowed disabled:opacity-60"
                         @click="handleFetch"
                     >
                         <component
@@ -268,18 +378,17 @@ const idleCallout = computed(() =>
                 </div>
             </div>
 
-            <transition name="fade">
-                <div
-                    v-if="showSuccessBanner"
-                    class="flex items-center gap-3 rounded-[12px] bg-surface px-4 py-3 text-sm text-accent"
-                >
-                    <ShieldCheck class="h-5 w-5 text-[#1dbf7a]" />
-                    <span>{{ successMessage }}</span>
-                </div>
-            </transition>
-
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,320px)_1fr]">
-                <div class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent/50">
+                <div
+                    v-if="isWorthLoading"
+                    class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent/50"
+                >
+                    <div class="h-4 w-28 animate-pulse rounded-full bg-surface shadow-neu-in" />
+                    <div class="h-3 w-full animate-pulse rounded-full bg-surface shadow-neu-in" />
+                    <div class="h-4 w-48 animate-pulse rounded-full bg-surface shadow-neu-in" />
+                    <div class="h-8 w-24 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                </div>
+                <div v-else class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent/50">
                     <div class="flex items-center justify-between text-xs font-semibold tracking-[0.3em] uppercase">
                         <span>Plan usage</span>
                         <span class="inline-flex items-center gap-2">
@@ -331,9 +440,14 @@ const idleCallout = computed(() =>
                     </div>
                 </header>
 
-                <div v-if="state === 'loading'" class="space-y-4">
-                    <div class="h-40 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                    <div class="h-32 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                <div v-if="isWorthLoading" class="space-y-4">
+                    <div class="grid gap-4 rounded-[12px] lg:grid-cols-[1.3fr_1fr]">
+                        <div class="h-40 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                        <div class="h-40 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    </div>
+                    <div class="h-36 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    <div class="h-44 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    <div class="h-20 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
                 </div>
 
                 <div
@@ -429,7 +543,14 @@ const idleCallout = computed(() =>
                         </div>
                     </header>
 
-                    <ul class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
+                    <div v-if="isWorthLoading" class="grid gap-3">
+                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    </div>
+                    <ul v-else class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
                         <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
                             <span>Status</span>
                             <span class="text-[#7c4dff]">{{ moduleStatusLabel }}</span>
@@ -459,7 +580,14 @@ const idleCallout = computed(() =>
                         </li>
                     </ul>
                 </section>
+                <div v-if="isWorthLoading" class="flex flex-col gap-3 px-6 pb-6">
+                    <div class="h-5 w-40 animate-pulse rounded-full bg-surface shadow-neu-in" />
+                    <div class="h-8 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    <div class="h-8 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                    <div class="h-8 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                </div>
                 <PropertyDetails
+                    v-else
                     :beds="subjectDetails.beds"
                     :baths="subjectDetails.baths"
                     :squareFootage="subjectDetails.squareFootage"
@@ -474,12 +602,6 @@ const idleCallout = computed(() =>
                     data.
                 </div>
 
-                <div
-                    v-if="errorMessage && state !== 'loading'"
-                    class="rounded-[12px] bg-[#fff5f5] p-4 text-sm text-[#9a1b1b] shadow-[8px_8px_22px_rgba(244,200,200,0.55),-8px_-8px_22px_rgba(255,255,255,0.93)]"
-                >
-                    {{ errorMessage }}
-                </div>
             </aside>
         </section>
     </div>
