@@ -8,8 +8,8 @@ use App\Models\Property;
 use App\Models\User;
 
 /**
- * Test that the worth fetch endpoint returns valuation payload via Inertia.
- * Expected Result: Response status 200 with component props containing worth data keys.
+ * Test that the worth fetch endpoint returns valuation payload via JSON.
+ * Expected Result: Response status 200 with JSON payload containing worth data keys.
  */
 test('property worth endpoint returns valuation payload', function (): void {
     $user = User::factory()->create();
@@ -18,24 +18,17 @@ test('property worth endpoint returns valuation payload', function (): void {
 
     app()->instance(WorthProvider::class, new MockWorthProvider());
 
-    $response = $this->withHeaders([
-        'X-Inertia' => 'true',
-        'X-Inertia-Version' => 'testing',
-        'Accept' => 'application/json',
-    ])->post(route('properties.worth.fetch', ['property' => $property->id]));
+    $response = $this->post(route('properties.worth.fetch', ['property' => $property->id]));
 
     $response->assertStatus(200)
         ->assertJsonStructure([
-            'component',
-            'props' => [
-                'worth' => ['value', 'value_low', 'value_high', 'confidence', 'comparables', 'provider', 'fetched_at'],
-            ],
+            'worth' => ['value', 'value_low', 'value_high', 'confidence', 'comparables', 'provider', 'fetched_at'],
         ]);
 });
 
 /**
  * Test that exceeding plan limits returns an HTTP 403 response.
- * Expected Result: Controller responds with Inertia error payload containing worth error message.
+ * Expected Result: Controller responds with JSON error payload containing worth error message.
  */
 test('property worth endpoint enforces plan limits', function (): void {
     $resetsAt = app(UsagePeriodService::class)->current()->resetsAt->toDateTimeString();
@@ -50,14 +43,10 @@ test('property worth endpoint enforces plan limits', function (): void {
 
     app()->instance(WorthProvider::class, new MockWorthProvider());
 
-    $response = $this->withHeaders([
-        'X-Inertia' => 'true',
-        'X-Inertia-Version' => 'testing',
-        'Accept' => 'application/json',
-    ])->post(route('properties.worth.fetch', ['property' => $property->id]));
+    $response = $this->post(route('properties.worth.fetch', ['property' => $property->id]));
 
     $response->assertStatus(403)
-        ->assertJsonPath('props.errors.worth', 'You have reached your monthly property usage limit.');
+        ->assertJsonPath('message', 'You have reached your monthly property usage limit.');
 });
 
 /**
@@ -78,18 +67,12 @@ test('property worth endpoint reuses cached valuations', function (): void {
         ->andReturn($sampleProvider->appraisal($property->toEntity()));
     app()->instance(WorthProvider::class, $provider);
 
-    $headers = [
-        'X-Inertia' => 'true',
-        'X-Inertia-Version' => 'testing',
-        'Accept' => 'application/json',
-    ];
-
-    $first = $this->withHeaders($headers)->post(route('properties.worth.fetch', ['property' => $property->id]));
+    $first = $this->post(route('properties.worth.fetch', ['property' => $property->id]));
     $first->assertStatus(200);
 
-    $second = $this->withHeaders($headers)->post(route('properties.worth.fetch', ['property' => $property->id]));
+    $second = $this->post(route('properties.worth.fetch', ['property' => $property->id]));
     $second->assertStatus(200)
-        ->assertJsonPath('props.worth.value', $first->json('props.worth.value'));
+        ->assertJsonPath('worth.value', $first->json('worth.value'));
 
     $user->refresh();
     expect($user->used_docs)->toBe(1);
