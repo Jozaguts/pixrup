@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-    Activity,
-    ClipboardList,
-    Home,
-    MapPin,
-    RefreshCw,
-    ShieldAlert,
-    Waves,
-} from 'lucide-vue-next';
+import { Activity, ClipboardList, Home, MapPin, RefreshCw, ShieldAlert, Waves } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
 import propertiesRoutes from '@/routes/properties';
@@ -266,23 +258,9 @@ function toTimestamp(value?: string): number {
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 text-accent">
-        <header class="flex flex-col gap-4 rounded-[28px] p-6">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div class="space-y-1">
-                    <h2 class="text-lg font-semibold tracking-tight">Workspace Overview</h2>
-                    <p class="text-sm text-accent/50">
-                        Centralize property intelligence before diving into specific tools.
-                    </p>
-                </div>
-                <div class="flex items-center gap-3 text-xs text-accent/50">
-                    <span class="font-medium">{{ lastRunCopy }}</span>
-                </div>
-            </div>
-        </header>
-
+    <div class="pt-6 flex flex-col gap-6 text-accent">
         <section class="grid h-100 gap-6">
-            <article class="npo-form-shadow flex flex-col gap-6 rounded-[18px] p-6 text-accent">
+            <article class="npo-form-shadow flex flex-col gap-6 rounded-[12px] p-6 text-accent">
                 <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div class="space-y-1">
                         <h3 class="text-lg font-semibold">Key Investment Signals</h3>
@@ -290,7 +268,7 @@ function toTimestamp(value?: string): number {
                             Blend of valuation, renovation and market sentiment across modules.
                         </p>
                     </div>
-                    <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex flex-wrap items-end">
                         <button
                             type="button"
                             :disabled="loading"
@@ -377,7 +355,7 @@ function toTimestamp(value?: string): number {
                                             </span>
                                             <span
                                                 v-if="locationByLabel.get('MSA')?.detail"
-                                                class="text-xs text-accent/50"
+                                                class="text-xs break-words text-accent/50"
                                             >
                                                 {{ locationByLabel.get('MSA')?.detail }}
                                             </span>
@@ -405,7 +383,7 @@ function toTimestamp(value?: string): number {
                                             </span>
                                             <span
                                                 v-if="locationByLabel.get('County')?.detail"
-                                                class="text-xs text-accent/50"
+                                                class="text-xs break-words text-accent/50"
                                             >
                                                 {{ locationByLabel.get('County')?.detail }}
                                             </span>
@@ -437,15 +415,19 @@ function toTimestamp(value?: string): number {
                                             <div
                                                 v-for="sale in recentSales"
                                                 :key="sale.key"
-                                                class="bg-background p-3 border-b-1 border-accent/20"
+                                                class="border-b-1 border-accent/20 bg-background p-3"
                                             >
-                                                <div class="flex items-center justify-between gap-4">
+                                                <div
+                                                    class="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                                                >
                                                     <div class="min-w-0">
                                                         <p class="text-xs text-accent/50">{{ sale.dateLabel }}</p>
-                                                        <p class="truncate text-sm text-accent">{{ sale.parties }}</p>
+                                                        <p class="text-sm break-words text-accent sm:truncate">
+                                                            {{ sale.parties }}
+                                                        </p>
                                                     </div>
                                                     <span
-                                                        class="px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-accent uppercase"
+                                                        class="self-start px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-accent uppercase sm:self-center"
                                                     >
                                                         {{ sale.typeLabel }}
                                                     </span>
@@ -458,20 +440,24 @@ function toTimestamp(value?: string): number {
                                     <div class="h-px w-full"></div>
 
                                     <div class="flex flex-col gap-3">
-                                        <div class="flex items-start justify-between text-xs p-3 ">
-                                            <span class="text-accent uppercase">FEMA declarations</span>
-                                            <span class="text-xs font-semibold text-accent tracking-[0.2em]"
-                                                >{{ femaCount }} events</span
+                                        <div class="flex flex-wrap items-center justify-between gap-2 p-3 text-xs">
+                                            <span class="min-w-0 break-words text-accent uppercase"
+                                                >FEMA declarations</span
                                             >
+                                            <span class="text-xs font-semibold tracking-[0.2em] text-accent">
+                                                {{ femaCount }} events
+                                            </span>
                                         </div>
                                         <div v-if="latestFema" class="rounded-[12px] bg-background p-3">
-                                            <div class="flex items-center justify-between gap-4">
+                                            <div
+                                                class="flex flex-wrap items-center justify-between gap-2 sm:flex-nowrap sm:gap-4"
+                                            >
                                                 <div class="min-w-0">
                                                     <p class="text-xs text-accent/50">{{ latestFemaDate }}</p>
                                                     <p class="truncate text-sm text-accent">{{ latestFemaTitle }}</p>
                                                 </div>
                                                 <span
-                                                    class="shrink-0  px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-accent uppercase "
+                                                    class="px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-accent uppercase"
                                                 >
                                                     {{ latestFemaBadge }}
                                                 </span>
