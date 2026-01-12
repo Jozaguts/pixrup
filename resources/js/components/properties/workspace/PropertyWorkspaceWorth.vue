@@ -6,7 +6,13 @@ import propertiesRoutes from '@/routes/properties';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { AlertCircle, ArrowRight, Gauge, LineChart, Loader2, RefreshCw } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
-import type { PropertyWorkspaceProperty, WorkspaceModuleMeta, WorthResult, WorthStatusState, WorthTrendPoint } from './types';
+import type {
+    PropertyWorkspaceProperty,
+    WorkspaceModuleMeta,
+    WorthResult,
+    WorthStatusState,
+    WorthTrendPoint,
+} from './types';
 import AnalyticsChart from './worth/AnalyticsChart.vue';
 import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
@@ -347,98 +353,83 @@ watch(successMessage, (value, previous) => {
             :show-confirm-button="false"
             :show-close-button="true"
         />
-        <header class="flex flex-col gap-5 rounded-[12px] transition-all duration-200 ease-in-out md:p-6 lg:p-6">
-            <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div class="space-y-2">
-                    <p class="text-xs tracking-[0.28em] text-[#7c4dff] uppercase">AI Appraisal</p>
-                    <h2 class="text-2xl font-semibold tracking-tight text-accent">
-                        Instant property valuation and market confidence.
-                    </h2>
-                    <p class="text-sm text-accent/50">
-                        Fetch live AVM data, comps, and confidence scores with a single click.
-                    </p>
-                </div>
-
-                <div class="flex w-full flex-col lg:max-w-sm">
-                    <button
-                        type="button"
-                        :disabled="isFetchDisabled"
-                        class="neu-button flex transform cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent disabled:cursor-not-allowed disabled:opacity-60"
-                        @click="handleFetch"
-                    >
-                        <component
-                            :is="isFetchLoading ? Loader2 : RefreshCw"
-                            :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
-                        />
-                        {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
-                    </button>
-                    <div v-if="lastFetchedLabel" class="mt-2 text-right text-sm text-accent/50">
-                        Last fetched on {{ lastFetchedLabel }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,320px)_1fr]">
-                <div
-                    v-if="isWorthLoading"
-                    class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent/50"
-                >
-                    <div class="h-4 w-28 animate-pulse rounded-full bg-surface shadow-neu-in" />
-                    <div class="h-3 w-full animate-pulse rounded-full bg-surface shadow-neu-in" />
-                    <div class="h-4 w-48 animate-pulse rounded-full bg-surface shadow-neu-in" />
-                    <div class="h-8 w-24 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                </div>
-                <div v-else class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent/50">
-                    <div class="flex items-center justify-between text-xs font-semibold tracking-[0.3em] uppercase">
-                        <span>Plan usage</span>
-                        <span class="inline-flex items-center gap-2">
-                            <Gauge class="h-4 w-4 text-[#7c4dff]" />
-                            {{ usageLabel }}
-                        </span>
-                    </div>
-
-                    <div class="relative h-3 w-full overflow-hidden rounded-full bg-surface shadow-neu-in">
-                        <div
-                            class="h-full rounded-[12px] bg-gradient-to-r from-[#7c4dff] to-[#16b1ff]"
-                            :style="usageMeterStyle"
-                        />
-                    </div>
-                    <p class="text-xs text-accent/50">
-                        {{ helperCopy }}
-                    </p>
-                    <a
-                        v-if="isUsageLimitReached"
-                        :href="upgradeHref"
-                        class="inline-flex items-center justify-center gap-2 self-start rounded-[12px] bg-background px-4 py-2 text-xs font-semibold text-[#7c4dff] shadow-[8px_8px_20px_rgba(210,212,226,0.5),-8px_-8px_20px_rgba(255,255,255,0.95)] transition-all duration-200 ease-in-out hover:shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
-                    >
-                        Upgrade plan
-                        <ArrowRight class="h-4 w-4" />
-                    </a>
-                </div>
-            </div>
-        </header>
-
         <section class="grid gap-6 lg:grid-cols-2">
             <article class="npo-form-shadow flex flex-col gap-5 rounded-[12px] p-6 text-sm text-accent">
                 <header class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                     <div class="flex w-full flex-col">
                         <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-lg font-semibold text-accent">
-                                    {{ stateTitle }}
-                                </h3>
-                                <p class="text-sm text-accent/50">
-                                    {{ stateSubtitle }}
-                                </p>
+                            <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                                <div class="space-y-2">
+                                    <p class="text-xs tracking-[0.28em] text-[#7c4dff] uppercase">AI Appraisal</p>
+                                    <h2 class="text-2xl font-semibold tracking-tight text-accent">
+                                        Instant property valuation and market confidence.
+                                    </h2>
+                                    <p class="text-sm text-accent/50">
+                                        Fetch live AVM data, comps, and confidence scores with a single click.
+                                    </p>
+                                </div>
                             </div>
-                            <div
-                                class="pointer-events-none flex size-12 items-center justify-center rounded-full text-accent shadow-neu-in"
-                            >
-                                <LineChart class="h-6 w-6" />
+                            <div class="flex w-full flex-col lg:max-w-sm">
+                                <button
+                                    type="button"
+                                    :disabled="isFetchDisabled"
+                                    class="neu-button flex transform cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent disabled:cursor-not-allowed disabled:opacity-60"
+                                    @click="handleFetch"
+                                >
+                                    <component
+                                        :is="isFetchLoading ? Loader2 : RefreshCw"
+                                        :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
+                                    />
+                                    {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
+                                </button>
+                                <div v-if="lastFetchedLabel" class="mt-2 text-right text-sm text-accent/50">
+                                    Last fetched on {{ lastFetchedLabel }}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </header>
+                <div class="flex flex-col gap-5 rounded-[12px] transition-all duration-200 ease-in-out">
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,420px)_1fr]">
+                        <div
+                            v-if="isWorthLoading"
+                            class="npo-form-shadow flex flex-col rounded-[12px] text-xs text-accent"
+                        >
+                            <div class="h-4 w-28 animate-pulse rounded-full bg-surface shadow-neu-in" />
+                            <div class="h-3 w-full animate-pulse rounded-full bg-surface shadow-neu-in" />
+                            <div class="h-4 w-48 animate-pulse rounded-full bg-surface shadow-neu-in" />
+                            <div class="h-8 w-24 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
+                        </div>
+                        <div v-else class="npo-form-shadow flex flex-col gap-3 rounded-[12px] p-4 text-xs text-accent">
+                            <div
+                                class="flex items-center justify-between text-xs font-semibold tracking-[0.3em] uppercase"
+                            >
+                                <span>Plan usage</span>
+                                <span class="inline-flex items-center gap-2">
+                                    <Gauge class="h-4 w-4 text-[#7c4dff]" />
+                                    {{ usageLabel }}
+                                </span>
+                            </div>
+                            <div class="relative h-3 w-full overflow-hidden rounded-full bg-surface shadow-neu-in">
+                                <div
+                                    class="h-full rounded-[12px] bg-gradient-to-r from-[#7c4dff] to-[#16b1ff]"
+                                    :style="usageMeterStyle"
+                                />
+                            </div>
+                            <p class="text-xs text-accent/50">
+                                {{ helperCopy }}
+                            </p>
+                            <a
+                                v-if="isUsageLimitReached"
+                                :href="upgradeHref"
+                                class="inline-flex items-center justify-center gap-2 self-start rounded-[12px] bg-background px-4 py-2 text-xs font-semibold text-[#7c4dff] shadow-[8px_8px_20px_rgba(210,212,226,0.5),-8px_-8px_20px_rgba(255,255,255,0.95)] transition-all duration-200 ease-in-out hover:shadow-[inset_8px_8px_18px_rgba(210,212,226,0.5),inset_-8px_-8px_18px_rgba(255,255,255,0.9)]"
+                            >
+                                Upgrade plan
+                                <ArrowRight class="h-4 w-4" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <div v-if="isWorthLoading" class="space-y-4">
                     <div class="grid gap-4 rounded-[12px] lg:grid-cols-[1.3fr_1fr]">
@@ -449,7 +440,6 @@ watch(successMessage, (value, previous) => {
                     <div class="h-44 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
                     <div class="h-20 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
                 </div>
-
                 <div
                     v-else-if="state === 'error'"
                     class="flex flex-col gap-4 rounded-[12px] bg-surface p-6 shadow-neu-in"
@@ -461,7 +451,7 @@ watch(successMessage, (value, previous) => {
 
                     <button
                         type="button"
-                        class="inline-flex items-center gap-2 self-start rounded-[12px] bg-sruface px-4 py-2 text-sm font-semibold text-[#9a1b1b]"
+                        class="bg-sruface inline-flex items-center gap-2 self-start rounded-[12px] px-4 py-2 text-sm font-semibold text-[#9a1b1b]"
                         @click="handleRetry"
                     >
                         Retry
@@ -470,15 +460,6 @@ watch(successMessage, (value, previous) => {
                 </div>
                 <template v-else-if="state === 'success' || state === 'cached'">
                     <div class="grid gap-4 rounded-[12px] lg:grid-cols-[1.3fr_1fr]">
-                        <CardValuation
-                            :value="worth?.value ?? null"
-                            :value-low="valueLow"
-                            :value-high="valueHigh"
-                            :confidence="confidence"
-                            :fetched-at="fetchedAt"
-                            :is-stale="state === 'cached'"
-                        />
-
                         <RentalValueCard v-if="hasRentalValue" :rental-value="rentalValue" />
                         <div v-else class="flex flex-col gap-2 rounded-[12px] text-sm text-accent/50">
                             <p class="text-base font-semibold tracking-[0.3em] text-accent uppercase">Rental value</p>
@@ -490,8 +471,6 @@ watch(successMessage, (value, previous) => {
                     </div>
 
                     <AnalyticsChart v-if="hasTrend" :points="trendPoints" />
-
-                    <ComparablesTable :comparables="worth?.comparables ?? []" :is-loading="!worth?.comparables" />
 
                     <div class="flex flex-col gap-3 rounded-[12px] p-5 text-sm text-accent/50">
                         <p class="text-sm">
@@ -510,7 +489,6 @@ watch(successMessage, (value, previous) => {
                         </button>
                     </div>
                 </template>
-
                 <div
                     v-else
                     class="flex flex-col gap-3 rounded-[12px] bg-[#f4f5fa] p-6 text-sm text-accent/50 shadow-neu-in"
@@ -530,78 +508,8 @@ watch(successMessage, (value, previous) => {
                     </button>
                 </div>
             </article>
-
-            <aside class="npo-form-shadow flex flex-col gap-4 rounded-[12px]">
-                <section class="flex flex-col gap-4 p-6">
-                    <header class="flex items-center justify-between">
-                        <h3 class="text-base font-semibold text-accent">Module signals</h3>
-
-                        <div
-                            class="pointer-events-none flex size-12 items-center justify-center rounded-full text-accent shadow-neu-in"
-                        >
-                            <RefreshCw class="h-5 w-5" />
-                        </div>
-                    </header>
-
-                    <div v-if="isWorthLoading" class="grid gap-3">
-                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                        <div class="h-10 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                    </div>
-                    <ul v-else class="grid gap-3 text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">
-                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
-                            <span>Status</span>
-                            <span class="text-[#7c4dff]">{{ moduleStatusLabel }}</span>
-                        </li>
-                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
-                            <span>Local state</span>
-                            <span class="text-accent">{{ state }}</span>
-                        </li>
-                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
-                            <span>Comparables</span>
-                            <span class="text-accent">{{ worth?.comparables?.length }}</span>
-                        </li>
-                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
-                            <span>Trend points</span>
-                            <span class="text-accent">{{ trendCount }}</span>
-                        </li>
-                        <li class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
-                            <span>Plan remaining</span>
-                            <span class="text-accent">
-                                <span v-if="usage.isUnlimited">Unlimited</span>
-                                <span v-else>{{ remaining ?? 0 }} / {{ usage.limit }}</span>
-                            </span>
-                        </li>
-                        <li v-if="lastFetchedLabel" class="flex justify-between rounded-[12px] p-4 shadow-neu-in">
-                            <span>Last fetched</span>
-                            <span class="text-accent">{{ lastFetchedLabel }}</span>
-                        </li>
-                    </ul>
-                </section>
-                <div v-if="isWorthLoading" class="flex flex-col gap-3 px-6 pb-6">
-                    <div class="h-5 w-40 animate-pulse rounded-full bg-surface shadow-neu-in" />
-                    <div class="h-8 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                    <div class="h-8 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                    <div class="h-8 animate-pulse rounded-[12px] bg-surface shadow-neu-in" />
-                </div>
-                <PropertyDetails
-                    v-else
-                    :beds="subjectDetails.beds"
-                    :baths="subjectDetails.baths"
-                    :squareFootage="subjectDetails.squareFootage"
-                    :propertyType="subjectDetails.propertyType"
-                />
-
-                <div
-                    v-if="!hasComparables && state === 'success'"
-                    class="rounded-[12px] bg-[#fffdf5] p-5 text-sm text-[#92400e] shadow-[12px_12px_28px_rgba(240,213,166,0.45),-12px_-12px_28px_rgba(255,250,232,0.95)]"
-                >
-                    Valuation delivered, but comparables are pending. Refresh in a few minutes to load nearby sales
-                    data.
-                </div>
-
+            <aside class="flex flex-col gap-4 rounded-[12px]">
+                <ComparablesTable :comparables="worth?.comparables ?? []" :is-loading="!worth?.comparables" />
             </aside>
         </section>
     </div>

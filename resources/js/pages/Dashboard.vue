@@ -225,7 +225,7 @@ const visitLink = (link?: string) => {
 
             <DashboardSection class="flex flex-col items-stretch gap-6 md:flex-row lg:flex-row">
                 <!-- Quick Actions -->
-                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 shadow-neu-in">
+                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 npo-form-shadow">
                     <h3 class="text-sm font-semibold tracking-wide text-accent uppercase">Quick actions</h3>
                     <button
                         type="button"
@@ -249,7 +249,7 @@ const visitLink = (link?: string) => {
                 </div>
 
                 <!-- Plan usage -->
-                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 shadow-neu-in sm:w-full md:flex-1">
+                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 npo-form-shadow sm:w-full md:flex-1">
                     <h3 class="text-sm font-semibold tracking-wide text-accent uppercase">Plan usage</h3>
                     <div class="flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
@@ -273,7 +273,7 @@ const visitLink = (link?: string) => {
                         <div
                             v-for="bucket in usageBuckets"
                             :key="bucket.key"
-                            class="flex flex-col gap-3 rounded-[12px] bg-surface p-4 shadow-neu-in"
+                            class="flex flex-col gap-3 rounded-[12px] p-4   shadow-neu-out"
                         >
                             <div class="flex items-center justify-between">
                                 <p class="text-xs tracking-wide text-accent uppercase">{{ bucket.stats.label }}</p>
@@ -281,7 +281,7 @@ const visitLink = (link?: string) => {
                                     {{ bucket.stats.used }} / {{ bucket.stats.limitLabel }}
                                 </p>
                             </div>
-                            <div class="relative h-3 w-full overflow-hidden rounded-full bg-surface shadow-neu-in">
+                            <div class="relative h-3 w-full overflow-hidden rounded-full bg-background shadow-neu-in">
                                 <div
                                     class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r transition-all duration-500 ease-out"
                                     :class="bucket.stats.progressGradient"
@@ -293,7 +293,7 @@ const visitLink = (link?: string) => {
                                 <span>{{ bucket.stats.remainingText }}</span>
                             </div>
                             <p
-                                class="ring-accent-300 rounded-[12px] bg-surface p-3 px-4 text-sm font-medium text-accent/50 ring-1 shadow-neu-in"
+                                class="ring-accent-300 rounded-[12px] bg-background p-3 px-4 text-sm font-medium text-accent/50 ring-1 shadow-neu-in"
                                 :class="bucket.stats.textClass"
                             >
                                 {{ bucket.stats.message }}
