@@ -55,7 +55,15 @@ return [
         'model' => env('REPLICATE_MODEL', 'seedream-4'),
         'prompt_template' => env(
             'REPLICATE_PROMPT_TEMPLATE',
-            'Photograph of a {room} upgraded to {style} finish, interior design render, natural lighting, high detail'
+            "Photorealistic renovation of the provided reference photo ({room}) in {style} style. " .
+            "CRITICAL: preserve the exact camera viewpoint, lens perspective, vanishing point, depth, and room proportions. " .
+            "Do not change layout or geometry: keep walls, floor/ceiling boundaries, doors, windows, hallway length and angles identical. " .
+            "Only upgrade materials, finishes, lighting, and decor. Natural lighting, realistic shadows, high detail."
+        ),
+        'negative_prompt_template' => env(
+            'REPLICATE_NEGATIVE_PROMPT_TEMPLATE',
+            "warped geometry, incorrect perspective, fisheye, bent lines, crooked walls, stretched hallway, " .
+            "extra doors, extra windows, duplicated objects, floating furniture, unrealistic scale, text, watermark, logo, blurry, low-res"
         ),
         'size' => env('REPLICATE_IMAGE_SIZE', '2K'),
         'aspect_ratio' => env('REPLICATE_ASPECT_RATIO', '4:3'),
