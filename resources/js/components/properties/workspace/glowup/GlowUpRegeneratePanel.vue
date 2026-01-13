@@ -16,19 +16,29 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-    (e: 'regenerate', payload: { room_type: string; style: string; prompt: string }): void;
+    (e: 'state-change', payload: { isDirty: boolean; canRegenerate: boolean; payload: { room_type: string; style: string; prompt: string } }): void;
 }>();
 
 const roomType = ref<string | null>(null);
 const style = ref<string | null>(null);
 const prompt = ref('');
-const dirty = ref(false);
+const promptTouched = ref(false);
 
 const canRegenerate = computed(
     () =>
         Boolean(roomType.value && style.value && prompt.value.trim().length >= 20) &&
         !props.processing,
 );
+const isDirty = computed(() => {
+    if (!roomType.value || !style.value) {
+        return false;
+    }
+    return (
+        roomType.value !== props.initialRoomType ||
+        style.value !== props.initialStyle ||
+        promptTouched.value
+    );
+});
 
 const applyAutoPrompt = () => {
     if (!roomType.value || !style.value) {
@@ -44,25 +54,13 @@ const applyAutoPrompt = () => {
 };
 
 const resetPrompt = () => {
-    dirty.value = false;
+    promptTouched.value = false;
     applyAutoPrompt();
 };
 
 const handlePromptInput = (value: string) => {
     prompt.value = value;
-    dirty.value = true;
-};
-
-const handleRegenerate = () => {
-    if (!roomType.value || !style.value) {
-        return;
-    }
-
-    emit('regenerate', {
-        room_type: roomType.value,
-        style: style.value,
-        prompt: prompt.value.trim(),
-    });
+    promptTouched.value = true;
 };
 
 watch(
@@ -70,7 +68,7 @@ watch(
     () => {
         roomType.value = props.initialRoomType ?? null;
         style.value = props.initialStyle ?? null;
-        dirty.value = false;
+        promptTouched.value = false;
         if (roomType.value && style.value) {
             applyAutoPrompt();
         } else {
@@ -81,9 +79,24 @@ watch(
 );
 
 watch([roomType, style], () => {
-    if (!dirty.value) {
+    if (!promptTouched.value) {
         applyAutoPrompt();
     }
+});
+
+watch([roomType, style, prompt, isDirty], () => {
+    if (!roomType.value || !style.value) {
+        return;
+    }
+    emit('state-change', {
+        isDirty: isDirty.value,
+        canRegenerate: canRegenerate.value,
+        payload: {
+            room_type: roomType.value,
+            style: style.value,
+            prompt: prompt.value.trim(),
+        },
+    });
 });
 </script>
 
@@ -135,13 +148,8 @@ watch([roomType, style], () => {
                 {{ errors.prompt }}
             </p>
         </div>
-        <button
-            type="button"
-            class="inline-flex items-center justify-center rounded-[14px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-            :disabled="!canRegenerate"
-            @click="handleRegenerate"
-        >
-            Generate another GlowUp
-        </button>
+        <p v-if="!canRegenerate" class="text-xs text-accent/40">
+            Update selections or prompt to enable regeneration.
+        </p>
     </div>
 </template>

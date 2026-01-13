@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { GlowUpJob, GlowUpOptionItem } from '@/components/properties/workspace/types';
-import { Download, X } from 'lucide-vue-next';
-import { computed, onMounted, onUnmounted } from 'vue';
+import { Download, FileText, Paperclip, Sparkles, X } from 'lucide-vue-next';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import GlowUpResultSlider from './GlowUpResultSlider.vue';
 import GlowUpRegeneratePanel from './GlowUpRegeneratePanel.vue';
 import { statusTokens } from './glowupConstants';
@@ -12,6 +12,7 @@ interface Props {
     roomOptions: GlowUpOptionItem[];
     styleOptions: GlowUpOptionItem[];
     regenerating: boolean;
+    attaching: boolean;
     errors: Record<string, string | undefined>;
 }
 
@@ -20,6 +21,7 @@ const emit = defineEmits<{
     (e: 'close'): void;
     (e: 'download', url: string | null): void;
     (e: 'regenerate', payload: { room_type: string; style: string; prompt: string }): void;
+    (e: 'attach', action: 'save_to_property' | 'add_to_report'): void;
 }>();
 
 const token = computed(() => {
@@ -33,6 +35,59 @@ const hasResult = computed(() =>
 
 const beforeUrl = computed(() => props.job?.before_url ?? null);
 const afterUrl = computed(() => props.job?.after_url ?? props.job?.before_url ?? null);
+const regenState = ref<{
+    isDirty: boolean;
+    canRegenerate: boolean;
+    payload: { room_type: string; style: string; prompt: string };
+} | null>(null);
+
+const canAttach = computed(() => hasResult.value && !props.attaching);
+const canRegenerate = computed(
+    () =>
+        Boolean(
+            hasResult.value &&
+                regenState.value?.isDirty &&
+                regenState.value?.canRegenerate &&
+                !props.regenerating,
+        ),
+);
+const actionLabel = computed(() =>
+    hasResult.value && regenState.value?.isDirty ? 'Regenerate GlowUp' : 'Download',
+);
+const actionIcon = computed(() =>
+    hasResult.value && regenState.value?.isDirty ? Sparkles : Download,
+);
+const actionDisabled = computed(() => {
+    if (!hasResult.value) {
+        return true;
+    }
+    if (regenState.value?.isDirty) {
+        return !canRegenerate.value;
+    }
+    return false;
+});
+
+const handleRegenStateChange = (
+    state: { isDirty: boolean; canRegenerate: boolean; payload: { room_type: string; style: string; prompt: string } },
+) => {
+    regenState.value = state;
+};
+
+const handlePrimaryAction = () => {
+    if (!hasResult.value) {
+        return;
+    }
+
+    if (regenState.value?.isDirty) {
+        if (!canRegenerate.value) {
+            return;
+        }
+        emit('regenerate', regenState.value.payload);
+        return;
+    }
+
+    emit('download', afterUrl.value);
+};
 
 const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -92,7 +147,7 @@ onUnmounted(() => {
                             </div>
                             <div class="h-2 rounded-full bg-surface/60">
                                 <div
-                                    class="h-2 rounded-full bg-primary/50 transition-all"
+                                    class="h-2 animate-pulse rounded-full bg-primary/50 transition-all"
                                     :style="{ width: `${props.job?.progress ?? 35}%` }"
                                 />
                             </div>
@@ -111,27 +166,49 @@ onUnmounted(() => {
                             :seed-key="job?.id ?? null"
                             :processing="regenerating"
                             :errors="errors"
-                            @regenerate="emit('regenerate', $event)"
+                            @state-change="handleRegenStateChange"
                         />
                     </div>
                 </div>
 
                 <footer class="mt-5 flex flex-wrap items-center justify-between gap-3">
-                    <div
-                        class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-                        :class="token.badge"
-                    >
-                        <span class="h-2 w-2 rounded-full" :class="token.dot" />
-                        {{ props.job?.status ?? 'pending' }}
+                    <div class="flex flex-wrap items-center gap-2">
+                        <div
+                            class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
+                            :class="token.badge"
+                        >
+                            <span class="h-2 w-2 rounded-full" :class="token.dot" />
+                            {{ props.job?.status ?? 'pending' }}
+                        </div>
+                        <button
+                            v-if="hasResult"
+                            type="button"
+                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent shadow-neu-in transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+                            :disabled="!canAttach"
+                            @click="emit('attach', 'save_to_property')"
+                        >
+                            <Paperclip class="h-4 w-4 text-[#6e33ff]" />
+                            Attach image
+                        </button>
+                        <button
+                            v-if="hasResult"
+                            type="button"
+                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent shadow-neu-in transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+                            :disabled="!canAttach"
+                            @click="emit('attach', 'add_to_report')"
+                        >
+                            <FileText class="h-4 w-4 text-[#6e33ff]" />
+                            Add to report
+                        </button>
                     </div>
                     <button
                         type="button"
                         class="inline-flex items-center gap-2 rounded-[14px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-                        :disabled="!hasResult"
-                        @click="emit('download', afterUrl)"
+                        :disabled="actionDisabled"
+                        @click="handlePrimaryAction"
                     >
-                        <Download class="h-4 w-4" />
-                        Download
+                        <component :is="actionIcon" class="h-4 w-4" />
+                        {{ actionLabel }}
                     </button>
                 </footer>
             </div>

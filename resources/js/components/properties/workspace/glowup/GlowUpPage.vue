@@ -22,6 +22,8 @@ const numericPropertyId = computed(() => Number(props.propertyId));
 
 const {
     jobs,
+    attachForm,
+    attachToProperty,
     createForm,
     submitJob,
     refreshJobs,
@@ -89,7 +91,6 @@ const handleRegenerate = (payload: { room_type: string; style: string; prompt: s
         return;
     }
 
-    modalJobId.value = null;
     regenerateForm.clearErrors();
     regenerateForm.room_type = payload.room_type;
     regenerateForm.style = payload.style;
@@ -104,9 +105,18 @@ const handleRegenerate = (payload: { room_type: string; style: string; prompt: s
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
+            refreshJobs();
             isResultOpen.value = true;
         },
     });
+};
+
+const handleAttach = (action: 'save_to_property' | 'add_to_report') => {
+    if (!modalJob.value?.id) {
+        return;
+    }
+
+    attachToProperty(modalJob.value.id, action);
 };
 
 const handleFileSelected = (file: File) => {
@@ -194,10 +204,12 @@ watch(
             :room-options="roomOptions"
             :style-options="styleOptions"
             :regenerating="regenerateForm.processing"
+            :attaching="attachForm.processing"
             :errors="regenerateForm.errors"
             @close="isResultOpen = false"
             @download="downloadJob"
             @regenerate="handleRegenerate"
+            @attach="handleAttach"
         />
     </section>
 </template>
