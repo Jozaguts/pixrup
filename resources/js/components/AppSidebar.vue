@@ -63,11 +63,11 @@ const navGroups = computed(() => {
                     href: '/properties',
                     icon: 'mdi:office-building-outline',
                 },
-                {
-                    title: 'PixrVision Reports',
-                    href: '/reports',
-                    icon: 'mdi:account-file-text-outline',
-                },
+                // {
+                //     title: 'PixrVision Reports',
+                //     href: '/reports',
+                //     icon: 'mdi:account-file-text-outline',
+                // },
             ]),
         },
         {

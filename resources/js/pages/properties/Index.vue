@@ -79,6 +79,9 @@
                             <a title="Explore property" :href="links.report" class="shadow-neu-out px-4 py-2 rounded-[12px] group mr-4">
                                 <Icon icon="ph:megaphone-thin" class="inline w-4 h-4 group-hover:text-accent/80 text-accent/50 transition all ease-in-out"/>
                             </a>
+                            <a title="Pirxvision Report" :href="links.report" class="shadow-neu-out px-4 py-2 rounded-[12px] group mr-4">
+                                <Icon icon="ph:file-thin" class="inline w-4 h-4 group-hover:text-accent/80 text-accent/50 transition all ease-in-out"/>
+                            </a>
                         </div>
                     </template>
                 </data-table>

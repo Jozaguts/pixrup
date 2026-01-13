@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import { Icon } from '@iconify/vue';
+import { computed, Ref, ref } from 'vue';
+const props = defineProps({ item: Object });
+
+const isLiked: Ref<boolean> = ref(props.item?.like);
+const setBackupThumbnail = (e: Event) => {
+    (e.target as HTMLImageElement).src = 'https://picsum.photos/200/300?grayscale';
+};
+const valueToCurrency = computed(() => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+    }).format(props.item?.estimatedValue ?? 0);
+});
+</script>
 <template>
     <div class="relative h-[400px] overflow-hidden p-4 sm:w-full">
         <div class="property-card relative h-full w-full overflow-hidden rounded-[12px] bg-background p-2.5 shadow-sm">
@@ -20,9 +37,8 @@
                     <div class="flex flex-wrap items-center gap-4 text-sm text-accent/50">
                         <div class="flex flex-col">
                             <span class="text-xs tracking-wide text-accent/50 uppercase"> Estimated value </span>
-                            <span class="font-semibold">_ &nbsp;{{ props.item?.estimatedValue }}</span>
+                            <span class="font-semibold">&nbsp;{{ valueToCurrency }}</span>
                         </div>
-                        <!---->
                     </div>
 
                     <span
@@ -55,16 +71,3 @@
         </div>
     </div>
 </template>
-
-<script setup lang="ts">
-import { Icon } from '@iconify/vue';
-import { Ref, ref } from 'vue';
-const props = defineProps({ item: Object });
-
-const isLiked: Ref<boolean> = ref(props.item?.like);
-const setBackupThumbnail = (e: Event) => {
-    (e.target as HTMLImageElement).src = 'https://picsum.photos/200/300?grayscale';
-};
-</script>
-
-<style scoped></style>
