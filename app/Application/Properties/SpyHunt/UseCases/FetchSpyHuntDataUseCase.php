@@ -34,6 +34,7 @@ readonly class FetchSpyHuntDataUseCase
     public function execute(int $propertyId,  User $user, $filters = []): SpyHuntDataDTO
     {
 
+        //if(!$enforceFetch && $cached = $this->cacheRepository->get($propertyId)) {
         if ($cached = $this->cacheRepository->get($propertyId)) {
             return $cached;
         }

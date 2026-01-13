@@ -10,6 +10,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\GlowUp\GlowUpJobResource;
 use App\Interface\Properties\Http\Requests\CreatePropertyRequest;
 use App\Models\Property;
+use App\Services\Runes\ComparablesDensityRune;
+use App\Services\Runes\MarketSpreadRune;
+use App\Services\Runes\MarketVelocityRune;
+use App\Services\Runes\PriceReductionPressureRune;
+use App\Services\Runes\PriceVsMarketRune;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -39,7 +44,7 @@ class PropertyController extends Controller
                     'title' => $property->title ?? $property->address,
                     'formattedAddress' => $addressSegments->implode(', '),
                     'address' => $property->address,
-                    'city' => $property->city .', '. $property->state,
+                    'city' => $property->city . ', ' . $property->state,
                     'status' => $status,
                     'estimatedValue' => $property->latestWorth?->value,
                     'progress' => null,
@@ -55,10 +60,12 @@ class PropertyController extends Controller
             'properties' => $properties,
         ]);
     }
+
     public function create(): Response
     {
         return Inertia::render('properties/New');
     }
+
     public function show(Property $property): Response
     {
         $property->load('latestWorth');
@@ -74,6 +81,7 @@ class PropertyController extends Controller
             'provider' => $latestWorth->provider,
             'fetched_at' => optional($latestWorth->fetched_at)->toIso8601String(),
         ] : null;
+
 
         $glowUpJobs = $property->glowupJobs()->latest()->take(10)->get();
         $glowUpJobsPayload = GlowUpJobResource::collection($glowUpJobs)->toArray(request());
@@ -113,7 +121,7 @@ class PropertyController extends Controller
                 'livingArea' => data_get($property->metadata, 'summary.livingArea'),
                 'squareFootage' => $property->square_footage,
                 'yearBuilt' => data_get($property->metadata, 'summary.yearBuilt'),
-                'propertyType' =>  $property->property_type
+                'propertyType' => $property->property_type
             ],
             'pricing' => [
                 'acquisition' => data_get($property->metadata, 'pricing.acquisition'),
@@ -183,11 +191,13 @@ class PropertyController extends Controller
                 ],
             ],
         ];
+
         return Inertia::render('properties/Show', [
             'property' => $propertyData,
             'usage' => $usageSummary,
         ]);
     }
+
     public function store(CreatePropertyRequest $request, CreatePropertyUseCase $useCase): RedirectResponse
     {
         $dto = new CreatePropertyDTO(
@@ -215,10 +225,31 @@ class PropertyController extends Controller
             ->route('dashboard')
             ->with('status', 'property-created');
     }
+
     public function overview(Property $property, CreatePropertyOverviewUseCase $useCase): JsonResponse
     {
         $overview = $useCase->execute($property->toEntity());
 
         return response()->json($overview);
+    }
+
+    public function signal(Property $property): JsonResponse
+    {
+        $service = new PriceVsMarketRune($property);
+        $service_second= new MarketSpreadRune($property);
+        $densityRune=  new ComparablesDensityRune($property);
+        $marketVelocityRune = new MarketVelocityRune($property);
+        $priceReductionPressureRune = new PriceReductionPressureRune($property);
+
+        $runes =[
+            'comparables_density' => $densityRune->toArray(),
+            'market_spread' => $service_second->toArray(),
+            'price_vs_market' => $service->toArray(),
+            'market_velocity' => $marketVelocityRune->toArray(),
+            'price_reduction_pressure' => $priceReductionPressureRune->toArray(),
+        ];
+
+
+        dd($runes);
     }
 }
