@@ -297,7 +297,7 @@ watch(successMessage, (value, previous) => {
                             <button
                                 type="button"
                                 :disabled="isFetchDisabled"
-                                class="inline-flex items-center gap-2 rounded-[12px] bg-[#6e33ff] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(110,51,255,0.35)] transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
+                                class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
                                 @click="handleFetch"
                             >
                                 <component

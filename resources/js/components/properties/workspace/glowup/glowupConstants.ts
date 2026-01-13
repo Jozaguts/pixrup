@@ -21,13 +21,13 @@ export const statusTokens: Record<
     pending: {
         label: 'Queued',
         badge: 'bg-background text-accent/70',
-        dot: 'bg-[#6e33ff]',
+        dot: 'bg-primary/50',
         copy: 'Preparing your scene for processing.',
     },
     processing: {
         label: 'Processing',
         badge: 'bg-background text-accent/70',
-        dot: 'bg-[#6e33ff]',
+        dot: 'bg-primary/50',
         copy: 'Applying materials, color, and post-production.',
     },
     done: {

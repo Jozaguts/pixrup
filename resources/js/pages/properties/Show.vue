@@ -3,7 +3,6 @@ import PropertyWorkspaceGlowUp from '@/components/properties/workspace/PropertyW
 import PropertyWorkspaceOverview from '@/components/properties/workspace/PropertyWorkspaceOverview.vue';
 import PropertyWorkspaceSpyHunt from '@/components/properties/workspace/PropertyWorkspaceSpyHunt.vue';
 import PropertyWorkspaceWorth from '@/components/properties/workspace/PropertyWorkspaceWorth.vue';
-import ToastAlert from '@/components/shared/ToastAlert.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import propertiesRoutes from '@/routes/properties';
@@ -17,7 +16,7 @@ import {
     LayoutDashboard,
     LineChart,
 } from 'lucide-vue-next';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import type {
     ModuleId,
@@ -169,58 +168,6 @@ const propertyStatus = computed(() => {
     return statusTokens[statusKey] ?? statusTokens['in-progress'];
 });
 
-const glowupToastVisible = ref(false);
-const glowupToastType = ref<'success' | 'error'>('success');
-const glowupToastTitle = ref('GlowUp update');
-const glowupToastMessage = ref('');
-const lastGlowupToastJobId = ref<number | null>(null);
-let glowupSubscription: ReturnType<NonNullable<typeof window.Echo>['private']> | null = null;
-
-const triggerGlowupToast = (type: 'success' | 'error', title: string, message: string) => {
-    glowupToastType.value = type;
-    glowupToastTitle.value = title;
-    glowupToastMessage.value = message;
-    glowupToastVisible.value = false;
-
-    nextTick(() => {
-        glowupToastVisible.value = true;
-        window.setTimeout(() => {
-            glowupToastVisible.value = false;
-        }, 4200);
-    });
-};
-
-onMounted(() => {
-    if (typeof window === 'undefined' || !window.Echo || !propertyId.value) {
-        return;
-    }
-
-    glowupSubscription = window.Echo.private(`glowup.jobs.${propertyId.value}`);
-    glowupSubscription.listen('.GlowUpJobUpdated', (event: { job?: { id?: number; status?: string } }) => {
-        const job = event?.job;
-        if (!job?.id) {
-            return;
-        }
-
-        if (job.status === 'done' && job.id !== lastGlowupToastJobId.value) {
-            lastGlowupToastJobId.value = job.id;
-            triggerGlowupToast('success', 'GlowUp ready', 'Your new GlowUp render is ready to download.');
-        }
-
-        if (job.status === 'error' && job.id !== lastGlowupToastJobId.value) {
-            lastGlowupToastJobId.value = job.id;
-            triggerGlowupToast('error', 'GlowUp failed', 'We could not complete the render. Try again.');
-        }
-    });
-});
-
-onBeforeUnmount(() => {
-    if (typeof window !== 'undefined' && glowupSubscription) {
-        window.Echo?.leave(`glowup.jobs.${propertyId.value}`);
-        glowupSubscription = null;
-    }
-});
-
 const activeModule = computed(
     () =>
         modules.find((module) => module.id === activeModuleId.value) ??
@@ -298,16 +245,6 @@ const headerMetricCards = computed(() => {
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head :title="props.property.title ?? 'Property Workspace'" />
-        <ToastAlert
-            :visible="glowupToastVisible"
-            :type="glowupToastType"
-            :title="glowupToastTitle"
-            :msg="glowupToastMessage"
-            :timer="4200"
-            :show-confirm-button="false"
-            :show-close-button="true"
-        />
-
         <div class="min-h-screen pt-10 pb-16">
             <div
                 class="flex flex-col gap-4"

@@ -120,7 +120,7 @@ const handleDragLeave = () => {
             </div>
             <input ref="fileRef" type="file" accept="image/*" class="hidden" @change="handleFileChange" />
             <p v-if="errors.image" class="text-sm text-[#EA5455]">{{ errors.image }}</p>
-            <div v-if="previewUrl" class="mx-auto mt-2 w-full max-w-md">
+            <div v-if="previewUrl" class="mx-auto mt-2 w-full max-w-lg">
                 <img
                     :src="previewUrl"
                     alt="Preview"
@@ -192,7 +192,7 @@ const handleDragLeave = () => {
         <div class="flex flex-wrap items-center gap-4">
             <button
                 type="button"
-                class="inline-flex items-center gap-2 rounded-[16px] bg-[#6e33ff] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(110,51,255,0.35)] disabled:opacity-60"
+                class="inline-flex items-center gap-2 rounded-[16px] bg-primary/50 px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
                 :disabled="isGenerateDisabled"
                 @click="emit('generate')"
             >

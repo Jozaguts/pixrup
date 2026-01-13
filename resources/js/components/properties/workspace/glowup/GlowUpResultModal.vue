@@ -92,7 +92,7 @@ onUnmounted(() => {
                             </div>
                             <div class="h-2 rounded-full bg-surface/60">
                                 <div
-                                    class="h-2 rounded-full bg-[#6e33ff] transition-all"
+                                    class="h-2 rounded-full bg-primary/50 transition-all"
                                     :style="{ width: `${props.job?.progress ?? 35}%` }"
                                 />
                             </div>
@@ -126,7 +126,7 @@ onUnmounted(() => {
                     </div>
                     <button
                         type="button"
-                        class="inline-flex items-center gap-2 rounded-[14px] bg-[#6e33ff] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(110,51,255,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+                        class="inline-flex items-center gap-2 rounded-[14px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
                         :disabled="!hasResult"
                         @click="emit('download', afterUrl)"
                     >

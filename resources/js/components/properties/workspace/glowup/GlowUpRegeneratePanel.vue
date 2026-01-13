@@ -137,7 +137,7 @@ watch([roomType, style], () => {
         </div>
         <button
             type="button"
-            class="inline-flex items-center justify-center rounded-[14px] bg-[#6e33ff] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(110,51,255,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+            class="inline-flex items-center justify-center rounded-[14px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="!canRegenerate"
             @click="handleRegenerate"
         >
