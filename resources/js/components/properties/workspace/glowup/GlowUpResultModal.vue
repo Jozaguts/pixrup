@@ -54,7 +54,7 @@ onUnmounted(() => {
         <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-black/60" @click="emit('close')" />
             <div
-                class="relative w-full max-w-3xl rounded-[20px] bg-surface p-6 text-accent shadow-[0_20px_50px_rgba(15,23,42,0.55)]"
+                class="relative flex w-full max-w-3xl flex-col overflow-hidden rounded-[20px] bg-surface p-6 text-accent shadow-[0_20px_50px_rgba(15,23,42,0.55)] max-h-[90vh]"
             >
                 <header class="flex items-start justify-between gap-4">
                     <div class="space-y-2">
@@ -73,45 +73,47 @@ onUnmounted(() => {
                     </button>
                 </header>
 
-                <div class="mt-5 rounded-[16px] bg-background p-4 shadow-neu-in">
-                    <div v-if="hasResult" class="space-y-4">
-                        <GlowUpResultSlider
-                            v-if="beforeUrl"
-                            :before="beforeUrl"
-                            :after="afterUrl"
-                            label="Move the slider to compare"
-                        />
-                    </div>
-                    <div v-else class="space-y-4">
-                        <div class="flex items-center gap-3 text-sm">
-                            <span class="h-2 w-2 rounded-full" :class="token.dot" />
-                            <span class="text-accent/70">
-                                {{ props.job?.status ?? 'Starting' }}
-                            </span>
-                        </div>
-                        <div class="h-2 rounded-full bg-surface/60">
-                            <div
-                                class="h-2 rounded-full bg-[#6e33ff] transition-all"
-                                :style="{ width: `${props.job?.progress ?? 35}%` }"
+                <div class="mt-5 flex-1 overflow-y-auto pr-1">
+                    <div class="rounded-[16px] bg-background p-4 shadow-neu-in">
+                        <div v-if="hasResult" class="space-y-4">
+                            <GlowUpResultSlider
+                                v-if="beforeUrl"
+                                :before="beforeUrl"
+                                :after="afterUrl"
+                                label="Move the slider to compare"
                             />
                         </div>
-                        <p v-if="props.job?.error_message" class="text-xs text-[#EA5455]">
-                            {{ props.job.error_message }}
-                        </p>
+                        <div v-else class="space-y-4">
+                            <div class="flex items-center gap-3 text-sm">
+                                <span class="h-2 w-2 rounded-full" :class="token.dot" />
+                                <span class="text-accent/70">
+                                    {{ props.job?.status ?? 'Starting' }}
+                                </span>
+                            </div>
+                            <div class="h-2 rounded-full bg-surface/60">
+                                <div
+                                    class="h-2 rounded-full bg-[#6e33ff] transition-all"
+                                    :style="{ width: `${props.job?.progress ?? 35}%` }"
+                                />
+                            </div>
+                            <p v-if="props.job?.error_message" class="text-xs text-[#EA5455]">
+                                {{ props.job.error_message }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div v-if="hasResult" class="mt-6 rounded-[16px] bg-background p-4 shadow-neu-in">
-                    <GlowUpRegeneratePanel
-                        :room-options="roomOptions"
-                        :style-options="styleOptions"
-                        :initial-room-type="job?.room_type ?? null"
-                        :initial-style="job?.style ?? null"
-                        :seed-key="job?.id ?? null"
-                        :processing="regenerating"
-                        :errors="errors"
-                        @regenerate="emit('regenerate', $event)"
-                    />
+                    <div v-if="hasResult" class="mt-6 rounded-[16px] bg-background p-4 shadow-neu-in">
+                        <GlowUpRegeneratePanel
+                            :room-options="roomOptions"
+                            :style-options="styleOptions"
+                            :initial-room-type="job?.room_type ?? null"
+                            :initial-style="job?.style ?? null"
+                            :seed-key="job?.id ?? null"
+                            :processing="regenerating"
+                            :errors="errors"
+                            @regenerate="emit('regenerate', $event)"
+                        />
+                    </div>
                 </div>
 
                 <footer class="mt-5 flex flex-wrap items-center justify-between gap-3">
