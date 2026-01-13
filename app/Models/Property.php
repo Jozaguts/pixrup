@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property mixed $id
+ * @property mixed $latestWorth
+ */
 #[ScopedBy([OwnProperties::class])]
 class Property extends Model
 {

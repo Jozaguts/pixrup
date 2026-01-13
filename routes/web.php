@@ -20,8 +20,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-
-
+Route::get('/test/{property}', static function ($property){
+   $cache = \App\Models\SpyHuntCache::where('property_id',$property)->first();
+    \App\Domain\PixHunt\Jobs\GeneratePixHuntRunesJob::dispatchSync($cache);
+});
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');

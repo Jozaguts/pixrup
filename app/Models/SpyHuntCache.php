@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed $property_id
+ */
 class SpyHuntCache extends Model
 {
     protected $table = 'spy_hunt_cache';

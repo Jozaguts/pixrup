@@ -2,10 +2,20 @@
 
 namespace App\Models;
 
+use App\Observers\PropertyWorthObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed|null $comparables
+ * @property mixed $property_id
+ * @property float|null $value
+ * @property float|null $value_low
+ * @property float|null $value_high
+ */
+#[ObservedBy(PropertyWorthObserver::class)]
 class PropertyWorth extends Model
 {
 

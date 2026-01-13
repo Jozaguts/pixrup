@@ -70,7 +70,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'status' => $request->session()->get('status'),
                 'glowupJob' => $request->session()->get('glowupJob'),
-                'limitExceeded' => $cachePayload['limitExceeded'] ?? false,
+                'limitExceeded' => isMonthlyUsageLimitExceeded($user, $periodKey)
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
