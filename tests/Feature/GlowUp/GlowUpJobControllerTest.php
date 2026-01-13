@@ -4,7 +4,6 @@ use App\Jobs\ProcessGlowUpImageJob;
 use App\Models\GlowupJob;
 use App\Models\Property;
 use App\Models\User;
-use App\Models\UsagePropertyMonthly;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +14,7 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
 
     Bus::fake();
 
-    $user = User::factory()->create();
+    $user = User::factory()->create(['plan_tier' => 'PRICE_PRO']);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
@@ -47,15 +46,15 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
         return $queued->jobId === $job->id;
     });
 
-    expect(UsagePropertyMonthly::query()->count())->toBe(1);
+    $user->refresh();
+    expect($user->used_renders)->toBe(1);
 });
 
 test('glowup job creation respects plan limits', function (): void {
     Storage::fake('public');
     config(['glowup.disk' => 'public']);
-    config(['plans.tiers.professional.limit' => 0]);
 
-    $user = User::factory()->create(['plan' => 'professional']);
+    $user = User::factory()->create(['plan_tier' => 'PRICE_STARTER']);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
@@ -72,15 +71,9 @@ test('glowup job creation respects plan limits', function (): void {
 
     $response->assertForbidden()
         ->assertJsonPath('message', 'You have reached your monthly property usage limit.')
-        ->assertJsonStructure([
-            'usage' => [
-                'plan' => ['tier', 'label', 'limit'],
-                'used',
-                'remaining',
-                'period_key',
-                'resets_at',
-            ],
-        ]);
+        ->assertJsonPath('usage.bucket', 'renders')
+        ->assertJsonPath('usage.plan.tier', 'PRICE_STARTER')
+        ->assertJsonPath('usage.usage.renders.is_blocked', true);
 });
 
 test('users can attach finished glowup jobs to the property', function (): void {

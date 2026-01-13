@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Observers\PixHuntCacheObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property mixed $property_id
  */
+
+#[ObservedBy(PixHuntCacheObserver::class)]
 class SpyHuntCache extends Model
 {
     protected $table = 'spy_hunt_cache';

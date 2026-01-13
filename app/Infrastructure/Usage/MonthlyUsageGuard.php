@@ -4,6 +4,7 @@ namespace App\Infrastructure\Usage;
 
 use App\Application\Auth\Contracts\CurrentUserProvider;
 use App\Application\Usage\Contracts\UsageGuard;
+use App\Application\Usage\Services\MonthlyPropertyUsageService;
 use App\Domain\Properties\Entities\PropertyEntity;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Domain\Usage\Enums\UsageAction;

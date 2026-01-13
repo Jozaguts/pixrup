@@ -4,7 +4,7 @@
  * Description: File registering the PropertyWorthController handling PixrWorth requests.
  * Parameters: None.
  * Returns: Void.
- * Expected Result: Provides controller entry point for fetching property valuations via Inertia.
+ * Expected Result: Provides controller entry point for fetching property valuations via JSON.
  */
 
 namespace App\Interface\Appraisal\Http\Controllers;
@@ -14,57 +14,50 @@ use App\Application\Properties\PixrWorth\UseCases\AppraisePropertyWorthUseCase;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 /**
  * Description: Controller responsible for orchestrating PixrWorth fetch operations.
  * Parameters: None.
  * Returns: Not applicable.
- * Expected Result: Returns Inertia responses containing valuation data or errors.
+ * Expected Result: Returns JSON responses containing valuation data or errors.
  */
 class PropertyWorthController extends Controller
 {
     /**
      * Description: Fetch and return property valuation (mock or real).
-     * Parameters: Request $request Incoming HTTP request; Property $property Target property; AppraisePropertyWorthUseCase $useCase Use case executing valuation logic.
-     * Returns: InertiaResponse|\Symfony\Component\HttpFoundation\Response
-     * Expected Result: Responds with Inertia component containing valuation data or error details.
+     * Parameters: Property $property Target property; AppraisePropertyWorthUseCase $useCase Use case executing valuation logic.
+     * Returns: JsonResponse
+     * Expected Result: Responds with JSON payload containing valuation data or error details.
      */
     public function fetch(
-        Request $request,
         Property $property,
         AppraisePropertyWorthUseCase $useCase
-    ): Response {
+    ): JsonResponse {
         try {
             $dto = $useCase->execute($property->toEntity());
 
-            $inertia = Inertia::render('Appraisal/PixrWorth', [
+            return response()->json([
                 'worth' => $this->transformDto($dto),
-                'property' => $this->transformProperty($property),
             ]);
-
-            return $inertia->toResponse($request);
         } catch (FeatureLimitExceededException $e) {
-            return Inertia::render('Appraisal/PixrWorth', [
-                'worth' => null,
-                'property' => $this->transformProperty($property),
-                'errors' => ['worth' => $e->getMessage()],
-            ])->toResponse($request)->setStatusCode(403);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => 'limit',
+            ], 403);
         } catch (Throwable $e) {
-            return Inertia::render('Appraisal/PixrWorth', [
-                'worth' => null,
-                'property' => $this->transformProperty($property),
-                'errors' => ['worth' => $e->getMessage()],
-            ])->toResponse($request)->setStatusCode(500);
+            report($e);
+
+            return response()->json([
+                'message' => 'We couldn’t retrieve data. Please try again later.',
+                'code' => 'error',
+            ], 500);
         }
     }
 
     /**
-     * Description: Convert valuation DTO into an array suitable for Inertia props.
+     * Description: Convert valuation DTO into an array suitable for JSON payloads.
      * Parameters: PropertyWorthDTO $dto Valuation result to transform.
      * Returns: array<string, mixed>
      * Expected Result: Provides serializable payload for frontend consumption.
@@ -83,22 +76,4 @@ class PropertyWorthController extends Controller
         ];
     }
 
-    /**
-     * Description: Normalize property model data for frontend consumption.
-     * Parameters: Property $property Property model bound by the route.
-     * Returns: array<string, mixed>
-     * Expected Result: Provides lean property payload for PixrWorth Vue page.
-     */
-    private function transformProperty(Property $property): array
-    {
-        return [
-            'id' => $property->getKey(),
-            'title' => $property->title,
-            'address' => $property->address,
-            'city' => $property->city,
-            'state' => $property->state,
-            'postal_code' => $property->postal_code,
-            'country' => $property->country,
-        ];
-    }
 }

@@ -11,6 +11,8 @@ use App\Application\Properties\PixrWorth\Contracts\WorthRepository;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntCacheRepository;
 use App\Application\Shared\Contracts\Cache\KeyValueStore;
 use App\Application\Usage\Contracts\UsageGuard;
+use App\Application\Usage\Contracts\UsageEventLogger;
+use App\Application\Usage\Contracts\UsageUserStore;
 use App\Domain\Properties\Repositories\PropertyPhotoRepositoryInterface;
 use App\Domain\Properties\Repositories\PropertyRepositoryInterface;
 use App\Application\Properties\SpyHunt\Contracts\SpyHuntMarketDataProviderInterface;
@@ -31,7 +33,9 @@ use App\Infrastructure\Property\SpyHunt\Persistence\EloquentSpyHuntRepository;
 use App\Infrastructure\Property\Overview\Persistence\EloquentMsaMarketPulseRepository;
 use App\Infrastructure\Property\SpyHunt\Persistence\RedisSpyHuntCache;
 use App\Infrastructure\Shared\Persistence\RedisKeyValueStore;
+use App\Infrastructure\Usage\EloquentUsageUserStore;
 use App\Infrastructure\Usage\MonthlyUsageGuard;
+use App\Infrastructure\Usage\UsageLogEventLogger;
 use Illuminate\Support\ServiceProvider;
 
 class PropertyServiceProvider extends ServiceProvider
@@ -74,6 +78,8 @@ class PropertyServiceProvider extends ServiceProvider
         $this->app->bind(WorthProvider::class, HouseCanaryWorthProvider::class);
         $this->app->bind(WorthRepository::class, EloquentWorthRepository::class);
         $this->app->bind(CurrentUserProvider::class, LaravelCurrentUserProvider::class);
+        $this->app->bind(UsageUserStore::class, EloquentUsageUserStore::class);
+        $this->app->bind(UsageEventLogger::class, UsageLogEventLogger::class);
         $this->app->bind(UsageGuard::class, MonthlyUsageGuard::class);
     }
 }

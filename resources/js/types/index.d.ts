@@ -21,7 +21,6 @@ export type AppPageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     name: string;
-    quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
     mustVerifyEmail: boolean;
@@ -50,13 +49,27 @@ export interface PlanUsagePayload {
     plan: {
         tier: string;
         label: string;
-        limit: number | null;
     };
-    used: number;
-    remaining: number;
-    limit: number | null;
+    usage: {
+        docs: UsageBucketPayload;
+        renders: UsageBucketPayload;
+    };
+    can: {
+        docs: boolean;
+        renders: boolean;
+    };
     period_key: string;
     resets_at?: string | null;
+}
+
+export interface UsageBucketPayload {
+    limit: number;
+    used: number;
+    remaining: number | null;
+    is_unlimited: boolean;
+    is_blocked: boolean;
+    can_use: boolean;
+    percent_used: number | null;
 }
 
 export interface GlowUpJobPayload {

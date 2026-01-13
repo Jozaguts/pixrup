@@ -1,51 +1,13 @@
 <?php
 
 return [
-    'default' => 'professional',
+    'default' => 'PRICE_STARTER',
     'tiers' => [
-        'professional' => [
-            'label' => 'Professional',
-            'limit' => 20,
-            'features' => [
-                'appraisal',
-                'glowup',
-                'spyhunt',
-                'report',
-            ],
-            'price' => 99,
-        ],
-        'business' => [
-            'label' => 'Business',
-            'limit' => 50,
-            'features' => [
-                'appraisal',
-                'glowup',
-                'spyhunt',
-                'report',
-                'priority_support',
-            ],
-            'price' => 199,
-        ],
-        'enterprise' => [
-            'label' => 'Enterprise',
-            'limit' => 200,
-            'features' => [
-                'appraisal',
-                'glowup',
-                'spyhunt',
-                'report',
-                'priority_support',
-                'white_label',
-                'api_access',
-                'teams',
-            ],
-            'price' => 499,
-        ],
+        'PRICE_STARTER' => ['label' => 'Starter', 'limits' => ['docs' => 50, 'renders' => 0]],
+        'PRICE_PRO' => ['label' => 'Pro', 'limits' => ['docs' => -1, 'renders' => 20]],
+        'PRICE_ENTERPRISE' => ['label' => 'Enterprise', 'limits' => ['docs' => -1, 'renders' => -1]],
     ],
-    'aliases' => [
-        'pro' => 'professional',
-        'professional' => 'professional',
-        'business' => 'business',
-        'enterprise' => 'enterprise',
-    ],
+    'aliases' => ['starter'=>'PRICE_STARTER','pro'=>'PRICE_PRO','enterprise'=>'PRICE_ENTERPRISE'],
+
 ];
+

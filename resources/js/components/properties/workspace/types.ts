@@ -1,4 +1,5 @@
 import type { SpyHuntComparable } from '@/components/properties/workspace/spyhunt/types';
+import type { PlanUsagePayload, UsageBucketPayload } from '@/types';
 
 export type SpyHunt = {
     property: {
@@ -166,18 +167,7 @@ export interface PropertyWorkspaceProperty {
     workspace?: PropertyWorkspaceMeta;
     worth?: WorthResult | null;
     glowUp?: GlowUpState;
-    usage?: {
-        plan: {
-            tier: string;
-            label: string;
-            limit: number | null;
-        };
-        used: number;
-        remaining: number;
-        limit: number | null;
-        period_key: string;
-        resets_at?: string | null;
-    } | null;
+    usage?: PlanUsagePayload | null;
 }
 
 export type ModuleId =
@@ -207,9 +197,7 @@ export interface GlowUpJob {
     usage_recorded_at?: string | null;
 }
 
-export interface GlowUpUsage {
-    used: number;
-    limit: number | null;
+export interface GlowUpUsage extends UsageBucketPayload {
     reset_at?: string | null;
 }
 

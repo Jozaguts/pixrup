@@ -130,26 +130,3 @@ const headers = [
 
 const searchString = ref('');
 </script>
-
-<style>
-.soft-table {
-    --easy-table-header-background-color: #eee;  /* light bg */
-    --easy-table-header-font-color: #374151;/* dark gray */
-    --easy-table-body-row-background-color: #eee;
-    --easy-table-body-row-hover-background-color:var(--color-gray-200);
-    --easy-table-row-border: 1px solid #e5e7eb; /* light gray border */
-    --easy-table-body-row-height: 72px; /* tall row to fit pdf thumbnail */
-    --easy-table-header-item-padding: 1rem;
-    --easy-table-border: none;
-    --easy-table-body-row-font-color:rgba(0, 0, 0, 0.60);
-    .easy-data-table__body-cell,
-    .easy-data-table__header-cell {
-        text-align: center !important;
-    }
-
-}
-
-.soft-table td, .pdf-table th {
-    padding: 0.5rem 1rem;
-}
-</style>
