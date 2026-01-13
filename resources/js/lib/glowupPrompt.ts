@@ -86,14 +86,18 @@ export function buildPrompt({
     const styleLabel = STYLE_LABEL[style];
 
     const core =
-        `Transform the provided reference image into a high-quality ${roomLabel} rendered in a ${styleLabel} interior design.` +
-        ` Keep the core layout coherence while enhancing style, materials, lighting, and decor.`;
+        `Enhance the provided photo with subtle, realistic upgrades for a ${styleLabel} ${roomLabel}. ` +
+        'Preserve the original layout, perspective, depth, proportions, and camera angle. ' +
+        'Do NOT change the structure, room shape, walls, doors, windows, or furniture placement. ' +
+        'Improve materials, finishes, lighting, textures, and overall aesthetics only. ' +
+        'Keep all existing objects in their original positions. ' +
+        'Photorealistic, natural lighting, realistic shadows.';
 
     const roomHints = ROOM_HINTS[room]
-        ? ` Key elements: ${ROOM_HINTS[room]}.`
+        ? ` Room cues: ${ROOM_HINTS[room]}.`
         : '';
     const styleHints = STYLE_HINTS[style]
-        ? ` Style traits: ${STYLE_HINTS[style]}.`
+        ? ` Style cues: ${STYLE_HINTS[style]}.`
         : '';
 
     const modifiers =
@@ -104,7 +108,7 @@ export function buildPrompt({
     const positive = `${core}${roomHints}${styleHints}${modifiers}`.trim();
 
     const negative = includeNegatives
-        ? 'blurry, low-res, overexposed, underexposed, harsh shadows, distorted geometry, incorrect perspective, watermark, text, logo, extra limbs, duplicates, noisy textures'
+        ? 'new layout, new room, altered geometry, incorrect perspective, warped walls, moved furniture, extra objects, missing objects, fantasy, CGI look, cartoon, illustration, dramatic redesign'
         : '';
 
     return { positive, negative };

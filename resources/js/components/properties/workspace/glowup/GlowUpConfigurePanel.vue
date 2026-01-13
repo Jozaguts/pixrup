@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { TextArea } from '@/components/ui/textarea';
 import type { GlowUpOptionItem } from '@/components/properties/workspace/types';
 import { Camera, CloudUpload, Loader2, RefreshCw, ShieldAlert, Sparkles } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
@@ -14,10 +13,6 @@ interface Props {
     isGenerateDisabled: boolean;
     isUploading: boolean;
     limitReached: boolean;
-    promptDraft: string;
-    promptHelper: string;
-    skeletonActive: boolean;
-    canShowPrompt: boolean;
     roomType: string | null;
     style: string | null;
     errors: Record<string, string | undefined>;
@@ -27,8 +22,6 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
     (e: 'update:roomType', value: string | null): void;
     (e: 'update:style', value: string | null): void;
-    (e: 'prompt-input', value: string): void;
-    (e: 'regenerate'): void;
     (e: 'generate'): void;
     (e: 'capture'): void;
     (e: 'file-selected', file: File): void;
@@ -154,39 +147,8 @@ const handleDragLeave = () => {
             </label>
         </div>
 
-        <div class="flex flex-col gap-3">
-            <div class="relative">
-                <TextArea
-                    :model-value="promptDraft"
-                    label="Prompt (editable)"
-                    :rows="6"
-                    placeholder="Prompt will appear once an image is selected."
-                    :disabled="!canShowPrompt"
-                    @update:model-value="emit('prompt-input', $event)"
-                />
-                <div
-                    class="pointer-events-none absolute inset-1 top-[auto] h-[80%] rounded-[20px] transition-opacity duration-300"
-                    :class="[
-                        skeletonActive ? 'opacity-90' : 'opacity-0',
-                        canShowPrompt ? 'visible' : 'invisible',
-                        'skeleton-overlay',
-                    ]"
-                />
-            </div>
-            <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-accent/50">
-                <span>{{ promptHelper }}</span>
-                <button
-                    type="button"
-                    class="font-semibold text-[#6e33ff] disabled:cursor-not-allowed disabled:opacity-50"
-                    :disabled="!canShowPrompt"
-                    @click="emit('regenerate')"
-                >
-                    Regenerate prompt
-                </button>
-            </div>
-            <p v-if="errors.prompt" class="text-sm text-[#EA5455]">
-                {{ errors.prompt }}
-            </p>
+        <div class="rounded-[14px] bg-background p-4 text-sm text-accent/50 shadow-neu-in">
+            Prompt is generated automatically based on room type and style.
         </div>
 
         <div class="flex flex-wrap items-center gap-4">
@@ -196,8 +158,8 @@ const handleDragLeave = () => {
                 :disabled="isGenerateDisabled"
                 @click="emit('generate')"
             >
-                <Sparkles v-if="!isUploading" class="h-4 w-4" />
-                <Loader2 v-else class="h-4 w-4 animate-spin" />
+                        <Sparkles v-if="!isUploading" class="h-4 w-4" />
+                        <Loader2 v-else class="h-4 w-4 animate-spin" />
                 Generate GlowUp
             </button>
             <button
@@ -217,24 +179,4 @@ const handleDragLeave = () => {
     </article>
 </template>
 
-<style scoped lang="postcss">
-.skeleton-overlay {
-    background: linear-gradient(
-        120deg,
-        rgba(110, 51, 255, 0.15) 0%,
-        rgba(235, 229, 255, 0.6) 50%,
-        rgba(110, 51, 255, 0.15) 100%
-    );
-    background-size: 200% 100%;
-    animation: glowupSkeleton 3.2s ease-in-out infinite;
-}
-
-@keyframes glowupSkeleton {
-    0% {
-        background-position: -200% 0;
-    }
-    100% {
-        background-position: 200% 0;
-    }
-}
-</style>
+<style scoped lang="postcss"></style>

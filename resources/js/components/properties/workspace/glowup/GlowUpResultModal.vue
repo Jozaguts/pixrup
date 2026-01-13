@@ -20,7 +20,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
     (e: 'close'): void;
     (e: 'download', url: string | null): void;
-    (e: 'regenerate', payload: { room_type: string; style: string; prompt: string }): void;
+    (e: 'regenerate', payload: { room_type: string; style: string }): void;
     (e: 'attach', action: 'save_to_property' | 'add_to_report'): void;
 }>();
 
@@ -38,7 +38,7 @@ const afterUrl = computed(() => props.job?.after_url ?? props.job?.before_url ??
 const regenState = ref<{
     isDirty: boolean;
     canRegenerate: boolean;
-    payload: { room_type: string; style: string; prompt: string };
+    payload: { room_type: string; style: string };
 } | null>(null);
 
 const canAttach = computed(() => hasResult.value && !props.attaching);
@@ -68,7 +68,7 @@ const actionDisabled = computed(() => {
 });
 
 const handleRegenStateChange = (
-    state: { isDirty: boolean; canRegenerate: boolean; payload: { room_type: string; style: string; prompt: string } },
+    state: { isDirty: boolean; canRegenerate: boolean; payload: { room_type: string; style: string } },
 ) => {
     regenState.value = state;
 };

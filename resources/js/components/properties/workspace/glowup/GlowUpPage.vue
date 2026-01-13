@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { GlowUpState } from '@/components/properties/workspace/types';
 import { useGlowUpJobs } from '@/composables/useGlowUpJobs';
-import { useGlowUpPrompt } from '@/composables/useGlowUpPrompt';
 import propertiesRoutes from '@/routes/properties';
 import { useForm } from '@inertiajs/vue3';
 import { Sparkles } from 'lucide-vue-next';
@@ -46,21 +45,12 @@ const maxUpload = computed(() => glowUpState.value?.limits?.max_upload_size_mb ?
 
 const selectedFileLabel = computed(() => createForm.image?.name ?? 'Select an image');
 
-const {
-    promptDraft,
-    promptHelper,
-    skeletonActive,
-    canShowPrompt,
-    regeneratePrompt,
-    handlePromptInput,
-} = useGlowUpPrompt(createForm);
-
 const isGenerateDisabled = computed(() => {
     if (limitReached.value || isUploading.value) {
         return true;
     }
 
-    return !createForm.image || !createForm.prompt?.trim();
+    return !createForm.image || !createForm.room_type || !createForm.style;
 });
 
 const isResultOpen = ref(false);
@@ -72,7 +62,6 @@ const modalJob = computed(
 const regenerateForm = useForm({
     room_type: null as string | null,
     style: null as string | null,
-    prompt: '',
     source_job_id: null as number | null,
 });
 
@@ -86,7 +75,7 @@ const handleGenerate = () => {
     isResultOpen.value = true;
 };
 
-const handleRegenerate = (payload: { room_type: string; style: string; prompt: string }) => {
+const handleRegenerate = (payload: { room_type: string; style: string }) => {
     if (!modalJob.value?.id) {
         return;
     }
@@ -94,7 +83,6 @@ const handleRegenerate = (payload: { room_type: string; style: string; prompt: s
     regenerateForm.clearErrors();
     regenerateForm.room_type = payload.room_type;
     regenerateForm.style = payload.style;
-    regenerateForm.prompt = payload.prompt;
     regenerateForm.source_job_id = modalJob.value.id;
 
     const route = propertiesRoutes.glowup.jobs.store.url({
@@ -181,17 +169,11 @@ watch(
             :is-generate-disabled="isGenerateDisabled"
             :is-uploading="isUploading"
             :limit-reached="limitReached"
-            :prompt-draft="promptDraft"
-            :prompt-helper="promptHelper"
-            :skeleton-active="skeletonActive"
-            :can-show-prompt="canShowPrompt"
             :room-type="createForm.room_type"
             :style="createForm.style"
             :errors="createForm.errors"
             @update:room-type="(value) => (createForm.room_type = value)"
             @update:style="(value) => (createForm.style = value)"
-            @prompt-input="handlePromptInput"
-            @regenerate="regeneratePrompt"
             @generate="handleGenerate"
             @capture="captureFromCamera"
             @file-selected="handleFileSelected"

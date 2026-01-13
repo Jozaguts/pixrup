@@ -79,12 +79,10 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         room_type: string | null;
         style: string | null;
         image: File | null;
-        prompt: string;
     }>({
         room_type: initialState?.options?.room_types?.[0]?.value ?? null,
         style: initialState?.options?.styles?.[0]?.value ?? null,
         image: null,
-        prompt: '',
     });
 
     const attachForm = useForm({
@@ -182,7 +180,6 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             previewUrl.value = previewObject;
         } else {
             previewUrl.value = null;
-            createForm.prompt = '';
         }
     };
 
@@ -216,17 +213,6 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             return;
         }
 
-        const trimmedPrompt = (createForm.prompt ?? '').trim();
-
-        if (!trimmedPrompt) {
-            createForm.setError(
-                'prompt',
-                'Provide a prompt before generating.',
-            );
-            return;
-        }
-
-        createForm.prompt = trimmedPrompt;
         createForm.clearErrors();
 
         createForm.post(
@@ -239,7 +225,6 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
                 preserveState: true,
                 onSuccess: () => {
                     setImage(null);
-                    createForm.prompt = '';
                 },
             },
         );
