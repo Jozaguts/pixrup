@@ -61,6 +61,7 @@ class SocialAuthController
                 'password' => Hash::make(Str::random(40)),
                 'provider' => 'google',
                 'provider_id' => $googleUser->getId(),
+                'role' => 'default',
                 'email_verified_at' => now(),
             ]);
 

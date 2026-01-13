@@ -13,7 +13,7 @@ class UserEntity
         public ?DateTimeInterface $email_verified_at = null,
         public ?string $provider = null,
         public ?string $provider_id = null,
-        public ?string $role = 'user',
+        public ?string $role = 'default',
         public ?DateTimeInterface $created_at = null,
         public ?DateTimeInterface $updated_at = null,
     ) {}

@@ -4,6 +4,7 @@ namespace App\Interface\Properties\Http\Controllers;
 
 
 use App\Application\Properties\SpyHunt\UseCases\FetchSpyHuntDataUseCase;
+use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SpyHuntFilterRequest;
 
@@ -26,7 +27,19 @@ class SpyHuntController extends Controller
                 'data' => $dto->toArray(),
             ]);
 
-        }catch (\Throwable $e){
+        } catch (FeatureLimitExceededException $e) {
+            $context = $e->context();
+            $code = ($context['reason'] ?? null) === 'subscription_inactive' ? 'subscription' : 'limit';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $code,
+                ], 403);
+            }
+
+            return back()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
             report($e);
             return back()->with('error', 'Could not load SpyHunt data.');
         }

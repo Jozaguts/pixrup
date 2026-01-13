@@ -9,14 +9,19 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasUuids, HasFactory, Notifiable, TwoFactorAuthenticatable, Billable;
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $attributes = [
+        'role' => 'default',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -65,5 +70,24 @@ class User extends Authenticatable implements MustVerifyEmail
             'two_factor_confirmed_at' => 'datetime',
             'usage_reset_at' => 'datetime',
         ];
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->isAdmin();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->subscribed();
     }
 }

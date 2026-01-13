@@ -42,9 +42,12 @@ class PropertyWorthController extends Controller
                 'worth' => $this->transformDto($dto),
             ]);
         } catch (FeatureLimitExceededException $e) {
+            $context = $e->context();
+            $code = ($context['reason'] ?? null) === 'subscription_inactive' ? 'subscription' : 'limit';
+
             return response()->json([
                 'message' => $e->getMessage(),
-                'code' => 'limit',
+                'code' => $code,
             ], 403);
         } catch (Throwable $e) {
             report($e);

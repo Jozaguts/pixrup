@@ -15,7 +15,7 @@ class RegisterUser
     public function execute(array $data): UserEntity
     {
         $data['password'] = Hash::make($data['password']);
-        $data['role'] = 'user';
+        $data['role'] = 'default';
 
         return $this->repository->create($data);
     }

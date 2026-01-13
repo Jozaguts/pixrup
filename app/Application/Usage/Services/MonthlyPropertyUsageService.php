@@ -31,6 +31,20 @@ readonly class MonthlyPropertyUsageService
      */
     public function ensureUsage(User $user, PropertyEntity $property, UsageAction $action): void
     {
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if (! $user->hasActiveSubscription()) {
+            throw new FeatureLimitExceededException(
+                'Your subscription is inactive. Please update your plan to continue.',
+                [
+                    'reason' => 'subscription_inactive',
+                    'action' => $action->value,
+                ],
+            );
+        }
+
         $period = $this->periodService->current();
         $scope = $this->scopeResolver->resolve($user);
         $plan = $this->planResolver->resolve($user);
