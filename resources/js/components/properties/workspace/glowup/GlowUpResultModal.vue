@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import type { GlowUpJob } from '@/components/properties/workspace/types';
+import type { GlowUpJob, GlowUpOptionItem } from '@/components/properties/workspace/types';
 import { Download, X } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted } from 'vue';
 import GlowUpResultSlider from './GlowUpResultSlider.vue';
+import GlowUpRegeneratePanel from './GlowUpRegeneratePanel.vue';
 import { statusTokens } from './glowupConstants';
 
 interface Props {
     open: boolean;
     job: GlowUpJob | null;
+    roomOptions: GlowUpOptionItem[];
+    styleOptions: GlowUpOptionItem[];
+    regenerating: boolean;
+    errors: Record<string, string | undefined>;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
     (e: 'close'): void;
     (e: 'download', url: string | null): void;
+    (e: 'regenerate', payload: { room_type: string; style: string; prompt: string }): void;
 }>();
 
 const token = computed(() => {
@@ -93,6 +99,19 @@ onUnmounted(() => {
                             {{ props.job.error_message }}
                         </p>
                     </div>
+                </div>
+
+                <div v-if="hasResult" class="mt-6 rounded-[16px] bg-background p-4 shadow-neu-in">
+                    <GlowUpRegeneratePanel
+                        :room-options="roomOptions"
+                        :style-options="styleOptions"
+                        :initial-room-type="job?.room_type ?? null"
+                        :initial-style="job?.style ?? null"
+                        :seed-key="job?.id ?? null"
+                        :processing="regenerating"
+                        :errors="errors"
+                        @regenerate="emit('regenerate', $event)"
+                    />
                 </div>
 
                 <footer class="mt-5 flex flex-wrap items-center justify-between gap-3">

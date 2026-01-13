@@ -58,24 +58,50 @@ class GlowUpJobController extends Controller
     public function store(CreateGlowUpJobRequest $request, Property $property): JsonResponse|RedirectResponse {
         $image = $request->file('image');
 
-        if ($image === null) {
-            return $this->respondWithError(
-                $request,
-                'Please select an image before generating a GlowUp.',
-            );
-        }
-
         $user = $request->user();
 
         abort_unless($user instanceof User, Response::HTTP_FORBIDDEN);
 
         try {
-            $job = $this->service->create(
-                $property,
-                $user,
-                $image,
-                $request->validatedPayload(),
-            );
+            $payload = $request->validatedPayload();
+            $sourceJobId = $payload['source_job_id'] ?? null;
+
+            if ($sourceJobId) {
+                $sourceJob = GlowupJob::query()
+                    ->whereKey($sourceJobId)
+                    ->where('property_id', $property->getKey())
+                    ->where('user_id', $user->getKey())
+                    ->first();
+
+                if (! $sourceJob) {
+                    return $this->respondWithError(
+                        $request,
+                        'Selected source image is not available.',
+                        Response::HTTP_NOT_FOUND,
+                    );
+                }
+
+                $job = $this->service->createFromSource(
+                    $property,
+                    $user,
+                    $sourceJob,
+                    $payload,
+                );
+            } else {
+                if ($image === null) {
+                    return $this->respondWithError(
+                        $request,
+                        'Please select an image before generating a GlowUp.',
+                    );
+                }
+
+                $job = $this->service->create(
+                    $property,
+                    $user,
+                    $image,
+                    $payload,
+                );
+            }
         } catch (FeatureLimitExceededException $exception) {
             if ($request->expectsJson()) {
                 return response()->json(

@@ -78,6 +78,53 @@ readonly class GlowUpJobService
         return $job;
     }
 
+    /**
+     * @throws FeatureLimitExceededException
+     * @throws Throwable
+     */
+    public function createFromSource(
+        Property $property,
+        User $user,
+        GlowupJob $sourceJob,
+        array $payload,
+    ): GlowupJob {
+        $this->usageService->ensureUsage($user, $property->toEntity(), UsageAction::GLOW_UP);
+
+        $disk = data_get($sourceJob->meta, 'disk', $this->disk());
+        $beforePath = data_get($sourceJob->meta, 'before_path');
+
+        if (! $beforePath) {
+            throw new \RuntimeException('Unable to reuse the source image.');
+        }
+
+        $meta = [
+            'disk' => $disk,
+            'before_path' => $beforePath,
+            'source_job_id' => $sourceJob->getKey(),
+        ];
+
+        if (! empty($payload['prompt'])) {
+            $meta['prompt'] = $payload['prompt'];
+        }
+
+        $job = GlowupJob::query()->create([
+            'property_id' => $property->getKey(),
+            'user_id' => $user->getKey(),
+            'room_type' => $payload['room_type'],
+            'style' => $payload['style'],
+            'before_url' => $sourceJob->before_url,
+            'status' => GlowupJob::STATUS_PENDING,
+            'meta' => $meta,
+            'usage_recorded_at' => now(),
+        ]);
+
+        GlowUpJobUpdated::dispatch($job);
+
+        ProcessGlowUpImageJob::dispatch($job->getKey());
+
+        return $job;
+    }
+
     public function attachResult(GlowupJob $job, string $action, ?string $notes): void
     {
         $property = $job->property;

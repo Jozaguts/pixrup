@@ -2,6 +2,8 @@
 import type { GlowUpState } from '@/components/properties/workspace/types';
 import { useGlowUpJobs } from '@/composables/useGlowUpJobs';
 import { useGlowUpPrompt } from '@/composables/useGlowUpPrompt';
+import propertiesRoutes from '@/routes/properties';
+import { useForm } from '@inertiajs/vue3';
 import { Sparkles } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 import GlowUpConfigurePanel from './GlowUpConfigurePanel.vue';
@@ -20,7 +22,6 @@ const numericPropertyId = computed(() => Number(props.propertyId));
 
 const {
     jobs,
-    activeJobId,
     createForm,
     submitJob,
     refreshJobs,
@@ -66,6 +67,13 @@ const modalJob = computed(
     () => jobs.value.find((job) => job.id === modalJobId.value) ?? null,
 );
 
+const regenerateForm = useForm({
+    room_type: null as string | null,
+    style: null as string | null,
+    prompt: '',
+    source_job_id: null as number | null,
+});
+
 const handleGenerate = () => {
     if (isGenerateDisabled.value) {
         return;
@@ -74,6 +82,31 @@ const handleGenerate = () => {
     modalJobId.value = null;
     submitJob();
     isResultOpen.value = true;
+};
+
+const handleRegenerate = (payload: { room_type: string; style: string; prompt: string }) => {
+    if (!modalJob.value?.id) {
+        return;
+    }
+
+    modalJobId.value = null;
+    regenerateForm.clearErrors();
+    regenerateForm.room_type = payload.room_type;
+    regenerateForm.style = payload.style;
+    regenerateForm.prompt = payload.prompt;
+    regenerateForm.source_job_id = modalJob.value.id;
+
+    const route = propertiesRoutes.glowup.jobs.store.url({
+        property: numericPropertyId.value,
+    });
+
+    regenerateForm.post(route, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            isResultOpen.value = true;
+        },
+    });
 };
 
 const handleFileSelected = (file: File) => {
@@ -107,7 +140,7 @@ watch(
 </script>
 
 <template>
-    <section class="flex flex-col gap-6 text-accent">
+    <section class="flex flex-col gap-6 text-accent mt-5">
         <header class="npo-form-shadow flex flex-col gap-4 rounded-[22px] p-6 md:flex-row md:items-center md:justify-between">
             <div class="space-y-2">
                 <p class="text-xs font-semibold tracking-[0.35em] text-accent/40 uppercase">PixrGlowUp</p>
@@ -158,8 +191,13 @@ watch(
         <GlowUpResultModal
             :open="isResultOpen"
             :job="modalJob"
+            :room-options="roomOptions"
+            :style-options="styleOptions"
+            :regenerating="regenerateForm.processing"
+            :errors="regenerateForm.errors"
             @close="isResultOpen = false"
             @download="downloadJob"
+            @regenerate="handleRegenerate"
         />
     </section>
 </template>

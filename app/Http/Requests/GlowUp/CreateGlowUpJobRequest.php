@@ -42,8 +42,9 @@ class CreateGlowUpJobRequest extends FormRequest
             'room_type' => ['required', 'string', Rule::in($roomTypes)],
             'style' => ['required', 'string', Rule::in($styles)],
             'prompt' => ['required', 'string', 'between:20,2000'],
+            'source_job_id' => ['required_without:image', 'nullable', 'integer', Rule::exists('glowup_jobs', 'id')],
             'image' => [
-                'required',
+                'required_without:source_job_id',
                 'file',
                 'image',
                 'max:'.$maxSize,
@@ -65,6 +66,7 @@ class CreateGlowUpJobRequest extends FormRequest
             'room_type' => $validated['room_type'],
             'style' => $validated['style'],
             'prompt' => trim($validated['prompt']),
+            'source_job_id' => $validated['source_job_id'] ?? null,
         ];
     }
 }
