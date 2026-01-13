@@ -79,6 +79,8 @@ class PropertyController extends Controller
             'comparables' => $latestWorth->comparables,
             'trend' => $latestWorth->trend,
             'provider' => $latestWorth->provider,
+            'value_low' => $latestWorth->value_low,
+            'value_high' => $latestWorth->value_high,
             'fetched_at' => optional($latestWorth->fetched_at)->toIso8601String(),
         ] : null;
 

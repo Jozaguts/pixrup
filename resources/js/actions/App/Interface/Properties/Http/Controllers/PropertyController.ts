@@ -339,7 +339,7 @@ overview.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\PropertyController::overview
-* @see app/Interface/Properties/Http/Controllers/PropertyController.php:229
+* @see app/Interface/Properties/Http/Controllers/PropertyController.php:218
 * @route '/properties/{property}/overview'
 */
 overview.url = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {

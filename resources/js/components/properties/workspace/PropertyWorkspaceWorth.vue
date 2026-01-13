@@ -4,20 +4,11 @@ import { usePlanUsage } from '@/composables/usePlanUsage';
 import http from '@/lib/http';
 import propertiesRoutes from '@/routes/properties';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { AlertCircle, ArrowRight, Gauge, LineChart, Loader2, RefreshCw } from 'lucide-vue-next';
+import { AlertCircle, ArrowRight, Gauge, Loader2, RefreshCw } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
-import type {
-    PropertyWorkspaceProperty,
-    WorkspaceModuleMeta,
-    WorthResult,
-    WorthStatusState,
-    WorthTrendPoint,
-} from './types';
-import AnalyticsChart from './worth/AnalyticsChart.vue';
+import type { PropertyWorkspaceProperty, WorkspaceModuleMeta, WorthResult, WorthStatusState } from './types';
 import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
-import PropertyDetails from './worth/PropertyDetails.vue';
-import RentalValueCard from './worth/RentalValueCard.vue';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -26,26 +17,20 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
 const propertyId = computed(() => Number(props.property.id));
 
 const worthState = ref<WorthResult | null>(props.property.worth ?? null);
 const worth = computed(() => worthState.value);
+const hasWorth = computed(() => worth.value !== null && worth.value !== undefined);
 const propertyWorthValue = computed(() => {
-    if (!worth.value || worth.value.value === null || worth.value.value === undefined) {
+    if (!hasWorth.value) {
         return 'N/A';
     }
 
-    return `$${worth.value.value.toLocaleString()}`;
+    return `$${worth.value?.value?.toLocaleString()}`;
 });
 
-const hasWorth = computed(() => worth.value !== null && worth.value !== undefined);
-const hasComparables = computed(() => worth.value?.comparables.some((comp) => comp.sale_price !== null));
 const comparablesCount = computed(() => worth.value?.comparables.length ?? 0);
-
-const trendPoints = computed<WorthTrendPoint[]>(() => worth.value?.trend ?? []);
-const hasTrend = computed(() => trendPoints.value.length > 0);
-
 const reportForm = useForm({});
 const isFetchLoading = ref(false);
 const isReportLoading = computed(() => reportForm.processing);
@@ -165,36 +150,6 @@ const state = computed<WorthStatusState>(() => {
     return 'idle';
 });
 
-const stateTitle = computed(() => {
-    switch (state.value) {
-        case 'loading':
-            return 'Fetching valuation…';
-        case 'cached':
-            return 'Cached appraisal';
-        case 'success':
-            return 'Appraisal ready';
-        case 'error':
-            return 'Something went wrong';
-        default:
-            return 'No valuation yet';
-    }
-});
-
-const stateSubtitle = computed(() => {
-    switch (state.value) {
-        case 'loading':
-            return 'Pulling comps and calibrating valuation.';
-        case 'cached':
-            return 'Refresh to pull the latest market movement.';
-        case 'success':
-            return 'Review the latest valuation, comparables and market.';
-        case 'error':
-            return errorDisplayMessage.value;
-        default:
-            return 'No valuation yet — click “Fetch Valuation” .';
-    }
-});
-
 const isFetchDisabled = computed(
     () => isWorthLoading.value || isUsageLimitReached.value || Number.isNaN(propertyId.value),
 );
@@ -206,11 +161,6 @@ const upgradeHref = '/settings/billing';
 const confidence = computed(() => worth.value?.confidence ?? null);
 const valueLow = computed(() => worth.value?.value_low ?? null);
 const valueHigh = computed(() => worth.value?.value_high ?? null);
-const rentalValue = computed(() => worth.value?.rental_value ?? null);
-
-const hasRentalValue = computed(
-    () => rentalValue.value !== null && rentalValue.value !== undefined && rentalValue.value > 0,
-);
 
 const normalizeWorthPayload = (payload: Partial<WorthResult>): WorthResult => ({
     id: payload.id ?? worthState.value?.id ?? 0,
@@ -294,37 +244,6 @@ const handleAddToReport = () => {
         preserveScroll: true,
     });
 };
-
-const moduleStatus = computed(() => props.meta?.status ?? state.value);
-
-const moduleStatusLabel = computed(() => {
-    if (!moduleStatus.value) {
-        return 'Unknown';
-    }
-
-    return moduleStatus.value
-        .toString()
-        .replace(/[-_]/g, ' ')
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-});
-
-const propertySummary = computed(() => props.property.summary ?? {});
-
-const subjectDetails = computed(() => ({
-    beds: propertySummary.value?.bedrooms ?? null,
-    baths: propertySummary.value?.bathrooms ?? null,
-    squareFootage: propertySummary.value?.squareFootage ?? null,
-    propertyType: propertySummary.value?.propertyType ?? null,
-}));
-
-const trendCount = computed(() => trendPoints.value.length);
-
-const idleCallout = computed(() =>
-    isUsageLimitReached.value
-        ? 'Usage limit reached — upgrade your plan to fetch a fresh valuation.'
-        : 'No valuation yet — click “Fetch Valuation” to pull the latest data.',
-);
-
 watch(successMessage, (value, previous) => {
     if (!value || value === previous) {
         return;
@@ -416,7 +335,7 @@ watch(successMessage, (value, previous) => {
                             </div>
                             <div
                                 v-else
-                                class="flex flex-col gap-3 rounded-[12px] border-1  p-4 text-xs text-accent shadow-neu-in"
+                                class="flex flex-col gap-3 rounded-[12px] border-1 p-4 text-xs text-accent shadow-neu-in"
                             >
                                 <div
                                     class="flex items-center justify-between text-xs font-semibold tracking-[0.3em] uppercase"
