@@ -3,10 +3,11 @@ import AppContent from '@/components/AppContent.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
-import type { BreadcrumbItemType, DashboardPageProps } from '@/types';
+import type { BreadcrumbItemType, DashboardPageProps, GlowUpJobPayload } from '@/types';
+import { emitRealtimeEvent } from '@/lib/realtimeEvents';
 import { usePage } from '@inertiajs/vue3';
 import { CheckCircle2, X } from 'lucide-vue-next';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import ToastAlert from "@/components/shared/ToastAlert.vue";
 import {LimitExceededToastProps as ToastProps} from "@/lib/shared/LimitExceededToastProps";
 
@@ -18,11 +19,14 @@ interface Props {
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
-const page = usePage<DashboardPageProps>();
+const page = usePage<DashboardPageProps & { property?: { id?: number | string } }>();
 const successToastStorageKey = 'pixrup:new-property-toast';
 const propertyToastMessage = ref('');
 const flashStatus = computed(() => page.props.flash?.status ?? null);
 const limitExceededStatus = computed(() => page.props.flash?.limitExceeded ?? false);
+const propertyId = computed(() => page.props.property?.id ?? null);
+const glowupChannelName = ref<string | null>(null);
+let glowupSubscription: ReturnType<NonNullable<typeof window.Echo>['private']> | null = null;
 
 onMounted(() => {
     if (typeof window === 'undefined') {
@@ -57,6 +61,50 @@ const dismissPropertyToast = () => {
     propertyToastMessage.value = '';
     removeFlashMessageFromStorage();
 };
+
+const leaveGlowupChannel = () => {
+    if (glowupChannelName.value) {
+        window.Echo?.leave(glowupChannelName.value);
+        glowupChannelName.value = null;
+        glowupSubscription = null;
+    }
+};
+
+const subscribeGlowupChannel = (id: number | string) => {
+    if (typeof window === 'undefined' || !window.Echo) {
+        return;
+    }
+
+    const nextChannel = `glowup.jobs.${id}`;
+    if (glowupChannelName.value === nextChannel) {
+        return;
+    }
+
+    leaveGlowupChannel();
+    glowupChannelName.value = nextChannel;
+    glowupSubscription = window.Echo.private(nextChannel);
+    glowupSubscription.listen('.GlowUpJobUpdated', (event: { job?: GlowUpJobPayload }) => {
+        if (event?.job) {
+            emitRealtimeEvent('glowup:job', event.job);
+        }
+    });
+};
+
+watch(
+    propertyId,
+    (id) => {
+        if (!id) {
+            leaveGlowupChannel();
+            return;
+        }
+        subscribeGlowupChannel(id);
+    },
+    { immediate: true },
+);
+
+onBeforeUnmount(() => {
+    leaveGlowupChannel();
+});
 </script>
 
 <template>

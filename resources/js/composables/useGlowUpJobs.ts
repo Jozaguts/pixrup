@@ -3,6 +3,7 @@ import type {
     GlowUpState,
     GlowUpUsage,
 } from '@/components/properties/workspace/types';
+import { onRealtimeEvent } from '@/lib/realtimeEvents';
 import glowupRoutes from '@/routes/glowup/index';
 import propertiesRoutes from '@/routes/properties/index';
 import type { GlowUpJobPayload } from '@/types';
@@ -93,9 +94,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
 
     const page = usePage<{ flash?: { glowupJob?: GlowUpJobPayload | null } }>();
     const lastFlashJobId = ref<number | null>(null);
-    let subscription: ReturnType<
-        NonNullable<typeof window.Echo>['private']
-    > | null = null;
+    let removeRealtimeListener: (() => void) | null = null;
 
     const syncUsage = () => {
         usage.is_unlimited = usage.limit === -1;
@@ -327,24 +326,17 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
             return;
         }
 
-        if (window.Echo && propertyId) {
-            subscription = window.Echo.private(`glowup.jobs.${propertyId}`);
-            subscription.listen(
-                '.GlowUpJobUpdated',
-                (event: { job: GlowUpJobPayload }) => {
-                    if (event?.job) {
-                        upsertJob(normalizeJob(event.job));
-                    }
-                },
-            );
-        }
+        removeRealtimeListener = onRealtimeEvent('glowup:job', (job) => {
+            if (Number(job.property_id) !== Number(propertyId)) {
+                return;
+            }
+            upsertJob(normalizeJob(job));
+        });
     });
 
     onBeforeUnmount(() => {
-        if (typeof window !== 'undefined' && subscription) {
-            window.Echo?.leave(`glowup.jobs.${propertyId}`);
-            subscription = null;
-        }
+        removeRealtimeListener?.();
+        removeRealtimeListener = null;
 
         if (previewObject) {
             URL.revokeObjectURL(previewObject);
