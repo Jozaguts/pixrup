@@ -56,10 +56,6 @@ readonly class GlowUpJobService
             'before_path' => $beforePath,
         ];
 
-        if (! empty($payload['prompt'])) {
-            $meta['prompt'] = $payload['prompt'];
-        }
-
         $job = GlowupJob::query()->create([
             'property_id' => $property->getKey(),
             'user_id' => $user->getKey(),
@@ -102,10 +98,6 @@ readonly class GlowUpJobService
             'before_path' => $beforePath,
             'source_job_id' => $sourceJob->getKey(),
         ];
-
-        if (! empty($payload['prompt'])) {
-            $meta['prompt'] = $payload['prompt'];
-        }
 
         $job = GlowupJob::query()->create([
             'property_id' => $property->getKey(),

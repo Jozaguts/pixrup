@@ -15,11 +15,18 @@ class ReplicateImageService implements GlowUpImageProvider
     private PendingRequest $http;
     private string $model;
     private ?string $modelOwner;
-    private string $promptTemplate;
-    private string $negativePromptTemplate;
+    private ?string $version;
+    private string $promptTemplateSeedream;
+    private string $promptTemplateSdxl;
+    private string $negativePromptTemplateSdxl;
     private string $size;
     private string $aspectRatio;
     private int $maxImages;
+    private float $strength;
+    private float $guidanceScale;
+    private int $steps;
+    private int $width;
+    private int $height;
     private string $waitPreference;
 
     public function __construct()
@@ -39,12 +46,19 @@ class ReplicateImageService implements GlowUpImageProvider
             ->retry((int) config('services.replicate.retries', 2), 2000);
 
         $this->modelOwner = config('services.replicate.model_owner');
-        $this->model = trim(config('services.replicate.model', 'seedream-4'));
-        $this->promptTemplate = (string) config('services.replicate.prompt_template');
-        $this->negativePromptTemplate = (string) config('services.replicate.negative_prompt_template', '');
+        $this->model = trim(config('services.replicate.model', 'seedream-4.5'));
+        $this->version = config('services.replicate.version');
+        $this->promptTemplateSeedream = (string) config('services.replicate.prompt_template_seedream');
+        $this->promptTemplateSdxl = (string) config('services.replicate.prompt_template_sdxl');
+        $this->negativePromptTemplateSdxl = (string) config('services.replicate.negative_prompt_template_sdxl', '');
         $this->size = config('services.replicate.size', '2K');
         $this->aspectRatio = config('services.replicate.aspect_ratio', '4:3');
         $this->maxImages = (int) config('services.replicate.max_images', 1);
+        $this->strength = (float) config('services.replicate.strength', 0.85);
+        $this->guidanceScale = (float) config('services.replicate.guidance_scale', 6);
+        $this->steps = (int) config('services.replicate.steps', 35);
+        $this->width = (int) config('services.replicate.width', 2048);
+        $this->height = (int) config('services.replicate.height', 2048);
         $this->waitPreference = config('services.replicate.wait_preference', 'wait=60');
     }
 
@@ -58,35 +72,49 @@ class ReplicateImageService implements GlowUpImageProvider
 
         $sourceUrl = $this->resolveSourceUrl($storage, $sourcePath);
 
-        // 👇 Dimensiones reales (si el disco es local/temporalmente accesible)
-        // Si estás en S3 y no tienes path local, puedes usar getimagesizefromstring($storage->get()) (ojo RAM).
-        [$w, $h] = $this->readImageSize($storage, $sourcePath);
-
-        // Target long edge (mantén 2048 si quieres) y preserva aspect
-        [$targetW, $targetH] = $this->fitToLongEdge($w, $h, 2048);
-
         [$prompt, $negative] = $this->buildPrompts($job);
+        [$targetW, $targetH] = $this->resolveTargetDimensions($storage, $sourcePath);
 
-        $endpoint = sprintf('models/%s/predictions', $this->modelSlug());
+        if ($this->isSdxlModel()) {
+            if (! $this->version) {
+                throw new RuntimeException('Replicate model version is required for SDXL requests.');
+            }
 
-        $input = [
-            'size' => $this->size,
-            'prompt' => $prompt,
-            'max_images' => $this->maxImages,
-            'image_input' => [$sourceUrl],
-            'aspect_ratio' => $this->aspectRatio,
-            'sequential_image_generation' => 'disabled',
-            // 👇 respeta geometría (NO fuerces 2048x2048)
-            'width' => $targetW,
-            'height' => $targetH,
-        ];
+            $input = [
+                'image_input' => [$sourceUrl],
+                'prompt' => $prompt,
+                'negative_prompt' => $negative,
+                'strength' => $this->strength,
+                'guidance_scale' => $this->guidanceScale,
+                'steps' => $this->steps,
+                'width' => $targetW,
+                'height' => $targetH,
+            ];
 
-        // 👇 Si el modelo soporta negative_prompt, úsalo (si no, no rompe nada si lo ignora; pero mejor loguear)
-        if ($negative !== '') {
-            $input['negative_prompt'] = $negative;
+            $payload = [
+                'version' => $this->version,
+                'input' => $input,
+            ];
+            $endpoint = 'predictions';
+        } else {
+            $input = [
+                'size' => $this->size,
+                'prompt' => $prompt,
+                'max_images' => $this->maxImages,
+                'image_input' => [$sourceUrl],
+                'aspect_ratio' => $this->aspectRatio,
+                'sequential_image_generation' => 'disabled',
+                'width' => $targetW,
+                'height' => $targetH,
+            ];
+
+            if ($negative !== '') {
+                $input['negative_prompt'] = $negative;
+            }
+
+            $payload = ['input' => $input];
+            $endpoint = sprintf('models/%s/predictions', $this->modelSlug());
         }
-
-        $payload = ['input' => $input];
 
         $response = $this->http
             ->withHeaders(['Prefer' => $this->waitPreference])
@@ -122,9 +150,54 @@ class ReplicateImageService implements GlowUpImageProvider
         return $targetPath;
     }
 
+    private function buildPrompts(GlowupJob $job): array
+    {
+        $room = $this->humanize($job->room_type, 'space');
+        $style = $this->humanize($job->style, 'modern');
+
+        if ($this->isSdxlModel()) {
+            $template = $this->promptTemplateSdxl ?: 'Enhance the provided photo with subtle, realistic upgrades.';
+            $prompt = str_replace(
+                ['{room}', '{style}', '{property_id}'],
+                [$room, $style, (string) $job->property_id],
+                $template,
+            );
+            $negative = trim($this->negativePromptTemplateSdxl);
+
+            if ($negative === '') {
+                $negative =
+                    'new layout, new room, altered geometry, incorrect perspective, '
+                    . 'warped walls, moved furniture, extra objects, missing objects, '
+                    . 'fantasy, CGI look, cartoon, illustration, dramatic redesign';
+            }
+
+            return [trim($prompt), $negative];
+        }
+
+        $template = $this->promptTemplateSeedream
+            ?: 'Edit the provided reference photo of a {room}. Apply a tasteful {style} glow-up.';
+
+        $prompt = str_replace(
+            ['{room}', '{style}', '{property_id}'],
+            [$room, $style, (string) $job->property_id],
+            $template,
+        );
+
+        return [trim($prompt), ''];
+    }
+
+    private function resolveTargetDimensions($storage, string $path): array
+    {
+        [$w, $h] = $this->readImageSize($storage, $path);
+        $maxEdge = max(1, (int) max($this->width, $this->height));
+        $originalMax = max(1, (int) max($w, $h));
+        $longEdge = min($maxEdge, $originalMax);
+
+        return $this->fitToLongEdge($w, $h, $longEdge);
+    }
+
     private function readImageSize($storage, string $path): array
     {
-        // Si es filesystem local, puedes usar ->path()
         if (method_exists($storage, 'path')) {
             $abs = $storage->path($path);
             $info = @getimagesize($abs);
@@ -133,14 +206,12 @@ class ReplicateImageService implements GlowUpImageProvider
             }
         }
 
-        // Fallback: lee bytes (ojo en imágenes grandes)
         $bytes = $storage->get($path);
         $info = @getimagesizefromstring($bytes);
         if (is_array($info) && isset($info[0], $info[1])) {
             return [(int) $info[0], (int) $info[1]];
         }
 
-        // Si no pudimos leer, usa default no-cuadrado
         return [1600, 1200];
     }
 
@@ -159,31 +230,9 @@ class ReplicateImageService implements GlowUpImageProvider
         return [(int) round($longEdge * $ratio), $longEdge];
     }
 
-    private function buildPrompts(GlowupJob $job): array
+    private function isSdxlModel(): bool
     {
-        $customPrompt = data_get($job->meta, 'prompt');
-        $customNegative = data_get($job->meta, 'negative_prompt');
-
-        $room = $this->humanize($job->room_type, 'space');
-        $style = $this->humanize($job->style, 'modern');
-
-        $prompt = '';
-        $negative = '';
-
-        if (is_string($customPrompt) && trim($customPrompt) !== '') {
-            $prompt = trim($customPrompt);
-        } else {
-            $template = $this->promptTemplate ?: 'Transform the reference photo of a {room} into {style}. Preserve perspective and layout.';
-            $prompt = str_replace(['{room}', '{style}', '{property_id}'], [$room, $style, (string) $job->property_id], $template);
-        }
-
-        if (is_string($customNegative) && trim($customNegative) !== '') {
-            $negative = trim($customNegative);
-        } else {
-            $negative = trim($this->negativePromptTemplate);
-        }
-
-        return [$prompt, $negative];
+        return str_contains(strtolower($this->model), 'sdxl');
     }
 
     private function resolveSourceUrl($storage, string $path): string

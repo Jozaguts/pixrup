@@ -52,22 +52,42 @@ return [
         'token' => env('REPLICATE_API_TOKEN'),
         'base_url' => env('REPLICATE_API_BASE_URL', 'https://api.replicate.com/v1/'),
         'model_owner' => env('REPLICATE_MODEL_OWNER', 'bytedance'),
-        'model' => env('REPLICATE_MODEL', 'seedream-4'),
-        'prompt_template' => env(
-            'REPLICATE_PROMPT_TEMPLATE',
-            "Photorealistic renovation of the provided reference photo ({room}) in {style} style. " .
-            "CRITICAL: preserve the exact camera viewpoint, lens perspective, vanishing point, depth, and room proportions. " .
-            "Do not change layout or geometry: keep walls, floor/ceiling boundaries, doors, windows, hallway length and angles identical. " .
-            "Only upgrade materials, finishes, lighting, and decor. Natural lighting, realistic shadows, high detail."
+        'model' => env('REPLICATE_MODEL', 'seedream-4.5'),
+        'version' => env(
+            'REPLICATE_MODEL_VERSION',
+            '610dddf033f10431b1b55f24510b6009fcba23017ee551a1b9afbc4eec79e29c'
         ),
-        'negative_prompt_template' => env(
-            'REPLICATE_NEGATIVE_PROMPT_TEMPLATE',
-            "warped geometry, incorrect perspective, fisheye, bent lines, crooked walls, stretched hallway, " .
-            "extra doors, extra windows, duplicated objects, floating furniture, unrealistic scale, text, watermark, logo, blurry, low-res"
+        'prompt_template_seedream' => env(
+            'REPLICATE_PROMPT_TEMPLATE_SEEDREAM',
+            "Edit the provided reference photo of a {room}. Apply a tasteful {style} glow-up.\n\n"
+            . "Strictly preserve the original camera viewpoint, perspective/vanishing point, depth, and all geometry.\n"
+            . "Do not change the layout or structure: keep walls, floor/ceiling lines, doors/windows, corridor length/angles.\n"
+            . "Keep all existing objects and their positions (bed/sofa/chairs/cabinets). You may improve materials, finishes, lighting, and decor, but do not remove, add, or relocate items.\n\n"
+            . "Output must look like a real photo: photorealistic, natural lighting, realistic shadows, high detail. No CGI / no stylized render."
+        ),
+        'prompt_template_sdxl' => env(
+            'REPLICATE_PROMPT_TEMPLATE_SDXL',
+            "Enhance the provided photo with subtle, realistic upgrades for a {style} {room}.\n"
+            . "Preserve the original layout, perspective, depth, proportions, and camera angle.\n"
+            . "Do NOT change the structure, room shape, walls, doors, windows, or furniture placement.\n"
+            . "Improve materials, finishes, lighting, textures, and overall aesthetics only.\n"
+            . "Keep all existing objects in their original positions.\n"
+            . "Photorealistic, natural lighting, realistic shadows."
+        ),
+        'negative_prompt_template_sdxl' => env(
+            'REPLICATE_NEGATIVE_PROMPT_TEMPLATE_SDXL',
+            "new layout, new room, altered geometry, incorrect perspective, "
+            . "warped walls, moved furniture, extra objects, missing objects, "
+            . "fantasy, CGI look, cartoon, illustration, dramatic redesign"
         ),
         'size' => env('REPLICATE_IMAGE_SIZE', '2K'),
         'aspect_ratio' => env('REPLICATE_ASPECT_RATIO', '4:3'),
         'max_images' => env('REPLICATE_MAX_IMAGES', 1),
+        'strength' => env('REPLICATE_IMAGE_STRENGTH', 0.85),
+        'guidance_scale' => env('REPLICATE_GUIDANCE_SCALE', 6),
+        'steps' => env('REPLICATE_STEPS', 35),
+        'width' => env('REPLICATE_WIDTH', 2048),
+        'height' => env('REPLICATE_HEIGHT', 2048),
         'wait_preference' => env('REPLICATE_WAIT_PREFERENCE', 'wait=60'),
         'timeout' => env('REPLICATE_TIMEOUT', 120),
         'retries' => env('REPLICATE_RETRIES', 2),
