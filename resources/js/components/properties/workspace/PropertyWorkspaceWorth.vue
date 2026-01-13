@@ -230,20 +230,6 @@ const handleFetch = async () => {
 const handleRetry = () => {
     handleFetch();
 };
-
-const handleAddToReport = () => {
-    if (isReportDisabled.value) {
-        return;
-    }
-
-    const route = propertiesRoutes.worth.report.post({
-        property: propertyId.value,
-    });
-
-    reportForm.submit(route.method, route.url, {
-        preserveScroll: true,
-    });
-};
 watch(successMessage, (value, previous) => {
     if (!value || value === previous) {
         return;
@@ -405,19 +391,6 @@ watch(successMessage, (value, previous) => {
                             <ArrowRight class="h-4 w-4" />
                         </button>
                     </div>
-                    <template v-if="state === 'success' || state === 'cached'">
-                        <div class="mt-auto flex flex-col gap-3 rounded-[12px] p-5 text-sm text-accent/50">
-                            <button
-                                type="button"
-                                :disabled="isReportDisabled"
-                                class="neu-button active flex cursor-pointer items-center justify-center gap-2 rounded-[12px] !bg-transparent px-4 py-4 text-sm font-medium text-accent"
-                                @click="handleAddToReport"
-                            >
-                                Add to report
-                                <ArrowRight class="h-4 w-4" />
-                            </button>
-                        </div>
-                    </template>
                 </article>
             </div>
             <aside class="flex flex-col gap-4 rounded-[12px]">
