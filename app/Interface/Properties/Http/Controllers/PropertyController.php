@@ -139,7 +139,7 @@ class PropertyController extends Controller
                     ['id' => 'appraise', 'label' => 'Appraise', 'module' => 'pixrWorth'],
                     ['id' => 'glowUp', 'label' => 'Glow-Up', 'module' => 'pixrGlowUp'],
                     ['id' => 'spyHunt', 'label' => 'SpyHunt', 'module' => 'pixrSpyHunt'],
-                    ['id' => 'vision', 'label' => '3D Tour', 'module' => 'pixrVision'],
+//                    ['id' => 'vision', 'label' => '3D Tour', 'module' => 'pixrVision'],
 //                    ['id' => 'seal', 'label' => 'Report', 'module' => 'pixrSeal'],
 //                    ['id' => 'collab', 'label' => 'Collab', 'module' => 'pixrCollab'],
                 ],
@@ -164,11 +164,11 @@ class PropertyController extends Controller
                         'status' => 'processing',
                         'last_run_at' => now()->subMinutes(45)->toIso8601String(),
                     ],
-                    'pixrVision' => [
-                        'endpoint' => "/api/properties/{$property->id}/vision",
-                        'status' => 'ready',
-                        'last_run_at' => now()->subDays(5)->toIso8601String(),
-                    ],
+//                    'pixrVision' => [
+//                        'endpoint' => "/api/properties/{$property->id}/vision",
+//                        'status' => 'ready',
+//                        'last_run_at' => now()->subDays(5)->toIso8601String(),
+//                    ],
 //                    'pixrSeal' => [
 //                        'endpoint' => "/api/properties/{$property->id}/report",
 //                        'status' => $latestWorth ? 'ready' : 'draft',

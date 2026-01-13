@@ -1,5 +1,5 @@
 <template>
-    <AppLayout :breadcrumbs="[{title:'Reports', href: '/reports'}]">
+    <AppLayout :breadcrumbs="[{title:'PixrVision Reports', href: '/reports'}]">
         <DashboardSection
             title="Pixrup Reports"
             description="Manage your reports here."

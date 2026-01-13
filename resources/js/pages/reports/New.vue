@@ -33,7 +33,7 @@
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="[ {title:'Reports', href: '/reports'}, {title:'New Report', href: '/reports/new'}]">
+    <AppLayout :breadcrumbs="[ {title:'PixrVision Reports', href: '/reports'}, {title:'New Report', href: '/reports/new'}]">
         <HorizontalStepper :steps="items" :step="currentStep"/>
     </AppLayout>
 </template>

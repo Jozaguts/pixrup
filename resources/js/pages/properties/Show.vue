@@ -83,14 +83,14 @@ const modules: WorkspaceModuleDefinition[] = [
         component: PropertyWorkspaceSpyHunt,
         description: 'Competitive market scan and nearby activity.',
     },
-    {
-        id: 'pixrVision',
-        label: 'PixrVision',
-        subtitle: '3D Tour',
-        icon: 'mdi:monitor-eye',
-        component: PropertyWorkspaceVision,
-        description: 'Immersive tour and assets management.',
-    },
+    // {
+    //     id: 'pixrVision',
+    //     label: 'PixrVision',
+    //     subtitle: '3D Tour',
+    //     icon: 'mdi:monitor-eye',
+    //     component: PropertyWorkspaceVision,
+    //     description: 'Immersive tour and assets management.',
+    // },
     // {
     //     id: 'pixrSeal',
     //     label: 'PixrSeal',
