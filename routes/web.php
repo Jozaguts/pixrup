@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::post('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'store'])->name('properties.glowup.jobs.store');
     Route::get('/properties/{property}/glowup/jobs/{glowupJob}', [GlowUpJobController::class, 'show'])->name('properties.glowup.jobs.show');
     Route::post('/glowup/jobs/{glowupJob}/attach', [GlowUpJobController::class, 'attach'])->name('glowup.jobs.attach');
+    Route::post('/glowup/jobs/{glowupJob}/detach', [GlowUpJobController::class, 'detach'])->name('glowup.jobs.detach');
     Route::get('/v1/usage', UsageSummaryController::class)->name('usage.summary');
     Route::get('properties/{property}/fetch', [SpyHuntController::class, 'fetch'])->name('properties.spyhunt.fetch');
     Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');

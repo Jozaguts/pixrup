@@ -233,11 +233,11 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
     const attachToProperty = (
         jobId: number,
         action: 'save_to_property' | 'add_to_report',
-        notes?: string,
+        options: { notes?: string; onSuccess?: () => void } = {},
     ) => {
         attachForm.transform(() => ({
             action,
-            notes,
+            notes: options.notes,
         }));
 
         attachForm.post(
@@ -248,6 +248,30 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
                 preserveScroll: true,
                 onSuccess: () => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    options.onSuccess?.();
+                },
+            },
+        );
+    };
+
+    const detachFromProperty = (
+        jobId: number,
+        action: 'save_to_property' | 'add_to_report',
+        options: { onSuccess?: () => void } = {},
+    ) => {
+        attachForm.transform(() => ({
+            action,
+            notes: undefined,
+        }));
+
+        attachForm.post(
+            glowupRoutes.jobs.detach.url({
+                glowupJob: jobId,
+            }),
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    options.onSuccess?.();
                 },
             },
         );
@@ -342,6 +366,7 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         attachForm,
         submitJob,
         attachToProperty,
+        detachFromProperty,
         refreshJobs,
         setActiveJob: (jobId: number) => {
             activeJobId.value = jobId;
