@@ -201,6 +201,13 @@ export interface GlowUpUsage extends UsageBucketPayload {
     reset_at?: string | null;
 }
 
+export interface GlowUpAttachment {
+    job_id: number;
+    action: 'save_to_property' | 'add_to_report' | string;
+    attached_at?: string | null;
+    notes?: string | null;
+}
+
 export interface GlowUpOptionItem {
     value: string;
     label: string;
@@ -209,6 +216,7 @@ export interface GlowUpOptionItem {
 export interface GlowUpState {
     jobs: GlowUpJob[];
     usage?: GlowUpUsage | null;
+    attachments?: GlowUpAttachment[];
     options?: {
         room_types?: GlowUpOptionItem[];
         styles?: GlowUpOptionItem[];

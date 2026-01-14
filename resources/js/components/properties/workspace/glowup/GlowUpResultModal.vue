@@ -183,7 +183,7 @@ onUnmounted(() => {
                         <button
                             v-if="hasResult"
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent shadow-neu-in transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+                            class="neu-button inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent  transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
                             :disabled="!canAttach"
                             @click="emit('attach', 'save_to_property')"
                         >
@@ -193,7 +193,7 @@ onUnmounted(() => {
                         <button
                             v-if="hasResult"
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent shadow-neu-in transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent neu-button transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
                             :disabled="!canAttach"
                             @click="emit('attach', 'add_to_report')"
                         >
