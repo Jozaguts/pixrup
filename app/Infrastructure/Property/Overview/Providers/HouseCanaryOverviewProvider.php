@@ -40,6 +40,15 @@ final readonly class HouseCanaryOverviewProvider implements OverviewProvider
         $fema = $this->extractResult($this->client->get('/v2/property/fema_disaster_area', $params), 'property/fema_disaster_area');
         $flood = $this->extractResult($this->client->get('/v2/property/flood', $params), 'property/flood');
         $crime = $this->extractResult($this->client->get('/v2/property/block_crime', $params), 'property/block_crime');
+        $hoaResponse = $this->decode($this->client->get('/v3/property/hoa_est', $params));
+        $hoaSubject = data_get($hoaResponse, 'subject_address');
+        $hoaEstimate = data_get($hoaResponse, 'association_estimated');
+        if (! is_array($hoaSubject)) {
+            $hoaSubject = [];
+        }
+        if (! is_array($hoaEstimate)) {
+            $hoaEstimate = [];
+        }
 
         $ownerFlag = data_get($ownerOccupied, 'owner_occupied', data_get($ownerOccupied, 'ownerOccupied'));
         $femaFlag = data_get($fema, 'in_disaster_area');
@@ -66,6 +75,12 @@ final readonly class HouseCanaryOverviewProvider implements OverviewProvider
             msaName: data_get($census, 'msa_name'),
             censusTract: data_get($census, 'census_tract', data_get($census, 'tract')),
             blockGroup: data_get($census, 'block_group', data_get($census, 'blockGroup')),
+            hoaAnnualEstimate: $this->intOrNull(data_get($hoaEstimate, 'annual_hoa_est')),
+            hoaMinFee: $this->intOrNull(data_get($hoaEstimate, 'min_fee')),
+            hoaMaxFee: $this->intOrNull(data_get($hoaEstimate, 'max_fee')),
+            hoaSamples: $this->intOrNull(data_get($hoaEstimate, 'n_samples')),
+            hoaSubdivision: data_get($hoaEstimate, 'subdivision'),
+            hoaSubdivisionId: data_get($hoaEstimate, 'subdivision_id'),
             payload: [
                 'census' => $census,
                 'sales_history' => $salesHistory,
@@ -75,6 +90,10 @@ final readonly class HouseCanaryOverviewProvider implements OverviewProvider
                     'flood' => $flood,
                 ],
                 'block_crime' => $crime,
+                'hoa_est' => [
+                    'subject_address' => $hoaSubject,
+                    'association_estimated' => $hoaEstimate,
+                ],
                 'meta' => [
                     'housecanary' => [
                         'request' => $params,

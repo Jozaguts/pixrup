@@ -37,6 +37,12 @@ final class EloquentOverviewRepository implements OverviewRepository
             msaName: $row->msa_name,
             censusTract: $row->census_tract,
             blockGroup: $row->block_group,
+            hoaAnnualEstimate: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.annual_hoa_est'),
+            hoaMinFee: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.min_fee'),
+            hoaMaxFee: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.max_fee'),
+            hoaSamples: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.n_samples'),
+            hoaSubdivision: $this->stringFromPayload($row->payload, 'hoa_est.association_estimated.subdivision'),
+            hoaSubdivisionId: $this->stringFromPayload($row->payload, 'hoa_est.association_estimated.subdivision_id'),
             payload: $row->payload ?? [],
             fetchedAt: CarbonImmutable::parse($row->fetched_at ?? $row->updated_at ?? 'now'),
             expiresAt: CarbonImmutable::parse($row->expires_at ?? $row->updated_at ?? 'now'),
@@ -76,5 +82,25 @@ final class EloquentOverviewRepository implements OverviewRepository
         PropertyOverview::query()
             ->where('property_id', $propertyId)
             ->delete();
+    }
+
+    private function intFromPayload(?array $payload, string $path): ?int
+    {
+        $value = data_get($payload ?? [], $path);
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? (int) round((float) $value) : null;
+    }
+
+    private function stringFromPayload(?array $payload, string $path): ?string
+    {
+        $value = data_get($payload ?? [], $path);
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (string) $value;
     }
 }

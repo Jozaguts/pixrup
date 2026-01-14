@@ -19,6 +19,12 @@ final readonly class PropertyOverviewSnapshotDTO
         public ?string $msaName,
         public ?string $censusTract,
         public ?string $blockGroup,
+        public ?int $hoaAnnualEstimate,
+        public ?int $hoaMinFee,
+        public ?int $hoaMaxFee,
+        public ?int $hoaSamples,
+        public ?string $hoaSubdivision,
+        public ?string $hoaSubdivisionId,
         /** @var array<string, mixed> */
         public array $payload,
         public CarbonImmutable $fetchedAt,
@@ -44,6 +50,12 @@ final readonly class PropertyOverviewSnapshotDTO
             'msa_name' => $this->msaName,
             'census_tract' => $this->censusTract,
             'block_group' => $this->blockGroup,
+            'hoa_annual_est' => $this->hoaAnnualEstimate,
+            'hoa_min_fee' => $this->hoaMinFee,
+            'hoa_max_fee' => $this->hoaMaxFee,
+            'hoa_samples' => $this->hoaSamples,
+            'hoa_subdivision' => $this->hoaSubdivision,
+            'hoa_subdivision_id' => $this->hoaSubdivisionId,
             'payload' => $this->payload,
             'fetched_at' => $this->fetchedAt->toIso8601String(),
             'expires_at' => $this->expiresAt->toIso8601String(),
@@ -56,6 +68,8 @@ final readonly class PropertyOverviewSnapshotDTO
     /** @param array<string, mixed> $payload */
     public static function fromArray(array $payload): self
     {
+        $hoaPayload = data_get($payload, 'payload.hoa_est.association_estimated', []);
+
         return new self(
             propertyId: (int) ($payload['property_id'] ?? 0),
             provider: (string) ($payload['provider'] ?? 'housecanary'),
@@ -69,6 +83,20 @@ final readonly class PropertyOverviewSnapshotDTO
             msaName: $payload['msa_name'] ?? null,
             censusTract: $payload['census_tract'] ?? null,
             blockGroup: $payload['block_group'] ?? null,
+            hoaAnnualEstimate: isset($payload['hoa_annual_est'])
+                ? (int) $payload['hoa_annual_est']
+                : (isset($hoaPayload['annual_hoa_est']) ? (int) $hoaPayload['annual_hoa_est'] : null),
+            hoaMinFee: isset($payload['hoa_min_fee'])
+                ? (int) $payload['hoa_min_fee']
+                : (isset($hoaPayload['min_fee']) ? (int) $hoaPayload['min_fee'] : null),
+            hoaMaxFee: isset($payload['hoa_max_fee'])
+                ? (int) $payload['hoa_max_fee']
+                : (isset($hoaPayload['max_fee']) ? (int) $hoaPayload['max_fee'] : null),
+            hoaSamples: isset($payload['hoa_samples'])
+                ? (int) $payload['hoa_samples']
+                : (isset($hoaPayload['n_samples']) ? (int) $hoaPayload['n_samples'] : null),
+            hoaSubdivision: $payload['hoa_subdivision'] ?? ($hoaPayload['subdivision'] ?? null),
+            hoaSubdivisionId: $payload['hoa_subdivision_id'] ?? ($hoaPayload['subdivision_id'] ?? null),
             payload: $payload['payload'] ?? [],
             fetchedAt: CarbonImmutable::parse($payload['fetched_at'] ?? 'now'),
             expiresAt: CarbonImmutable::parse($payload['expires_at'] ?? 'now'),

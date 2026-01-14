@@ -52,6 +52,11 @@ const femaDetails = computed(() => (Array.isArray(femaArea.value?.details) ? fem
 const crime = computed(() => payload.value?.block_crime ?? {});
 const crimeStats = computed(() => crime.value?.property ?? crime.value?.all ?? {});
 const salesHistory = computed(() => (Array.isArray(payload.value?.sales_history) ? payload.value.sales_history : []));
+const hoaEstimate = computed(() => snapshot.value?.hoa_annual_est ?? payload.value?.hoa_est?.association_estimated?.annual_hoa_est ?? null);
+const hoaMinFee = computed(() => snapshot.value?.hoa_min_fee ?? payload.value?.hoa_est?.association_estimated?.min_fee ?? null);
+const hoaMaxFee = computed(() => snapshot.value?.hoa_max_fee ?? payload.value?.hoa_est?.association_estimated?.max_fee ?? null);
+const hoaSamples = computed(() => snapshot.value?.hoa_samples ?? payload.value?.hoa_est?.association_estimated?.n_samples ?? null);
+const hoaSubdivision = computed(() => snapshot.value?.hoa_subdivision ?? payload.value?.hoa_est?.association_estimated?.subdivision ?? null);
 
 const salesCount = computed(() => salesHistory.value.length);
 const femaCount = computed(() => femaDetails.value.length);
@@ -161,6 +166,36 @@ const recentSales = computed(() => {
     }));
 });
 
+const hoaFeeLabel = computed(() => {
+    if (hoaEstimate.value) {
+        return `${formatCurrency(hoaEstimate.value)} / year`;
+    }
+    if (hoaMinFee.value && hoaMaxFee.value) {
+        return `${formatCurrency(hoaMinFee.value)} - ${formatCurrency(hoaMaxFee.value)} / year`;
+    }
+    if (hoaMinFee.value) {
+        return `${formatCurrency(hoaMinFee.value)} / year`;
+    }
+    if (hoaMaxFee.value) {
+        return `${formatCurrency(hoaMaxFee.value)} / year`;
+    }
+    return 'Not reported';
+});
+
+const hoaFeeDetail = computed(() => {
+    const parts = [];
+    if (hoaMinFee.value && hoaMaxFee.value) {
+        parts.push(`Range ${formatCurrency(hoaMinFee.value)} - ${formatCurrency(hoaMaxFee.value)}`);
+    }
+    if (hoaSamples.value) {
+        parts.push(`${hoaSamples.value} samples`);
+    }
+    if (hoaSubdivision.value) {
+        parts.push(hoaSubdivision.value);
+    }
+    return parts.length ? parts.join(' | ') : null;
+});
+
 const latestFema = computed(() => {
     if (!femaDetails.value.length) {
         return null;
@@ -237,6 +272,13 @@ function formatDate(value?: string): string {
         month: 'short',
         day: 'numeric',
     });
+}
+
+function formatCurrency(value?: number | null): string {
+    if (value === null || value === undefined) {
+        return '-';
+    }
+    return `$${Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)}`;
 }
 
 function formatTitle(value?: string): string | null {
@@ -409,6 +451,17 @@ function toTimestamp(value?: string): number {
                                             </span>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase">
+                                        HOA fees
+                                    </span>
+                                    <span class="text-sm font-semibold break-words text-accent">
+                                        {{ hoaFeeLabel }}
+                                    </span>
+                                    <span v-if="hoaFeeDetail" class="text-xs break-words text-accent/50">
+                                        {{ hoaFeeDetail }}
+                                    </span>
                                 </div>
                             </template>
                         </KeySingalCard>
