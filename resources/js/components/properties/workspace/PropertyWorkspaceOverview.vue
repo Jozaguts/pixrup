@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
 import propertiesRoutes from '@/routes/properties';
 import KeySingalCard from '@/components/properties/workspace/overview/KeySingalCard.vue';
+import WorkspaceModuleHeader from '@/components/properties/workspace/WorkspaceModuleHeader.vue';
 
 interface SignalCard {
     label: string;
@@ -395,27 +396,26 @@ function toTimestamp(value?: string): number {
 
 <template>
     <div class="flex flex-col gap-6 pt-6 text-accent">
+        <WorkspaceModuleHeader
+            eyebrow="PixrOverview"
+            title="Key Investment Signals"
+            description="Blend of valuation, renovation and market sentiment across modules."
+        >
+            <template #actions>
+                <button
+                    type="button"
+                    :disabled="loading"
+                    class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
+                    @click="loadOverView(true)"
+                >
+                    <RefreshCw :class="['h-4 w-4', { 'animate-spin': loading }]" />
+                    Re-fetch
+                </button>
+            </template>
+        </WorkspaceModuleHeader>
+
         <section class="grid h-100 gap-6">
             <article class="npo-form-shadow flex flex-col gap-6 rounded-[12px] p-6 text-accent">
-                <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div class="space-y-1">
-                        <h3 class="text-lg font-semibold">Key Investment Signals</h3>
-                        <p class="text-sm text-accent/50">
-                            Blend of valuation, renovation and market sentiment across modules.
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap items-end">
-                        <button
-                            type="button"
-                            :disabled="loading"
-                            class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
-                            @click="loadOverView(true)"
-                        >
-                            <RefreshCw :class="['h-4 w-4', { 'animate-spin': loading }]" />
-                            Re-fetch
-                        </button>
-                    </div>
-                </header>
 
                 <div v-if="loading" class="grid gap-4">
                     <div class="grid gap-4 md:grid-cols-2">

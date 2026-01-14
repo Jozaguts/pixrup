@@ -9,6 +9,7 @@ import GlowUpConfigurePanel from './GlowUpConfigurePanel.vue';
 import GlowUpResultModal from './GlowUpResultModal.vue';
 import GlowUpResultSlider from './GlowUpResultSlider.vue';
 import { defaultRoomTypes, defaultStyleOptions } from './glowupConstants';
+import WorkspaceModuleHeader from '@/components/properties/workspace/WorkspaceModuleHeader.vue';
 
 interface Props {
     propertyId: number | string;
@@ -192,18 +193,13 @@ watch(
 
 <template>
     <section class="mt-5 flex flex-col gap-6 text-accent">
-        <header
-            class="npo-form-shadow flex flex-col gap-4 rounded-[22px] p-6 md:flex-row md:items-center md:justify-between"
+        <WorkspaceModuleHeader
+            eyebrow="PixrGlowUp"
+            title="Before / After AI Studio"
+            description="Turn your photos into catalog-ready visuals for reports and clients."
         >
-            <div class="space-y-2">
-                <p class="text-xs font-semibold tracking-[0.35em] text-accent/40 uppercase">PixrGlowUp</p>
-                <h2 class="text-2xl font-semibold text-accent">Before / After AI Studio</h2>
-                <p class="text-sm text-accent/50">
-                    Turn your photos into catalog-ready visuals for reports and clients.
-                </p>
-            </div>
-            <div class="flex flex-col items-end gap-4">
-                <div class="flex items-start gap-3 rounded-[16px] bg-surface px-4 py-3 shadow-neu-in">
+            <template #actions>
+                <div class="flex items-start gap-3 rounded-[16px] bg-surface  shadow-neu-in">
                     <Sparkles class="h-5 w-5 text-[#6e33ff]" />
                     <div class="flex flex-col gap-2">
                         <p class="text-xs tracking-[0.35em] text-accent/40 uppercase">Monthly usage</p>
@@ -220,8 +216,8 @@ watch(
                 >
                     {{ historyButtonLabel }}
                 </button>
-            </div>
-        </header>
+            </template>
+        </WorkspaceModuleHeader>
 
         <Transition name="fade" mode="out-in">
             <GlowUpConfigurePanel

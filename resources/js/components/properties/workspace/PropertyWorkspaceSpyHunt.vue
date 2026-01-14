@@ -19,6 +19,7 @@ import {
 } from 'vue-map-ui';
 import MarketOverviewCard from '@/components/properties/workspace/spyhunt/MarketOverviewCard.vue';
 import NeuphormistTabs from '@/components/NeuphormistTabs.vue';
+import WorkspaceModuleHeader from '@/components/properties/workspace/WorkspaceModuleHeader.vue';
 const { spyhunt, avgPrice, dayOnMarket, radius, mode, comparables, trend30d, spyHuntProperty, avgPerSqft } =
     toRefs(useSpyHunt());
 
@@ -40,9 +41,10 @@ function onViewChanged(e: ViewChangedEvent) {
     zoom.value = e.zoom;
     bounds.value = e.bounds;
 }
-async function loadSpyHunt() {
+async function loadSpyHunt(force = false) {
     loading.value = true;
-    const res = await fetch(spyHuntRoutes.fetch.get(props.property.id).url, {
+    const options = force ? { query: { force: 1 } } : undefined;
+    const res = await fetch(spyHuntRoutes.fetch.get(props.property.id, options).url, {
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
@@ -77,10 +79,27 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div class="flex flex-col gap-6 text-[#111827]">
+    <div class="flex flex-col gap-6 pt-6 text-accent">
+        <WorkspaceModuleHeader
+            eyebrow="PixrSpyHunt"
+            title="Market Overview & Comparables"
+            description="RentCast comps, pricing, and demand signals."
+        >
+            <template #actions>
+                <button
+                    type="button"
+                    :disabled="loading"
+                    class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
+                    @click="loadSpyHunt(true)"
+                >
+                    <Icon icon="ph:arrow-clockwise" :class="['h-4 w-4', { 'animate-spin': loading }]" />
+                    Re-fetch
+                </button>
+            </template>
+        </WorkspaceModuleHeader>
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
-        <section v-else-if="isReady">
-            <div class="mt-10 flex flex-col gap-4 md:grid md:grid-cols-12 lg:grid lg:grid-cols-12">
+        <section v-else-if="isReady" class="npo-form-shadow rounded-[12px] bg-surface p-6 shadow-neu-in">
+            <div class="flex flex-col gap-4 md:grid md:grid-cols-12 lg:grid lg:grid-cols-12">
                 <div
                     class="col-span-1 mt-4 h-full min-h-[600px] rounded-[12px] bg-surface p-6 shadow-neu-in md:col-span-9 lg:col-span-9"
                 >
@@ -109,7 +128,7 @@ onMounted(() => {
                             <span class="text-body absolute end-0 -bottom-6 text-sm">5</span>
                         </div>
                         <div class="mt-4">
-                            <span class="text-sm font-semibold tracking-wide text-accent uppercase">
+                            <span class="text-sm font-semibold tracking-wide text-accent uppercase ">
                                 Property type</span
                             >
                             <NeuphormistTabs
@@ -119,7 +138,7 @@ onMounted(() => {
                                     { id: 'sale', label: 'Sale' },
                                     { id: 'rent', label: 'Rent' },
                                 ]"
-                                parentClasses="flex w-fit    m-0 "
+                                parentClasses="flex w-fit mt-2 "
                             />
                         </div>
                     </div>
@@ -168,8 +187,8 @@ onMounted(() => {
                                     transform: 'translate(-50%, -100%)',
                                 }"
                             >
-                                <p class="font-semibold text-gray-800">{{ activeComparable?.address }}</p>
-                                <div class="mt-1 mb-3 flex gap-2 text-gray-600">
+                                <p class="font-semibold text-accent">{{ activeComparable?.address }}</p>
+                                <div class="mt-1 mb-3 flex gap-2 text-accent">
                                     <span class="text-sm">{{ activeComparable?.price }}</span> -
                                     <span class="text-sm">{{ activeComparable?.squareFootage }} sqft</span> -
                                     <span class="text-sm">{{ activeComparable?.pricePerFt }}/ft²</span>
@@ -256,7 +275,7 @@ onMounted(() => {
                                             <span class="ml-1">{{ spyHuntProperty.bedrooms }}</span>
                                         </div>
                                         <div class="inline-flex items-center justify-center text-base">
-                                            <Icon icon="material-symbols-light:shower-outline" class="h-6 w-6"></Icon>
+                                            <Icon icon="material-symbols-light:shower-outline" class="h-6 w-6 !text-accent"></Icon>
                                             <span class="ml-1">{{ spyHuntProperty.bathrooms }}</span>
                                         </div>
                                     </div>
