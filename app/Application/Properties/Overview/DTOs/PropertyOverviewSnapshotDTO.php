@@ -25,6 +25,10 @@ final readonly class PropertyOverviewSnapshotDTO
         public ?int $hoaSamples,
         public ?string $hoaSubdivision,
         public ?string $hoaSubdivisionId,
+        public ?string $schoolDistrict,
+        public ?string $elementarySchool,
+        public ?string $middleSchool,
+        public ?string $highSchool,
         /** @var array<string, mixed> */
         public array $payload,
         public CarbonImmutable $fetchedAt,
@@ -56,6 +60,10 @@ final readonly class PropertyOverviewSnapshotDTO
             'hoa_samples' => $this->hoaSamples,
             'hoa_subdivision' => $this->hoaSubdivision,
             'hoa_subdivision_id' => $this->hoaSubdivisionId,
+            'school_district' => $this->schoolDistrict,
+            'elementary_school' => $this->elementarySchool,
+            'middle_school' => $this->middleSchool,
+            'high_school' => $this->highSchool,
             'payload' => $this->payload,
             'fetched_at' => $this->fetchedAt->toIso8601String(),
             'expires_at' => $this->expiresAt->toIso8601String(),
@@ -69,6 +77,7 @@ final readonly class PropertyOverviewSnapshotDTO
     public static function fromArray(array $payload): self
     {
         $hoaPayload = data_get($payload, 'payload.hoa_est.association_estimated', []);
+        $schoolPayload = data_get($payload, 'payload.school.result.school', []);
 
         return new self(
             propertyId: (int) ($payload['property_id'] ?? 0),
@@ -97,6 +106,15 @@ final readonly class PropertyOverviewSnapshotDTO
                 : (isset($hoaPayload['n_samples']) ? (int) $hoaPayload['n_samples'] : null),
             hoaSubdivision: $payload['hoa_subdivision'] ?? ($hoaPayload['subdivision'] ?? null),
             hoaSubdivisionId: $payload['hoa_subdivision_id'] ?? ($hoaPayload['subdivision_id'] ?? null),
+            schoolDistrict: $payload['school_district']
+                ?? data_get($schoolPayload, 'district')
+                ?? data_get($schoolPayload, 'school_district'),
+            elementarySchool: $payload['elementary_school']
+                ?? data_get($schoolPayload, 'elementary.0.name'),
+            middleSchool: $payload['middle_school']
+                ?? data_get($schoolPayload, 'middle.0.name'),
+            highSchool: $payload['high_school']
+                ?? data_get($schoolPayload, 'high.0.name'),
             payload: $payload['payload'] ?? [],
             fetchedAt: CarbonImmutable::parse($payload['fetched_at'] ?? 'now'),
             expiresAt: CarbonImmutable::parse($payload['expires_at'] ?? 'now'),

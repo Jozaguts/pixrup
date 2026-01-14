@@ -57,6 +57,32 @@ const hoaMinFee = computed(() => snapshot.value?.hoa_min_fee ?? payload.value?.h
 const hoaMaxFee = computed(() => snapshot.value?.hoa_max_fee ?? payload.value?.hoa_est?.association_estimated?.max_fee ?? null);
 const hoaSamples = computed(() => snapshot.value?.hoa_samples ?? payload.value?.hoa_est?.association_estimated?.n_samples ?? null);
 const hoaSubdivision = computed(() => snapshot.value?.hoa_subdivision ?? payload.value?.hoa_est?.association_estimated?.subdivision ?? null);
+const schoolPayload = computed(() => payload.value?.school?.result?.school ?? {});
+const schoolDistrict = computed(
+    () =>
+        snapshot.value?.school_district ??
+        schoolPayload.value?.district ??
+        schoolPayload.value?.school_district ??
+        null,
+);
+const elementarySchool = computed(
+    () =>
+        snapshot.value?.elementary_school ??
+        (Array.isArray(schoolPayload.value?.elementary) ? schoolPayload.value.elementary[0]?.name : null) ??
+        null,
+);
+const middleSchool = computed(
+    () =>
+        snapshot.value?.middle_school ??
+        (Array.isArray(schoolPayload.value?.middle) ? schoolPayload.value.middle[0]?.name : null) ??
+        null,
+);
+const highSchool = computed(
+    () =>
+        snapshot.value?.high_school ??
+        (Array.isArray(schoolPayload.value?.high) ? schoolPayload.value.high[0]?.name : null) ??
+        null,
+);
 
 const salesCount = computed(() => salesHistory.value.length);
 const femaCount = computed(() => femaDetails.value.length);
@@ -196,6 +222,11 @@ const hoaFeeDetail = computed(() => {
     return parts.length ? parts.join(' | ') : null;
 });
 
+const schoolDistrictLabel = computed(() => formatSchoolLabel(schoolDistrict.value));
+const elementarySchoolLabel = computed(() => formatSchoolLabel(elementarySchool.value));
+const middleSchoolLabel = computed(() => formatSchoolLabel(middleSchool.value));
+const highSchoolLabel = computed(() => formatSchoolLabel(highSchool.value));
+
 const latestFema = computed(() => {
     if (!femaDetails.value.length) {
         return null;
@@ -279,6 +310,13 @@ function formatCurrency(value?: number | null): string {
         return '-';
     }
     return `$${Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)}`;
+}
+
+function formatSchoolLabel(value?: string | null): string {
+    if (!value) {
+        return 'Not reported';
+    }
+    return value;
 }
 
 function formatTitle(value?: string): string | null {
@@ -465,8 +503,67 @@ function toTimestamp(value?: string): number {
                                 </div>
                             </template>
                         </KeySingalCard>
+                        <KeySingalCard :icon="ClipboardList" title="School Information">
+                            <template #expand>
+                                <div class="grid gap-4 sm:grid-cols-2">
+                                    <div class="flex flex-col gap-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                School District
+                                            </span>
+                                            <span
+                                                class="text-sm font-semibold break-words text-accent underline decoration-accent/20 underline-offset-4"
+                                            >
+                                                {{ schoolDistrictLabel }}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                High School
+                                            </span>
+                                            <span
+                                                class="text-sm font-semibold break-words text-accent underline decoration-accent/20 underline-offset-4"
+                                            >
+                                                {{ highSchoolLabel }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Middle School
+                                            </span>
+                                            <span
+                                                class="text-sm font-semibold break-words text-accent underline decoration-accent/20 underline-offset-4"
+                                            >
+                                                {{ middleSchoolLabel }}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Elementary School
+                                            </span>
+                                            <span
+                                                class="text-sm font-semibold break-words text-accent underline decoration-accent/20 underline-offset-4"
+                                            >
+                                                {{ elementarySchoolLabel }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </KeySingalCard>
                         <KeySingalCard
                             :icon="ClipboardList"
+                            class="lg:col-span-2"
                             title="Activity snapshot"
                             value="Recent sales and FEMA signals."
                             :details="'Sales history | ' + salesCount + ' events'"

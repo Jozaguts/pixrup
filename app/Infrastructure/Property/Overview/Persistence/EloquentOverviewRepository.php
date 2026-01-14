@@ -43,6 +43,11 @@ final class EloquentOverviewRepository implements OverviewRepository
             hoaSamples: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.n_samples'),
             hoaSubdivision: $this->stringFromPayload($row->payload, 'hoa_est.association_estimated.subdivision'),
             hoaSubdivisionId: $this->stringFromPayload($row->payload, 'hoa_est.association_estimated.subdivision_id'),
+            schoolDistrict: $this->stringFromPayload($row->payload, 'school.result.school.district')
+                ?? $this->stringFromPayload($row->payload, 'school.result.school.school_district'),
+            elementarySchool: $this->stringFromPayload($row->payload, 'school.result.school.elementary.0.name'),
+            middleSchool: $this->stringFromPayload($row->payload, 'school.result.school.middle.0.name'),
+            highSchool: $this->stringFromPayload($row->payload, 'school.result.school.high.0.name'),
             payload: $row->payload ?? [],
             fetchedAt: CarbonImmutable::parse($row->fetched_at ?? $row->updated_at ?? 'now'),
             expiresAt: CarbonImmutable::parse($row->expires_at ?? $row->updated_at ?? 'now'),
