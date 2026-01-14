@@ -29,6 +29,11 @@ final readonly class PropertyOverviewSnapshotDTO
         public ?string $elementarySchool,
         public ?string $middleSchool,
         public ?string $highSchool,
+        public ?bool $hasPool,
+        public ?bool $hasAttic,
+        public ?string $basementType,
+        public ?bool $hasAirConditioning,
+        public ?string $fireplaceType,
         /** @var array<string, mixed> */
         public array $payload,
         public CarbonImmutable $fetchedAt,
@@ -64,6 +69,11 @@ final readonly class PropertyOverviewSnapshotDTO
             'elementary_school' => $this->elementarySchool,
             'middle_school' => $this->middleSchool,
             'high_school' => $this->highSchool,
+            'has_pool' => $this->hasPool,
+            'has_attic' => $this->hasAttic,
+            'basement_type' => $this->basementType,
+            'has_air_conditioning' => $this->hasAirConditioning,
+            'fireplace_type' => $this->fireplaceType,
             'payload' => $this->payload,
             'fetched_at' => $this->fetchedAt->toIso8601String(),
             'expires_at' => $this->expiresAt->toIso8601String(),
@@ -78,6 +88,7 @@ final readonly class PropertyOverviewSnapshotDTO
     {
         $hoaPayload = data_get($payload, 'payload.hoa_est.association_estimated', []);
         $schoolPayload = data_get($payload, 'payload.school.result.school', []);
+        $detailsProperty = data_get($payload, 'payload.details.property', []);
 
         return new self(
             propertyId: (int) ($payload['property_id'] ?? 0),
@@ -115,6 +126,17 @@ final readonly class PropertyOverviewSnapshotDTO
                 ?? data_get($schoolPayload, 'middle.0.name'),
             highSchool: $payload['high_school']
                 ?? data_get($schoolPayload, 'high.0.name'),
+            hasPool: array_key_exists('has_pool', $payload)
+                ? self::normalizeBool($payload['has_pool'])
+                : self::normalizeBool(data_get($detailsProperty, 'pool')),
+            hasAttic: array_key_exists('has_attic', $payload)
+                ? self::normalizeBool($payload['has_attic'])
+                : self::normalizeBool(data_get($detailsProperty, 'attic')),
+            basementType: $payload['basement_type'] ?? data_get($detailsProperty, 'basement'),
+            hasAirConditioning: array_key_exists('has_air_conditioning', $payload)
+                ? self::normalizeBool($payload['has_air_conditioning'])
+                : self::normalizeBool(data_get($detailsProperty, 'air_conditioning')),
+            fireplaceType: $payload['fireplace_type'] ?? data_get($detailsProperty, 'fireplace'),
             payload: $payload['payload'] ?? [],
             fetchedAt: CarbonImmutable::parse($payload['fetched_at'] ?? 'now'),
             expiresAt: CarbonImmutable::parse($payload['expires_at'] ?? 'now'),
@@ -122,5 +144,32 @@ final readonly class PropertyOverviewSnapshotDTO
             errorCode: $payload['error_code'] ?? null,
             errorMessage: $payload['error_message'] ?? null,
         );
+    }
+
+    private static function normalizeBool(mixed $value): ?bool
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value === 1;
+        }
+
+        if (is_string($value)) {
+            $normalized = strtolower(trim($value));
+            if (in_array($normalized, ['y', 'yes', 'true', '1'], true)) {
+                return true;
+            }
+            if (in_array($normalized, ['n', 'no', 'false', '0'], true)) {
+                return false;
+            }
+        }
+
+        return null;
     }
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Activity, ClipboardList, Home, MapPin, RefreshCw, ShieldAlert, Waves } from 'lucide-vue-next';
+import { Activity, ClipboardList, Home, MapPin, RefreshCw, ShieldAlert, Waves, School } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import type { PropertyWorkspaceProperty, WorkspaceModuleMeta } from './types';
 import propertiesRoutes from '@/routes/properties';
@@ -52,11 +52,21 @@ const femaDetails = computed(() => (Array.isArray(femaArea.value?.details) ? fem
 const crime = computed(() => payload.value?.block_crime ?? {});
 const crimeStats = computed(() => crime.value?.property ?? crime.value?.all ?? {});
 const salesHistory = computed(() => (Array.isArray(payload.value?.sales_history) ? payload.value.sales_history : []));
-const hoaEstimate = computed(() => snapshot.value?.hoa_annual_est ?? payload.value?.hoa_est?.association_estimated?.annual_hoa_est ?? null);
-const hoaMinFee = computed(() => snapshot.value?.hoa_min_fee ?? payload.value?.hoa_est?.association_estimated?.min_fee ?? null);
-const hoaMaxFee = computed(() => snapshot.value?.hoa_max_fee ?? payload.value?.hoa_est?.association_estimated?.max_fee ?? null);
-const hoaSamples = computed(() => snapshot.value?.hoa_samples ?? payload.value?.hoa_est?.association_estimated?.n_samples ?? null);
-const hoaSubdivision = computed(() => snapshot.value?.hoa_subdivision ?? payload.value?.hoa_est?.association_estimated?.subdivision ?? null);
+const hoaEstimate = computed(
+    () => snapshot.value?.hoa_annual_est ?? payload.value?.hoa_est?.association_estimated?.annual_hoa_est ?? null,
+);
+const hoaMinFee = computed(
+    () => snapshot.value?.hoa_min_fee ?? payload.value?.hoa_est?.association_estimated?.min_fee ?? null,
+);
+const hoaMaxFee = computed(
+    () => snapshot.value?.hoa_max_fee ?? payload.value?.hoa_est?.association_estimated?.max_fee ?? null,
+);
+const hoaSamples = computed(
+    () => snapshot.value?.hoa_samples ?? payload.value?.hoa_est?.association_estimated?.n_samples ?? null,
+);
+const hoaSubdivision = computed(
+    () => snapshot.value?.hoa_subdivision ?? payload.value?.hoa_est?.association_estimated?.subdivision ?? null,
+);
 const schoolPayload = computed(() => payload.value?.school?.result?.school ?? {});
 const schoolDistrict = computed(
     () =>
@@ -83,6 +93,14 @@ const highSchool = computed(
         (Array.isArray(schoolPayload.value?.high) ? schoolPayload.value.high[0]?.name : null) ??
         null,
 );
+const detailsProperty = computed(() => payload.value?.details?.property ?? {});
+const hasPool = computed(() => snapshot.value?.has_pool ?? detailsProperty.value?.pool ?? null);
+const hasAttic = computed(() => snapshot.value?.has_attic ?? detailsProperty.value?.attic ?? null);
+const basementType = computed(() => snapshot.value?.basement_type ?? detailsProperty.value?.basement ?? null);
+const hasAirConditioning = computed(
+    () => snapshot.value?.has_air_conditioning ?? detailsProperty.value?.air_conditioning ?? null,
+);
+const fireplaceType = computed(() => snapshot.value?.fireplace_type ?? detailsProperty.value?.fireplace ?? null);
 
 const salesCount = computed(() => salesHistory.value.length);
 const femaCount = computed(() => femaDetails.value.length);
@@ -226,6 +244,11 @@ const schoolDistrictLabel = computed(() => formatSchoolLabel(schoolDistrict.valu
 const elementarySchoolLabel = computed(() => formatSchoolLabel(elementarySchool.value));
 const middleSchoolLabel = computed(() => formatSchoolLabel(middleSchool.value));
 const highSchoolLabel = computed(() => formatSchoolLabel(highSchool.value));
+const poolLabel = computed(() => formatBoolLabel(hasPool.value));
+const atticLabel = computed(() => formatBoolLabel(hasAttic.value));
+const airConditioningLabel = computed(() => formatBoolLabel(hasAirConditioning.value));
+const basementLabel = computed(() => formatTitle(basementType.value) ?? formatSchoolLabel(basementType.value));
+const fireplaceLabel = computed(() => formatTitle(fireplaceType.value) ?? formatBoolLabel(fireplaceType.value));
 
 const latestFema = computed(() => {
     if (!femaDetails.value.length) {
@@ -319,6 +342,29 @@ function formatSchoolLabel(value?: string | null): string {
     return value;
 }
 
+function formatBoolLabel(value: unknown): string {
+    if (value === null || value === undefined) {
+        return 'Not reported';
+    }
+    if (typeof value === 'boolean') {
+        return value ? 'Yes' : 'No';
+    }
+    if (typeof value === 'number') {
+        return value > 0 ? 'Yes' : 'No';
+    }
+    if (typeof value === 'string') {
+        const normalized = value.trim().toLowerCase();
+        if (['y', 'yes', 'true', '1'].includes(normalized)) {
+            return 'Yes';
+        }
+        if (['n', 'no', 'false', '0'].includes(normalized)) {
+            return 'No';
+        }
+        return value;
+    }
+    return 'Not reported';
+}
+
 function formatTitle(value?: string): string | null {
     if (!value) {
         return null;
@@ -348,7 +394,7 @@ function toTimestamp(value?: string): number {
 </script>
 
 <template>
-    <div class="pt-6 flex flex-col gap-6 text-accent">
+    <div class="flex flex-col gap-6 pt-6 text-accent">
         <section class="grid h-100 gap-6">
             <article class="npo-form-shadow flex flex-col gap-6 rounded-[12px] p-6 text-accent">
                 <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -363,11 +409,11 @@ function toTimestamp(value?: string): number {
                             type="button"
                             :disabled="loading"
                             class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
-                        @click="loadOverView(true)"
-                    >
-                        <RefreshCw :class="['h-4 w-4', { 'animate-spin': loading }]" />
-                        Re-fetch
-                    </button>
+                            @click="loadOverView(true)"
+                        >
+                            <RefreshCw :class="['h-4 w-4', { 'animate-spin': loading }]" />
+                            Re-fetch
+                        </button>
                     </div>
                 </header>
 
@@ -399,37 +445,7 @@ function toTimestamp(value?: string): number {
                 </div>
 
                 <div v-else class="flex flex-col gap-6">
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <KeySingalCard
-                            :icon="signalByLabel.get('Owner occupied')?.icon ?? Home"
-                            :value="signalByLabel.get('Owner occupied')?.value ?? '-'"
-                            :details="signalByLabel.get('Owner occupied')?.detail ?? ''"
-                            title="Owner occupied"
-                        />
-                        <KeySingalCard
-                            :icon="signalByLabel.get('FEMA disaster area')?.icon ?? Home"
-                            :value="signalByLabel.get('FEMA disaster area')?.value ?? '-'"
-                            :details="signalByLabel.get('FEMA disaster area')?.detail ?? ''"
-                            title="FEMA disaster area"
-                        />
-                    </div>
-
-                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        <KeySingalCard
-                            :icon="signalByLabel.get('Flood zone')?.icon ?? Home"
-                            :value="signalByLabel.get('Flood zone')?.value ?? '-'"
-                            :details="signalByLabel.get('Flood zone')?.detail ?? ''"
-                            title=" Flood zone"
-                        />
-                        <KeySingalCard
-                            :icon="signalByLabel.get('Crime percentile')?.icon ?? Home"
-                            :value="signalByLabel.get('Crime percentile')?.value ?? '-'"
-                            :details="signalByLabel.get('Crime percentile')?.detail ?? ''"
-                            title="Crime percentile"
-                        />
-                    </div>
-
-                    <div class="grid gap-4 lg:grid-cols-2">
+                    <div class="grid gap-4 lg:grid-cols-3">
                         <KeySingalCard :icon="MapPin" title="Location context">
                             <template #expand>
                                 <div class="grid gap-2 sm:grid-cols-2">
@@ -503,7 +519,7 @@ function toTimestamp(value?: string): number {
                                 </div>
                             </template>
                         </KeySingalCard>
-                        <KeySingalCard :icon="ClipboardList" title="School Information">
+                        <KeySingalCard :icon="School" title="School Information">
                             <template #expand>
                                 <div class="grid gap-4 sm:grid-cols-2">
                                     <div class="flex flex-col gap-4">
@@ -561,9 +577,98 @@ function toTimestamp(value?: string): number {
                                 </div>
                             </template>
                         </KeySingalCard>
+                        <KeySingalCard :icon="Home" title="Property facts">
+                            <template #expand>
+                                <div class="grid gap-4 sm:grid-cols-2">
+                                    <div class="flex flex-col gap-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Pool
+                                            </span>
+                                            <span class="text-sm font-semibold break-words text-accent">
+                                                {{ poolLabel }}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Attic
+                                            </span>
+                                            <span class="text-sm font-semibold break-words text-accent">
+                                                {{ atticLabel }}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Basement
+                                            </span>
+                                            <span class="text-sm font-semibold break-words text-accent">
+                                                {{ basementLabel }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Air conditioning
+                                            </span>
+                                            <span class="text-sm font-semibold break-words text-accent">
+                                                {{ airConditioningLabel }}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <span
+                                                class="text-[11px] font-semibold tracking-[0.2em] text-accent/50 uppercase"
+                                            >
+                                                Fireplace
+                                            </span>
+                                            <span class="text-sm font-semibold break-words text-accent">
+                                                {{ fireplaceLabel }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </KeySingalCard>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
+                    <div class="grid gap-4 md:grid-cols-4">
+                        <KeySingalCard
+                            :icon="signalByLabel.get('Owner occupied')?.icon ?? Home"
+                            :value="signalByLabel.get('Owner occupied')?.value ?? '-'"
+                            :details="signalByLabel.get('Owner occupied')?.detail ?? ''"
+                            title="Owner occupied"
+                        />
+                        <KeySingalCard
+                            :icon="signalByLabel.get('FEMA disaster area')?.icon ?? Home"
+                            :value="signalByLabel.get('FEMA disaster area')?.value ?? '-'"
+                            :details="signalByLabel.get('FEMA disaster area')?.detail ?? ''"
+                            title="FEMA disaster area"
+                        />
+                        <KeySingalCard
+                            :icon="signalByLabel.get('Flood zone')?.icon ?? Home"
+                            :value="signalByLabel.get('Flood zone')?.value ?? '-'"
+                            :details="signalByLabel.get('Flood zone')?.detail ?? ''"
+                            title=" Flood zone"
+                        />
+
+                        <KeySingalCard
+                            :icon="signalByLabel.get('Crime percentile')?.icon ?? Home"
+                            :value="signalByLabel.get('Crime percentile')?.value ?? '-'"
+                            :details="signalByLabel.get('Crime percentile')?.detail ?? ''"
+                            title="Crime percentile"
+                        />
+                    </div>
+                    <div class="grid gap-4">
                         <KeySingalCard
                             :icon="ClipboardList"
-                            class="lg:col-span-2"
                             title="Activity snapshot"
                             value="Recent sales and FEMA signals."
                             :details="'Sales history | ' + salesCount + ' events'"
