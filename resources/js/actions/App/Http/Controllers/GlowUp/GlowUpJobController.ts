@@ -447,6 +447,86 @@ attachForm.post = (args: { glowupJob: number | { id: number } } | [glowupJob: nu
 
 attach.form = attachForm
 
-const GlowUpJobController = { history, index, store, show, attach }
+/**
+* @see \App\Http\Controllers\GlowUp\GlowUpJobController::detach
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:171
+* @route '/glowup/jobs/{glowupJob}/detach'
+*/
+export const detach = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: detach.url(args, options),
+    method: 'post',
+})
+
+detach.definition = {
+    methods: ["post"],
+    url: '/glowup/jobs/{glowupJob}/detach',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\GlowUp\GlowUpJobController::detach
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:171
+* @route '/glowup/jobs/{glowupJob}/detach'
+*/
+detach.url = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { glowupJob: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { glowupJob: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            glowupJob: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        glowupJob: typeof args.glowupJob === 'object'
+        ? args.glowupJob.id
+        : args.glowupJob,
+    }
+
+    return detach.definition.url
+            .replace('{glowupJob}', parsedArgs.glowupJob.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\GlowUp\GlowUpJobController::detach
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:171
+* @route '/glowup/jobs/{glowupJob}/detach'
+*/
+detach.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: detach.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\GlowUp\GlowUpJobController::detach
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:171
+* @route '/glowup/jobs/{glowupJob}/detach'
+*/
+const detachForm = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: detach.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\GlowUp\GlowUpJobController::detach
+* @see app/Http/Controllers/GlowUp/GlowUpJobController.php:171
+* @route '/glowup/jobs/{glowupJob}/detach'
+*/
+detachForm.post = (args: { glowupJob: number | { id: number } } | [glowupJob: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: detach.url(args, options),
+    method: 'post',
+})
+
+detach.form = detachForm
+
+const GlowUpJobController = { history, index, store, show, attach, detach }
 
 export default GlowUpJobController

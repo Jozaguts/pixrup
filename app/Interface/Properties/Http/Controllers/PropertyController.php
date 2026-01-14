@@ -87,6 +87,10 @@ class PropertyController extends Controller
 
         $glowUpJobs = $property->glowupJobs()->latest()->take(10)->get();
         $glowUpJobsPayload = GlowUpJobResource::collection($glowUpJobs)->toArray(request());
+        $glowUpAttachments = data_get($property->metadata, 'glowup.attachments', []);
+        if (! is_array($glowUpAttachments)) {
+            $glowUpAttachments = [];
+        }
 
         $authedUser = auth()->user();
         $usageSummary = $authedUser
@@ -184,6 +188,7 @@ class PropertyController extends Controller
             'glowUp' => [
                 'jobs' => $glowUpJobsPayload,
                 'usage' => $glowUpUsage,
+                'attachments' => $glowUpAttachments,
                 'options' => [
                     'room_types' => config('glowup.room_types', []),
                     'styles' => config('glowup.styles', []),
