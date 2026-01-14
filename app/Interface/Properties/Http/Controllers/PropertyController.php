@@ -16,6 +16,7 @@ use App\Services\Runes\MarketVelocityRune;
 use App\Services\Runes\PriceReductionPressureRune;
 use App\Services\Runes\PriceVsMarketRune;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -233,9 +234,10 @@ class PropertyController extends Controller
             ->with('status', 'property-created');
     }
 
-    public function overview(Property $property, CreatePropertyOverviewUseCase $useCase): JsonResponse
+    public function overview(Property $property, CreatePropertyOverviewUseCase $useCase, Request $request): JsonResponse
     {
-        $overview = $useCase->execute($property->toEntity());
+        $force = $request->boolean('force');
+        $overview = $useCase->execute($property->toEntity(), $force);
 
         return response()->json($overview);
     }

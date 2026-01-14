@@ -38,11 +38,11 @@ readonly class AppraisePropertyWorthUseCase
      * Returns: PropertyWorthDTO
      * Expected Result: Returns DTO produced by the application service for the property.
      */
-    public function execute(PropertyEntity $property): PropertyWorthDTO
+    public function execute(PropertyEntity $property, bool $force = false): PropertyWorthDTO
     {
         $threshold = now()->subHours(self::CACHE_TTL_HOURS);
 
-        if (false  && $cached = $this->repo->findFresh($property->id, $threshold)) {
+        if (!$force && $cached = $this->repo->findFresh($property->id, $threshold)) {
             return $cached;
         }
         $this->usage->ensure(UsageAction::APPRAISAL, $property);

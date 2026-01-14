@@ -15,6 +15,7 @@ use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Throwable;
 
 /**
@@ -33,10 +34,12 @@ class PropertyWorthController extends Controller
      */
     public function fetch(
         Property $property,
-        AppraisePropertyWorthUseCase $useCase
+        AppraisePropertyWorthUseCase $useCase,
+        Request $request,
     ): JsonResponse {
         try {
-            $dto = $useCase->execute($property->toEntity());
+            $force = $request->boolean('force');
+            $dto = $useCase->execute($property->toEntity(), $force);
 
             return response()->json([
                 'worth' => $this->transformDto($dto),

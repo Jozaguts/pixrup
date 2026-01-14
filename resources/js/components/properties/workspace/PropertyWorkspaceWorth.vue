@@ -194,9 +194,16 @@ const handleFetch = async () => {
         return;
     }
 
-    const route = propertiesRoutes.worth.fetch({
-        property: propertyId.value,
-    });
+    const route = propertiesRoutes.worth.fetch(
+        {
+            property: propertyId.value,
+        },
+        {
+            query: {
+                force: 1,
+            },
+        },
+    );
 
     isFetchLoading.value = true;
     fetchErrorMessage.value = null;
@@ -304,7 +311,7 @@ watch(successMessage, (value, previous) => {
                                     :is="isFetchLoading ? Loader2 : RefreshCw"
                                     :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
                                 />
-                                {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
+                                {{ isUsageLimitReached ? 'Limit reached' : 'Re-fetch valuation' }}
                             </button>
                             <div v-if="lastFetchedLabel" class="mt-2 text-right text-sm text-accent/50">
                                 Last fetched on {{ lastFetchedLabel }}

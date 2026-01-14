@@ -183,11 +183,21 @@ const latestFema = computed(() => {
 const latestFemaTitle = computed(() => latestFema.value?.title ?? 'No FEMA declarations available.');
 const latestFemaBadge = computed(() => latestFema.value?.type ?? 'FEMA');
 const latestFemaDate = computed(() => latestFema.value?.dateLabel ?? '-');
-async function loadOverView() {
+async function loadOverView(force = false) {
     loading.value = true;
     overviewError.value = null;
     try {
-        const res = await fetch(propertiesRoutes.overview.get(props.property.id as number).url, {
+        const route = propertiesRoutes.overview.get(
+            props.property.id as number,
+            force
+                ? {
+                      query: {
+                          force: 1,
+                      },
+                  }
+                : undefined,
+        );
+        const res = await fetch(route.url, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -273,11 +283,11 @@ function toTimestamp(value?: string): number {
                             type="button"
                             :disabled="loading"
                             class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
-                            @click="loadOverView"
-                        >
-                            <RefreshCw :class="['h-4 w-4', { 'animate-spin': loading }]" />
-                            Refresh
-                        </button>
+                        @click="loadOverView(true)"
+                    >
+                        <RefreshCw :class="['h-4 w-4', { 'animate-spin': loading }]" />
+                        Re-fetch
+                    </button>
                     </div>
                 </header>
 

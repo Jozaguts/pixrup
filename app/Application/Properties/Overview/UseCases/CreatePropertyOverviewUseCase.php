@@ -16,13 +16,16 @@ final readonly class CreatePropertyOverviewUseCase
     ) {}
 
     /** @return array<string, mixed> */
-    public function execute(PropertyEntity $propertyEntity): array
+    public function execute(PropertyEntity $propertyEntity, bool $force = false): array
     {
         if ($propertyEntity->id === null) {
             throw new \InvalidArgumentException('Property id is required for overview.');
         }
 
-        $snapshot = $this->overviewRepository->get($propertyEntity->id);
+        $snapshot = null;
+        if (! $force) {
+            $snapshot = $this->overviewRepository->get($propertyEntity->id);
+        }
         if (!$snapshot) {
             $snapshot = $this->provider->fetchPropertySnapshot($propertyEntity);
             $this->overviewRepository->save($snapshot);
