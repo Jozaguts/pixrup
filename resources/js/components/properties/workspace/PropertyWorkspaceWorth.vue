@@ -302,7 +302,7 @@ watch(successMessage, (value, previous) => {
         </WorkspaceModuleHeader>
         <section class="grid h-100 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
             <div class="flex gap-6">
-                <article class="npo-form-shadow flex w-full flex-col gap-4 rounded-[12px] p-6 text-sm text-accent">
+                <article class="npo-form-shadow flex w-full flex-col gap-4 rounded-[12px] p-4 text-sm text-accent">
                     <div class="space-y-1">
                         <h2 class="text-2xl font-semibold tracking-tight text-accent">Estimate property value</h2>
                         <h2 class="text-2xl font-semibold tracking-tight text-accent">
@@ -385,7 +385,7 @@ watch(successMessage, (value, previous) => {
                     </div>
                     <div
                         v-else-if="state === 'error'"
-                        class="flex flex-col gap-4 rounded-[12px] bg-surface p-6 shadow-neu-in"
+                        class="flex flex-col gap-4 rounded-[12px] bg-surface p-4 shadow-neu-in"
                     >
                         <div class="flex items-center gap-3 text-sm">
                             <AlertCircle class="h-5 w-5" />

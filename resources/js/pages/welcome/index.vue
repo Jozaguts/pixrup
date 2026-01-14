@@ -169,7 +169,7 @@ onMounted(async () => {
                                 <div
                                     data-ns-animate
                                     data-delay="0.3"
-                                    class="mx-auto w-full max-w-[847px] rounded-4xl bg-white p-6 md:p-8 lg:p-11 dark:bg-background-6"
+                                    class="mx-auto w-full max-w-[847px] rounded-4xl bg-white p-4 md:p-8 lg:p-11 dark:bg-background-6"
                                 >
                                     <form action="/index.html" method="POST" class="space-y-8">
                                         <!-- name and phone number  -->

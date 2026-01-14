@@ -109,7 +109,7 @@ onUnmounted(() => {
         <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-black/60" @click="emit('close')" />
             <div
-                class="relative flex w-full max-w-3xl flex-col overflow-hidden rounded-[20px] bg-surface p-6 text-accent shadow-[0_20px_50px_rgba(15,23,42,0.55)] max-h-[90vh]"
+                class="relative flex w-full max-w-3xl flex-col overflow-hidden rounded-[20px] bg-surface p-4 text-accent shadow-[0_20px_50px_rgba(15,23,42,0.55)] max-h-[90vh]"
             >
                 <header class="flex items-start justify-between gap-4">
                     <div class="space-y-2">

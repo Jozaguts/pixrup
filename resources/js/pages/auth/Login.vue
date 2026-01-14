@@ -69,7 +69,7 @@ defineProps<{
             v-bind="auth.login.store()"
             :reset-on-success="['password']"
             v-slot="{ errors, processing }"
-            class="flex flex-col gap-6 p-6 py-3"
+            class="flex flex-col gap-6 p-4 py-3"
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">

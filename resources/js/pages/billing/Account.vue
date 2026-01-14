@@ -238,7 +238,7 @@ const handleShowPaymentForm = () => {
             </header>
 
             <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-                <article class="npo-form-shadow flex flex-col gap-5 rounded-[16px] bg-surface p-6">
+                <article class="npo-form-shadow flex flex-col gap-5 rounded-[16px] bg-surface p-4">
                     <header class="flex flex-col gap-2">
                         <h2 class="text-base font-semibold">Order history</h2>
                         <p class="text-sm text-accent/50">Manage billing information and view receipts.</p>
@@ -246,7 +246,7 @@ const handleShowPaymentForm = () => {
 
                     <div
                         v-if="!hasOrderHistory"
-                        class="flex flex-col items-center justify-center gap-3 rounded-[14px] bg-background p-6 text-center shadow-neu-in"
+                        class="flex flex-col items-center justify-center gap-3 rounded-[14px] bg-background p-4 text-center shadow-neu-in"
                     >
                         <div class="flex size-12 items-center justify-center rounded-full bg-surface shadow-neu-in">
                             <FolderOpen class="h-5 w-5 text-accent/60" />
@@ -301,7 +301,7 @@ const handleShowPaymentForm = () => {
                     </template>
                 </article>
 
-                <aside v-if="hasActivePlan" class="flex flex-col gap-4 rounded-[18px] bg-primary p-6 text-white shadow-neu-out">
+                <aside v-if="hasActivePlan" class="flex flex-col gap-4 rounded-[18px] bg-primary p-4 text-white shadow-neu-out">
                     <p class="text-xs font-semibold tracking-[0.3em] text-white/70 uppercase">Your plan</p>
                     <div class="space-y-1">
                         <h3 class="text-lg font-semibold">{{ activePlan.name }}</h3>
@@ -316,7 +316,7 @@ const handleShowPaymentForm = () => {
                         Cancel subscription
                     </button>
                 </aside>
-                <aside v-else class="flex flex-col items-center justify-center gap-4 rounded-[18px] bg-surface p-6 text-center shadow-neu-out">
+                <aside v-else class="flex flex-col items-center justify-center gap-4 rounded-[18px] bg-surface p-4 text-center shadow-neu-out">
                     <div class="flex size-12 items-center justify-center rounded-full bg-background shadow-neu-in">
                         <Sparkles class="h-5 w-5 text-accent/60" />
                     </div>
@@ -333,7 +333,7 @@ const handleShowPaymentForm = () => {
                 </aside>
             </div>
 
-            <section class="npo-form-shadow flex flex-col gap-5 rounded-[16px] bg-surface p-6">
+            <section class="npo-form-shadow flex flex-col gap-5 rounded-[16px] bg-surface p-4">
                 <header class="flex flex-col gap-2">
                     <h2 class="text-base font-semibold">Payment method</h2>
                     <p class="text-sm text-accent/50">Manage billing information and view receipts.</p>
@@ -341,7 +341,7 @@ const handleShowPaymentForm = () => {
 
                 <div v-if="!hasPaymentMethod" class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                     <div
-                        class="flex flex-col items-center justify-center gap-3 rounded-[14px] bg-background p-6 text-center shadow-neu-in"
+                        class="flex flex-col items-center justify-center gap-3 rounded-[14px] bg-background p-4 text-center shadow-neu-in"
                     >
                         <div class="flex size-12 items-center justify-center rounded-full bg-surface shadow-neu-in">
                             <CreditCard class="h-5 w-5 text-accent/60" />

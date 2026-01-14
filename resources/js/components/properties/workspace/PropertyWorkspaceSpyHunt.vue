@@ -98,10 +98,10 @@ onMounted(() => {
             </template>
         </WorkspaceModuleHeader>
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
-        <section v-else-if="isReady" class="npo-form-shadow rounded-[12px] bg-surface p-6 shadow-neu-in">
+        <section v-else-if="isReady" class="npo-form-shadow rounded-[12px] bg-surface p-2 md:p-4 lg:p-4  shadow-neu-in">
             <div class="flex flex-col gap-4 md:grid md:grid-cols-12 lg:grid lg:grid-cols-12">
                 <div
-                    class="col-span-1 mt-4 h-full min-h-[600px] rounded-[12px] bg-surface p-6 shadow-neu-in md:col-span-9 lg:col-span-9"
+                    class="col-span-1 mt-4 h-full min-h-[600px] rounded-[12px] bg-surface p-2 md:p-4 lg:p-4  shadow-neu-in md:col-span-9 lg:col-span-9"
                 >
                     <div class="npo-form-shadow mb-4 flex flex-col rounded-[12px] p-4 md:hidden lg:hidden">
                         <div class="relative mb-6">
@@ -304,10 +304,11 @@ onMounted(() => {
                 <div class="pa-2 md:col-span-3 lg:col-span-3">
                     <h2 class="mb-2 text-2xl font-semibold tracking-tight text-accent sm:text-2xl md:text-2xl">
                         Market Overview
+
                     </h2>
                     <div class="flex flex-col gap-4">
                         <div
-                            class="flex grid-cols-2 flex-col justify-between gap-4 rounded-[12px] bg-surface p-5 sm:gap-3 md:grid lg:grid"
+                            class="flex grid-cols-2 flex-col justify-between gap-4 rounded-[12px] bg-surface p-2 md:p-4 lg:p-4 sm:gap-3 md:grid lg:grid"
                         >
                             <MarketOverviewCard
                                 icon="ph:currency-dollar-bold"

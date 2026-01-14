@@ -199,7 +199,7 @@ watch(
             description="Turn your photos into catalog-ready visuals for reports and clients."
         >
             <template #actions>
-                <div class="flex items-start gap-3 rounded-[16px] bg-surface  shadow-neu-in">
+                <div class="flex items-start gap-3 rounded-[16px] bg-surface shadow-neu-in p-4">
                     <Sparkles class="h-5 w-5 text-[#6e33ff]" />
                     <div class="flex flex-col gap-2">
                         <p class="text-xs tracking-[0.35em] text-accent/40 uppercase">Monthly usage</p>
@@ -242,7 +242,7 @@ watch(
                 @file-selected="handleFileSelected"
                 @refresh="refreshJobs"
             />
-            <section v-else key="history" class="npo-form-shadow flex flex-col gap-5 rounded-[22px] bg-surface p-6">
+            <section v-else key="history" class="npo-form-shadow flex flex-col gap-5 rounded-[22px] bg-surface p-4">
                 <div class="space-y-2">
                     <p class="text-xs font-semibold tracking-[0.35em] text-accent/40 uppercase">Processed history</p>
                     <h3 class="text-lg font-semibold text-accent">GlowUp results</h3>

@@ -73,7 +73,7 @@ const handleDragLeave = () => {
 </script>
 
 <template>
-    <article class="npo-form-shadow flex flex-col gap-6 rounded-[18px] bg-surface p-6 text-accent">
+    <article class="npo-form-shadow flex flex-col gap-6 rounded-[18px] bg-surface p-4 text-accent">
         <header class="flex flex-wrap items-start justify-between gap-4">
             <div class="space-y-2">
                 <p class="text-xs font-semibold tracking-[0.35em] text-accent/40 uppercase">
@@ -84,14 +84,6 @@ const handleDragLeave = () => {
                     Supported formats JPG/PNG ({{ maxUpload }}MB). Choose a room and style for the AI.
                 </p>
             </div>
-            <button
-                type="button"
-                class="inline-flex items-center gap-2 rounded-[14px] bg-background px-4 py-2 text-xs font-semibold text-[#6e33ff] shadow-neu-in"
-                @click="emit('refresh')"
-            >
-                <RefreshCw class="h-4 w-4" />
-                Refresh
-            </button>
         </header>
 
         <div

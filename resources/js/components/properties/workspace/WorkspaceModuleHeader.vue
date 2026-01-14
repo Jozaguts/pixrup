@@ -9,7 +9,7 @@ defineProps<Props>();
 </script>
 
 <template>
-    <header class="npo-form-shadow flex flex-col gap-4 rounded-[22px] p-6 md:flex-row md:items-center md:justify-between">
+    <header class="npo-form-shadow flex flex-col gap-4 rounded-[22px] p-4 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
             <p v-if="eyebrow" class="text-xs font-semibold tracking-[0.35em] text-accent/40 uppercase">
                 {{ eyebrow }}

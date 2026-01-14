@@ -415,7 +415,7 @@ function toTimestamp(value?: string): number {
         </WorkspaceModuleHeader>
 
         <section class="grid h-100 gap-6">
-            <article class="npo-form-shadow flex flex-col gap-6 rounded-[12px] p-6 text-accent">
+            <article class="npo-form-shadow flex flex-col gap-6 rounded-[12px] p-4 text-accent">
 
                 <div v-if="loading" class="grid gap-4">
                     <div class="grid gap-4 md:grid-cols-2">
