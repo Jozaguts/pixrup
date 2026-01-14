@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SpyHuntComparable } from '@/components/properties/workspace/spyhunt/types';
 import type { PropertyWorkspaceProperty, SpyHunt, WorkspaceModuleMeta } from '@/components/properties/workspace/types';
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, toRefs } from 'vue';
 import { Icon } from '@iconify/vue';
 import SpyHuntWorkSpaceSkeleton from '@/components/skeleton/SpyHuntWorkSpaceSkeleton.vue';
 import useSpyHunt from '@/composables/useSpyHunt';
@@ -60,7 +60,80 @@ async function loadSpyHunt(force = false) {
 const activeMarker = ref<LeafletMouseEvent | null>(null);
 const activeComparable = ref<SpyHuntComparable>();
 const markerScreenPos = ref({ x: 0, y: 0 });
-function onMarkHover(marker: LeafletMouseEvent, comparable: SpyHuntComparable): void {
+const hideMarkerTimeout = ref<number | null>(null);
+const isMobile = ref(false);
+const viewport = ref({ width: 0, height: 0 });
+
+const updateViewport = () => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    viewport.value = { width: window.innerWidth, height: window.innerHeight };
+    isMobile.value = window.innerWidth < 768;
+};
+
+const tooltipStyle = computed(() => {
+    if (!activeMarker.value) {
+        return {};
+    }
+
+    const mapSize = activeMarker.value?.target?._map?.getSize?.();
+    const containerWidth = mapSize?.x ?? viewport.value.width;
+    const containerHeight = mapSize?.y ?? viewport.value.height;
+
+    const baseLeft = markerScreenPos.value.x;
+    const baseTop = markerScreenPos.value.y;
+
+    if (!isMobile.value) {
+        return {
+            top: `${baseTop}px`,
+            left: `${baseLeft + 200}px`,
+            transform: 'translate(-50%, -100%)',
+        };
+    }
+
+    const padding = 16;
+    const maxWidth = 340;
+    const tooltipWidth = Math.max(0, Math.min(maxWidth, containerWidth - padding * 2));
+    const halfWidth = tooltipWidth / 2;
+    const minLeft = padding + halfWidth;
+    const maxLeft = containerWidth - padding - halfWidth;
+
+    let left = baseLeft;
+    if (maxLeft < minLeft) {
+        left = containerWidth / 2;
+    } else {
+        left = Math.min(Math.max(left, minLeft), maxLeft);
+    }
+
+    const minTop = padding + 8;
+    const maxTop = containerHeight - padding;
+    let top = Math.min(Math.max(baseTop, minTop), maxTop);
+
+    return {
+        top: `${top}px`,
+        left: `${left}px`,
+        transform: 'translate(-50%, -110%)',
+    };
+});
+function clearHideMarker(): void {
+    if (hideMarkerTimeout.value === null) {
+        return;
+    }
+    window.clearTimeout(hideMarkerTimeout.value);
+    hideMarkerTimeout.value = null;
+}
+
+function scheduleHideMarker(): void {
+    clearHideMarker();
+    hideMarkerTimeout.value = window.setTimeout(() => {
+        activeMarker.value = null;
+        activeComparable.value = undefined;
+    }, 300);
+}
+
+function setActiveMarker(marker: LeafletMouseEvent, comparable: SpyHuntComparable): void {
+    clearHideMarker();
     activeMarker.value = marker;
     activeComparable.value = useSpyHunt().formatComparable(comparable) as unknown as SpyHuntComparable;
     const point = marker.containerPoint;
@@ -69,13 +142,32 @@ function onMarkHover(marker: LeafletMouseEvent, comparable: SpyHuntComparable): 
     }
     markerScreenPos.value = { x: point.x, y: point.y };
 }
+
+function onMarkHover(marker: LeafletMouseEvent, comparable: SpyHuntComparable): void {
+    setActiveMarker(marker, comparable);
+}
+
+function onMarkClick(marker: LeafletMouseEvent, comparable: SpyHuntComparable): void {
+    if (activeComparable.value?.id === comparable.id) {
+        scheduleHideMarker();
+        return;
+    }
+    setActiveMarker(marker, comparable);
+}
 /*
  * COMPUTED
  * */
 
 const isReady = computed(() => !loading.value && !!spyhunt.value.property?.lat);
 onMounted(() => {
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
     loadSpyHunt();
+});
+
+onBeforeUnmount(() => {
+    clearHideMarker();
+    window.removeEventListener('resize', updateViewport);
 });
 </script>
 <template>
@@ -98,10 +190,10 @@ onMounted(() => {
             </template>
         </WorkspaceModuleHeader>
         <SpyHuntWorkSpaceSkeleton v-if="loading" />
-        <section v-else-if="isReady" class="npo-form-shadow rounded-[12px] bg-surface p-2 md:p-4 lg:p-4  shadow-neu-in">
+        <section v-else-if="isReady" class="npo-form-shadow rounded-[12px] bg-surface p-2 shadow-neu-in md:p-4 lg:p-4">
             <div class="flex flex-col gap-4 md:grid md:grid-cols-12 lg:grid lg:grid-cols-12">
                 <div
-                    class="col-span-1 mt-4 h-full min-h-[600px] rounded-[12px] bg-surface p-2 md:p-4 lg:p-4  shadow-neu-in md:col-span-9 lg:col-span-9"
+                    class="col-span-1 mt-4 h-full min-h-[600px] rounded-[12px] bg-surface p-2 shadow-neu-in md:col-span-9 md:p-4 lg:col-span-9 lg:p-4"
                 >
                     <div class="npo-form-shadow mb-4 flex flex-col rounded-[12px] p-4 md:hidden lg:hidden">
                         <div class="relative mb-6">
@@ -128,7 +220,7 @@ onMounted(() => {
                             <span class="text-body absolute end-0 -bottom-6 text-sm">5</span>
                         </div>
                         <div class="mt-4">
-                            <span class="text-sm font-semibold tracking-wide text-accent uppercase ">
+                            <span class="text-sm font-semibold tracking-wide text-accent uppercase">
                                 Property type</span
                             >
                             <NeuphormistTabs
@@ -168,7 +260,8 @@ onMounted(() => {
                             :key="idx"
                             :latlng="[comp.latitude, comp.longitude]"
                             @mouseover="(e) => onMarkHover(e, comp)"
-                            @mouseout="activeMarker = null"
+                            @mouseout="scheduleHideMarker"
+                            @click="(e) => onMarkClick(e, comp)"
                         >
                             <VMapPinIcon
                                 :color="comp.status === 'Active' ? '#3B82F6' : '#16A34A'"
@@ -181,11 +274,9 @@ onMounted(() => {
                             <div
                                 v-if="activeMarker"
                                 class="min-full m absolute z-[600] max-w-[340px] rounded-lg bg-surface p-4 shadow-neu-in"
-                                :style="{
-                                    top: markerScreenPos.y + 'px',
-                                    left: markerScreenPos.x + 200 + 'px',
-                                    transform: 'translate(-50%, -100%)',
-                                }"
+                                :style="tooltipStyle"
+                                @mouseenter="clearHideMarker"
+                                @mouseleave="scheduleHideMarker"
                             >
                                 <p class="font-semibold text-accent">{{ activeComparable?.address }}</p>
                                 <div class="mt-1 mb-3 flex gap-2 text-accent">
@@ -194,22 +285,22 @@ onMounted(() => {
                                     <span class="text-sm">{{ activeComparable?.pricePerFt }}/ft²</span>
                                 </div>
                                 <div class="flex gap-x-4">
-                                    <div class="inline-flex items-center justify-center text-base">
+                                    <div class="inline-flex items-center justify-center text-base text-accent">
                                         <Icon icon="ph:bulldozer-light" class="h-6 w-6"></Icon>
                                         <span class="ml-1">{{ activeComparable?.yearBuilt }}</span>
                                     </div>
-                                    <div class="inline-flex items-center justify-center text-base">
+                                    <div class="inline-flex items-center justify-center text-base text-accent">
                                         <Icon
                                             icon="material-symbols-light:bedroom-parent-outline"
                                             class="h-6 w-6"
                                         ></Icon>
                                         <span class="ml-1">{{ activeComparable?.bedrooms }}</span>
                                     </div>
-                                    <div class="inline-flex items-center justify-center text-base">
+                                    <div class="inline-flex items-center justify-center text-base text-accent">
                                         <Icon icon="material-symbols-light:shower-outline" class="h-6 w-6"></Icon>
                                         <span class="ml-1">{{ activeComparable?.bathrooms }}</span>
                                     </div>
-                                    <div class="inline-flex items-center justify-center text-sm">
+                                    <div class="inline-flex items-center justify-center text-sm text-accent">
                                         <Icon icon="game-icons:path-distance" class="h-5 w-5"></Icon>
                                         <span class="ml-1">{{ activeComparable?.distance }}</span>
                                     </div>
@@ -270,12 +361,15 @@ onMounted(() => {
                                         <div class="inline-flex items-center justify-center text-base">
                                             <Icon
                                                 icon="material-symbols-light:bedroom-parent-outline"
-                                                class="h-6 w-6"
+                                                class="h-6 w-6 text-accent"
                                             ></Icon>
                                             <span class="ml-1">{{ spyHuntProperty.bedrooms }}</span>
                                         </div>
                                         <div class="inline-flex items-center justify-center text-base">
-                                            <Icon icon="material-symbols-light:shower-outline" class="h-6 w-6 !text-accent"></Icon>
+                                            <Icon
+                                                icon="material-symbols-light:shower-outline"
+                                                class="h-6 w-6 !text-accent"
+                                            ></Icon>
                                             <span class="ml-1">{{ spyHuntProperty.bathrooms }}</span>
                                         </div>
                                     </div>
@@ -304,11 +398,10 @@ onMounted(() => {
                 <div class="pa-2 md:col-span-3 lg:col-span-3">
                     <h2 class="mb-2 text-2xl font-semibold tracking-tight text-accent sm:text-2xl md:text-2xl">
                         Market Overview
-
                     </h2>
                     <div class="flex flex-col gap-4">
                         <div
-                            class="flex grid-cols-2 flex-col justify-between gap-4 rounded-[12px] bg-surface p-2 md:p-4 lg:p-4 sm:gap-3 md:grid lg:grid"
+                            class="flex grid-cols-2 flex-col justify-between gap-4 rounded-[12px] bg-surface p-2 sm:gap-3 md:grid md:p-4 lg:grid lg:p-4"
                         >
                             <MarketOverviewCard
                                 icon="ph:currency-dollar-bold"
