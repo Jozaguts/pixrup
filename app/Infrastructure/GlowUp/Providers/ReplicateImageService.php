@@ -102,7 +102,7 @@ class ReplicateImageService implements GlowUpImageProvider
                 'prompt' => $prompt,
                 'max_images' => $this->maxImages,
                 'image_input' => [$sourceUrl],
-                'aspect_ratio' => $this->aspectRatio,
+                'aspect_ratio' => 'match_input_image',
                 'sequential_image_generation' => 'disabled',
                 'width' => $targetW,
                 'height' => $targetH,

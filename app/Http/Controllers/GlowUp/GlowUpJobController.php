@@ -168,6 +168,29 @@ class GlowUpJobController extends Controller
         return back()->with('status', 'glowup-attached');
     }
 
+    public function detach(
+        AttachGlowUpResultRequest $request,
+        GlowupJob $glowupJob,
+    ): JsonResponse|RedirectResponse {
+        $this->assertJobOwner($request->user(), $glowupJob);
+
+        $payload = $request->validatedPayload();
+
+        $this->service->detachResult(
+            $glowupJob,
+            $payload['action'],
+        );
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'job' => (new GlowUpJobResource($glowupJob->refresh()))->resolve(),
+                'message' => 'Attachment removed successfully.',
+            ]);
+        }
+
+        return back()->with('status', 'glowup-detached');
+    }
+
     private function assertJobProperty(Property $property, GlowupJob $job): void
     {
         abort_unless(
