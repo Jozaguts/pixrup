@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { GlowUpOptionItem } from '@/components/properties/workspace/types';
+import { defaultInstructionHint, roomTypeInstructionHints } from './glowupConstants';
 import { Camera, CloudUpload, Loader2, RefreshCw, ShieldAlert, Sparkles } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
@@ -15,6 +16,7 @@ interface Props {
     limitReached: boolean;
     roomType: string | null;
     style: string | null;
+    userInstructions: string;
     errors: Record<string, string | undefined>;
 }
 
@@ -22,6 +24,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
     (e: 'update:roomType', value: string | null): void;
     (e: 'update:style', value: string | null): void;
+    (e: 'update:userInstructions', value: string): void;
     (e: 'generate'): void;
     (e: 'capture'): void;
     (e: 'file-selected', file: File): void;
@@ -40,6 +43,15 @@ const styleModel = computed({
     get: () => props.style,
     set: (value) => emit('update:style', value),
 });
+
+const userInstructionsModel = computed({
+    get: () => props.userInstructions,
+    set: (value) => emit('update:userInstructions', value),
+});
+
+const instructionsPlaceholder = computed(
+    () => roomTypeInstructionHints[roomTypeModel.value ?? ''] ?? defaultInstructionHint,
+);
 
 const handleBrowse = () => {
     fileRef.value?.click();
@@ -139,9 +151,16 @@ const handleDragLeave = () => {
             </label>
         </div>
 
-        <div class="rounded-[14px] bg-background p-4 text-sm text-accent/50 shadow-neu-in">
-            Prompt is generated automatically based on room type and style.
-        </div>
+        <label class="flex flex-col gap-2 text-sm text-accent/50">
+            Instructions for the AI (optional)
+            <textarea
+                v-model="userInstructionsModel"
+                class="min-h-[110px] w-full rounded-[14px] border border-white/10 bg-background px-4 py-3 text-sm text-accent shadow-neu-in focus:border-[#6e33ff] focus:outline-none"
+                :placeholder="instructionsPlaceholder"
+                maxlength="500"
+            />
+            <p v-if="errors.user_instructions" class="text-sm text-[#EA5455]">{{ errors.user_instructions }}</p>
+        </label>
 
         <div class="flex flex-wrap items-center gap-4">
             <button

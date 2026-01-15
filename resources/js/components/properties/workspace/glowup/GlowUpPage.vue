@@ -45,6 +45,11 @@ const {
 const roomOptions = computed(() => glowUpState.value?.options?.room_types ?? defaultRoomTypes);
 const styleOptions = computed(() => glowUpState.value?.options?.styles ?? defaultStyleOptions);
 const maxUpload = computed(() => glowUpState.value?.limits?.max_upload_size_mb ?? 10);
+const roomLabelMap = computed(
+    () => new Map(roomOptions.value.map((room) => [room.value, room.label])),
+);
+const formatRoomLabel = (roomType: string) =>
+    roomLabelMap.value.get(roomType) ?? roomType.replace(/_/g, ' ');
 
 const selectedFileLabel = computed(() => createForm.image?.name ?? 'Select an image');
 
@@ -234,9 +239,11 @@ watch(
                 :limit-reached="limitReached"
                 :room-type="createForm.room_type"
                 :style="createForm.style"
+                :user-instructions="createForm.user_instructions"
                 :errors="createForm.errors"
                 @update:room-type="(value) => (createForm.room_type = value)"
                 @update:style="(value) => (createForm.style = value)"
+                @update:user-instructions="(value) => (createForm.user_instructions = value)"
                 @generate="handleGenerate"
                 @capture="captureFromCamera"
                 @file-selected="handleFileSelected"
@@ -257,7 +264,7 @@ watch(
                     >
                         <GlowUpResultSlider :before="job.before_url" :after="job.after_url ?? job.before_url" />
                         <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-accent/50">
-                            <span>{{ job.room_type.replace(/_/g, ' ') }} · {{ job.style }}</span>
+                            <span>{{ formatRoomLabel(job.room_type) }} · {{ job.style }}</span>
                             <span v-if="job.created_at">{{ formatJobDate(job.created_at) }}</span>
                         </div>
                         <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold tracking-wide uppercase">

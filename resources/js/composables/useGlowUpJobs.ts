@@ -79,10 +79,12 @@ export const useGlowUpJobs = ({ propertyId, glowUp }: UseGlowUpJobsOptions) => {
         room_type: string | null;
         style: string | null;
         image: File | null;
+        user_instructions: string;
     }>({
         room_type: initialState?.options?.room_types?.[0]?.value ?? null,
         style: initialState?.options?.styles?.[0]?.value ?? null,
         image: null,
+        user_instructions: '',
     });
 
     const attachForm = useForm({

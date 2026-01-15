@@ -54,6 +54,7 @@ readonly class GlowUpJobService
         $meta = [
             'disk' => $disk,
             'before_path' => $beforePath,
+            'user_instructions' => $payload['user_instructions'] ?? null,
         ];
 
         $job = GlowupJob::query()->create([
@@ -97,6 +98,7 @@ readonly class GlowUpJobService
             'disk' => $disk,
             'before_path' => $beforePath,
             'source_job_id' => $sourceJob->getKey(),
+            'user_instructions' => $payload['user_instructions'] ?? null,
         ];
 
         $job = GlowupJob::query()->create([
