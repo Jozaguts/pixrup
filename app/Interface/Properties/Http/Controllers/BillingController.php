@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Interface\Properties\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Application\Billing\Services\BillingPlanService;
+use App\Interface\Properties\Http\Requests\CancelSubscriptionRequest;
+use App\Interface\Properties\Http\Requests\SubscribePlanRequest;
+use App\Interface\Properties\Http\Requests\SwapPlanRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,12 +16,16 @@ use Inertia\Response;
 
 class BillingController extends Controller
 {
-    public function account(Request $request): Response
+    public function account(Request $request, BillingPlanService $planService): Response
     {
         $user = $request->user();
         $paymentMethods = collect();
         $defaultPaymentMethodId = null;
         $setupIntent = null;
+        $planCatalog = [
+            'plans' => [],
+            'active_plan' => null,
+        ];
 
         if ($user) {
             if (!$user->stripe_id) {
@@ -25,6 +35,7 @@ class BillingController extends Controller
             $paymentMethods = $user->paymentMethods();
             $defaultPaymentMethodId = $user->defaultPaymentMethod()?->id;
             $setupIntent = $user->createSetupIntent();
+            $planCatalog = $planService->catalog($user);
         }
 
         return Inertia::render('billing/Account', [
@@ -40,6 +51,8 @@ class BillingController extends Controller
             'setupIntent' => $setupIntent ? [
                 'client_secret' => $setupIntent->client_secret,
             ] : null,
+            'plans' => $planCatalog['plans'],
+            'activePlan' => $planCatalog['active_plan'],
         ]);
     }
 
@@ -111,6 +124,50 @@ class BillingController extends Controller
         if ($remainingMethods->isNotEmpty()) {
             $user->updateDefaultPaymentMethod($remainingMethods->first()->id);
         }
+
+        return back(303);
+    }
+
+    public function subscribe(
+        SubscribePlanRequest $request,
+        BillingPlanService $planService,
+    ): RedirectResponse {
+        $user = $request->user();
+        if (! $user) {
+            abort(401);
+        }
+
+        $payload = $request->validated();
+        $planService->subscribe($user, $payload['price_id']);
+
+        return back(303);
+    }
+
+    public function swap(
+        SwapPlanRequest $request,
+        BillingPlanService $planService,
+    ): RedirectResponse {
+        $user = $request->user();
+        if (! $user) {
+            abort(401);
+        }
+
+        $payload = $request->validated();
+        $planService->swap($user, $payload['price_id']);
+
+        return back(303);
+    }
+
+    public function cancel(
+        CancelSubscriptionRequest $request,
+        BillingPlanService $planService,
+    ): RedirectResponse {
+        $user = $request->user();
+        if (! $user) {
+            abort(401);
+        }
+
+        $planService->cancel($user);
 
         return back(303);
     }
