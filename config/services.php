@@ -51,6 +51,7 @@ return [
     'replicate' => [
         'token' => env('REPLICATE_API_TOKEN'),
         'base_url' => env('REPLICATE_API_BASE_URL', 'https://api.replicate.com/v1/'),
+        'defect_detection_url' => 'models/openai/gpt-4.1-mini/predictions',
         'model_owner' => env('REPLICATE_MODEL_OWNER', 'bytedance'),
         'model' => env('REPLICATE_MODEL', 'seedream-4.5'),
         'version' => env(
@@ -91,6 +92,12 @@ return [
         'wait_preference' => env('REPLICATE_WAIT_PREFERENCE', 'wait=60'),
         'timeout' => env('REPLICATE_TIMEOUT', 120),
         'retries' => env('REPLICATE_RETRIES', 2),
+        'models' => [
+            'defect_detection' => env(
+                'REPLICATE_DEFECT_DETECTION_MODEL',
+                'openai/gpt-4.1-mini-vision'
+            ),
+        ],
     ],
 
     'rentcast' => [

@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withEvents(discover: [
         __DIR__.'/../app/Interface/*/Events',
         __DIR__.'/../app/Interface/*/Listeners',
+        __DIR__.'/../app/Domain/*/Listeners',
     ])
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);

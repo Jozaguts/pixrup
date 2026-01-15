@@ -42,7 +42,7 @@ readonly class AppraisePropertyWorthUseCase
     {
         $threshold = now()->subHours(self::CACHE_TTL_HOURS);
 
-        if ($cached = $this->repo->findFresh($property->id, $threshold)) {
+        if (false  && $cached = $this->repo->findFresh($property->id, $threshold)) {
             return $cached;
         }
         $this->usage->ensure(UsageAction::APPRAISAL, $property);

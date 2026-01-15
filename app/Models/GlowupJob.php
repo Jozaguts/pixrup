@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed $property_id
+ * @property mixed $id
+ * @property string $before_url
+ */
 class GlowupJob extends Model
 {
     /** @use HasFactory<\Database\Factories\GlowupJobFactory> */

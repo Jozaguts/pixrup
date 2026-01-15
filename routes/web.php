@@ -8,6 +8,7 @@ use App\Http\Controllers\GlowUp\GlowUpJobController;
 use App\Interface\Properties\Http\Controllers\PropertyController;
 use App\Interface\Properties\Http\Controllers\SpyHuntController;
 use App\Http\Controllers\Billing\StripeWebhookController;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Interface\Appraisal\Http\Controllers\PropertyWorthController as AppraisalPropertyWorthController;
@@ -20,6 +21,12 @@ Route::get('/', function () {
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+
+Route::get('/test',function(){
+$job = \App\Models\GlowupJob::first();
+    \App\Domain\PixGlowUp\Events\GlowUpGenerated::dispatch($job);
+
+});
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
