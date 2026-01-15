@@ -3,7 +3,7 @@
 return [
     'default' => 'PRICE_STARTER',
     'tiers' => [
-        'PRICE_STARTER' => ['label' => 'Starter', 'limits' => ['docs' => 50, 'renders' => 0]],
+        'PRICE_STARTER' => ['label' => 'Starter', 'limits' => ['docs' => 50, 'renders' => 50]],
         'PRICE_PRO' => ['label' => 'Pro', 'limits' => ['docs' => -1, 'renders' => 20]],
         'PRICE_ENTERPRISE' => ['label' => 'Enterprise', 'limits' => ['docs' => -1, 'renders' => -1]],
     ],
