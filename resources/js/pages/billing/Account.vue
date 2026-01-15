@@ -8,9 +8,16 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import PaymentMethodCard from '@/components/billing/PaymentMethodCard.vue';
 
 interface BillingOrder {
+    id: string;
     date: string;
     type: string;
     receipt_url?: string | null;
+}
+
+interface BillingOrderHistory {
+    data: BillingOrder[];
+    next_cursor?: string | null;
+    has_more?: boolean;
 }
 
 interface BillingPlan {
@@ -54,7 +61,7 @@ interface Props {
     paymentMethods?: BillingPaymentMethod[];
     defaultPaymentMethodId?: string | null;
     setupIntent?: SetupIntentPayload | null;
-    orderHistory?: BillingOrder[];
+    orderHistory?: BillingOrderHistory | null;
     activePlan?: BillingPlan | null;
     plans?: BillingPlanOption[];
 }
@@ -68,7 +75,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const orderHistory = computed(() => props.orderHistory ?? []);
+const orderHistory = ref<BillingOrder[]>([]);
+const orderHistoryCursors = ref<Record<number, string | null>>({});
+const orderHistoryServerItemsLength = ref(0);
 const activePlan = computed(() => props.activePlan ?? null);
 const plans = computed(() => props.plans ?? []);
 const paymentMethods = computed(() => props.paymentMethods ?? []);
@@ -89,11 +98,35 @@ const paymentForm = useForm({
 });
 const paymentMethodError = computed(() => paymentForm.errors.payment_method ?? null);
 
+const orderHistoryHeaders = [
+    {
+        text: 'Date',
+        value: 'date',
+    },
+    {
+        text: 'Type',
+        value: 'type',
+    },
+    {
+        text: 'Receipt',
+        value: 'receipt',
+        align: 'right',
+        width: 120,
+    },
+];
+const orderHistoryTableHeight = 396;
+const orderHistoryServerOptions = ref({
+    page: 1,
+    rowsPerPage: 5,
+});
+
 const planForm = useForm({
     price_id: '',
 });
 const planError = computed(() => planForm.errors.price_id ?? null);
 const cancelForm = useForm({});
+const isLoadingOrderHistory = ref(false);
+const orderHistoryError = ref<string | null>(null);
 
 const canCollectPayment = computed(() => Boolean(props.stripeKey) && Boolean(props.setupIntent?.client_secret));
 const showPaymentForm = ref(false);
@@ -331,6 +364,86 @@ const handleCancelSubscription = () => {
         preserveScroll: true,
     });
 };
+
+const resolveOrderHistoryTotal = (page: number, count: number, hasMore: boolean, rowsPerPage: number) => {
+    const total = (page - 1) * rowsPerPage + count;
+
+    return hasMore ? total + rowsPerPage : total;
+};
+
+const loadOrderHistoryFromServer = async () => {
+    if (!window.axios) {
+        orderHistoryError.value = 'Unable to load receipts.';
+        return;
+    }
+
+    if (isLoadingOrderHistory.value) {
+        return;
+    }
+
+    const page = orderHistoryServerOptions.value.page ?? 1;
+    const rowsPerPage = orderHistoryServerOptions.value.rowsPerPage ?? 5;
+    const cursor = page > 1 ? orderHistoryCursors.value[page] : null;
+
+    if (page > 1 && !cursor) {
+        orderHistoryServerOptions.value.page = Math.max(1, page - 1);
+        return;
+    }
+
+    isLoadingOrderHistory.value = true;
+    orderHistoryError.value = null;
+
+    try {
+        const response = await window.axios.get(
+            billingRoutes.orderHistory({
+                query: {
+                    cursor: cursor ?? undefined,
+                    per_page: rowsPerPage,
+                },
+            }).url,
+        );
+        const payload = response.data as BillingOrderHistory;
+        const hasMore = payload.has_more ?? Boolean(payload.next_cursor);
+
+        orderHistory.value = payload.data ?? [];
+        orderHistoryCursors.value = {
+            ...orderHistoryCursors.value,
+            [page + 1]: payload.next_cursor ?? null,
+        };
+        orderHistoryServerItemsLength.value = resolveOrderHistoryTotal(
+            page,
+            orderHistory.value.length,
+            hasMore,
+            rowsPerPage,
+        );
+    } catch (error) {
+        orderHistoryError.value = 'Unable to load receipts.';
+    } finally {
+        isLoadingOrderHistory.value = false;
+    }
+};
+
+watch(orderHistoryServerOptions, () => {
+    loadOrderHistoryFromServer();
+}, { deep: true });
+
+watch(
+    () => props.orderHistory,
+    (value) => {
+        orderHistory.value = value?.data ?? [];
+        orderHistoryCursors.value = {
+            1: null,
+            2: value?.next_cursor ?? null,
+        };
+        orderHistoryServerItemsLength.value = resolveOrderHistoryTotal(
+            1,
+            orderHistory.value.length,
+            value?.has_more ?? Boolean(value?.next_cursor),
+            orderHistoryServerOptions.value.rowsPerPage,
+        );
+    },
+    { immediate: true },
+);
 </script>
 
 <template>
@@ -371,52 +484,50 @@ const handleCancelSubscription = () => {
                     </div>
 
                     <template v-else>
-                        <div
-                            class="hidden text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_110px]"
-                        >
-                            <span>Date</span>
-                            <span>Type</span>
-                            <span class="text-right">Receipt</span>
-                        </div>
-
-                        <div class="grid gap-3">
-                            <div
-                                v-for="entry in orderHistory"
-                                :key="`${entry.date}-${entry.type}`"
-                                class="grid gap-3 rounded-[12px] bg-background p-4 shadow-neu-in sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_110px] sm:items-center"
+                        <div class="overflow-hidden rounded-[12px] shadow-neu-in">
+                            <data-table
+                                v-model:server-options="orderHistoryServerOptions"
+                                table-class-name="soft-table"
+                                :server-items-length="orderHistoryServerItemsLength"
+                                :loading="isLoadingOrderHistory"
+                                :headers="orderHistoryHeaders"
+                                :items="orderHistory"
+                                :rows-per-page="orderHistoryServerOptions.rowsPerPage"
+                                hide-rows-per-page
+                                :table-height="orderHistoryTableHeight"
+                                :table-min-height="orderHistoryTableHeight"
                             >
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-sm font-semibold text-accent">{{ entry.date }}</span>
-                                    <span class="text-xs text-accent/50 sm:hidden">{{ entry.type }}</span>
-                                </div>
-                                <span class="hidden text-sm text-accent sm:block">{{ entry.type }}</span>
-                                <div class="flex sm:justify-end">
-                                    <a
-                                        v-if="entry.receipt_url"
-                                        :href="entry.receipt_url"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="inline-flex items-center justify-center rounded-[10px] px-3 py-2 text-xs font-semibold text-accent shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40"
-                                    >
-                                        Download
-                                    </a>
-                                    <button
-                                        v-else
-                                        type="button"
-                                        disabled
-                                        class="inline-flex items-center justify-center rounded-[10px] px-3 py-2 text-xs font-semibold text-accent shadow-neu-out disabled:cursor-not-allowed disabled:opacity-50"
-                                    >
-                                        Download
-                                    </button>
-                                </div>
-                            </div>
+                                <template #header="header">
+                                    <span class="text-xs font-semibold tracking-[0.3em] uppercase text-accent/50">
+                                        {{ header.text }}
+                                    </span>
+                                </template>
+                                <template #item-receipt="{ receipt_url }">
+                                    <div class="flex justify-end">
+                                        <a
+                                            v-if="receipt_url"
+                                            :href="receipt_url"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center px-3 py-2 text-xs font-semibold text-primary !bg-transparent rounded-[12px] neu-button shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40"
+                                        >
+                                            Download
+                                        </a>
+                                        <button
+                                            v-else
+                                            type="button"
+                                            disabled
+                                            class="inline-flex items-center justify-center px-3 py-2 text-xs font-semibold text-primary !bg-transparent rounded-[12px] neu-button shadow-neu-out disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            Download
+                                        </button>
+                                    </div>
+                                </template>
+                            </data-table>
                         </div>
-                        <button
-                            type="button"
-                            class="inline-flex items-center justify-center self-start rounded-[10px] px-3 py-2 text-xs font-semibold tracking-[0.3em] text-accent uppercase shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40"
-                        >
-                            Load more
-                        </button>
+                        <p v-if="orderHistoryError" class="text-xs text-primary">
+                            {{ orderHistoryError }}
+                        </p>
                     </template>
                 </article>
 

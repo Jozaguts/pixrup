@@ -47,3 +47,29 @@ Canonical:
 - `inline-flex items-center rounded-sm px-4 py-2 text-xs font-medium text-accent/50 ring shadow-neu-in ring-white`
 
 Prefer creating a `StatusBadge.vue` if used 2+ times.
+
+## 7) Tables (Data Table)
+Use the global `data-table` component with the soft table theme:
+
+```
+<data-table
+    table-class-name="soft-table"
+    :headers="headers"
+    :items="items"
+    hide-footer
+    search-field="title"
+    :search-value="searchString"
+></data-table>
+```
+
+For server-paginated data, use server-side mode and watch `serverOptions`:
+
+```
+<data-table
+    v-model:server-options="serverOptions"
+    :server-items-length="serverItemsLength"
+    :loading="loading"
+    :headers="headers"
+    :items="items"
+/>
+```

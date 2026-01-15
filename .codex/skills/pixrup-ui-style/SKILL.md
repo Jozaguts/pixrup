@@ -14,6 +14,7 @@ Apply the Pixrup UI style system for this project and keep UI code consistent wi
 - Use `cn()` from `@/lib/utils` to merge classes; do not concatenate strings manually for conditional classes.
 - Only use arbitrary values that already exist in the codebase and are listed in `references/tokens.md`.
 - Prefer reusable primitives under `@/components/ui/*` and compose from there. If a class string repeats 2+ times, extract a component.
+- For tables, use the `data-table` component with `table-class-name="soft-table"` and pass `headers` + `items`. Include `search-field` and `search-value` when a search input is present.
 
 ## Class Composition Order
 Always order classes roughly as:
@@ -31,6 +32,7 @@ state (hover/focus/disabled/aria)
 - Keep components small and single-responsibility.
 - Type props and emits; avoid `any`.
 - Prefer `inheritAttrs: false` and explicit forwarding when wrapping primitives.
+- When creating new UI, proactively extract reusable components so future reuse is easy.
 
 ## Inertia Conventions
 - Pages live in `resources/js/pages`, layouts in `resources/js/layouts`.

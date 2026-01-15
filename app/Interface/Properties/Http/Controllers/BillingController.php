@@ -9,6 +9,8 @@ use App\Application\Billing\Services\BillingPlanService;
 use App\Interface\Properties\Http\Requests\CancelSubscriptionRequest;
 use App\Interface\Properties\Http\Requests\SubscribePlanRequest;
 use App\Interface\Properties\Http\Requests\SwapPlanRequest;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,6 +18,9 @@ use Inertia\Response;
 
 class BillingController extends Controller
 {
+    private const ORDER_HISTORY_PER_PAGE = 5;
+    private const ORDER_HISTORY_MAX_PER_PAGE = 25;
+
     public function account(Request $request, BillingPlanService $planService): Response
     {
         $user = $request->user();
@@ -25,6 +30,10 @@ class BillingController extends Controller
         $planCatalog = [
             'plans' => [],
             'active_plan' => null,
+        ];
+        $orderHistory = [
+            'data' => [],
+            'next_cursor' => null,
         ];
 
         if ($user) {
@@ -36,13 +45,7 @@ class BillingController extends Controller
             $defaultPaymentMethodId = $user->defaultPaymentMethod()?->id;
             $setupIntent = $user->createSetupIntent();
             $planCatalog = $planService->catalog($user);
-            $orderHistory = $user->invoices()
-                ->map(fn ($invoice) => [
-                    'date' => $invoice->date()->toFormattedDateString(),
-                    'type' => $invoice->description ?? 'Subscription',
-                    'receipt_url' => $invoice->hosted_invoice_url ?? $invoice->invoice_pdf,
-                ])
-                ->values();
+            $orderHistory = $this->buildOrderHistoryPayload($user);
         }
 
         return Inertia::render('billing/Account', [
@@ -60,8 +63,24 @@ class BillingController extends Controller
             ] : null,
             'plans' => $planCatalog['plans'],
             'activePlan' => $planCatalog['active_plan'],
-            'orderHistory' => $orderHistory ?? [],
+            'orderHistory' => $orderHistory,
         ]);
+    }
+
+    public function orderHistory(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (! $user) {
+            abort(401);
+        }
+
+        return response()->json(
+            $this->buildOrderHistoryPayload(
+                $user,
+                $request->query('cursor'),
+                $this->resolveOrderHistoryPerPage($request),
+            )
+        );
     }
 
     public function store(Request $request): RedirectResponse
@@ -178,5 +197,43 @@ class BillingController extends Controller
         $planService->cancel($user);
 
         return back(303);
+    }
+
+    private function buildOrderHistoryPayload(User $user, ?string $cursor = null, ?int $perPage = null): array
+    {
+        $resolvedPerPage = $perPage ?? self::ORDER_HISTORY_PER_PAGE;
+
+        $paginator = $user->cursorPaginateInvoices(
+            $resolvedPerPage,
+            ['status' => 'paid'],
+            'cursor',
+            $cursor,
+        );
+
+        $data = collect($paginator->items())
+            ->map(fn ($invoice) => [
+                'id' => $invoice->id,
+                'date' => $invoice->date()->toFormattedDateString(),
+                'type' => $invoice->description ?? 'Subscription',
+                'receipt_url' => $invoice->hosted_invoice_url ?? $invoice->invoice_pdf,
+            ])
+            ->values();
+
+        return [
+            'data' => $data,
+            'next_cursor' => $paginator->nextCursor()?->encode(),
+            'has_more' => $paginator->hasMorePages(),
+        ];
+    }
+
+    private function resolveOrderHistoryPerPage(Request $request): int
+    {
+        $perPage = (int) $request->query('per_page', self::ORDER_HISTORY_PER_PAGE);
+
+        if ($perPage < 1) {
+            return self::ORDER_HISTORY_PER_PAGE;
+        }
+
+        return min($perPage, self::ORDER_HISTORY_MAX_PER_PAGE);
     }
 }
