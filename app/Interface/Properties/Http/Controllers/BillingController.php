@@ -36,6 +36,13 @@ class BillingController extends Controller
             $defaultPaymentMethodId = $user->defaultPaymentMethod()?->id;
             $setupIntent = $user->createSetupIntent();
             $planCatalog = $planService->catalog($user);
+            $orderHistory = $user->invoices()
+                ->map(fn ($invoice) => [
+                    'date' => $invoice->date()->toFormattedDateString(),
+                    'type' => $invoice->description ?? 'Subscription',
+                    'receipt_url' => $invoice->hosted_invoice_url ?? $invoice->invoice_pdf,
+                ])
+                ->values();
         }
 
         return Inertia::render('billing/Account', [
@@ -53,6 +60,7 @@ class BillingController extends Controller
             ] : null,
             'plans' => $planCatalog['plans'],
             'activePlan' => $planCatalog['active_plan'],
+            'orderHistory' => $orderHistory ?? [],
         ]);
     }
 

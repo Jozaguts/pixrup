@@ -95,13 +95,9 @@ const planForm = useForm({
 const planError = computed(() => planForm.errors.price_id ?? null);
 const cancelForm = useForm({});
 
-const canCollectPayment = computed(
-    () => Boolean(props.stripeKey) && Boolean(props.setupIntent?.client_secret),
-);
+const canCollectPayment = computed(() => Boolean(props.stripeKey) && Boolean(props.setupIntent?.client_secret));
 const showPaymentForm = ref(false);
-const shouldMountStripe = computed(
-    () => showPaymentForm.value && canCollectPayment.value,
-);
+const shouldMountStripe = computed(() => showPaymentForm.value && canCollectPayment.value);
 
 let stripeInstance: any = null;
 let stripeElements: any = null;
@@ -140,6 +136,7 @@ const mountStripeCard = async () => {
 
     try {
         await loadStripeScript();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         stripeError.value = 'Stripe failed to load. Please try again later.';
         return;
@@ -233,9 +230,13 @@ onMounted(() => {
     }
 });
 
-watch(hasPaymentMethod, (value) => {
-    showPaymentForm.value = !value;
-}, { immediate: true });
+watch(
+    hasPaymentMethod,
+    (value) => {
+        showPaymentForm.value = !value;
+    },
+    { immediate: true },
+);
 
 watch(shouldMountStripe, (value) => {
     if (value) {
@@ -275,6 +276,7 @@ const formatPlanPrice = (plan: BillingPlanOption) => {
             style: 'currency',
             currency,
         }).format(plan.price.unit_amount / 100);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         return `$${(plan.price.unit_amount / 100).toFixed(0)}`;
     }
@@ -307,9 +309,7 @@ const handlePlanAction = (plan: BillingPlanOption) => {
 
     planForm.price_id = plan.price.id;
 
-    const route = hasActivePlan.value
-        ? billingRoutes.subscription.swap().url
-        : billingRoutes.subscription.store().url;
+    const route = hasActivePlan.value ? billingRoutes.subscription.swap().url : billingRoutes.subscription.store().url;
 
     planForm.post(route, {
         preserveScroll: true,
@@ -336,7 +336,7 @@ const handleCancelSubscription = () => {
 <template>
     <Head title="Billing" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <section class="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pb-12 pt-4 text-accent">
+        <section class="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pt-4 pb-12 text-accent">
             <header class="flex flex-col gap-2">
                 <p class="text-xs font-semibold tracking-[0.4em] text-accent/50 uppercase">Account</p>
                 <h1 class="text-2xl font-semibold tracking-tight">Billing</h1>
@@ -371,7 +371,9 @@ const handleCancelSubscription = () => {
                     </div>
 
                     <template v-else>
-                        <div class="hidden text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_110px]">
+                        <div
+                            class="hidden text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_110px]"
+                        >
                             <span>Date</span>
                             <span>Type</span>
                             <span class="text-right">Receipt</span>
@@ -389,46 +391,60 @@ const handleCancelSubscription = () => {
                                 </div>
                                 <span class="hidden text-sm text-accent sm:block">{{ entry.type }}</span>
                                 <div class="flex sm:justify-end">
+                                    <a
+                                        v-if="entry.receipt_url"
+                                        :href="entry.receipt_url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex items-center justify-center rounded-[10px] px-3 py-2 text-xs font-semibold text-accent shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40"
+                                    >
+                                        Download
+                                    </a>
                                     <button
+                                        v-else
                                         type="button"
-                                        class="neu-button active inline-flex items-center justify-center rounded-[10px] !bg-transparent px-3 py-2 text-xs font-semibold text-accent shadow-neu-in"
+                                        disabled
+                                        class="inline-flex items-center justify-center rounded-[10px] px-3 py-2 text-xs font-semibold text-accent shadow-neu-out disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         Download
                                     </button>
                                 </div>
                             </div>
                         </div>
-
                         <button
                             type="button"
-                            class="self-start text-xs font-semibold tracking-[0.3em] text-primary uppercase"
+                            class="inline-flex items-center justify-center self-start rounded-[10px] px-3 py-2 text-xs font-semibold tracking-[0.3em] text-accent uppercase shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40"
                         >
                             Load more
                         </button>
                     </template>
                 </article>
 
-                <aside v-if="hasActivePlan" class="flex flex-col gap-4 p-4 text-accent bg-surface rounded-[12px] npo-form-shadow">
-                    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-accent/50">Your plan</p>
+                <aside
+                    v-if="hasActivePlan"
+                    class="npo-form-shadow flex flex-col gap-4 rounded-[12px] bg-surface p-4 text-accent"
+                >
+                    <p class="text-xs font-semibold tracking-[0.3em] text-accent/50 uppercase">Your plan</p>
                     <div class="space-y-1">
-                        <h3 class="text-lg font-semibold">{{ activePlan.name }}</h3>
-                        <p v-if="activePlan.is_canceling" class="text-sm text-accent/50">
-                            Access until {{ activePlan.ends_at ?? 'TBD' }}
+                        <h3 class="text-lg font-semibold">{{ activePlan?.name }}</h3>
+                        <p v-if="activePlan?.is_canceling" class="text-sm text-accent/50">
+                            Access until {{ activePlan?.ends_at ?? 'TBD' }}
                         </p>
-                        <p v-else class="text-sm text-accent/50">
-                            Active subscription
-                        </p>
+                        <p v-else class="text-sm text-accent/50">Active subscription</p>
                     </div>
                     <button
                         type="button"
-                        :disabled="activePlan.is_canceling || cancelForm.processing"
-                        class="neu-button mt-auto inline-flex items-center justify-center px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary bg-surface rounded-[12px] shadow-neu-in hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
+                        :disabled="activePlan?.is_canceling || cancelForm.processing"
+                        class="mt-auto inline-flex items-center justify-center rounded-[12px] bg-surface px-4 py-2 text-xs font-semibold tracking-[0.2em] text-accent uppercase shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
                         @click="handleCancelSubscription"
                     >
-                        {{ activePlan.is_canceling ? 'Cancellation scheduled' : 'Cancel subscription' }}
+                        {{ activePlan?.is_canceling ? 'Cancellation scheduled' : 'Cancel subscription' }}
                     </button>
                 </aside>
-                <aside v-else class="flex flex-col items-center justify-center gap-4 rounded-[18px] bg-surface p-4 text-center shadow-neu-out">
+                <aside
+                    v-else
+                    class="flex flex-col items-center justify-center gap-4 rounded-[18px] bg-surface p-4 text-center shadow-neu-out"
+                >
                     <div class="flex size-12 items-center justify-center rounded-full bg-background shadow-neu-in">
                         <Sparkles class="h-5 w-5 text-accent/60" />
                     </div>
@@ -438,7 +454,7 @@ const handleCancelSubscription = () => {
                     </div>
                     <button
                         type="button"
-                        class="neu-button active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-primary shadow-neu-in"
+                        class="active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-primary shadow-neu-out"
                         @click="openPlansDrawer"
                     >
                         Browse plans
@@ -468,7 +484,7 @@ const handleCancelSubscription = () => {
                         </p>
                         <button
                             type="button"
-                            class="neu-button active rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in"
+                            class="active rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-out"
                             @click="handleShowPaymentForm"
                         >
                             Add new payment method
@@ -488,7 +504,7 @@ const handleCancelSubscription = () => {
                                 v-model="cardHolderName"
                                 type="text"
                                 placeholder="Name on card"
-                                class="rounded-[12px] bg-surface px-4 py-3 text-sm text-accent shadow-neu-in outline-none transition focus:ring-2 focus:ring-primary/40"
+                                class="rounded-[12px] bg-surface px-4 py-3 text-sm text-accent shadow-neu-in transition outline-none focus:ring-2 focus:ring-primary/40"
                             />
                         </div>
                         <div class="flex flex-col gap-2">
@@ -509,13 +525,11 @@ const handleCancelSubscription = () => {
                         <button
                             type="submit"
                             :disabled="paymentForm.processing || !stripeReady"
-                            class="neu-button active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in disabled:cursor-not-allowed disabled:text-accent/50"
+                            class="active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-out disabled:cursor-not-allowed disabled:text-accent/50"
                         >
                             {{ paymentForm.processing ? 'Saving card...' : 'Save card' }}
                         </button>
-                        <p v-if="!stripeReady" class="text-xs text-accent/50">
-                            Loading secure card form...
-                        </p>
+                        <p v-if="!stripeReady" class="text-xs text-accent/50">Loading secure card form...</p>
                     </form>
                 </div>
 
@@ -526,7 +540,7 @@ const handleCancelSubscription = () => {
                         </p>
                         <button
                             type="button"
-                            class="neu-button active inline-flex items-center justify-center rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in"
+                            class="active inline-flex items-center justify-center rounded-[10px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-out"
                             @click="handleShowPaymentForm"
                         >
                             Add new payment method
@@ -555,7 +569,7 @@ const handleCancelSubscription = () => {
                             v-model="cardHolderName"
                             type="text"
                             placeholder="Name on card"
-                            class="rounded-[12px] bg-surface px-4 py-3 text-sm text-accent shadow-neu-in outline-none transition focus:ring-2 focus:ring-primary/40"
+                            class="rounded-[12px] bg-surface px-4 py-3 text-sm text-accent shadow-neu-in transition outline-none focus:ring-2 focus:ring-primary/40"
                         />
                     </div>
                     <div class="flex flex-col gap-2">
@@ -576,13 +590,11 @@ const handleCancelSubscription = () => {
                     <button
                         type="submit"
                         :disabled="paymentForm.processing || !stripeReady"
-                        class="neu-button active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-in disabled:cursor-not-allowed disabled:text-accent/50"
+                        class="active rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-out disabled:cursor-not-allowed disabled:text-accent/50"
                     >
                         {{ paymentForm.processing ? 'Saving card...' : 'Save card' }}
                     </button>
-                    <p v-if="!stripeReady" class="text-xs text-accent/50">
-                        Loading secure card form...
-                    </p>
+                    <p v-if="!stripeReady" class="text-xs text-accent/50">Loading secure card form...</p>
                 </form>
                 <p v-else-if="hasPaymentMethod && showPaymentForm" class="text-xs text-accent/50">
                     Payment setup is unavailable. Please try again later.
@@ -598,11 +610,7 @@ const handleCancelSubscription = () => {
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
             >
-                <div
-                    v-if="isPlanDrawerOpen"
-                    class="fixed inset-0 z-40 bg-black/50"
-                    @click="closePlansDrawer"
-                ></div>
+                <div v-if="isPlanDrawerOpen" class="fixed inset-0 z-40 bg-black/50" @click="closePlansDrawer"></div>
             </transition>
             <transition
                 enter-active-class="transition duration-200 ease-out"
@@ -612,19 +620,16 @@ const handleCancelSubscription = () => {
                 leave-from-class="translate-x-0 opacity-100"
                 leave-to-class="translate-x-full opacity-0"
             >
-                <aside
-                    v-if="isPlanDrawerOpen"
-                    class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md"
-                >
-                    <section class="flex h-full w-full flex-col gap-4 p-4 bg-surface npo-form-shadow">
+                <aside v-if="isPlanDrawerOpen" class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md">
+                    <section class="npo-form-shadow flex h-full w-full flex-col gap-4 bg-surface p-4">
                         <header class="flex items-start justify-between gap-3">
                             <div class="flex flex-col gap-1">
-                                <p class="text-xs font-semibold uppercase tracking-widest text-accent/50">Plans</p>
+                                <p class="text-xs font-semibold tracking-widest text-accent/50 uppercase">Plans</p>
                                 <h2 class="text-lg font-semibold text-accent">Choose a plan</h2>
                             </div>
                             <button
                                 type="button"
-                                class="neu-button flex items-center justify-center px-2 py-2 text-xs font-semibold text-primary rounded-[12px] shadow-neu-in hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
+                                class="flex items-center justify-center rounded-[12px] px-2 py-2 text-xs font-semibold text-primary shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
                                 @click="closePlansDrawer"
                             >
                                 <X class="h-4 w-4" />
@@ -634,7 +639,7 @@ const handleCancelSubscription = () => {
                         <div class="flex flex-col gap-3 overflow-y-auto">
                             <div
                                 v-if="!hasPlans"
-                                class="flex flex-col items-center gap-2 p-4 text-center bg-background rounded-[12px] shadow-neu-in"
+                                class="flex flex-col items-center gap-2 rounded-[12px] bg-background p-4 text-center shadow-neu-in"
                             >
                                 <p class="text-sm font-semibold text-accent">Plans unavailable</p>
                                 <p class="text-xs text-accent/50">Check back later or contact support.</p>
@@ -643,7 +648,7 @@ const handleCancelSubscription = () => {
                             <div
                                 v-for="plan in plans"
                                 :key="plan.key"
-                                class="flex flex-col gap-3 p-4 bg-background rounded-[12px] shadow-neu-in"
+                                class="flex flex-col gap-3 rounded-[12px] bg-background p-4 shadow-neu-in"
                             >
                                 <div class="flex items-start justify-between gap-4">
                                     <div class="flex flex-col gap-1">
@@ -662,7 +667,7 @@ const handleCancelSubscription = () => {
                                 <button
                                     type="button"
                                     :disabled="plan.is_current || !canSubmitPlan || planForm.processing"
-                                    class="neu-button flex items-center justify-center px-4 py-2 text-xs font-semibold text-primary rounded-[12px] shadow-neu-in hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
+                                    class="flex items-center justify-center rounded-[12px] px-4 py-2 text-xs font-semibold text-primary shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
                                     @click="handlePlanAction(plan)"
                                 >
                                     {{ planActionLabel(plan) }}
