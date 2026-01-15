@@ -5,8 +5,9 @@ use App\Models\BillingPrice;
 use App\Models\BillingProduct;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-uses(RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 it('syncs plan tier for active subscriptions using product key aliases', function (): void {
     $user = User::factory()->create([

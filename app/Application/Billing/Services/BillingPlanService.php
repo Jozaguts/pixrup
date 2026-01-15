@@ -34,7 +34,7 @@ class BillingPlanService
         $isSubscriptionActive = $subscription?->valid() ?? false;
 
         $plans = $products
-            ->map(function (BillingProduct $product) use ($currentPriceId): ?array {
+            ->map(function (BillingProduct $product) use ($currentPriceId, $isSubscriptionActive): ?array {
                 $price = $this->resolvePrimaryPrice($product, $product->prices);
                 if (! $price) {
                     return null;

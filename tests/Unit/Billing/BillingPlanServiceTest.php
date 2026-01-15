@@ -6,8 +6,9 @@ use App\Models\BillingProduct;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Cashier\Subscription;
+use Tests\TestCase;
 
-uses(RefreshDatabase::class);
+uses(TestCase::class, RefreshDatabase::class);
 
 it('marks active plans as canceling when within grace period', function (): void {
     $user = User::factory()->create([
