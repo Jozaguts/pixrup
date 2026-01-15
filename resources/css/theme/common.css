@@ -345,5 +345,8 @@ Common Styles all over the sites
     --easy-table-border: none;
     --easy-table-body-row-hover-font-color: var(--on-surface-muted);
     --easy-table-body-row-font-color: var(--on-surface);
+    --easy-table-footer-background-color:  var(--color-surface);
+    --easy-table-footer-font-color: var(--on-surface-muted);
     .easy-data-table__body-cell, .easy-data-table__header-cell {text-align: center !important;};
+
 }
