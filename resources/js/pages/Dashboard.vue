@@ -225,7 +225,7 @@ const visitLink = (link?: string) => {
 
             <DashboardSection class="flex flex-col items-stretch gap-6 md:flex-row lg:flex-row">
                 <!-- Quick Actions -->
-                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 npo-form-shadow">
+                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-4 npo-form-shadow">
                     <h3 class="text-sm font-semibold tracking-wide text-accent uppercase">Quick actions</h3>
                     <button
                         type="button"

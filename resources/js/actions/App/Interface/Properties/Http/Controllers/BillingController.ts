@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../wayfinder'
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 export const account = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ account.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 account.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ account.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:13
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:19
 * @route '/billing/account'
 */
 accountForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ account.form = accountForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:59
 * @route '/billing/payment-method'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:59
 * @route '/billing/payment-method'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:59
 * @route '/billing/payment-method'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:59
 * @route '/billing/payment-method'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:59
 * @route '/billing/payment-method'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:80
 * @route '/billing/payment-method/default'
 */
 export const updateDefault = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -153,7 +153,7 @@ updateDefault.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:80
 * @route '/billing/payment-method/default'
 */
 updateDefault.url = (options?: RouteQueryOptions) => {
@@ -162,7 +162,7 @@ updateDefault.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:80
 * @route '/billing/payment-method/default'
 */
 updateDefault.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ updateDefault.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:80
 * @route '/billing/payment-method/default'
 */
 const updateDefaultForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -182,7 +182,7 @@ const updateDefaultForm = (options?: RouteQueryOptions): RouteFormDefinition<'po
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::updateDefault
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:80
 * @route '/billing/payment-method/default'
 */
 updateDefaultForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -194,7 +194,7 @@ updateDefault.form = updateDefaultForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:101
 * @route '/billing/payment-method'
 */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -209,7 +209,7 @@ destroy.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:101
 * @route '/billing/payment-method'
 */
 destroy.url = (options?: RouteQueryOptions) => {
@@ -218,7 +218,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:101
 * @route '/billing/payment-method'
 */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -228,7 +228,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:101
 * @route '/billing/payment-method'
 */
 const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -243,7 +243,7 @@ const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:101
 * @route '/billing/payment-method'
 */
 destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -258,6 +258,174 @@ destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> 
 
 destroy.form = destroyForm
 
-const BillingController = { account, store, updateDefault, destroy }
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::subscribe
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:131
+* @route '/billing/subscription'
+*/
+export const subscribe = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: subscribe.url(options),
+    method: 'post',
+})
+
+subscribe.definition = {
+    methods: ["post"],
+    url: '/billing/subscription',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::subscribe
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:131
+* @route '/billing/subscription'
+*/
+subscribe.url = (options?: RouteQueryOptions) => {
+    return subscribe.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::subscribe
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:131
+* @route '/billing/subscription'
+*/
+subscribe.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: subscribe.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::subscribe
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:131
+* @route '/billing/subscription'
+*/
+const subscribeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: subscribe.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::subscribe
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:131
+* @route '/billing/subscription'
+*/
+subscribeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: subscribe.url(options),
+    method: 'post',
+})
+
+subscribe.form = subscribeForm
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::swap
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:146
+* @route '/billing/subscription/swap'
+*/
+export const swap = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: swap.url(options),
+    method: 'post',
+})
+
+swap.definition = {
+    methods: ["post"],
+    url: '/billing/subscription/swap',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::swap
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:146
+* @route '/billing/subscription/swap'
+*/
+swap.url = (options?: RouteQueryOptions) => {
+    return swap.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::swap
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:146
+* @route '/billing/subscription/swap'
+*/
+swap.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: swap.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::swap
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:146
+* @route '/billing/subscription/swap'
+*/
+const swapForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: swap.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::swap
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:146
+* @route '/billing/subscription/swap'
+*/
+swapForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: swap.url(options),
+    method: 'post',
+})
+
+swap.form = swapForm
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::cancel
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:161
+* @route '/billing/subscription/cancel'
+*/
+export const cancel = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: cancel.url(options),
+    method: 'post',
+})
+
+cancel.definition = {
+    methods: ["post"],
+    url: '/billing/subscription/cancel',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::cancel
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:161
+* @route '/billing/subscription/cancel'
+*/
+cancel.url = (options?: RouteQueryOptions) => {
+    return cancel.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::cancel
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:161
+* @route '/billing/subscription/cancel'
+*/
+cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: cancel.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::cancel
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:161
+* @route '/billing/subscription/cancel'
+*/
+const cancelForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: cancel.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Interface\Properties\Http\Controllers\BillingController::cancel
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:161
+* @route '/billing/subscription/cancel'
+*/
+cancelForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: cancel.url(options),
+    method: 'post',
+})
+
+cancel.form = cancelForm
+
+const BillingController = { account, store, updateDefault, destroy, subscribe, swap, cancel }
 
 export default BillingController
