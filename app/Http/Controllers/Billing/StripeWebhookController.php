@@ -1,60 +1,111 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Billing;
 
-use App\Http\Controllers\Controller;
+use App\Application\Billing\Services\StripeSubscriptionPlanSyncService;
 use App\Infrastructure\Billing\Handlers\UpsertStripePrice;
 use App\Infrastructure\Billing\Handlers\UpsertStripeProduct;
 use Illuminate\Http\Request;
-use Stripe\Exception\SignatureVerificationException;
-use Stripe\Webhook;
+use Laravel\Cashier\Http\Controllers\WebhookController as CashierWebhookController;
 use Symfony\Component\HttpFoundation\Response;
 
-class StripeWebhookController extends Controller
+class StripeWebhookController extends CashierWebhookController
 {
-    public function __invoke(Request $request, UpsertStripeProduct $upsertProduct, UpsertStripePrice $upsertPrice): Response
+    public function __invoke(Request $request): Response
     {
-        $payload = $request->getContent();
-        $signature = $request->header('Stripe-Signature', '');
-        $secret = config('cashier.webhook.secret');
+        return $this->handleWebhook($request);
+    }
 
-        if (!$secret) {
-            return response('Stripe webhook secret not configured.', 500);
+    protected function handleProductCreated(array $payload): Response
+    {
+        $this->upsertProduct($payload);
+
+        return $this->successMethod();
+    }
+
+    protected function handleProductUpdated(array $payload): Response
+    {
+        $this->upsertProduct($payload);
+
+        return $this->successMethod();
+    }
+
+    protected function handleProductDeleted(array $payload): Response
+    {
+        $this->upsertProduct($payload);
+
+        return $this->successMethod();
+    }
+
+    protected function handlePriceCreated(array $payload): Response
+    {
+        $this->upsertPrice($payload);
+
+        return $this->successMethod();
+    }
+
+    protected function handlePriceUpdated(array $payload): Response
+    {
+        $this->upsertPrice($payload);
+
+        return $this->successMethod();
+    }
+
+    protected function handlePriceDeleted(array $payload): Response
+    {
+        $this->upsertPrice($payload);
+
+        return $this->successMethod();
+    }
+
+    protected function handleCustomerSubscriptionCreated(array $payload)
+    {
+        $response = parent::handleCustomerSubscriptionCreated($payload);
+        $this->syncSubscriptionPlan($payload);
+
+        return $response ?? $this->successMethod();
+    }
+
+    protected function handleCustomerSubscriptionUpdated(array $payload)
+    {
+        $response = parent::handleCustomerSubscriptionUpdated($payload);
+        $this->syncSubscriptionPlan($payload);
+
+        return $response ?? $this->successMethod();
+    }
+
+    protected function handleCustomerSubscriptionDeleted(array $payload)
+    {
+        $response = parent::handleCustomerSubscriptionDeleted($payload);
+        $this->syncSubscriptionPlan($payload);
+
+        return $response ?? $this->successMethod();
+    }
+
+    private function upsertProduct(array $payload): void
+    {
+        $object = data_get($payload, 'data.object');
+        if (! $object) {
+            return;
         }
 
-        try {
-            $event = Webhook::constructEvent(
-                $payload,
-                $signature,
-                $secret,
-                (int) config('cashier.webhook.tolerance', 300)
-            );
-        } catch (SignatureVerificationException) {
-            return response('Invalid signature.', 400);
-        } catch (\UnexpectedValueException) {
-            return response('Invalid payload.', 400);
+        app(UpsertStripeProduct::class)->handle($object);
+    }
+
+    private function upsertPrice(array $payload): void
+    {
+        $object = data_get($payload, 'data.object');
+        if (! $object) {
+            return;
         }
 
-        $object = $event->data->object ?? null;
-        if (!$object) {
-            return response('Missing payload.', 400);
-        }
+        app(UpsertStripePrice::class)->handle($object);
+    }
 
-        switch ($event->type) {
-            case 'product.created':
-            case 'product.updated':
-            case 'product.deleted':
-                $upsertProduct->handle($object);
-                break;
-            case 'price.created':
-            case 'price.updated':
-            case 'price.deleted':
-                $upsertPrice->handle($object);
-                break;
-            default:
-                break;
-        }
-
-        return response('ok', 200);
+    private function syncSubscriptionPlan(array $payload): void
+    {
+        app(StripeSubscriptionPlanSyncService::class)->sync($payload);
     }
 }
