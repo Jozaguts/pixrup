@@ -10,12 +10,22 @@ interface NavItem {
     external?: boolean;
 }
 
+interface NavbarLabels {
+    home: string;
+    toggleNavigation: string;
+    closeMenu: string;
+    dashboard: string;
+    getStarted: string;
+    logIn: string;
+}
+
 const props = defineProps<{
     open: boolean;
     navItems: NavItem[];
     isAuthenticated: boolean;
     canRegister: boolean;
     primaryLink?: NavItem;
+    labels?: NavbarLabels;
 }>();
 
 const emit = defineEmits<{
@@ -28,7 +38,7 @@ const compactLogo = new URL('../../../images/pixrup-icon.svg', import.meta.url)
 const resolvePrimaryCta = computed<NavItem>(() => {
     if (props.isAuthenticated) {
         return {
-            label: 'Dashboard',
+            label: props.labels?.dashboard ?? 'Dashboard',
             href: dashboard(),
             external: false,
         };
@@ -40,14 +50,14 @@ const resolvePrimaryCta = computed<NavItem>(() => {
 
     if (props.canRegister) {
         return {
-            label: 'Get started',
+            label: props.labels?.getStarted ?? 'Get started',
             href: auth.register.show(),
             external: false,
         };
     }
 
     return {
-        label: 'Log in',
+        label: props.labels?.logIn ?? 'Log in',
         href: auth.login.show(),
         external: false,
     };
@@ -75,7 +85,7 @@ const handleClose = () => {
             <div class="space-y-4 p-5 sm:p-8 lg:p-9">
                 <div class="flex items-center justify-between">
                     <Link href="/" @click="handleClose">
-                        <span class="sr-only">Home</span>
+                        <span class="sr-only">{{ props.labels?.home ?? 'Home' }}</span>
                         <figure class="max-w-[44px]">
                             <img
                                 :src="compactLogo"
@@ -94,7 +104,7 @@ const handleClose = () => {
                         type="button"
                         @click="handleClose"
                     >
-                        <span class="sr-only">Close menu</span>
+                        <span class="sr-only">{{ props.labels?.closeMenu ?? 'Close menu' }}</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -153,7 +163,7 @@ const handleClose = () => {
                                 class="flex items-center justify-between rounded-[14px] px-4 py-3 text-base font-medium text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
                                 @click="handleClose"
                             >
-                                <span>Log in</span>
+                                <span>{{ props.labels?.logIn ?? 'Log in' }}</span>
                             </Link>
                         </li>
                     </ul>

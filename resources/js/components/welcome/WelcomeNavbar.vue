@@ -12,15 +12,33 @@ interface NavItem {
     external?: boolean;
 }
 
+interface NavbarLabels {
+    home: string;
+    toggleNavigation: string;
+    closeMenu: string;
+    dashboard: string;
+    getStarted: string;
+    logIn: string;
+}
+
 const props = withDefaults(
     defineProps<{
         isAuthenticated: boolean;
         canRegister: boolean;
         navItems?: NavItem[];
         primaryLink?: NavItem;
+        labels?: NavbarLabels;
     }>(),
     {
         navItems: () => [],
+        labels: () => ({
+            home: 'Home',
+            toggleNavigation: 'Toggle navigation',
+            closeMenu: 'Close menu',
+            dashboard: 'Dashboard',
+            getStarted: 'Get started',
+            logIn: 'Log in',
+        }),
     },
 );
 
@@ -84,7 +102,7 @@ watch(
 );
 const navRef = ref<HTMLElement | null>(null);
 const resolvePrimaryCta = computed<string>(() => {
-    return props.isAuthenticated ? 'Dashboard' : 'Get started';
+    return props.isAuthenticated ? props.labels.dashboard : props.labels.getStarted;
 });
 useHideNavbarOnScroll(navRef);
 onBeforeUnmount(() => {
@@ -102,7 +120,7 @@ onBeforeUnmount(() => {
         >
             <div>
                 <Link href="/">
-                    <span class="sr-only">Home</span>
+                    <span class="sr-only">{{ props.labels.home }}</span>
                     <figure class="ml-2 hidden lg:block lg:max-w-[50px]">
                         <img :src="largeLogo" alt="Pixrup" class="dark" />
                     </figure>
@@ -141,7 +159,7 @@ onBeforeUnmount(() => {
                     type="button"
                     @click="toggleMobileMenu"
                 >
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only">{{ props.labels.toggleNavigation }}</span>
                     <span class="block h-0.5 w-6 bg-slate-900"></span>
                     <span class="block h-0.5 w-6 bg-slate-900"></span>
                     <span class="block h-0.5 w-6 bg-slate-900"></span>
@@ -155,6 +173,7 @@ onBeforeUnmount(() => {
             :is-authenticated="props.isAuthenticated"
             :can-register="props.canRegister"
             :primary-link="props.primaryLink"
+            :labels="props.labels"
             @close="closeMobileMenu"
         />
     </header>

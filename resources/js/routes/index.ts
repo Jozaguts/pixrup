@@ -184,7 +184,7 @@ dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 dashboard.form = dashboardForm
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -198,7 +198,7 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 home.url = (options?: RouteQueryOptions) => {
@@ -206,7 +206,7 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -215,7 +215,7 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -224,7 +224,7 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -233,7 +233,7 @@ const homeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -242,7 +242,7 @@ homeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see [serialized-closure]:2
+* @see routes/guest/routes.php:14
 * @route '/'
 */
 homeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

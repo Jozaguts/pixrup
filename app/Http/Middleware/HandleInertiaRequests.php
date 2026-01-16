@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use App\Application\Usage\Services\UsageSummaryService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -75,6 +78,10 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'locale' => app()->getLocale(),
+            'translations' => [
+                'landing' => Lang::get('landing'),
+            ],
             'auth' => [
                 'user' => $userPayload,
             ],

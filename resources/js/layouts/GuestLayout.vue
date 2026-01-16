@@ -3,6 +3,36 @@ import { Head, usePage } from '@inertiajs/vue3';
 import ThemeToggle from '@/components/ThemeToggle.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
 import { computed } from 'vue';
+
+interface LandingTranslations {
+    nav?: {
+        features?: string;
+        use_cases?: string;
+        pricing?: string;
+        blog?: string;
+        support?: string;
+        cta?: {
+            dashboard?: string;
+            get_started?: string;
+            sign_up?: string;
+            log_in?: string;
+        };
+        sr?: {
+            home?: string;
+            toggle_navigation?: string;
+            close_menu?: string;
+        };
+    };
+}
+
+interface NavbarLabels {
+    home: string;
+    toggleNavigation: string;
+    closeMenu: string;
+    dashboard: string;
+    getStarted: string;
+    logIn: string;
+}
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
@@ -15,14 +45,36 @@ const props = withDefaults(
 );
 const page = usePage();
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
-const navItems = [
-    { label: 'Features', href: 'features' },
-    { label: 'Use cases', href: 'use-cases' },
-    { label: 'Pricing', href: 'pricing' },
-    { label: 'Blog', href: 'blog' },
-    { label: 'Support', href: 'support' },
-];
-const primaryLink = { label: 'Sign up', href: 'register' };
+const landingTranslations = computed<LandingTranslations>(() => {
+    const translations = page.props.translations as { landing?: LandingTranslations } | undefined;
+    return translations?.landing ?? {};
+});
+const navTranslations = computed(() => landingTranslations.value.nav ?? {});
+const ctaTranslations = computed(() => navTranslations.value.cta ?? {});
+const srTranslations = computed(() => navTranslations.value.sr ?? {});
+
+const navItems = computed(() => [
+    { label: navTranslations.value.features ?? 'Features', href: 'features' },
+    { label: navTranslations.value.use_cases ?? 'Use cases', href: 'use-cases' },
+    { label: navTranslations.value.pricing ?? 'Pricing', href: 'pricing' },
+    { label: navTranslations.value.blog ?? 'Blog', href: 'blog' },
+    { label: navTranslations.value.support ?? 'Support', href: 'support' },
+]);
+
+const primaryLink = computed(() => ({
+    label: ctaTranslations.value.sign_up ?? 'Sign up',
+    href: 'register',
+}));
+
+const navbarLabels = computed<NavbarLabels>(() => ({
+    home: srTranslations.value.home ?? 'Home',
+    toggleNavigation:
+        srTranslations.value.toggle_navigation ?? 'Toggle navigation',
+    closeMenu: srTranslations.value.close_menu ?? 'Close menu',
+    dashboard: ctaTranslations.value.dashboard ?? 'Dashboard',
+    getStarted: ctaTranslations.value.get_started ?? 'Get started',
+    logIn: ctaTranslations.value.log_in ?? 'Log in',
+}));
 
 </script>
 
@@ -42,6 +94,7 @@ const primaryLink = { label: 'Sign up', href: 'register' };
                 :can-register="props.canRegister"
                 :nav-items="navItems"
                 :primary-link="primaryLink"
+                :labels="navbarLabels"
             />
 
             <main>
