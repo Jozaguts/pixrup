@@ -62,6 +62,34 @@ export interface PlanUsagePayload {
     resets_at?: string | null;
 }
 
+export interface BillingPlan {
+    name: string;
+    renews_at?: string | null;
+    is_canceling?: boolean;
+    ends_at?: string | null;
+    pending_plan?: {
+        name: string;
+        starts_at?: string | null;
+    } | null;
+}
+
+export interface BillingPlanPrice {
+    id: string;
+    unit_amount: number;
+    currency: string;
+    interval?: string | null;
+    interval_count?: number | null;
+}
+
+export interface BillingPlanOption {
+    id: number;
+    key: string;
+    name: string;
+    description?: string | null;
+    price: BillingPlanPrice;
+    is_current: boolean;
+}
+
 export interface UsageBucketPayload {
     limit: number;
     used: number;

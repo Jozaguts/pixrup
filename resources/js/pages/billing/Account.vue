@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { BreadcrumbItem } from '@/types';
+import type { BillingPlan, BillingPlanOption, BreadcrumbItem } from '@/types';
 import billingRoutes from '@/routes/billing';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { CreditCard, FolderOpen, Sparkles, X } from 'lucide-vue-next';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import PaymentMethodCard from '@/components/billing/PaymentMethodCard.vue';
+import BillingPlanCard from '@/components/billing/BillingPlanCard.vue';
 
 interface BillingOrder {
     id: string;
@@ -18,30 +19,6 @@ interface BillingOrderHistory {
     data: BillingOrder[];
     next_cursor?: string | null;
     has_more?: boolean;
-}
-
-interface BillingPlan {
-    name: string;
-    renews_at?: string | null;
-    is_canceling?: boolean;
-    ends_at?: string | null;
-}
-
-interface BillingPlanPrice {
-    id: string;
-    unit_amount: number;
-    currency: string;
-    interval?: string | null;
-    interval_count?: number | null;
-}
-
-interface BillingPlanOption {
-    id: number;
-    key: string;
-    name: string;
-    description?: string | null;
-    price: BillingPlanPrice;
-    is_current: boolean;
 }
 
 interface BillingPaymentMethod {
@@ -104,7 +81,7 @@ const orderHistoryHeaders = [
         value: 'date',
     },
     {
-        text: 'Type',
+        text: 'Plan',
         value: 'type',
     },
     {
@@ -127,6 +104,8 @@ const planError = computed(() => planForm.errors.price_id ?? null);
 const cancelForm = useForm({});
 const isLoadingOrderHistory = ref(false);
 const orderHistoryError = ref<string | null>(null);
+const pendingPlanPriceId = ref<string | null>(null);
+const isAnyPlanProcessing = computed(() => planForm.processing);
 
 const canCollectPayment = computed(() => Boolean(props.stripeKey) && Boolean(props.setupIntent?.client_secret));
 const showPaymentForm = ref(false);
@@ -298,6 +277,7 @@ const closePlansDrawer = () => {
     isPlanDrawerOpen.value = false;
     planForm.reset('price_id');
     planForm.clearErrors();
+    pendingPlanPriceId.value = null;
 };
 
 const canSubmitPlan = computed(() => hasActivePlan.value || hasPaymentMethod.value);
@@ -327,6 +307,42 @@ const formatPlanInterval = (plan: BillingPlanOption) => {
     return `/${suffix}`;
 };
 
+const formatPlanRenewDate = (value?: string | null) => {
+    if (!value) {
+        return 'soon';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return 'soon';
+    }
+
+    return date.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
+};
+
+const formatPlanChangeDate = (value?: string | null) => {
+    if (!value) {
+        return 'at period end';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return 'at period end';
+    }
+
+    const formatted = date.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    });
+
+    return `on ${formatted}`;
+};
+
 const planActionLabel = (plan: BillingPlanOption) => {
     if (plan.is_current) {
         return 'Current plan';
@@ -335,11 +351,23 @@ const planActionLabel = (plan: BillingPlanOption) => {
     return hasActivePlan.value ? 'Change plan' : 'Subscribe';
 };
 
+const isPlanProcessing = (plan: BillingPlanOption) =>
+    planForm.processing && pendingPlanPriceId.value === plan.price.id;
+
+const planActionStateLabel = (plan: BillingPlanOption) => {
+    if (isPlanProcessing(plan)) {
+        return hasActivePlan.value ? 'Updating...' : 'Subscribing...';
+    }
+
+    return planActionLabel(plan);
+};
+
 const handlePlanAction = (plan: BillingPlanOption) => {
     if (plan.is_current || !canSubmitPlan.value || planForm.processing) {
         return;
     }
 
+    pendingPlanPriceId.value = plan.price.id;
     planForm.price_id = plan.price.id;
 
     const route = hasActivePlan.value ? billingRoutes.subscription.swap().url : billingRoutes.subscription.store().url;
@@ -351,6 +379,7 @@ const handlePlanAction = (plan: BillingPlanOption) => {
         },
         onFinish: () => {
             planForm.reset('price_id');
+            pendingPlanPriceId.value = null;
         },
     });
 };
@@ -541,16 +570,31 @@ watch(
                         <p v-if="activePlan?.is_canceling" class="text-sm text-accent/50">
                             Access until {{ activePlan?.ends_at ?? 'TBD' }}
                         </p>
-                        <p v-else class="text-sm text-accent/50">Active subscription</p>
+                        <p v-else class="text-sm text-accent/50">
+                            Next charge on {{ formatPlanRenewDate(activePlan?.renews_at) }}
+                        </p>
+                        <p v-if="activePlan?.pending_plan" class="text-sm text-accent/50">
+                            Changes to {{ activePlan.pending_plan.name }}
+                            {{ formatPlanChangeDate(activePlan.pending_plan.starts_at) }}
+                        </p>
                     </div>
-                    <button
-                        type="button"
-                        :disabled="activePlan?.is_canceling || cancelForm.processing"
-                        class="mt-auto inline-flex items-center justify-center rounded-[12px] bg-surface px-4 py-2 text-xs font-semibold tracking-[0.2em] text-accent uppercase shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
-                        @click="handleCancelSubscription"
-                    >
-                        {{ activePlan?.is_canceling ? 'Cancellation scheduled' : 'Cancel subscription' }}
-                    </button>
+                    <div class="mt-auto flex flex-col gap-2">
+                        <button
+                            type="button"
+                            class="inline-flex items-center justify-center rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-primary shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40"
+                            @click="openPlansDrawer"
+                        >
+                            View plans
+                        </button>
+                        <button
+                            type="button"
+                            :disabled="activePlan?.is_canceling || cancelForm.processing"
+                            class="inline-flex items-center justify-center rounded-[12px] bg-surface px-4 py-2 text-xs font-semibold tracking-[0.2em] text-accent uppercase shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
+                            @click="handleCancelSubscription"
+                        >
+                            {{ activePlan?.is_canceling ? 'Cancellation scheduled' : 'Cancel subscription' }}
+                        </button>
+                    </div>
                 </aside>
                 <aside
                     v-else
@@ -756,34 +800,18 @@ watch(
                                 <p class="text-xs text-accent/50">Check back later or contact support.</p>
                             </div>
 
-                            <div
+                            <BillingPlanCard
                                 v-for="plan in plans"
                                 :key="plan.key"
-                                class="flex flex-col gap-3 rounded-[12px] bg-background p-4 shadow-neu-in"
-                            >
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="flex flex-col gap-1">
-                                        <h3 class="text-sm font-semibold text-accent">{{ plan.name }}</h3>
-                                        <p v-if="plan.description" class="text-xs text-accent/50">
-                                            {{ plan.description }}
-                                        </p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm font-semibold text-primary">
-                                            {{ formatPlanPrice(plan) }}
-                                            <span class="text-xs text-accent/50">{{ formatPlanInterval(plan) }}</span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <button
-                                    type="button"
-                                    :disabled="plan.is_current || !canSubmitPlan || planForm.processing"
-                                    class="flex items-center justify-center rounded-[12px] px-4 py-2 text-xs font-semibold text-primary shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
-                                    @click="handlePlanAction(plan)"
-                                >
-                                    {{ planActionLabel(plan) }}
-                                </button>
-                            </div>
+                                :plan="plan"
+                                :price-label="formatPlanPrice(plan)"
+                                :interval-label="formatPlanInterval(plan)"
+                                :action-label="planActionStateLabel(plan)"
+                                :can-submit="canSubmitPlan"
+                                :is-processing="isPlanProcessing(plan)"
+                                :is-busy="isAnyPlanProcessing"
+                                @action="handlePlanAction"
+                            />
                         </div>
 
                         <p v-if="!hasPaymentMethod && !hasActivePlan" class="text-xs text-accent/50">

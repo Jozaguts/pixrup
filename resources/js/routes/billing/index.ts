@@ -3,7 +3,7 @@ import paymentMethod from './payment-method'
 import subscription from './subscription'
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 export const account = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -18,7 +18,7 @@ account.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 account.url = (options?: RouteQueryOptions) => {
@@ -27,7 +27,7 @@ account.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -37,7 +37,7 @@ account.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -47,7 +47,7 @@ account.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -57,7 +57,7 @@ const accountForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -67,7 +67,7 @@ accountForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::account
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:24
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:25
 * @route '/billing/account'
 */
 accountForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -84,7 +84,7 @@ account.form = accountForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 export const orderHistory = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -99,7 +99,7 @@ orderHistory.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 orderHistory.url = (options?: RouteQueryOptions) => {
@@ -108,7 +108,7 @@ orderHistory.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 orderHistory.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -118,7 +118,7 @@ orderHistory.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 orderHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -128,7 +128,7 @@ orderHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 const orderHistoryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -138,7 +138,7 @@ const orderHistoryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 orderHistoryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -148,7 +148,7 @@ orderHistoryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::orderHistory
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:70
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:71
 * @route '/billing/order-history'
 */
 orderHistoryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

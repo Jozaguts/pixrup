@@ -9,6 +9,7 @@ use App\Application\Billing\Services\BillingPlanService;
 use App\Interface\Properties\Http\Requests\CancelSubscriptionRequest;
 use App\Interface\Properties\Http\Requests\SubscribePlanRequest;
 use App\Interface\Properties\Http\Requests\SwapPlanRequest;
+use App\Models\BillingPrice;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -214,7 +215,7 @@ class BillingController extends Controller
             ->map(fn ($invoice) => [
                 'id' => $invoice->id,
                 'date' => $invoice->date()->toFormattedDateString(),
-                'type' => $invoice->description ?? 'Subscription',
+                'type' => $this->resolveInvoicePlanName($invoice),
                 'receipt_url' => $invoice->hosted_invoice_url ?? $invoice->invoice_pdf,
             ])
             ->values();
@@ -224,6 +225,36 @@ class BillingController extends Controller
             'next_cursor' => $paginator->nextCursor()?->encode(),
             'has_more' => $paginator->hasMorePages(),
         ];
+    }
+
+    private function resolveInvoicePlanName($invoice): string
+    {
+        $planName = (string) ($invoice->description ?? '');
+
+        try {
+            $subscriptionLines = $invoice->subscriptions();
+            $line = $subscriptionLines[0] ?? null;
+            if ($line) {
+                $lineDescription = (string) ($line->description ?? '');
+                if ($lineDescription !== '') {
+                    $planName = $lineDescription;
+                }
+
+                $priceId = (string) data_get($line, 'price.id', '');
+                if ($planName === '' && $priceId !== '') {
+                    $price = BillingPrice::query()
+                        ->with('product')
+                        ->where('stripe_price_id', $priceId)
+                        ->first();
+
+                    $planName = (string) ($price?->product?->name ?? '');
+                }
+            }
+        } catch (\Throwable $exception) {
+            // Fallbacks below handle any Stripe API issues.
+        }
+
+        return $planName !== '' ? $planName : 'Subscription';
     }
 
     private function resolveOrderHistoryPerPage(Request $request): int
