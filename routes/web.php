@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
+
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
@@ -21,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     require __DIR__.'/billing/routes.php';
     require __DIR__.'/reports/routes.php';
     require __DIR__.'/settings.php';
+    require __DIR__.'/properties/routes.php';
 });
 
 require __DIR__.'/guest/routes.php';
