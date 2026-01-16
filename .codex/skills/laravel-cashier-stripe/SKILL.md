@@ -336,6 +336,26 @@ public function upgrade(Request $request)
 }
 ```
 
+### Upgrade vs Downgrade Best Practice
+
+- Upgrade (lower -> higher): immediate change with proration.
+- Downgrade (higher -> lower): defer to period end, no proration; keep features until then.
+
+```php
+// Upgrade: charge prorated difference and apply now
+$user->subscription('default')
+    ->swapAndInvoice($proPriceId);
+
+// Downgrade: schedule change at period end
+$user->subscription('default')
+    ->noProrate()
+    ->swap($starterPriceId);
+
+// App-level enforcement
+// - Keep features based on current plan_tier
+// - Persist pending_plan_tier + pending_plan_change_at for UI/guardrails
+```
+
 ### Payment Method Update Flow
 
 ```php
