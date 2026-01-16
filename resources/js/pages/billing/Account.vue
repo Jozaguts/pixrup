@@ -7,6 +7,16 @@ import { CreditCard, FolderOpen, Sparkles, X } from 'lucide-vue-next';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import PaymentMethodCard from '@/components/billing/PaymentMethodCard.vue';
 import BillingPlanCard from '@/components/billing/BillingPlanCard.vue';
+import ToastAlert from '@/components/shared/ToastAlert.vue';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 
 interface BillingOrder {
     id: string;
@@ -105,7 +115,10 @@ const cancelForm = useForm({});
 const isLoadingOrderHistory = ref(false);
 const orderHistoryError = ref<string | null>(null);
 const pendingPlanPriceId = ref<string | null>(null);
-const isAnyPlanProcessing = computed(() => planForm.processing);
+const selectedPlan = ref<BillingPlanOption | null>(null);
+const isPlanConfirmOpen = ref(false);
+const showPlanSuccessToast = ref(false);
+const planSuccessMessage = ref<string | null>(null);
 
 const canCollectPayment = computed(() => Boolean(props.stripeKey) && Boolean(props.setupIntent?.client_secret));
 const showPaymentForm = ref(false);
@@ -351,6 +364,32 @@ const planActionLabel = (plan: BillingPlanOption) => {
     return hasActivePlan.value ? 'Change plan' : 'Subscribe';
 };
 
+const planConfirmTitle = computed(() => {
+    if (!selectedPlan.value) {
+        return 'Confirm subscription';
+    }
+
+    return hasActivePlan.value ? 'Confirm plan change' : 'Confirm subscription';
+});
+
+const planConfirmActionLabel = computed(() => {
+    if (!selectedPlan.value) {
+        return 'Confirm';
+    }
+
+    return hasActivePlan.value ? 'Confirm change' : 'Confirm subscription';
+});
+
+const planConfirmDescription = computed(() => {
+    if (!selectedPlan.value) {
+        return 'Confirm to continue.';
+    }
+
+    const action = hasActivePlan.value ? 'change to' : 'subscribe to';
+
+    return `You're about to ${action} ${selectedPlan.value.name}.`;
+});
+
 const isPlanProcessing = (plan: BillingPlanOption) =>
     planForm.processing && pendingPlanPriceId.value === plan.price.id;
 
@@ -362,11 +401,40 @@ const planActionStateLabel = (plan: BillingPlanOption) => {
     return planActionLabel(plan);
 };
 
-const handlePlanAction = (plan: BillingPlanOption) => {
+const openPlanConfirmation = (plan: BillingPlanOption) => {
     if (plan.is_current || !canSubmitPlan.value || planForm.processing) {
         return;
     }
 
+    selectedPlan.value = plan;
+    isPlanConfirmOpen.value = true;
+};
+
+const closePlanConfirmation = () => {
+    isPlanConfirmOpen.value = false;
+    selectedPlan.value = null;
+};
+
+const handlePlanConfirmOpen = (value: boolean) => {
+    isPlanConfirmOpen.value = value;
+    if (!value) {
+        selectedPlan.value = null;
+    }
+};
+
+const triggerPlanSuccessToast = (message: string) => {
+    planSuccessMessage.value = message;
+    showPlanSuccessToast.value = false;
+
+    nextTick(() => {
+        showPlanSuccessToast.value = true;
+        window.setTimeout(() => {
+            showPlanSuccessToast.value = false;
+        }, 4200);
+    });
+};
+
+const submitPlanChange = (plan: BillingPlanOption) => {
     pendingPlanPriceId.value = plan.price.id;
     planForm.price_id = plan.price.id;
 
@@ -376,12 +444,26 @@ const handlePlanAction = (plan: BillingPlanOption) => {
         preserveScroll: true,
         onSuccess: () => {
             closePlansDrawer();
+            const message = hasActivePlan.value
+                ? `Plan updated to ${plan.name}.`
+                : `Subscribed to ${plan.name}.`;
+            triggerPlanSuccessToast(message);
         },
         onFinish: () => {
             planForm.reset('price_id');
             pendingPlanPriceId.value = null;
+            selectedPlan.value = null;
         },
     });
+};
+
+const confirmPlanChange = () => {
+    if (!selectedPlan.value || planForm.processing) {
+        return;
+    }
+
+    isPlanConfirmOpen.value = false;
+    submitPlanChange(selectedPlan.value);
 };
 
 const handleCancelSubscription = () => {
@@ -756,6 +838,16 @@ watch(
                 </p>
             </section>
         </section>
+        <ToastAlert
+            v-if="showPlanSuccessToast"
+            :visible="showPlanSuccessToast"
+            type="success"
+            title="Billing updated"
+            :msg="planSuccessMessage ?? ''"
+            :timer="4200"
+            :show-confirm-button="false"
+            :show-close-button="true"
+        />
         <teleport to="body">
             <transition
                 enter-active-class="transition duration-200 ease-out"
@@ -809,8 +901,7 @@ watch(
                                 :action-label="planActionStateLabel(plan)"
                                 :can-submit="canSubmitPlan"
                                 :is-processing="isPlanProcessing(plan)"
-                                :is-busy="isAnyPlanProcessing"
-                                @action="handlePlanAction"
+                                @action="openPlanConfirmation"
                             />
                         </div>
 
@@ -824,5 +915,45 @@ watch(
                 </aside>
             </transition>
         </teleport>
+        <Dialog :open="isPlanConfirmOpen" @update:open="handlePlanConfirmOpen">
+            <DialogContent
+                class="npo-form-shadow w-[90vw] max-w-md rounded-[16px] border-0 bg-surface p-5 text-accent"
+            >
+                <DialogHeader class="space-y-2">
+                    <DialogTitle class="text-lg font-semibold text-accent">
+                        {{ planConfirmTitle }}
+                    </DialogTitle>
+                    <DialogDescription class="text-sm text-accent/60">
+                        {{ planConfirmDescription }}
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="flex flex-col gap-2 rounded-[12px] bg-background p-4 text-xs text-accent/70 shadow-neu-in">
+                    <p v-if="selectedPlan" class="text-sm font-semibold text-accent">
+                        {{ selectedPlan.name }}
+                    </p>
+                    <p v-if="selectedPlan" class="text-xs text-accent/60">
+                        {{ formatPlanPrice(selectedPlan) }}{{ formatPlanInterval(selectedPlan) }}
+                    </p>
+                </div>
+                <DialogFooter class="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                    <DialogClose as-child>
+                        <button
+                            type="button"
+                            class="inline-flex items-center justify-center rounded-[12px] !bg-transparent px-4 py-2 text-xs font-semibold text-accent shadow-neu-out hover:opacity-90"
+                        >
+                            Cancel
+                        </button>
+                    </DialogClose>
+                    <button
+                        type="button"
+                        :disabled="planForm.processing"
+                        class="inline-flex items-center justify-center rounded-[12px] bg-surface px-4 py-2 text-xs font-semibold text-primary shadow-neu-out hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                        @click="confirmPlanChange"
+                    >
+                        {{ planConfirmActionLabel }}
+                    </button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </AppLayout>
 </template>

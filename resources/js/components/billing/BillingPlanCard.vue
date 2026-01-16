@@ -10,16 +10,13 @@ const props = defineProps<{
     actionLabel: string;
     canSubmit: boolean;
     isProcessing: boolean;
-    isBusy: boolean;
 }>();
 
 const emit = defineEmits<{
     (event: 'action', plan: BillingPlanOption): void;
 }>();
 
-const isDisabled = computed(
-    () => props.plan.is_current || !props.canSubmit || props.isBusy,
-);
+const isDisabled = computed(() => props.plan.is_current || !props.canSubmit || props.isProcessing);
 const buttonClassName = computed(() =>
     cn(
         'flex items-center justify-center rounded-[12px] px-4 py-2 text-xs font-semibold text-primary shadow-neu-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50',
