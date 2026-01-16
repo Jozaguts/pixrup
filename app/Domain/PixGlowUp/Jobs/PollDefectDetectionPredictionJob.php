@@ -5,7 +5,7 @@ namespace App\Domain\PixGlowUp\Jobs;
 use App\Domain\PixGlowUp\Runes\DefectDetectionRune;
 use App\Domain\PixGlowUp\Services\DefectDetectionClient;
 use App\Models\GlowupJob;
-use App\Models\PixvisionPropertyRune;
+use App\Models\PixVisionPropertyRune;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -94,7 +94,7 @@ class PollDefectDetectionPredictionJob implements ShouldQueue
 
             $payload = $rune->toArray();
 
-            PixvisionPropertyRune::updateOrCreate(
+            PixVisionPropertyRune::updateOrCreate(
                 [
                     'property_id' => $payload['property_id'],
                     'rune_key'    => $payload['rune_key'],

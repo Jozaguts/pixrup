@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\GlowUp;
 
 use App\Application\GlowUp\Services\GlowUpJobService;
+use App\Domain\PixGlowUp\Events\GlowUpGenerated;
 use App\Domain\Shared\Exceptions\FeatureLimitExceededException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GlowUp\AttachGlowUpResultRequest;
@@ -136,10 +137,8 @@ class GlowUpJobController extends Controller
             ->with('glowupJob', $resource);
     }
 
-    public function attach(
-        AttachGlowUpResultRequest $request,
-        GlowupJob $glowupJob,
-    ): JsonResponse|RedirectResponse {
+    public function attach( AttachGlowUpResultRequest $request, GlowupJob $glowupJob): JsonResponse|RedirectResponse
+    {
         if ($glowupJob->after_url === null) {
             return $this->respondWithError(
                 $request,
@@ -157,6 +156,8 @@ class GlowUpJobController extends Controller
             $payload['action'],
             $payload['notes'],
         );
+        //todo validar el que no haya sido ejecutado antes
+        GlowUpGenerated::dispatch($glowupJob);
 
         if ($request->expectsJson()) {
             return response()->json([

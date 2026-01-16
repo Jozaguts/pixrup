@@ -293,7 +293,7 @@ const closePlansDrawer = () => {
     pendingPlanPriceId.value = null;
 };
 
-const canSubmitPlan = computed(() => hasActivePlan.value || hasPaymentMethod.value);
+const canSubmitPlan = computed(() => hasPaymentMethod.value);
 
 const formatPlanPrice = (plan: BillingPlanOption) => {
     const currency = plan.price.currency?.toUpperCase() ?? 'USD';
@@ -905,8 +905,8 @@ watch(
                             />
                         </div>
 
-                        <p v-if="!hasPaymentMethod && !hasActivePlan" class="text-xs text-accent/50">
-                            Add a payment method before subscribing to a plan.
+                        <p v-if="!hasPaymentMethod" class="text-xs text-accent/50">
+                            Add a payment method to subscribe to a plan.
                         </p>
                         <p v-if="planError" class="text-xs text-primary">
                             {{ planError }}
