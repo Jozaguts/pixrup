@@ -157,8 +157,10 @@ return [
         'cta' => 'Appraise Full Property',
     ],
     'footer' => [
+        'tagline' => 'Get real insights in seconds',
         'rights' => 'All Rights Reserved © :year Pixrup',
         'terms' => 'Terms',
+        'terms_conditions' => 'Terms & Conditions',
         'and' => 'and',
         'privacy' => 'Privacy Policy',
     ],

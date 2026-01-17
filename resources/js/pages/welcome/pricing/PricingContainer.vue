@@ -121,6 +121,16 @@ const cardInnerClass = (plan: PricingPlan) =>
             ? 'p-8 bg-white rounded-[12px] dark:bg-background-8'
             : '',
     );
+
+const gridClass = computed(() =>
+    cn(
+        'grid grid-cols-1 items-center gap-8',
+        props.plans.length > 1 && 'md:grid-cols-2',
+        props.plans.length === 2 && 'lg:grid-cols-2',
+        props.plans.length === 3 && 'lg:grid-cols-3',
+        props.plans.length >= 4 && 'lg:grid-cols-4',
+    ),
+);
 </script>
 
 <template>
@@ -182,9 +192,7 @@ const cardInnerClass = (plan: PricingPlan) =>
                 </div>
             </div>
             <div class="relative">
-                <div
-                    class="grid grid-cols-1 items-center gap-8 md:grid-cols-2 lg:grid-cols-4"
-                >
+                <div :class="gridClass">
                     <div
                         v-for="plan in props.plans"
                         :key="plan.id ?? plan.key"

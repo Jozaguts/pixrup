@@ -157,8 +157,10 @@ return [
         'cta' => 'Valorar propiedad completa',
     ],
     'footer' => [
+        'tagline' => 'Obtén insights reales en segundos',
         'rights' => 'Todos los derechos reservados © :year Pixrup',
         'terms' => 'Términos',
+        'terms_conditions' => 'Términos y condiciones',
         'and' => 'y',
         'privacy' => 'Política de privacidad',
     ],

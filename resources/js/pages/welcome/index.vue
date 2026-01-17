@@ -4,7 +4,6 @@ import ContinueButtons from '@/components/welcome/ContinueButtons.vue';
 import FloatingRobot from '@/components/welcome/FloatingRobot.vue';
 import HeroSection from '@/components/welcome/HeroSection.vue';
 import WelcomeBackground from '@/components/welcome/WelcomeBackground.vue';
-import WelcomeFooter from '@/components/welcome/WelcomeFooter.vue';
 import WelcomeGallery from '@/components/welcome/WelcomeGallery.vue';
 import WorthPreviewModal, { type ComparableProperty } from '@/components/welcome/WorthPreviewModal.vue';
 import { router, usePage } from '@inertiajs/vue3';
@@ -144,7 +143,7 @@ onMounted(async () => {
                 <FloatingRobot />
                 <WelcomeBackground />
                 <HeroSection />
-                <div class="neu-bg-surface-color z-[100] mt-15 w-full max-w-lg rounded-[12px] bg-white/90">
+                <div class="neu-bg-surface-color z-[100] mt-15 w-full max-w-lg rounded-[12px] bg-background/90">
                     <AddressSearch v-model="addressQuery" @place-selected="handlePlaceSelected" />
                 </div>
                 <ContinueButtons
@@ -153,15 +152,6 @@ onMounted(async () => {
                     @continue-web="isWorthModalOpen = false"
                     @continue-app="isWorthModalOpen = false"
                 />
-                <div>
-                    <p class="text-primary">
-                        {{
-                            pageTranslations.intro ??
-                            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus ducimus ipsum iusto maxime nisi officia pariatur quam vel voluptates? Cumque pariatur, soluta! Ab adipisci, alias asperiores aspernatur consequuntur culpa deserunt dicta, ea eaque eius facilis incidunt maiores quis quisquam repellat suscipit vitae voluptas? Animi architecto delectus deleniti distinctio eaque, eius enim error fugit, illo in ipsa itaque iure labore libero minima minus, odit placeat quae quasi qui quis ratione reprehenderit sed ullam unde vel veniam. Aliquam exercitationem id nisi perferendis voluptates. Aut delectus eius expedita iure maxime minima nihil non officiis provident quam quo sint unde, vel veniam voluptate.'
-                        }}
-                    </p>
-                </div>
-
                 <WelcomeGallery :listings="featureState.data" v-if="!featureState.loading" />
                 <UseCaseContainer />
                 <PricingContainer :plans="props.pricingPlans ?? []" />
@@ -325,7 +315,6 @@ onMounted(async () => {
                         </div>
                     </div>
                 </section>
-                <WelcomeFooter />
                 <WorthPreviewModal
                     :open="isWorthModalOpen && Boolean(selectedAddress)"
                     :address="selectedAddress?.formattedAddress"

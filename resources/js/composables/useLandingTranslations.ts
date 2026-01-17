@@ -156,8 +156,10 @@ export type LandingTranslations = {
         cta?: string;
     };
     footer?: {
+        tagline?: string;
         rights?: string;
         terms?: string;
+        terms_conditions?: string;
         and?: string;
         privacy?: string;
     };

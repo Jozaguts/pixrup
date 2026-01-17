@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, usePage } from '@inertiajs/vue3';
 import ThemeToggle from '@/components/ThemeToggle.vue';
+import Footer from '@/components/shared/Footer.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
 import { computed } from 'vue';
 import { useLandingTranslations } from '@/composables/useLandingTranslations';
@@ -20,7 +21,7 @@ const props = withDefaults(
     }>(),
     {
         canRegister: true,
-        title:'Welcome',
+        title: 'Welcome',
     },
 );
 const page = usePage();
@@ -45,14 +46,12 @@ const primaryLink = computed(() => ({
 
 const navbarLabels = computed<NavbarLabels>(() => ({
     home: srTranslations.value.home ?? 'Home',
-    toggleNavigation:
-        srTranslations.value.toggle_navigation ?? 'Toggle navigation',
+    toggleNavigation: srTranslations.value.toggle_navigation ?? 'Toggle navigation',
     closeMenu: srTranslations.value.close_menu ?? 'Close menu',
     dashboard: ctaTranslations.value.dashboard ?? 'Dashboard',
     getStarted: ctaTranslations.value.get_started ?? 'Get started',
     logIn: ctaTranslations.value.log_in ?? 'Log in',
 }));
-
 </script>
 
 <template>
@@ -64,7 +63,7 @@ const navbarLabels = computed<NavbarLabels>(() => ({
             href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap"
         />
     </Head>
-    <div class="min-h-screen px-4 text-slate-900 sm:px-6 lg:px-10">
+    <div class="min-h-screen px-4 text-slate-900 sm:px-2 lg:px-4">
         <div class="relative z-10 mx-auto flex min-h-screen w-full flex-col">
             <WelcomeNavbar
                 :is-authenticated="isAuthenticated"
@@ -73,11 +72,12 @@ const navbarLabels = computed<NavbarLabels>(() => ({
                 :primary-link="primaryLink"
                 :labels="navbarLabels"
             />
-
             <main>
                 <slot name="main"></slot>
             </main>
+            <Footer />
         </div>
+
         <ThemeToggle />
     </div>
 </template>

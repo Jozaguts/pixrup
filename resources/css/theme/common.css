@@ -27,11 +27,11 @@ Common Styles all over the sites
 
 /* ==========FOOTER========== */
 .footer-link {
-    @apply relative inline-block overflow-hidden text-tagline-1 font-normal text-primary-50 before:absolute before:bottom-0 before:left-0 before:h-px before:w-full before:origin-right before:scale-x-0 before:bg-white before:transition-transform before:duration-500 before:content-[''] hover:before:origin-left hover:before:scale-x-100 max-[426px]:text-tagline-2 dark:before:bg-white;
+    @apply relative inline-block overflow-hidden text-tagline-1 font-normal text-accent/50 before:absolute before:bottom-0 before:left-0 before:h-px before:w-full before:origin-right before:scale-x-0 before:bg-accent before:transition-transform before:duration-500 before:content-[''] hover:before:origin-left hover:before:scale-x-100 max-[426px]:text-tagline-2 dark:before:bg-accent;
 }
 
 .footer-link-v2 {
-    @apply relative inline-block overflow-hidden text-tagline-1 font-normal text-secondary before:absolute before:bottom-0 before:left-0 before:h-px before:w-full before:origin-right before:scale-x-0 before:bg-secondary before:transition-transform before:duration-500 before:content-[''] hover:before:origin-left hover:before:scale-x-100 max-[426px]:text-tagline-2 dark:text-accent dark:before:bg-white;
+    @apply relative inline-block overflow-hidden text-tagline-1 font-normal text-secondary before:absolute before:bottom-0 before:left-0 before:h-px before:w-full before:origin-right before:scale-x-0 before:bg-secondary before:transition-transform before:duration-500 before:content-[''] hover:before:origin-left hover:before:scale-x-100 max-[426px]:text-tagline-2 dark:text-accent dark:before:bg-accent;
 }
 
 .footer-social-link {
