@@ -3,27 +3,7 @@ import { Head, usePage } from '@inertiajs/vue3';
 import ThemeToggle from '@/components/ThemeToggle.vue';
 import WelcomeNavbar from '@/components/welcome/WelcomeNavbar.vue';
 import { computed } from 'vue';
-
-interface LandingTranslations {
-    nav?: {
-        features?: string;
-        use_cases?: string;
-        pricing?: string;
-        blog?: string;
-        support?: string;
-        cta?: {
-            dashboard?: string;
-            get_started?: string;
-            sign_up?: string;
-            log_in?: string;
-        };
-        sr?: {
-            home?: string;
-            toggle_navigation?: string;
-            close_menu?: string;
-        };
-    };
-}
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 interface NavbarLabels {
     home: string;
@@ -45,10 +25,7 @@ const props = withDefaults(
 );
 const page = usePage();
 const isAuthenticated = computed(() => Boolean(page.props.auth?.user));
-const landingTranslations = computed<LandingTranslations>(() => {
-    const translations = page.props.translations as { landing?: LandingTranslations } | undefined;
-    return translations?.landing ?? {};
-});
+const landingTranslations = useLandingTranslations();
 const navTranslations = computed(() => landingTranslations.value.nav ?? {});
 const ctaTranslations = computed(() => navTranslations.value.cta ?? {});
 const srTranslations = computed(() => navTranslations.value.sr ?? {});

@@ -5,6 +5,7 @@ import { router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import type { AddressSelection } from './AddressSearch.vue';
 import Icon from '@/components/Icon.vue';
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 const props = defineProps<{
     addressData: AddressSelection | null;
@@ -17,6 +18,16 @@ const emit = defineEmits<{
 }>();
 
 const hasSelection = computed(() => Boolean(props.addressData));
+const landingTranslations = useLandingTranslations();
+const continueTranslations = computed(
+    () => landingTranslations.value.continue ?? {},
+);
+const continueAlerts = computed(
+    () => continueTranslations.value.alerts ?? {},
+);
+const continueAlt = computed(
+    () => continueTranslations.value.alt ?? {},
+);
 
 const buildQuery = () => {
     if (!props.addressData) {
@@ -48,7 +59,10 @@ const handleContinueInApp = () => {
     }
 
     if (!props.addressData) {
-        window.alert('Select an address to continue in the app.');
+        window.alert(
+            continueAlerts.value.select_address ??
+                'Select an address to continue in the app.',
+        );
         return;
     }
 
@@ -89,7 +103,10 @@ const handleContinueInApp = () => {
         return;
     }
 
-    window.alert('Open Pixrup on your phone to continue in the app.');
+    window.alert(
+        continueAlerts.value.open_on_phone ??
+            'Open Pixrup on your phone to continue in the app.',
+    );
 };
 </script>
 
@@ -97,7 +114,15 @@ const handleContinueInApp = () => {
     <div
         class="mb-0 mt-10 md:mt-20 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:justify-center z-100"
     >
-        <img src="/images/Apple Icon.svg" alt="Apple Icon" class="w-4/5 md:-w-full lg:w-full mx-auto">
-        <img src="/images/Android Icon.svg" alt="Android Icon" class="w-4/5 md:-w-full lg:w-full mx-auto">
+        <img
+            src="/images/Apple Icon.svg"
+            :alt="continueAlt.apple ?? 'Apple App Store'"
+            class="w-4/5 md:-w-full lg:w-full mx-auto"
+        >
+        <img
+            src="/images/Android Icon.svg"
+            :alt="continueAlt.android ?? 'Google Play'"
+            class="w-4/5 md:-w-full lg:w-full mx-auto"
+        >
     </div>
 </template>

@@ -8,6 +8,8 @@ import {
     Twitter,
     Youtube,
 } from 'lucide-vue-next';
+import { computed } from 'vue';
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 interface SocialLink {
     name: string;
@@ -27,6 +29,19 @@ const socialLinks: SocialLink[] = [
     },
     { name: 'YouTube', href: 'https://youtube.com/fixrup', icon: Youtube },
 ];
+
+const landingTranslations = useLandingTranslations();
+const footerTranslations = computed(
+    () => landingTranslations.value.footer ?? {},
+);
+const footerRights = computed(() => {
+    const year = new Date().getFullYear().toString();
+    const template =
+        footerTranslations.value.rights ??
+        'All Rights Reserved © :year Pixrup';
+
+    return template.replace(':year', year);
+});
 </script>
 
 <template>
@@ -47,13 +62,14 @@ const socialLinks: SocialLink[] = [
         </div>
 
         <p class="text-center text-slate-600">
-            All Rights Reserved © {{ new Date().getFullYear() }} Pixrup |
+            {{ footerRights }}
+            <span class="mx-1">|</span>
             <Link href="/terms" class="underline decoration-dotted">
-                Terms
+                {{ footerTranslations.terms ?? 'Terms' }}
             </Link>
-            and
+            <span class="mx-1">{{ footerTranslations.and ?? 'and' }}</span>
             <Link href="/privacy" class="underline decoration-dotted">
-                Privacy Policy
+                {{ footerTranslations.privacy ?? 'Privacy Policy' }}
             </Link>
         </p>
     </footer>

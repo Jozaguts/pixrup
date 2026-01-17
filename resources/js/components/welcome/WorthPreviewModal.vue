@@ -9,6 +9,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { computed } from 'vue';
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
+import { usePage } from '@inertiajs/vue3';
 
 export type ComparableProperty = {
     id: string;
@@ -28,15 +30,26 @@ const emit = defineEmits<{
     (e: 'appraise'): void;
 }>();
 
-const currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-});
+const landingTranslations = useLandingTranslations();
+const worthTranslations = computed(
+    () => landingTranslations.value.worth_preview ?? {},
+);
+const page = usePage();
+const formatterLocale = computed(() =>
+    page.props.locale === 'es' ? 'es-ES' : 'en-US',
+);
+const currencyFormatter = computed(
+    () =>
+        new Intl.NumberFormat(formatterLocale.value, {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0,
+        }),
+);
 
 const formattedEstimate = computed(() =>
     props.estimatedValue
-        ? currencyFormatter.format(props.estimatedValue)
+        ? currencyFormatter.value.format(props.estimatedValue)
         : undefined,
 );
 
@@ -62,7 +75,10 @@ const handleOpenChange = (value: boolean) => {
                         {{ props.address }}
                     </DialogTitle>
                     <DialogDescription class="text-left text-sm text-accent">
-                        Quick PixrWorth preview
+                        {{
+                            worthTranslations.description ??
+                            'Quick PixrWorth preview'
+                        }}
                     </DialogDescription>
                 </CardHeader>
 
@@ -71,14 +87,23 @@ const handleOpenChange = (value: boolean) => {
                         <p
                             class="text-xs font-medium tracking-wide text-accent uppercase"
                         >
-                            Estimated Value
+                            {{
+                                worthTranslations.estimated_label ??
+                                'Estimated Value'
+                            }}
                         </p>
                         <p class="text-3xl font-semibold text-slate-900">
-                            {{ formattedEstimate ?? 'Coming soon' }}
+                            {{
+                                formattedEstimate ??
+                                (worthTranslations.estimated_fallback ??
+                                    'Coming soon')
+                            }}
                         </p>
                         <p class="text-sm text-accent">
-                            Estimated using recent sales nearby. Connect
-                            HouseCanary for live data.
+                            {{
+                                worthTranslations.estimated_note ??
+                                'Estimated using recent sales nearby. Connect HouseCanary for live data.'
+                            }}
                         </p>
                     </section>
 
@@ -86,7 +111,10 @@ const handleOpenChange = (value: boolean) => {
                         <p
                             class="text-xs font-medium tracking-wide text-accent uppercase"
                         >
-                            Comparable Properties
+                            {{
+                                worthTranslations.comparable_label ??
+                                'Comparable Properties'
+                            }}
                         </p>
 
                         <ul class="grid gap-2">
@@ -108,8 +136,10 @@ const handleOpenChange = (value: boolean) => {
                             v-if="displayComps.length === 0"
                             class="text-sm text-accent"
                         >
-                            Comparable properties will appear here when
-                            available.
+                            {{
+                                worthTranslations.comparable_empty ??
+                                'Comparable properties will appear here when available.'
+                            }}
                         </p>
                     </section>
                 </CardContent>
@@ -118,7 +148,9 @@ const handleOpenChange = (value: boolean) => {
                     class="flex flex-col gap-2 border-t border-slate-100 bg-slate-50 px-6 py-4"
                 >
                     <Button class="w-full" size="lg" @click="emit('appraise')">
-                        Appraise Full Property
+                        {{
+                            worthTranslations.cta ?? 'Appraise Full Property'
+                        }}
                     </Button>
                 </DialogFooter>
             </Card>

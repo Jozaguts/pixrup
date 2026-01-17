@@ -4,6 +4,7 @@ import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import type { PropType } from 'vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import NeuInput from "@/components/NeuInput.vue";
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 type AddressLocation = {
     lat: number;
@@ -33,11 +34,21 @@ const inputRef = ref<InstanceType<typeof Input> | HTMLInputElement | null>(
 const isLoading = ref(false);
 const errorMessage = ref('');
 
+const landingTranslations = useLandingTranslations();
+const addressTranslations = computed(
+    () => landingTranslations.value.address_search ?? {},
+);
+const addressErrors = computed(
+    () => addressTranslations.value.errors ?? {},
+);
+
 let autocomplete: google.maps.places.Autocomplete | null = null;
 let placeListener: google.maps.MapsEventListener | undefined;
 
 const placeholder = computed(() =>
-    isLoading.value ? 'Loading Google Places…' : 'Search an address…',
+    isLoading.value
+        ? addressTranslations.value.loading ?? 'Loading Google Places...'
+        : addressTranslations.value.placeholder ?? 'Search an address...',
 );
 
 const initializeAutocomplete = async () => {
@@ -49,6 +60,7 @@ const initializeAutocomplete = async () => {
 
     if (!apiKey) {
         const message =
+            addressErrors.value.missing_api_key ??
             'Google Maps API key is missing. Set VITE_GOOGLE_MAPS_KEY to enable address search.';
         errorMessage.value = message;
         emit('error', message);
@@ -104,6 +116,7 @@ const initializeAutocomplete = async () => {
 
             if (!location || !formattedAddress || !placeId) {
                 const message =
+                    addressErrors.value.missing_place ??
                     'Unable to fetch address details from Google Places.';
                 errorMessage.value = message;
                 emit('error', message);
@@ -156,7 +169,8 @@ const initializeAutocomplete = async () => {
         const message =
             error instanceof Error
                 ? error.message
-                : 'Unexpected error loading Google Places.';
+                : addressErrors.value.unexpected ??
+                  'Unexpected error loading Google Places.';
         errorMessage.value = message;
         emit('error', message);
     } finally {

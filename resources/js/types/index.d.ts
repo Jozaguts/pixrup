@@ -1,5 +1,6 @@
 import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
+import type { LandingTranslations } from '@/composables/useLandingTranslations';
 
 export interface Auth {
     user: User;
@@ -22,7 +23,10 @@ export type AppPageProps<
 > = T & {
     name: string;
     locale?: string;
-    translations?: Record<string, unknown>;
+    translations?: {
+        landing?: LandingTranslations;
+        [key: string]: unknown;
+    };
     auth: Auth;
     sidebarOpen: boolean;
     mustVerifyEmail: boolean;
