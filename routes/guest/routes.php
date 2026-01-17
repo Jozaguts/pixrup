@@ -1,21 +1,16 @@
 <?php
 
 use App\Http\Controllers\FeaturesController;
+use App\Http\Controllers\LandingController;
 use App\Interface\Auth\Http\Controllers\AuthController;
 use App\Interface\Auth\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\BlogController;
-use Laravel\Fortify\Features;
-use Inertia\Inertia;
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
         'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
     ], function() {
-    Route::get('/', function () {
-        return Inertia::render('welcome/index', [
-            'canRegister' => Features::enabled(Features::registration()),
-        ]);
-    })->name('home');
+    Route::get('/', LandingController::class)->name('home');
     Route::prefix('blog')->group(function () {
         Route::get('/', [BlogController::class, 'index'])->name('blog.index');
         Route::get('/{slug}', [BlogController::class, 'show'])->name('blog.show');

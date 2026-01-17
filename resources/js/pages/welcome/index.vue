@@ -13,11 +13,13 @@ import type { ServiceCard } from '@/components/template/services/types';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import UseCaseContainer from '@/pages/welcome/use-cases/UseCaseContainer.vue';
 import PricingContainer from '@/pages/welcome/pricing/PricingContainer.vue';
+import type { PricingPlan } from '@/types';
 import featuresRoutes from '@/routes/features/index';
 import { useLandingTranslations } from '@/composables/useLandingTranslations';
 const props = withDefaults(
     defineProps<{
         canRegister: boolean;
+        pricingPlans?: PricingPlan[];
     }>(),
     {
         canRegister: true,
@@ -162,7 +164,7 @@ onMounted(async () => {
 
                 <WelcomeGallery :listings="featureState.data" v-if="!featureState.loading" />
                 <UseCaseContainer />
-                <PricingContainer />
+                <PricingContainer :plans="props.pricingPlans ?? []" />
                 <section
                     id="support"
                     class="pt-7 pb-14 md:pb-16 lg:pb-20 xl:pb-[100px]"

@@ -105,6 +105,27 @@ export interface BillingPlanOption {
     is_current: boolean;
 }
 
+export interface PricingPlanPrice {
+    id: string;
+    unit_amount: number;
+    currency: string;
+    interval?: string | null;
+    interval_count?: number | null;
+}
+
+export interface PricingPlan {
+    id: number | string;
+    key: string;
+    name: string;
+    description?: string | null;
+    features?: string[];
+    is_featured?: boolean;
+    prices: {
+        month?: PricingPlanPrice | null;
+        year?: PricingPlanPrice | null;
+    };
+}
+
 export interface UsageBucketPayload {
     limit: number;
     used: number;

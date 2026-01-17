@@ -36,18 +36,18 @@ const currentFlag = computed(() => flagByLocale[currentLocale.value] ?? flagByLo
 
 <template>
     <div v-if="hasLocales" data-slot="language-switcher">
-        <DropdownMenu >
-            <DropdownMenuTrigger as-child >
+        <DropdownMenu>
+            <DropdownMenuTrigger as-child>
                 <button
                     type="button"
-                    class="neu-button flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-accent uppercase"
+                    class="neu-button flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase text-accent rounded-full"
                     :aria-label="srTranslations.language ?? 'Language'"
                 >
                     <img :src="currentFlag" class="size-4 rounded-full" :alt="currentLocale" />
                     <span>{{ currentLocale }}</span>
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" class="neu-button w-40 rounded-xl !bg-surface text-accent">
+            <DropdownMenuContent align="end" class="neu-button w-40 !bg-surface text-accent rounded-xl">
                 <DropdownMenuItem v-for="option in localeOptions" :key="option.code" :as-child="true">
                     <Link
                         :href="option.url"
@@ -55,7 +55,7 @@ const currentFlag = computed(() => flagByLocale[currentLocale.value] ?? flagByLo
                         :class="
                             cn(
                                 option.code === currentLocale
-                                    ? 'text-accent '
+                                    ? 'text-accent'
                                     : 'text-accent/70',
                             )
                         "
@@ -68,7 +68,7 @@ const currentFlag = computed(() => flagByLocale[currentLocale.value] ?? flagByLo
                         <span class="flex-1">
                             {{ option.native ?? option.name ?? option.code }}
                         </span>
-                        <span class="text-xs font-semibold text-slate-400 uppercase">
+                        <span class="text-xs font-semibold uppercase text-slate-400">
                             {{ option.code }}
                         </span>
                     </Link>
