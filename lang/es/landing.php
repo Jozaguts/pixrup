@@ -19,6 +19,7 @@ return [
             'home' => 'Inicio',
             'toggle_navigation' => 'Mostrar navegación',
             'close_menu' => 'Cerrar menú',
+            'language' => 'Idioma',
         ],
     ],
     'page' => [
@@ -26,7 +27,7 @@ return [
         'intro' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus ducimus ipsum iusto maxime nisi officia pariatur quam vel voluptates? Cumque pariatur, soluta! Ab adipisci, alias asperiores aspernatur consequuntur culpa deserunt dicta, ea eaque eius facilis incidunt maiores quis quisquam repellat suscipit vitae voluptas? Animi architecto delectus deleniti distinctio eaque, eius enim error fugit, illo in ipsa itaque iure labore libero minima minus, odit placeat quae quasi qui quis ratione reprehenderit sed ullam unde vel veniam. Aliquam exercitationem id nisi perferendis voluptates. Aut delectus eius expedita iure maxime minima nihil non officiis provident quam quo sint unde, vel veniam voluptate.',
     ],
     'hero' => [
-        'title' => 'Convierte cualquier propiedad en efectivo.',
+        'title' => 'Convierte tu propiedad en efectivo.',
         'subtitle' => 'Sube. Valora. Reimagina. Comparte.',
     ],
     'address_search' => [

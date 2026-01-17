@@ -18,6 +18,7 @@ export type LandingTranslations = {
             home?: string;
             toggle_navigation?: string;
             close_menu?: string;
+            language?: string;
         };
     };
     page?: {

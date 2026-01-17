@@ -10,6 +10,7 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use Inertia\Middleware;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -75,10 +76,24 @@ class HandleInertiaRequests extends Middleware
             }
         }
 
+        $locales = [];
+        foreach (LaravelLocalization::getSupportedLocales() as $code => $details) {
+            $locales[] = [
+                'code' => $code,
+                'name' => $details['name'] ?? strtoupper($code),
+                'native' => $details['native'] ?? $code,
+                'url' => LaravelLocalization::getLocalizedURL($code, null, [], true),
+            ];
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'locale' => app()->getLocale(),
+            'localization' => [
+                'current' => app()->getLocale(),
+                'options' => $locales,
+            ],
             'translations' => [
                 'landing' => Lang::get('landing'),
             ],

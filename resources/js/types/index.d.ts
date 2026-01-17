@@ -23,6 +23,15 @@ export type AppPageProps<
 > = T & {
     name: string;
     locale?: string;
+    localization?: {
+        current?: string;
+        options?: Array<{
+            code: string;
+            name: string;
+            native: string;
+            url: string;
+        }>;
+    };
     translations?: {
         landing?: LandingTranslations;
         [key: string]: unknown;

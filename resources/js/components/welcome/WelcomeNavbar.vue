@@ -5,6 +5,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import WelcomeMobileMenu from './WelcomeMobileMenu.vue';
 import { useHideNavbarOnScroll } from '@/lib/utils';
 import { gsap } from '@/lib/gsap';
+import LanguageSwitcher from './LanguageSwitcher.vue';
 
 interface NavItem {
     label: string;
@@ -145,25 +146,29 @@ onBeforeUnmount(() => {
                 </ul>
             </nav>
 
-            <div class="hidden items-center justify-center xl:flex">
-                <a
-                    :href="auth.login.show().url"
-                    class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-700 dark:!text-[#fcfcfc]/60"
-                    >{{ resolvePrimaryCta }}</a
-                >
-            </div>
+            <div class="flex items-center gap-2">
+                <LanguageSwitcher />
 
-            <div class="block bg-surface xl:hidden">
-                <button
-                    class="neu-button flex size-12 flex-col items-center justify-center gap-[5px] rounded-[12px] text-slate-900 shadow-md transition"
-                    type="button"
-                    @click="toggleMobileMenu"
-                >
-                    <span class="sr-only">{{ props.labels.toggleNavigation }}</span>
-                    <span class="block h-0.5 w-6 bg-slate-900"></span>
-                    <span class="block h-0.5 w-6 bg-slate-900"></span>
-                    <span class="block h-0.5 w-6 bg-slate-900"></span>
-                </button>
+                <div class="hidden items-center justify-center xl:flex">
+                    <a
+                        :href="auth.login.show().url"
+                        class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-700 dark:!text-[#fcfcfc]/60"
+                        >{{ resolvePrimaryCta }}</a
+                    >
+                </div>
+
+                <div class="block bg-surface xl:hidden">
+                    <button
+                        class="neu-button flex size-12 flex-col items-center justify-center gap-[5px] rounded-[12px] text-slate-900 shadow-md transition"
+                        type="button"
+                        @click="toggleMobileMenu"
+                    >
+                        <span class="sr-only">{{ props.labels.toggleNavigation }}</span>
+                        <span class="block h-0.5 w-6 bg-slate-900"></span>
+                        <span class="block h-0.5 w-6 bg-slate-900"></span>
+                        <span class="block h-0.5 w-6 bg-slate-900"></span>
+                    </button>
+                </div>
             </div>
         </div>
 

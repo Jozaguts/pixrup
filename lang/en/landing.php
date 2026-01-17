@@ -19,6 +19,7 @@ return [
             'home' => 'Home',
             'toggle_navigation' => 'Toggle navigation',
             'close_menu' => 'Close menu',
+            'language' => 'Language',
         ],
     ],
     'page' => [
