@@ -54,6 +54,7 @@ readonly class GlowUpJobService
         $meta = [
             'disk' => $disk,
             'before_path' => $beforePath,
+            'user_instructions' => $payload['user_instructions'] ?? null,
         ];
 
         $job = GlowupJob::query()->create([
@@ -97,6 +98,7 @@ readonly class GlowUpJobService
             'disk' => $disk,
             'before_path' => $beforePath,
             'source_job_id' => $sourceJob->getKey(),
+            'user_instructions' => $payload['user_instructions'] ?? null,
         ];
 
         $job = GlowupJob::query()->create([
@@ -127,6 +129,14 @@ readonly class GlowUpJobService
 
         $meta = $property->metadata ?? [];
         $attachments = data_get($meta, 'glowup.attachments', []);
+        if (! is_array($attachments)) {
+            $attachments = [];
+        }
+        $attachments = array_values(array_filter(
+            $attachments,
+            fn (array $attachment) => (int) ($attachment['job_id'] ?? 0) !== (int) $job->getKey()
+                || ($attachment['action'] ?? null) !== $action,
+        ));
 
         $attachments[] = [
             'job_id' => $job->getKey(),
@@ -137,6 +147,31 @@ readonly class GlowUpJobService
             'notes' => $notes,
             'attached_at' => now()->toIso8601String(),
         ];
+
+        data_set($meta, 'glowup.attachments', $attachments);
+
+        $property->metadata = $meta;
+        $property->save();
+    }
+
+    public function detachResult(GlowupJob $job, string $action): void
+    {
+        $property = $job->property;
+
+        if ($property === null) {
+            return;
+        }
+
+        $meta = $property->metadata ?? [];
+        $attachments = data_get($meta, 'glowup.attachments', []);
+        if (! is_array($attachments)) {
+            $attachments = [];
+        }
+        $attachments = array_values(array_filter(
+            $attachments,
+            fn (array $attachment) => (int) ($attachment['job_id'] ?? 0) !== (int) $job->getKey()
+                || ($attachment['action'] ?? null) !== $action,
+        ));
 
         data_set($meta, 'glowup.attachments', $attachments);
 

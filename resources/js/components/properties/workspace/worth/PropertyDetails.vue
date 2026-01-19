@@ -53,7 +53,7 @@ const details = computed(() => [
 
 <template>
     <section
-        class="flex flex-col gap-4 rounded-[12px] p-6  transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4 rounded-[12px] p-4  transition-all duration-200 ease-in-out"
     >
         <header>
             <p

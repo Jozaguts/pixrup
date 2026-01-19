@@ -21,7 +21,8 @@ class SpyHuntController extends Controller
 
             $user = $request->user();
 
-            $dto = $this->fetchSpyHuntData->execute($propertyId, $user, $filters);
+            $force = $request->boolean('force');
+            $dto = $this->fetchSpyHuntData->execute($propertyId, $user, $filters, $force);
 
             return response()->json([
                 'data' => $dto->toArray(),

@@ -25,6 +25,6 @@ onBeforeUnmount(() => {
 <template>
     <div
         ref="bgRef"
-        class="pointer-events-none absolute top-[80px] right-[-30px] z-10 mt-[5rem] hidden h-full w-[35vw] bg-[url('../images/robot-3.webp')] bg-contain bg-top bg-no-repeat md:block lg:block"
+        class="pointer-events-none overflow-x-hidden absolute top-[80px] right-0 z-10 mt-[5rem] hidden h-dvh w-[35vw] bg-[url('../images/robot-3.webp')] bg-contain bg-top bg-no-repeat md:block lg:block"
     />
 </template>

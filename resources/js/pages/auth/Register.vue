@@ -18,7 +18,7 @@ import { Icon } from '@iconify/vue';
                 as="a"
                 :href="auth.google.redirect().url"
                 variant="outline"
-                class="neu-button flex w-full items-center justify-center gap-3 p-6 py-7 text-sm"
+                class="neu-button flex w-full items-center justify-center gap-3 p-4 py-7 text-sm"
                 tabindex="1"
             >
                 <svg
@@ -63,7 +63,7 @@ import { Icon } from '@iconify/vue';
             v-bind="auth.register.store()"
             :reset-on-success="['password']"
             v-slot="{ errors, processing }"
-            class="flex flex-col gap-6 p-6"
+            class="flex flex-col gap-6 p-4"
         >
             <div class="grid gap-4">
                 <div class="grid gap-2">

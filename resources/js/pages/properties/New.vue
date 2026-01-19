@@ -848,7 +848,7 @@ const isNextDisabled = computed(() => {
                     />
 
                     <div
-                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-background p-6 shadow-neu-in"
+                        class="flex flex-1 flex-col gap-4 rounded-[12px] bg-background p-4 shadow-neu-in"
                     >
                         <div
                             v-if="!photoItems.length && !isProcessingPhotos"
@@ -930,7 +930,7 @@ const isNextDisabled = computed(() => {
                         </p>
                     </div>
                     <div
-                        class="flex flex-1 flex-col gap-4 rounded-[12px] npo-form-shadow p-6 "
+                        class="flex flex-1 flex-col gap-4 rounded-[12px] npo-form-shadow p-4 "
                     >
 
                         <div class="grid md:gap-8 lg:gap-8 gap-4 md:grid-cols-2 lg:grid-cols-2 grid-cols-1">
@@ -1032,7 +1032,7 @@ const isNextDisabled = computed(() => {
                             </p>
                         </div>
 
-                        <div class="flex flex-col gap-3 flex-1 w-full rounded-[12px] bg-background p-6 shadow-neu-in">
+                        <div class="flex flex-col gap-3 flex-1 w-full rounded-[12px] bg-background p-4 shadow-neu-in">
                             <span
                                 class="text-xs tracking-wide text-accent uppercase"
                             >

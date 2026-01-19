@@ -19,7 +19,7 @@ const props = defineProps<Props>();
 
 <template>
     <div class="flex flex-col gap-6 text-accent">
-        <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
+        <header class="flex flex-col gap-4 neu-surface p-4 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
             >
@@ -42,8 +42,8 @@ const props = defineProps<Props>();
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <article class="space-y-5 neu-surface p-6 shadow-neu-out">
-                <div class="neu-surface p-6 shadow-neu-out">
+            <article class="space-y-5 neu-surface p-4 shadow-neu-out">
+                <div class="neu-surface p-4 shadow-neu-out">
                     <div
                         class="relative flex aspect-video items-center justify-center neu-surface shadow-neu-out"
                     >
@@ -109,7 +109,7 @@ const props = defineProps<Props>();
             </article>
 
             <aside
-                class="flex flex-col gap-5 neu-surface rounded-[28px] p-6 shadow-neu-out"
+                class="flex flex-col gap-5 neu-surface rounded-[28px] p-4 shadow-neu-out"
             >
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Asset controls</h3>

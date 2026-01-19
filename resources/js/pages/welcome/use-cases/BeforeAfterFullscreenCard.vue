@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { gsap } from '@/lib/gsap'
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 const props = defineProps<{
     before: string
@@ -9,6 +10,10 @@ const props = defineProps<{
 
 const container = ref<HTMLDivElement | null>(null)
 const beforeLayer = ref<HTMLDivElement | null>(null)
+const landingTranslations = useLandingTranslations();
+const useCasesTranslations = computed(
+    () => landingTranslations.value.use_cases ?? {},
+);
 
 let setClip: (value: string) => void
 
@@ -57,7 +62,7 @@ onBeforeUnmount(() => {
         <img
             :src="after"
             class="absolute inset-0 w-full h-full object-cover"
-            alt="after"
+            :alt="useCasesTranslations.after_alt ?? 'After image'"
         />
 
         <!-- BEFORE -->
@@ -65,7 +70,7 @@ onBeforeUnmount(() => {
             <img
                 :src="before"
                 class="w-full h-full object-cover"
-                alt="before"
+                :alt="useCasesTranslations.before_alt ?? 'Before image'"
             />
         </div>
     </div>

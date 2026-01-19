@@ -1,5 +1,6 @@
 import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
+import type { LandingTranslations } from '@/composables/useLandingTranslations';
 
 export interface Auth {
     user: User;
@@ -21,6 +22,20 @@ export type AppPageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     name: string;
+    locale?: string;
+    localization?: {
+        current?: string;
+        options?: Array<{
+            code: string;
+            name: string;
+            native: string;
+            url: string;
+        }>;
+    };
+    translations?: {
+        landing?: LandingTranslations;
+        [key: string]: unknown;
+    };
     auth: Auth;
     sidebarOpen: boolean;
     mustVerifyEmail: boolean;
@@ -60,6 +75,55 @@ export interface PlanUsagePayload {
     };
     period_key: string;
     resets_at?: string | null;
+}
+
+export interface BillingPlan {
+    name: string;
+    renews_at?: string | null;
+    is_canceling?: boolean;
+    ends_at?: string | null;
+    pending_plan?: {
+        name: string;
+        starts_at?: string | null;
+    } | null;
+}
+
+export interface BillingPlanPrice {
+    id: string;
+    unit_amount: number;
+    currency: string;
+    interval?: string | null;
+    interval_count?: number | null;
+}
+
+export interface BillingPlanOption {
+    id: number;
+    key: string;
+    name: string;
+    description?: string | null;
+    price: BillingPlanPrice;
+    is_current: boolean;
+}
+
+export interface PricingPlanPrice {
+    id: string;
+    unit_amount: number;
+    currency: string;
+    interval?: string | null;
+    interval_count?: number | null;
+}
+
+export interface PricingPlan {
+    id: number | string;
+    key: string;
+    name: string;
+    description?: string | null;
+    features?: string[];
+    is_featured?: boolean;
+    prices: {
+        month?: PricingPlanPrice | null;
+        year?: PricingPlanPrice | null;
+    };
 }
 
 export interface UsageBucketPayload {

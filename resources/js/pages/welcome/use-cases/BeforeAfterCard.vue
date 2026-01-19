@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watchEffect } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
 import { gsap } from '@/lib/gsap';
 import { useMediaQuery } from '@vueuse/core';
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 const { before, after, fullscreen, animation } = defineProps<{
     before: string;
@@ -13,6 +14,13 @@ const { before, after, fullscreen, animation } = defineProps<{
 const beforeLayer = ref<HTMLDivElement | null>(null);
 let tl: gsap.core.Timeline;
 const isMobile = useMediaQuery('(max-width: 600px)');
+const landingTranslations = useLandingTranslations();
+const useCasesTranslations = computed(
+    () => landingTranslations.value.use_cases ?? {},
+);
+const testimonial = computed(
+    () => useCasesTranslations.value.testimonial ?? {},
+);
 
 onMounted(() => {
     if (!beforeLayer.value && animation) return;
@@ -60,7 +68,7 @@ watchEffect(() => {
         <img
             :src="after"
             class="absolute inset-0 h-full w-full object-cover"
-            alt="after image"
+            :alt="useCasesTranslations.after_alt ?? 'After image'"
         />
 
         <!-- BEFORE -->
@@ -68,7 +76,7 @@ watchEffect(() => {
             <img
                 :src="before"
                 class="h-full w-full object-cover"
-                alt="before image"
+                :alt="useCasesTranslations.before_alt ?? 'Before image'"
             />
         </div>
 
@@ -79,18 +87,17 @@ watchEffect(() => {
         >
             <div class="mt-2 flex items-center gap-3">
                 <div class="flex size-11 items-center justify-center rounded-full bg-surface">
-                    <span>DS</span>
+                    <span>{{ testimonial.initials ?? 'DS' }}</span>
                 </div>
                 <div class="text-left">
                     <p class="text-lg font-medium text-secondary dark:text-accent">
-                        Darrell Steward
+                        {{ testimonial.name ?? 'Darrell Steward' }}
                     </p>
                     <p class="text-tagline-2">
-                        "Head of Operations, Finlytics"
+                        "{{ testimonial.role ?? 'Head of Operations, Finlytics' }}"
                     </p>
                 </div>
             </div>
         </div>
     </div>
 </template>
-

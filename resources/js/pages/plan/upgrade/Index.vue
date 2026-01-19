@@ -4,7 +4,7 @@ import NeuphormicButton from "@/components/neuphormic-button.vue";
 
 <template>
     <div class="min-h-screen flex items-center justify-center">
-        <div class="text-center max-w-md p-6">
+        <div class="text-center max-w-md p-4">
             <img
                 src="/images/under-construction.svg"
                 alt="Under construction"

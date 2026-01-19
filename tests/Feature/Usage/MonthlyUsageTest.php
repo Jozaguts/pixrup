@@ -19,6 +19,7 @@ test('usage resets before consumption when reset_at is in the past', function ()
         'used_renders' => 3,
         'usage_reset_at' => CarbonImmutable::now('UTC')->subDay()->toDateTimeString(),
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     app(MonthlyPropertyUsageService::class)
@@ -38,6 +39,7 @@ test('starter plan blocks docs after limit', function (): void {
         'used_docs' => 50,
         'usage_reset_at' => $period->resetsAt->toDateTimeString(),
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
     $service = app(MonthlyPropertyUsageService::class);
 
@@ -52,6 +54,7 @@ test('starter plan blocks renders', function (): void {
         'used_renders' => 0,
         'usage_reset_at' => $period->resetsAt->toDateTimeString(),
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
     $service = app(MonthlyPropertyUsageService::class);
 
@@ -66,6 +69,7 @@ test('pro plan allows unlimited docs', function (): void {
         'used_docs' => 999,
         'usage_reset_at' => $period->resetsAt->toDateTimeString(),
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     app(MonthlyPropertyUsageService::class)
@@ -82,6 +86,7 @@ test('pro plan blocks renders after limit', function (): void {
         'used_renders' => 20,
         'usage_reset_at' => $period->resetsAt->toDateTimeString(),
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
     $service = app(MonthlyPropertyUsageService::class);
 
@@ -96,6 +101,7 @@ test('enterprise plan allows renders without limits', function (): void {
         'used_renders' => 250,
         'usage_reset_at' => $period->resetsAt->toDateTimeString(),
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     app(MonthlyPropertyUsageService::class)

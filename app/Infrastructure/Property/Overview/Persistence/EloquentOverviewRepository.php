@@ -37,6 +37,22 @@ final class EloquentOverviewRepository implements OverviewRepository
             msaName: $row->msa_name,
             censusTract: $row->census_tract,
             blockGroup: $row->block_group,
+            hoaAnnualEstimate: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.annual_hoa_est'),
+            hoaMinFee: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.min_fee'),
+            hoaMaxFee: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.max_fee'),
+            hoaSamples: $this->intFromPayload($row->payload, 'hoa_est.association_estimated.n_samples'),
+            hoaSubdivision: $this->stringFromPayload($row->payload, 'hoa_est.association_estimated.subdivision'),
+            hoaSubdivisionId: $this->stringFromPayload($row->payload, 'hoa_est.association_estimated.subdivision_id'),
+            schoolDistrict: $this->stringFromPayload($row->payload, 'school.result.school.district')
+                ?? $this->stringFromPayload($row->payload, 'school.result.school.school_district'),
+            elementarySchool: $this->stringFromPayload($row->payload, 'school.result.school.elementary.0.name'),
+            middleSchool: $this->stringFromPayload($row->payload, 'school.result.school.middle.0.name'),
+            highSchool: $this->stringFromPayload($row->payload, 'school.result.school.high.0.name'),
+            hasPool: $this->boolFromPayload($row->payload, 'details.property.pool'),
+            hasAttic: $this->boolFromPayload($row->payload, 'details.property.attic'),
+            basementType: $this->stringFromPayload($row->payload, 'details.property.basement'),
+            hasAirConditioning: $this->boolFromPayload($row->payload, 'details.property.air_conditioning'),
+            fireplaceType: $this->stringFromPayload($row->payload, 'details.property.fireplace'),
             payload: $row->payload ?? [],
             fetchedAt: CarbonImmutable::parse($row->fetched_at ?? $row->updated_at ?? 'now'),
             expiresAt: CarbonImmutable::parse($row->expires_at ?? $row->updated_at ?? 'now'),
@@ -76,5 +92,53 @@ final class EloquentOverviewRepository implements OverviewRepository
         PropertyOverview::query()
             ->where('property_id', $propertyId)
             ->delete();
+    }
+
+    private function intFromPayload(?array $payload, string $path): ?int
+    {
+        $value = data_get($payload ?? [], $path);
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? (int) round((float) $value) : null;
+    }
+
+    private function stringFromPayload(?array $payload, string $path): ?string
+    {
+        $value = data_get($payload ?? [], $path);
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (string) $value;
+    }
+
+    private function boolFromPayload(?array $payload, string $path): ?bool
+    {
+        $value = data_get($payload ?? [], $path);
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value === 1;
+        }
+
+        if (is_string($value)) {
+            $normalized = strtolower(trim($value));
+            if (in_array($normalized, ['y', 'yes', 'true', '1'], true)) {
+                return true;
+            }
+            if (in_array($normalized, ['n', 'no', 'false', '0'], true)) {
+                return false;
+            }
+        }
+
+        return null;
     }
 }

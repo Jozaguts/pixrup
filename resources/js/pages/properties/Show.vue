@@ -221,14 +221,6 @@ const headerMetricCards = computed(() => {
             icon: Gauge,
         },
         {
-            id: 'livingArea',
-            label: 'Living Area',
-            value: summary.livingArea
-                ? `${Intl.NumberFormat('en-US').format(summary.livingArea)} sq ft`
-                : '—',
-            icon: Building2,
-        },
-        {
             id: 'valuation',
             label: 'Current Estimate',
             value: pricing.currentEstimate
@@ -322,7 +314,7 @@ const headerMetricCards = computed(() => {
                         </div>
 
                         <div class="flex w-full flex-col gap-5 lg:w-auto">
-                            <div class="grid gap-4 sm:grid-cols-2 ">
+                            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 ">
                                 <div
                                     v-for="metric in headerMetricCards"
                                     :key="metric.id"

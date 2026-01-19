@@ -212,7 +212,7 @@ const visitLink = (link?: string) => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-col gap-6 text-accent">
             <section
-                class="flex flex-col gap-6 rounded-[12px] p-6 md:flex-row md:items-center md:justify-between md:gap-10"
+                class="flex flex-col gap-6 rounded-[12px] p-4 md:flex-row md:items-center md:justify-between md:gap-10"
             >
                 <div class="flex flex-col gap-2">
                     <h1 class="text-3xl font-semibold tracking-tight md:text-3xl">
@@ -225,7 +225,7 @@ const visitLink = (link?: string) => {
 
             <DashboardSection class="flex flex-col items-stretch gap-6 md:flex-row lg:flex-row">
                 <!-- Quick Actions -->
-                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-5 npo-form-shadow">
+                <div class="flex flex-col gap-4 rounded-[12px] bg-surface p-4 npo-form-shadow">
                     <h3 class="text-sm font-semibold tracking-wide text-accent uppercase">Quick actions</h3>
                     <button
                         type="button"

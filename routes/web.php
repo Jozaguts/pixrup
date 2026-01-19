@@ -1,19 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\UsageSummaryController;
-use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\GlowUp\GlowUpJobController;
-use App\Interface\Properties\Http\Controllers\PropertyController;
-use App\Interface\Properties\Http\Controllers\SpyHuntController;
 use App\Http\Controllers\Billing\StripeWebhookController;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
-use App\Interface\Appraisal\Http\Controllers\PropertyWorthController as AppraisalPropertyWorthController;
-use App\Interface\Auth\Http\Controllers\AuthController;
-use App\Interface\Auth\Http\Controllers\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,74 +45,21 @@ Route::get('/test/{property}', static function(\App\Models\Property $property) {
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
-
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
-    Route::get('/properties/new', [PropertyController::class, 'create'])->name('properties.new');
-    Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
-    Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
-    Route::get('/properties/{property}/overview', [PropertyController::class, 'overview'])->name('properties.overview');
-    Route::post('/properties/{property}/worth/fetch', [AppraisalPropertyWorthController::class, 'fetch'])->name('properties.worth.fetch');
     Route::get('/glowup/jobs', [GlowUpJobController::class, 'history'])->name('glowup.jobs.index');
-    Route::get('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'index'])->name('properties.glowup.jobs.index');
-    Route::post('/properties/{property}/glowup/jobs', [GlowUpJobController::class, 'store'])->name('properties.glowup.jobs.store');
-    Route::get('/properties/{property}/glowup/jobs/{glowupJob}', [GlowUpJobController::class, 'show'])->name('properties.glowup.jobs.show');
+
     Route::post('/glowup/jobs/{glowupJob}/attach', [GlowUpJobController::class, 'attach'])->name('glowup.jobs.attach');
+    Route::post('/glowup/jobs/{glowupJob}/detach', [GlowUpJobController::class, 'detach'])->name('glowup.jobs.detach');
     Route::get('/v1/usage', UsageSummaryController::class)->name('usage.summary');
-    Route::get('properties/{property}/fetch', [SpyHuntController::class, 'fetch'])->name('properties.spyhunt.fetch');
-    Route::get('properties/{property}/mls-refresh', [SpyHuntController::class, 'mls-refresh'])->name('properties.spyhunt.msl-refresh');
+
+    Route::get('plan/upgrade', static fn() => Inertia::render('plan/upgrade/Index',[]))
+        ->name('plan.upgrade');
     require __DIR__.'/billing/routes.php';
-});
-Route::prefix('features')->group( static function() {
-    Route::get('/', [FeaturesController::class ,'index'])->name('features.index');
-    Route::get('{feature:slug}', [FeaturesController::class ,'show'])->name('features.show');
-});
-Route::prefix('blog')->group(function () {
-     Route::get('/', [BlogController::class, 'index'])->name('blog.index');
-     Route::get('/{slug}', [BlogController::class, 'show'])->name('blog.show');
+    require __DIR__.'/reports/routes.php';
+    require __DIR__.'/settings.php';
+    require __DIR__.'/properties/routes.php';
 });
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login.show');
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login.store');
+require __DIR__.'/guest/routes.php';
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('auth.register.show');
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register.store');
-
-Route::get('/auth/google/redirect', [SocialAuthController::class, 'redirect'])->name('auth.google.redirect');
-Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])->name('auth.google.callback');
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-require __DIR__.'/settings.php';
-
-
-Route::middleware( ['auth', 'verified'])
-    ->prefix('reports')
-    ->name('reports')
-    ->group(function () {
-        Route::get('/',[
-               \App\Http\Controllers\Reports\PdfReportsController::class,
-               'index'
-           ])->name('pdf.index');
-
-        Route::get('/new',[
-            \App\Http\Controllers\Reports\PdfReportsController::class,
-            'new'
-        ])->name('pdf.new');
-
-        Route::get('/logos',[
-            \App\Http\Controllers\Reports\PdfReportsController::class,
-            'getLogos'
-        ])->name('pdf.logos');
-
-        Route::post('/logos/create',[
-            \App\Http\Controllers\Reports\PdfReportsController::class,
-            'storeLogo'
-        ])->name('pdf.logos.new');
-    });
-
-Route::middleware(['auth','verified'])->prefix('plan')->group(function () {
-    Route::get('/upgrade', static function(){
-        return Inertia::render('plan/upgrade/Index',[]);
-    })->name('plan.upgrade');
-});

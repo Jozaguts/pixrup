@@ -33,7 +33,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Finance</span>
 
@@ -92,7 +92,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Crypto</span>
                                 <span
@@ -150,7 +150,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Banking</span>
                                 <span
@@ -208,7 +208,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Design</span>
                                 <span
@@ -264,7 +264,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Marketing</span>
                                 <span
@@ -319,7 +319,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Technology</span>
                                 <span
@@ -374,7 +374,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Business</span>
                                 <span
@@ -429,7 +429,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">UX/UI</span>
                                 <span
@@ -487,7 +487,7 @@
                                 class="w-full h-full object-cover"
                             />
                         </figure>
-                        <div class="px-4 py-6 md:p-6 space-y-6">
+                        <div class="px-4 py-6 md:p-4 space-y-6">
                             <div class="flex items-center gap-2">
                                 <span class="badge badge-green">Development</span>
 

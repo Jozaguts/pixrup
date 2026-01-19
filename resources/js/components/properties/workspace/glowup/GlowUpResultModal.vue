@@ -109,7 +109,7 @@ onUnmounted(() => {
         <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-black/60" @click="emit('close')" />
             <div
-                class="relative flex w-full max-w-3xl flex-col overflow-hidden rounded-[20px] bg-surface p-6 text-accent shadow-[0_20px_50px_rgba(15,23,42,0.55)] max-h-[90vh]"
+                class="relative flex w-full max-w-3xl flex-col overflow-hidden rounded-[20px] bg-surface p-4 text-accent shadow-[0_20px_50px_rgba(15,23,42,0.55)] max-h-[90vh]"
             >
                 <header class="flex items-start justify-between gap-4">
                     <div class="space-y-2">
@@ -183,7 +183,7 @@ onUnmounted(() => {
                         <button
                             v-if="hasResult"
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent shadow-neu-in transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+                            class="neu-button inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent  transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
                             :disabled="!canAttach"
                             @click="emit('attach', 'save_to_property')"
                         >
@@ -193,7 +193,7 @@ onUnmounted(() => {
                         <button
                             v-if="hasResult"
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent shadow-neu-in transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+                            class="inline-flex items-center gap-2 rounded-[14px] bg-surface px-4 py-2 text-sm font-semibold text-accent neu-button transition hover:shadow-[inset_3px_3px_8px_rgba(0,0,0,0.25),inset_-3px_-3px_8px_rgba(255,255,255,0.08)] disabled:cursor-not-allowed disabled:opacity-60"
                             :disabled="!canAttach"
                             @click="emit('attach', 'add_to_report')"
                         >

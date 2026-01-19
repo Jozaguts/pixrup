@@ -31,12 +31,13 @@ readonly class FetchSpyHuntDataUseCase
     /**
      * @throws FeatureLimitExceededException|\Throwable
      */
-    public function execute(int $propertyId,  User $user, $filters = []): SpyHuntDataDTO
+    public function execute(int $propertyId, User $user, $filters = [], bool $force = false): SpyHuntDataDTO
     {
 
-        //if(!$enforceFetch && $cached = $this->cacheRepository->get($propertyId)) {
-        if ($cached = $this->cacheRepository->get($propertyId)) {
-            return $cached;
+        if (! $force) {
+            if ($cached = $this->cacheRepository->get($propertyId)) {
+                return $cached;
+            }
         }
         $property = $this->propertyRepository->findOrFail($propertyId);
         $coordinates = $property->coordinates();

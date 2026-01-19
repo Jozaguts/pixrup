@@ -35,7 +35,7 @@ const normalized = computed(() => {
 
 <template>
     <section
-        class="flex flex-col gap-4 neu-surface rounded-[12px] p-6 shadow-neu-out transition-all duration-200 ease-in-out"
+        class="flex flex-col gap-4 neu-surface rounded-[12px] p-4 shadow-neu-out transition-all duration-200 ease-in-out"
     >
         <header class="flex items-center justify-between">
             <div>

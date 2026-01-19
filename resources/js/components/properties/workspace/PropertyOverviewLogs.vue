@@ -1,5 +1,5 @@
 <template>
-    <div class="npo-form-shadow max-w-xl rounded-[12px] p-6 text-accent">
+    <div class="npo-form-shadow max-w-xl rounded-[12px] p-4 text-accent">
         <div class="mb-6 flex items-center justify-between">
             <h2 class="text-lg font-semibold text-accent">Recent Activity</h2>
             <svg

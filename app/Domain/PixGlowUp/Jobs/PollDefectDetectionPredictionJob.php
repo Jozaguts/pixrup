@@ -94,7 +94,7 @@ class PollDefectDetectionPredictionJob implements ShouldQueue
 
             $payload = $rune->toArray();
 
-            PixvisionPropertyRune::updateOrCreate(
+            PixVisionPropertyRune::updateOrCreate(
                 [
                     'property_id' => $payload['property_id'],
                     'rune_key'    => $payload['rune_key'],

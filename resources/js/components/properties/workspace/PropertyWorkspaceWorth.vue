@@ -9,6 +9,7 @@ import { computed, nextTick, ref, watch } from 'vue';
 import type { PropertyWorkspaceProperty, WorkspaceModuleMeta, WorthResult, WorthStatusState } from './types';
 import CardValuation from './worth/CardValuation.vue';
 import ComparablesTable from './worth/ComparablesTable.vue';
+import WorkspaceModuleHeader from '@/components/properties/workspace/WorkspaceModuleHeader.vue';
 
 interface Props {
     property: PropertyWorkspaceProperty;
@@ -194,9 +195,16 @@ const handleFetch = async () => {
         return;
     }
 
-    const route = propertiesRoutes.worth.fetch({
-        property: propertyId.value,
-    });
+    const route = propertiesRoutes.worth.fetch(
+        {
+            property: propertyId.value,
+        },
+        {
+            query: {
+                force: 1,
+            },
+        },
+    );
 
     isFetchLoading.value = true;
     fetchErrorMessage.value = null;
@@ -269,48 +277,50 @@ watch(successMessage, (value, previous) => {
             :show-confirm-button="false"
             :show-close-button="true"
         />
+        <WorkspaceModuleHeader
+            eyebrow="PixrWorth"
+            title="Property value estimate"
+            description="Automated valuation built from comparable sales and market signals."
+        >
+            <template #actions>
+                <button
+                    type="button"
+                    :disabled="isFetchDisabled"
+                    class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
+                    @click="handleFetch"
+                >
+                    <component
+                        :is="isFetchLoading ? Loader2 : RefreshCw"
+                        :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
+                    />
+                    {{ isUsageLimitReached ? 'Limit reached' : 'Re-fetch valuation' }}
+                </button>
+                <div v-if="lastFetchedLabel" class="text-right text-sm text-accent/50">
+                    Last fetched on {{ lastFetchedLabel }}
+                </div>
+            </template>
+        </WorkspaceModuleHeader>
         <section class="grid h-100 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
             <div class="flex gap-6">
-                <article class="npo-form-shadow flex w-full flex-col gap-4 rounded-[12px] p-6 text-sm text-accent">
-                    <header class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                        <div class="space-y-1">
-                            <h2 class="text-2xl font-semibold tracking-tight text-accent">Estimate property value</h2>
-                            <h2 class="text-2xl font-semibold tracking-tight text-accent">
-                                {{ propertyWorthValue }}
-                            </h2>
-                            <div class="flex items-center gap-2">
-                                <p class="text-sm text-accent">Confidence: {{ confidence }}%</p>
-                                <div class="flex gap-x-1">
-                                    <span
-                                        class="h-2 w-2 rounded-full bg-primary text-white"
-                                        v-for="item in 5"
-                                        :key="item"
-                                        :class="item * 20 < confidence ? 'bg-primary' : 'bg-primary/50'"
-                                    />
-                                </div>
-                            </div>
-                            <small class="text-accent/50"
-                                >Based on {{ comparablesCount }} nearby comparable sales.</small
-                            >
-                        </div>
-                        <div class="flex flex-col flex-wrap items-end">
-                            <button
-                                type="button"
-                                :disabled="isFetchDisabled"
-                                class="inline-flex items-center gap-2 rounded-[12px] bg-primary/50 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f2fe0] disabled:cursor-not-allowed disabled:opacity-70"
-                                @click="handleFetch"
-                            >
-                                <component
-                                    :is="isFetchLoading ? Loader2 : RefreshCw"
-                                    :class="['h-4 w-4', { 'animate-spin': isFetchLoading }]"
+                <article class="npo-form-shadow flex w-full flex-col gap-4 rounded-[12px] p-4 text-sm text-accent">
+                    <div class="space-y-1">
+                        <h2 class="text-2xl font-semibold tracking-tight text-accent">Estimate property value</h2>
+                        <h2 class="text-2xl font-semibold tracking-tight text-accent">
+                            {{ propertyWorthValue }}
+                        </h2>
+                        <div class="flex items-center gap-2">
+                            <p class="text-sm text-accent">Confidence: {{ confidence }}%</p>
+                            <div class="flex gap-x-1">
+                                <span
+                                    class="h-2 w-2 rounded-full bg-primary text-white"
+                                    v-for="item in 5"
+                                    :key="item"
+                                    :class="item * 20 < confidence ? 'bg-primary' : 'bg-primary/50'"
                                 />
-                                {{ isUsageLimitReached ? 'Limit reached' : 'Fetch valuation' }}
-                            </button>
-                            <div v-if="lastFetchedLabel" class="mt-2 text-right text-sm text-accent/50">
-                                Last fetched on {{ lastFetchedLabel }}
                             </div>
                         </div>
-                    </header>
+                        <small class="text-accent/50">Based on {{ comparablesCount }} nearby comparable sales.</small>
+                    </div>
                     <div class="flex flex-col gap-5 rounded-[12px] transition-all duration-200 ease-in-out">
                         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,420px)_1fr]">
                             <div v-if="isWorthLoading" class="flex flex-col rounded-[12px] text-xs text-accent">
@@ -375,7 +385,7 @@ watch(successMessage, (value, previous) => {
                     </div>
                     <div
                         v-else-if="state === 'error'"
-                        class="flex flex-col gap-4 rounded-[12px] bg-surface p-6 shadow-neu-in"
+                        class="flex flex-col gap-4 rounded-[12px] bg-surface p-4 shadow-neu-in"
                     >
                         <div class="flex items-center gap-3 text-sm">
                             <AlertCircle class="h-5 w-5" />

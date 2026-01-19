@@ -45,3 +45,19 @@ function something()
 {
     // ..
 }
+
+function createActiveSubscription(\App\Models\User $user, array $attributes = []): \Laravel\Cashier\Subscription
+{
+    $defaults = [
+        'user_id' => $user->id,
+        'type' => 'default',
+        'stripe_id' => $attributes['stripe_id'] ?? ('sub_'.\Illuminate\Support\Str::uuid()->toString()),
+        'stripe_status' => 'active',
+        'stripe_price' => $attributes['stripe_price'] ?? 'price_test',
+        'quantity' => 1,
+        'trial_ends_at' => null,
+        'ends_at' => null,
+    ];
+
+    return \Laravel\Cashier\Subscription::query()->create(array_merge($defaults, $attributes));
+}

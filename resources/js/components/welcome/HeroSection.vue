@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { gsap } from '@/lib/gsap';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useLandingTranslations } from '@/composables/useLandingTranslations';
 
 const showSubtitle = ref(false);
 const caretVisible = ref(true);
 
-const heroText = 'Turn Any Property Into Cash.';
+const landingTranslations = useLandingTranslations();
+const heroText = computed(
+    () =>
+        landingTranslations.value.hero?.title ??
+        'Turn Any Property Into Cash.',
+);
+const heroSubtitle = computed(
+    () =>
+        landingTranslations.value.hero?.subtitle ??
+        'Upload. Appraise. Reimagine. Share.',
+);
 
 const textEl = ref<HTMLElement | null>(null);
 const caretEl = ref<HTMLElement | null>(null);
@@ -38,9 +49,11 @@ onMounted(() => {
         },
     );
 
+    const titleText = heroText.value;
+
     typingTween = gsap.to(textNode, {
-        text: { value: heroText },
-        duration: heroText.length * 0.065,
+        text: { value: titleText },
+        duration: titleText.length * 0.065,
         delay: 0.4,
         ease: 'none',
         onComplete: () => {
@@ -81,7 +94,7 @@ onBeforeUnmount(() => {
                 v-show="showSubtitle"
                 class="max-w-2xl  text-base text-slate-800 sm:text-lg lg:text-3xl dark:text-[#fcfcfc]/60"
             >
-                Upload. Appraise. Reimagine. Share.
+                {{ heroSubtitle }}
             </p>
         </div>
     </section>

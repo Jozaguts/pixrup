@@ -40,6 +40,39 @@ final readonly class HouseCanaryOverviewProvider implements OverviewProvider
         $fema = $this->extractResult($this->client->get('/v2/property/fema_disaster_area', $params), 'property/fema_disaster_area');
         $flood = $this->extractResult($this->client->get('/v2/property/flood', $params), 'property/flood');
         $crime = $this->extractResult($this->client->get('/v2/property/block_crime', $params), 'property/block_crime');
+        $detailsResponse = $this->client->get('/v2/property/details', $params);
+        $detailsResult = $this->extractResult($detailsResponse, 'property/details');
+        $detailsProperty = data_get($detailsResult, 'property');
+        $detailsAssessment = data_get($detailsResult, 'assessment');
+        $detailsAddress = data_get($this->decode($detailsResponse), '0.address_info');
+        $hoaResponse = $this->decode($this->client->get('/v3/property/hoa_est', $params));
+        $hoaSubject = data_get($hoaResponse, 'subject_address');
+        $hoaEstimate = data_get($hoaResponse, 'association_estimated');
+        $schoolResponse = $this->client->get('/v2/property/school', $params);
+        $schoolResult = $this->extractResult($schoolResponse, 'property/school');
+        $schoolEntries = data_get($schoolResult, 'school');
+        $schoolAddress = data_get($this->decode($schoolResponse), '0.address_info');
+        if (! is_array($detailsProperty)) {
+            $detailsProperty = [];
+        }
+        if (! is_array($detailsAssessment)) {
+            $detailsAssessment = [];
+        }
+        if (! is_array($detailsAddress)) {
+            $detailsAddress = [];
+        }
+        if (! is_array($hoaSubject)) {
+            $hoaSubject = [];
+        }
+        if (! is_array($hoaEstimate)) {
+            $hoaEstimate = [];
+        }
+        if (! is_array($schoolEntries)) {
+            $schoolEntries = [];
+        }
+        if (! is_array($schoolAddress)) {
+            $schoolAddress = [];
+        }
 
         $ownerFlag = data_get($ownerOccupied, 'owner_occupied', data_get($ownerOccupied, 'ownerOccupied'));
         $femaFlag = data_get($fema, 'in_disaster_area');
@@ -66,6 +99,21 @@ final readonly class HouseCanaryOverviewProvider implements OverviewProvider
             msaName: data_get($census, 'msa_name'),
             censusTract: data_get($census, 'census_tract', data_get($census, 'tract')),
             blockGroup: data_get($census, 'block_group', data_get($census, 'blockGroup')),
+            hoaAnnualEstimate: $this->intOrNull(data_get($hoaEstimate, 'annual_hoa_est')),
+            hoaMinFee: $this->intOrNull(data_get($hoaEstimate, 'min_fee')),
+            hoaMaxFee: $this->intOrNull(data_get($hoaEstimate, 'max_fee')),
+            hoaSamples: $this->intOrNull(data_get($hoaEstimate, 'n_samples')),
+            hoaSubdivision: data_get($hoaEstimate, 'subdivision'),
+            hoaSubdivisionId: data_get($hoaEstimate, 'subdivision_id'),
+            schoolDistrict: data_get($schoolResult, 'district', data_get($schoolResult, 'school_district')),
+            elementarySchool: data_get($schoolEntries, 'elementary.0.name'),
+            middleSchool: data_get($schoolEntries, 'middle.0.name'),
+            highSchool: data_get($schoolEntries, 'high.0.name'),
+            hasPool: $this->normalizeBool(data_get($detailsProperty, 'pool')),
+            hasAttic: $this->normalizeBool(data_get($detailsProperty, 'attic')),
+            basementType: data_get($detailsProperty, 'basement'),
+            hasAirConditioning: $this->normalizeBool(data_get($detailsProperty, 'air_conditioning')),
+            fireplaceType: data_get($detailsProperty, 'fireplace'),
             payload: [
                 'census' => $census,
                 'sales_history' => $salesHistory,
@@ -75,6 +123,19 @@ final readonly class HouseCanaryOverviewProvider implements OverviewProvider
                     'flood' => $flood,
                 ],
                 'block_crime' => $crime,
+                'details' => [
+                    'property' => $detailsProperty,
+                    'assessment' => $detailsAssessment,
+                    'address_info' => $detailsAddress,
+                ],
+                'hoa_est' => [
+                    'subject_address' => $hoaSubject,
+                    'association_estimated' => $hoaEstimate,
+                ],
+                'school' => [
+                    'result' => $schoolResult,
+                    'address_info' => $schoolAddress,
+                ],
                 'meta' => [
                     'housecanary' => [
                         'request' => $params,

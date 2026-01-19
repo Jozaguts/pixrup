@@ -20,7 +20,7 @@
 
         <!-- Modal Content -->
         <div
-            class="relative z-50 w-11/12 max-w-md p-6 bg-white rounded-xl shadow-lg"
+            class="relative z-50 w-11/12 max-w-md p-4 bg-white rounded-xl shadow-lg"
         >
             <h3 class="text-lg font-semibold mb-4">Select a file</h3>
             <button class="absolute top-4 right-4 text-accent hover:text-accent/60" @click="closeModal">

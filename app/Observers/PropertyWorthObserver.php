@@ -11,7 +11,8 @@ class PropertyWorthObserver
         GeneratePixWorthRunesJob::dispatch($propertyWorth);
     }
 
-    public function updated(object $propertyWorth): void {
+    public function updated(object $propertyWorth): void
+    {
         GeneratePixWorthRunesJob::dispatch($propertyWorth);
     }
 }

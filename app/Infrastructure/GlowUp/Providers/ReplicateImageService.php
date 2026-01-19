@@ -12,6 +12,8 @@ use RuntimeException;
 
 class ReplicateImageService implements GlowUpImageProvider
 {
+    private const int MIN_DIMENSION = 1024;
+    private const int MAX_DIMENSION = 4096;
     private PendingRequest $http;
     private string $model;
     private ?string $modelOwner;
@@ -73,6 +75,7 @@ class ReplicateImageService implements GlowUpImageProvider
         $sourceUrl = $this->resolveSourceUrl($storage, $sourcePath);
 
         [$prompt, $negative] = $this->buildPrompts($job);
+        $this->persistPrompts($job, $prompt, $negative);
         [$targetW, $targetH] = $this->resolveTargetDimensions($storage, $sourcePath);
 
         if ($this->isSdxlModel()) {
@@ -102,7 +105,7 @@ class ReplicateImageService implements GlowUpImageProvider
                 'prompt' => $prompt,
                 'max_images' => $this->maxImages,
                 'image_input' => [$sourceUrl],
-                'aspect_ratio' => $this->aspectRatio,
+                'aspect_ratio' => 'match_input_image',
                 'sequential_image_generation' => 'disabled',
                 'width' => $targetW,
                 'height' => $targetH,
@@ -152,38 +155,38 @@ class ReplicateImageService implements GlowUpImageProvider
 
     private function buildPrompts(GlowupJob $job): array
     {
-        $room = $this->humanize($job->room_type, 'space');
+        $room = $this->resolveRoomLabel($job->room_type);
         $style = $this->humanize($job->style, 'modern');
+        $userInstructions = $this->resolveUserInstructions($job);
 
+        $template = $this->isSdxlModel() ? $this->promptTemplateSdxl : $this->promptTemplateSeedream;
+        if (trim($template) === '') {
+            $template = $this->defaultPromptTemplate();
+        }
+
+        $prompt = $this->renderPromptTemplate($template, [
+            'room' => $room,
+            'style' => $style,
+            'property_id' => (string) $job->property_id,
+            'USER_INSTRUCTIONS' => $userInstructions,
+        ]);
+
+        if (! str_contains($template, '{USER_INSTRUCTIONS}')) {
+            $prompt = $this->appendUserInstructions($prompt, $userInstructions);
+        }
+
+        $negative = '';
         if ($this->isSdxlModel()) {
-            $template = $this->promptTemplateSdxl ?: 'Enhance the provided photo with subtle, realistic upgrades.';
-            $prompt = str_replace(
-                ['{room}', '{style}', '{property_id}'],
-                [$room, $style, (string) $job->property_id],
-                $template,
-            );
             $negative = trim($this->negativePromptTemplateSdxl);
-
             if ($negative === '') {
                 $negative =
                     'new layout, new room, altered geometry, incorrect perspective, '
                     . 'warped walls, moved furniture, extra objects, missing objects, '
                     . 'fantasy, CGI look, cartoon, illustration, dramatic redesign';
             }
-
-            return [trim($prompt), $negative];
         }
 
-        $template = $this->promptTemplateSeedream
-            ?: 'Edit the provided reference photo of a {room}. Apply a tasteful {style} glow-up.';
-
-        $prompt = str_replace(
-            ['{room}', '{style}', '{property_id}'],
-            [$room, $style, (string) $job->property_id],
-            $template,
-        );
-
-        return [trim($prompt), ''];
+        return [trim($prompt), $negative];
     }
 
     private function resolveTargetDimensions($storage, string $path): array
@@ -192,8 +195,9 @@ class ReplicateImageService implements GlowUpImageProvider
         $maxEdge = max(1, (int) max($this->width, $this->height));
         $originalMax = max(1, (int) max($w, $h));
         $longEdge = min($maxEdge, $originalMax);
+        [$targetW, $targetH] = $this->fitToLongEdge($w, $h, $longEdge);
 
-        return $this->fitToLongEdge($w, $h, $longEdge);
+        return $this->normalizeDimensions($targetW, $targetH);
     }
 
     private function readImageSize($storage, string $path): array
@@ -230,6 +234,33 @@ class ReplicateImageService implements GlowUpImageProvider
         return [(int) round($longEdge * $ratio), $longEdge];
     }
 
+    private function normalizeDimensions(int $width, int $height): array
+    {
+        $width = max(1, $width);
+        $height = max(1, $height);
+
+        $minEdge = min($width, $height);
+        $maxEdge = max($width, $height);
+
+        if ($minEdge < self::MIN_DIMENSION) {
+            $scale = self::MIN_DIMENSION / $minEdge;
+            $width = (int) round($width * $scale);
+            $height = (int) round($height * $scale);
+            $maxEdge = max($width, $height);
+        }
+
+        if ($maxEdge > self::MAX_DIMENSION) {
+            $scale = self::MAX_DIMENSION / $maxEdge;
+            $width = (int) round($width * $scale);
+            $height = (int) round($height * $scale);
+        }
+
+        return [
+            max(self::MIN_DIMENSION, min(self::MAX_DIMENSION, $width)),
+            max(self::MIN_DIMENSION, min(self::MAX_DIMENSION, $height)),
+        ];
+    }
+
     private function isSdxlModel(): bool
     {
         return str_contains(strtolower($this->model), 'sdxl');
@@ -248,6 +279,99 @@ class ReplicateImageService implements GlowUpImageProvider
     {
         if (! $value) return $fallback;
         return Str::of($value)->replace('_', ' ')->lower()->toString(); // 👈 evita Headline/TitleCase raro
+    }
+
+    private function resolveRoomLabel(?string $value): string
+    {
+        $normalized = $value ? strtolower(trim($value)) : '';
+        $aliases = [
+            'facade' => 'exterior',
+        ];
+        if ($normalized !== '' && isset($aliases[$normalized])) {
+            return $aliases[$normalized];
+        }
+
+        return $this->humanize($value, 'space');
+    }
+
+    private function resolveUserInstructions(GlowupJob $job): string
+    {
+        $raw = data_get($job->meta, 'user_instructions');
+        if (! is_string($raw)) {
+            return 'No additional changes requested.';
+        }
+        $trimmed = trim($raw);
+
+        return $trimmed !== '' ? $trimmed : 'No additional changes requested.';
+    }
+
+    private function renderPromptTemplate(string $template, array $replacements): string
+    {
+        $tokens = [];
+        foreach ($replacements as $key => $value) {
+            $tokens['{' . $key . '}'] = $value;
+        }
+
+        return strtr($template, $tokens);
+    }
+
+    private function appendUserInstructions(string $prompt, string $userInstructions): string
+    {
+        return rtrim($prompt)
+            . "\n\nUSER EDIT ZONE (high priority):\n"
+            . "Apply the following user-requested modifications carefully, as long as they do not break the base rules:\n"
+            . $userInstructions;
+    }
+
+    private function defaultPromptTemplate(): string
+    {
+        return <<<'PROMPT'
+You are an expert architectural photo editor AI.
+
+BASE RULES (always obey):
+- Preserve original camera viewpoint, perspective, vanishing point, depth, and geometry.
+- Maintain photorealism: natural lighting, realistic shadows, real materials.
+- No CGI, no stylized or illustrative rendering.
+- Output must look like a real photograph.
+
+SCENE CONTEXT:
+- Room type: {room}
+- Desired style: {style}
+
+STRUCTURAL RULES:
+- Walls, floors, ceilings, doors, windows, and room proportions must remain accurate unless explicitly allowed.
+- Perspective and spatial depth must never change.
+
+USER EDIT ZONE (high priority):
+Apply the following user-requested modifications carefully, as long as they do not break the base rules:
+{USER_INSTRUCTIONS}
+
+EDITING GUIDELINES:
+- The user may request:
+  - Removing existing objects
+  - Adding new furniture or decor
+  - Changing wall colors or materials
+  - Updating finishes or lighting
+- When removing objects, fill the space naturally and realistically.
+- When adding objects, match scale, lighting, and style to the scene.
+- All changes must remain architecturally plausible.
+
+FINAL QUALITY CHECK:
+- High detail, realistic textures
+- Correct light direction and shadow behavior
+- No artificial or rendered look
+PROMPT;
+    }
+
+    private function persistPrompts(GlowupJob $job, string $prompt, string $negative): void
+    {
+        $meta = $job->meta ?? [];
+        data_set($meta, 'prompt', $prompt);
+        if ($negative !== '') {
+            data_set($meta, 'negative_prompt', $negative);
+        }
+
+        $job->forceFill(['meta' => $meta])->save();
     }
 
     private function extractResultUrl(array $response): string

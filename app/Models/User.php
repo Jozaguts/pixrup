@@ -36,6 +36,8 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'provider_id',
         'role',
         'plan_tier',
+        'pending_plan_tier',
+        'pending_plan_change_at',
         'used_docs',
         'used_renders',
         'usage_reset_at',
@@ -69,6 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'usage_reset_at' => 'datetime',
+            'pending_plan_change_at' => 'datetime',
         ];
     }
 

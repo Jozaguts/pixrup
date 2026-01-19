@@ -15,6 +15,7 @@ test('authenticated users can create glowup jobs and enqueue processing', functi
     Bus::fake();
 
     $user = User::factory()->create(['plan_tier' => 'PRICE_PRO']);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
@@ -55,6 +56,7 @@ test('glowup job creation respects plan limits', function (): void {
     config(['glowup.disk' => 'public']);
 
     $user = User::factory()->create(['plan_tier' => 'PRICE_STARTER']);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);

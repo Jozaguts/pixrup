@@ -64,7 +64,7 @@ const searchString = ref('');
 </script>
 
 <template>
-    <section class="npo-form-shadow flex flex-col gap-4 rounded-[12px] bg-surface p-6">
+    <section class="npo-form-shadow flex flex-col gap-4 rounded-[12px] bg-surface p-4">
         <header class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <div

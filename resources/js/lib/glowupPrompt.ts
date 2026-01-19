@@ -24,7 +24,7 @@ const ROOM_LABEL: Record<RoomType, string> = {
     bathroom: 'Bathroom',
     bedroom: 'Bedroom',
     dining_room: 'Dining room',
-    facade: 'Facade',
+    facade: 'Exterior',
     outdoor: 'Outdoor / Patio',
     office: 'Office / Studio',
 };
@@ -64,7 +64,7 @@ const ROOM_HINTS: Partial<Record<RoomType, string>> = {
         'spa-like, clean fixtures, moisture-safe materials, soft lighting',
     bedroom: 'cozy linens, balanced lighting, calm palette, minimal clutter',
     dining_room: 'inviting table setup, ambient lighting, harmonious decor',
-    facade: 'curb appeal, balanced proportions, realistic materials and shadows',
+    facade: 'curb appeal, balanced proportions, realistic exterior materials and shadows',
     outdoor: 'weather-appropriate materials, plants, natural textures',
     office: 'ergonomic desk, shelving, organized workspace, soft acoustic elements',
 };

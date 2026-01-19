@@ -16,6 +16,7 @@ use App\Services\Runes\MarketVelocityRune;
 use App\Services\Runes\PriceReductionPressureRune;
 use App\Services\Runes\PriceVsMarketRune;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -87,6 +88,10 @@ class PropertyController extends Controller
 
         $glowUpJobs = $property->glowupJobs()->latest()->take(10)->get();
         $glowUpJobsPayload = GlowUpJobResource::collection($glowUpJobs)->toArray(request());
+        $glowUpAttachments = data_get($property->metadata, 'glowup.attachments', []);
+        if (! is_array($glowUpAttachments)) {
+            $glowUpAttachments = [];
+        }
 
         $authedUser = auth()->user();
         $usageSummary = $authedUser
@@ -184,6 +189,7 @@ class PropertyController extends Controller
             'glowUp' => [
                 'jobs' => $glowUpJobsPayload,
                 'usage' => $glowUpUsage,
+                'attachments' => $glowUpAttachments,
                 'options' => [
                     'room_types' => config('glowup.room_types', []),
                     'styles' => config('glowup.styles', []),
@@ -228,9 +234,10 @@ class PropertyController extends Controller
             ->with('status', 'property-created');
     }
 
-    public function overview(Property $property, CreatePropertyOverviewUseCase $useCase): JsonResponse
+    public function overview(Property $property, CreatePropertyOverviewUseCase $useCase, Request $request): JsonResponse
     {
-        $overview = $useCase->execute($property->toEntity());
+        $force = $request->boolean('force');
+        $overview = $useCase->execute($property->toEntity(), $force);
 
         return response()->json($overview);
     }

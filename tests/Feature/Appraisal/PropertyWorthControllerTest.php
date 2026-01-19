@@ -13,6 +13,7 @@ use App\Models\User;
  */
 test('property worth endpoint returns valuation payload', function (): void {
     $user = User::factory()->create();
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 
@@ -37,6 +38,7 @@ test('property worth endpoint enforces plan limits', function (): void {
         'used_docs' => 50,
         'usage_reset_at' => $resetsAt,
     ]);
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user);
@@ -55,6 +57,7 @@ test('property worth endpoint enforces plan limits', function (): void {
  */
 test('property worth endpoint reuses cached valuations', function (): void {
     $user = User::factory()->create();
+    createActiveSubscription($user);
     $property = Property::factory()->create(['user_id' => $user->id]);
     $this->actingAs($user);
 

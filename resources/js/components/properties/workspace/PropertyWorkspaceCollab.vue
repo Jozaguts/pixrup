@@ -45,7 +45,7 @@ const messages = computed(() => [
 
 <template>
     <div class="flex flex-col gap-6 text-accent">
-        <header class="flex flex-col gap-4 neu-surface p-6 shadow-neu-out">
+        <header class="flex flex-col gap-4 neu-surface p-4 shadow-neu-out">
             <div
                 class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
             >
@@ -66,7 +66,7 @@ const messages = computed(() => [
         </header>
 
         <section class="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-            <article class="flex flex-col gap-5 neu-surface p-6 shadow-neu-out">
+            <article class="flex flex-col gap-5 neu-surface p-4 shadow-neu-out">
                 <header class="flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-semibold">Live Thread</h3>
@@ -113,7 +113,7 @@ const messages = computed(() => [
             </article>
 
             <aside
-                class="flex flex-col gap-5 neu-surface rounded-[28px] p-6 shadow-neu-out"
+                class="flex flex-col gap-5 neu-surface rounded-[28px] p-4 shadow-neu-out"
             >
                 <header class="flex items-center justify-between">
                     <h3 class="text-base font-semibold">Participants</h3>

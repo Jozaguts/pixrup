@@ -18,7 +18,7 @@ return [
         ['value' => 'bathroom', 'label' => 'Bathroom'],
         ['value' => 'bedroom', 'label' => 'Bedroom'],
         ['value' => 'dining_room', 'label' => 'Dining room'],
-        ['value' => 'facade', 'label' => 'Facade'],
+        ['value' => 'facade', 'label' => 'Exterior'],
         ['value' => 'outdoor', 'label' => 'Outdoor / Patio'],
         ['value' => 'office', 'label' => 'Office / Studio'],
     ],
