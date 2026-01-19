@@ -26,6 +26,10 @@ class PixVisionPropertyRune extends Model
         'computed_at',
     ];
 
+    protected $casts = [
+        'rune_value' => 'array',
+    ];
+
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);
