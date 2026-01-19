@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:87
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
 * @route '/billing/payment-method'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:87
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
 * @route '/billing/payment-method'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:87
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
 * @route '/billing/payment-method'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:87
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
 * @route '/billing/payment-method'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::store
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:87
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:46
 * @route '/billing/payment-method'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -57,7 +57,7 @@ store.form = storeForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::defaultMethod
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:108
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
 * @route '/billing/payment-method/default'
 */
 export const defaultMethod = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -72,7 +72,7 @@ defaultMethod.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::defaultMethod
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:108
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
 * @route '/billing/payment-method/default'
 */
 defaultMethod.url = (options?: RouteQueryOptions) => {
@@ -81,7 +81,7 @@ defaultMethod.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::defaultMethod
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:108
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
 * @route '/billing/payment-method/default'
 */
 defaultMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -91,7 +91,7 @@ defaultMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::defaultMethod
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:108
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
 * @route '/billing/payment-method/default'
 */
 const defaultMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -101,7 +101,7 @@ const defaultMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'po
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::defaultMethod
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:108
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:67
 * @route '/billing/payment-method/default'
 */
 defaultMethodForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -113,7 +113,7 @@ defaultMethod.form = defaultMethodForm
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:129
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
 * @route '/billing/payment-method'
 */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -128,7 +128,7 @@ destroy.definition = {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:129
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
 * @route '/billing/payment-method'
 */
 destroy.url = (options?: RouteQueryOptions) => {
@@ -137,7 +137,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:129
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
 * @route '/billing/payment-method'
 */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -147,7 +147,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:129
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
 * @route '/billing/payment-method'
 */
 const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -162,7 +162,7 @@ const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Interface\Properties\Http\Controllers\BillingController::destroy
-* @see app/Interface/Properties/Http/Controllers/BillingController.php:129
+* @see app/Interface/Properties/Http/Controllers/BillingController.php:88
 * @route '/billing/payment-method'
 */
 destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
