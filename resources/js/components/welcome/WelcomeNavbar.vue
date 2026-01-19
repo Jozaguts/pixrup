@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { dashboard } from '@/routes';
 import auth from '@/routes/auth';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
@@ -105,6 +106,9 @@ const navRef = ref<HTMLElement | null>(null);
 const resolvePrimaryCta = computed<string>(() => {
     return props.isAuthenticated ? props.labels.dashboard : props.labels.getStarted;
 });
+const primaryHref = computed(() => {
+    return props.isAuthenticated ? dashboard().url : auth.login.show().url;
+});
 useHideNavbarOnScroll(navRef);
 onBeforeUnmount(() => {
     if (typeof document !== 'undefined') {
@@ -151,7 +155,7 @@ onBeforeUnmount(() => {
 
                 <div class="hidden items-center justify-center xl:flex">
                     <a
-                        :href="auth.login.show().url"
+                        :href="primaryHref"
                         class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-700 dark:!text-[#fcfcfc]/60"
                         >{{ resolvePrimaryCta }}</a
                     >

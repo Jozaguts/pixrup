@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1E3A8A" />
+    <title>Pixrup is offline</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f5fa;
+        --card: #ffffff;
+        --text: #1f2933;
+        --muted: #6b7280;
+        --accent: #1e3a8a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 55%, #e6e9f5 100%);
+        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        color: var(--text);
+      }
+
+      .card {
+        width: min(480px, 92vw);
+        background: var(--card);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 18px 18px 40px rgba(17, 24, 39, 0.12);
+        text-align: center;
+      }
+
+      .icon {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 16px;
+        border-radius: 20px;
+        display: grid;
+        place-items: center;
+        background: #e6eeff;
+        color: var(--accent);
+        font-size: 32px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 24px;
+      }
+
+      p {
+        margin: 0 0 20px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      button {
+        border: none;
+        background: var(--accent);
+        color: white;
+        font-weight: 600;
+        padding: 12px 20px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      button:focus-visible {
+        outline: 3px solid rgba(30, 58, 138, 0.3);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="icon">📶</div>
+      <h1>No connection</h1>
+      <p>Pixrup can’t reach the network right now. Check your connection and try again.</p>
+      <button type="button" onclick="location.reload()">Try again</button>
+    </div>
+  </body>
+</html>

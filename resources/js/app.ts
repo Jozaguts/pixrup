@@ -21,6 +21,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
 import { createPinia } from 'pinia';
 import { PiniaColada } from '@pinia/colada';
+import { registerSW } from 'virtual:pwa-register';
 window.gsap = gsap;
 window.ScrollTrigger = ScrollTrigger;
 window.ensureSpringer = ensureSpringer;
@@ -57,3 +58,7 @@ createInertiaApp({
 
 // This will set light / dark mode on page load...
 initializeTheme();
+
+if (import.meta.env.PROD) {
+    registerSW({ immediate: true });
+}
