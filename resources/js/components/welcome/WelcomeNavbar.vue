@@ -48,7 +48,9 @@ const menuItems = computed(() => props.navItems ?? []);
 const isMobileMenuOpen = ref(false);
 
 const largeLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
+const largeLogoDark = '/images/pixrup-dark-mode.png';
 const compactLogo = new URL('../../../images/pixrup.png', import.meta.url).href;
+const compactLogoDark = '/images/pixrup-dark-mode.png';
 const page = usePage();
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
@@ -127,11 +129,12 @@ onBeforeUnmount(() => {
                 <Link href="/">
                     <span class="sr-only">{{ props.labels.home }}</span>
                     <figure class="ml-2 hidden lg:block lg:max-w-[50px]">
-                        <img :src="largeLogo" alt="Pixrup" class="dark" />
+                        <img :src="largeLogo" alt="Pixrup" class="block dark:hidden" />
+                        <img :src="largeLogoDark" alt="Pixrup" class="hidden dark:block" />
                     </figure>
                     <figure class="block max-w-[44px] lg:hidden">
                         <img :src="compactLogo" alt="Pixrup" class="block w-full dark:hidden" />
-                        <img :src="compactLogo" alt="Pixrup" class="hidden w-full invert dark:block" />
+                        <img :src="compactLogoDark" alt="Pixrup" class="hidden w-full dark:block" />
                     </figure>
                 </Link>
             </div>
@@ -141,7 +144,7 @@ onBeforeUnmount(() => {
                     <li v-for="item in menuItems" :key="item.label" class="relative cursor-pointer px-2 py-2.5">
                         <button
                             type="button"
-                            class="neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-slate-600 dark:!text-[#fcfcfc]/60"
+                            class="neu-button flex items-center gap-2 rounded-full px-6 py-2 text-sm font-medium text-accent"
                             @click="() => scrollTo(item.href)"
                         >
                             <span>{{ item.label }}</span>
@@ -156,7 +159,7 @@ onBeforeUnmount(() => {
                 <div class="hidden items-center justify-center xl:flex">
                     <a
                         :href="primaryHref"
-                        class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-700 dark:!text-[#fcfcfc]/60"
+                        class="neu-button inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold text-accent transition hover:bg-accent/70"
                         >{{ resolvePrimaryCta }}</a
                     >
                 </div>
