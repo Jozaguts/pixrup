@@ -1,14 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Features;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 
 test('login screen can be rendered', function () {
-    $response = $this->get(route('auth.login.show'));
+    $response = $this->withoutMiddleware([
+        LocaleSessionRedirect::class,
+        LaravelLocalizationRedirectFilter::class,
+        LaravelLocalizationViewPath::class,
+    ])->get(route('auth.login.show'));
 
-    $response->assertStatus(200);
+    $response->assertOk();
 });
 
 test('users can authenticate using the login screen', function () {

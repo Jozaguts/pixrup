@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -14,6 +16,29 @@
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
+
+beforeAll(function (): void {
+    if (! app()->environment('testing')) {
+        throw new RuntimeException('Refusing to run tests unless APP_ENV=testing.');
+    }
+
+    $defaultConnection = config('database.default');
+    $database = (string) config("database.connections.{$defaultConnection}.database");
+
+    if ($defaultConnection !== 'sqlite') {
+        $allowUnsafe = filter_var(
+            env('TESTING_ALLOW_UNSAFE_DB', 'false'),
+            FILTER_VALIDATE_BOOLEAN,
+        );
+
+        if (! $allowUnsafe && ! str_contains(strtolower($database), 'test')) {
+            throw new RuntimeException(
+                "Refusing to run tests against database [{$database}]. ".
+                'Use a test database (name includes "test") or set TESTING_ALLOW_UNSAFE_DB=true.',
+            );
+        }
+    }
+});
 
 /*
 |--------------------------------------------------------------------------

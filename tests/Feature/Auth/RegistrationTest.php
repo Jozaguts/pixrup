@@ -1,13 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Notification;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 
 test('registration screen can be rendered', function () {
-    $response = $this->get(route('auth.register.show'));
+    $response = $this->withoutMiddleware([
+        LocaleSessionRedirect::class,
+        LaravelLocalizationRedirectFilter::class,
+        LaravelLocalizationViewPath::class,
+    ])->get(route('auth.register.show'));
 
-    $response->assertStatus(200);
+    $response->assertOk();
 });
 
 test('new users can register', function () {
