@@ -93,10 +93,8 @@ jobs:
             git reset --hard origin/${{ github.ref_name }}
             git clean -fd \
               -e .env \
-              -e storage \
-              -e storage/** \
-              -e vendor \
-              -e vendor/** \
+              -e storage -e storage/** \
+              -e vendor -e vendor/** \
               -e public/storage
 
             # 2) Sanity: PHP + intl
@@ -113,7 +111,11 @@ jobs:
 
             # 4) Dependencias (lock debe calzar con el server)
             echo "🧩 Updating dependencies"
-            ${{ matrix.php_bin }} ${{ matrix.composer_bin }} install --no-dev --prefer-dist --optimize-autoloader
+            ${{ matrix.php_bin }} ${{ matrix.composer_bin }} install \
+              --no-dev --prefer-dist --optimize-autoloader --no-interaction \
+              --no-scripts
+               
+            ${{ matrix.php_bin }} artisan package:discover --ansi
 
             # 5) Frontend
             echo "⚙️ Building frontend"
