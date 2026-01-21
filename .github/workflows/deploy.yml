@@ -125,9 +125,7 @@ jobs:
             # 6) Laravel
             echo "🚀 Running migrations and caches"
             ${{ matrix.php_bin }} artisan migrate --force
-            ${{ matrix.php_bin }} artisan config:cache
-            ${{ matrix.php_bin }} artisan route:cache
-            ${{ matrix.php_bin }} artisan view:cache
+            ${{ matrix.php_bin }} artisan optimize:clear
             ${{ matrix.php_bin }} artisan storage:link 2>/dev/null || true
 
             # 7) Workers (Horizon)
