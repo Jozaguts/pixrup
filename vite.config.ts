@@ -70,8 +70,6 @@ export default defineConfig({
                     'favicon.svg',
                     'robots.txt',
                 ],
-                navigateFallback: '/offline.html',
-                navigateFallbackDenylist: [/^\/stripe\//, /^\/storage\//, /^\/build\//, /^\/v1\//],
                 runtimeCaching: [
                     {
                         urlPattern: ({ request }) => request.mode === 'navigate',
@@ -79,6 +77,12 @@ export default defineConfig({
                         options: {
                             cacheName: 'pages',
                             networkTimeoutSeconds: 4,
+                            plugins: [
+                                {
+                                    handlerDidError: async () =>
+                                        caches.match('/offline.html'),
+                                },
+                            ],
                             expiration: {
                                 maxEntries: 30,
                                 maxAgeSeconds: 60 * 60 * 24,
