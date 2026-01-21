@@ -4,10 +4,15 @@ on:
   push:
     branches: [main, stg]
 
+concurrency:
+  group: deploy-pixrup-${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - branch: main
@@ -16,14 +21,18 @@ jobs:
             app_url: https://pixrup.com
             deploy_path: /var/www/pixrup-prod
             build_cmd: npm run build:prod
-            php_fpm: php8.3-fpm
+            php_fpm: php8.4-fpm
+            php_bin: /usr/bin/php8.4
+            composer_bin: /usr/local/bin/composer
           - branch: stg
             env: stg
             app_name: pixrup_stg
             app_url: https://stg.pixrup.com
             deploy_path: /var/www/pixrup-stg
             build_cmd: npm run build:staging
-            php_fpm: php8.3-fpm
+            php_fpm: php8.4-fpm
+            php_bin: /usr/bin/php8.4
+            composer_bin: /usr/local/bin/composer
 
     environment: ${{ matrix.env }}
 
@@ -35,161 +44,95 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ~/.ssh
-          echo "📦 DO_KEY base64 length: $(echo "${{ secrets.DO_KEY }}" | tr -d '\n' | wc -c) chars"
           echo "${{ secrets.DO_KEY }}" | base64 -d > ~/.ssh/id_ed25519
           if [[ ! -s ~/.ssh/id_ed25519 ]]; then
             echo "❌ SSH private key file is empty after decoding"
             exit 1
           fi
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
-          echo "✅ SSH private key decoded and ready"
+          ssh-keyscan -H "${{ secrets.DO_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
+      # Opcional: úsalo mientras estabilizas, luego bórralo.
       - name: 📜 SSH Debug Logs
         run: |
           set -euo pipefail
-          echo "📂 ~/.ssh directory listing:"
           ls -al ~/.ssh
           echo "📏 id_ed25519 size: $(wc -c < ~/.ssh/id_ed25519) bytes"
           echo "🔒 id_ed25519 permissions: $(stat --format '%a' ~/.ssh/id_ed25519)"
           ssh-keygen -y -f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
-          echo "🔖 Public key fingerprint (MD5):"
-          ssh-keygen -l -E md5 -f ~/.ssh/id_ed25519.pub
-          echo "🔖 Public key fingerprint (SHA256):"
           ssh-keygen -l -f ~/.ssh/id_ed25519.pub
-          echo "🌐 known_hosts entry for ${{ secrets.DO_HOST }}:"
-          if grep "${{ secrets.DO_HOST }}" ~/.ssh/known_hosts; then
-            echo "✅ Host found in known_hosts"
-          else
-            echo "⚠️ Host not found in known_hosts"
-          fi
           rm -f ~/.ssh/id_ed25519.pub
 
       - name: 🔍 Test SSH Connection
         run: |
-          ssh -v -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} "echo '✅ SSH OK on $(hostname)'"
+          set -euo pipefail
+          ssh -i ~/.ssh/id_ed25519 \
+            -o StrictHostKeyChecking=yes \
+            ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} \
+            "echo '✅ SSH OK on ' \$(hostname)"
 
       - name: 🚀 Deploy Laravel App
         run: |
+          set -euo pipefail
+
           if [ "${{ github.ref_name }}" != "${{ matrix.branch }}" ]; then
             echo "Skipping deploy: current branch (${{ github.ref_name }}) != matrix branch (${{ matrix.branch }})"
             exit 0
           fi
 
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << EOF
             set -Eeuo pipefail
-            trap 'echo "[deploy] Failed at line $LINENO" >&2' ERR
+            trap 'echo "[deploy] Failed at line \$LINENO" >&2' ERR
 
             cd "${{ matrix.deploy_path }}"
             echo "🌱 Deploying ${{ matrix.app_name }} on ${{ matrix.app_url }}"
+
+            # 1) Código
             git fetch --prune origin
             git reset --hard origin/${{ github.ref_name }}
             git clean -xfd
 
-            echo "🧩 Updating dependencies"
-            composer install --no-dev --prefer-dist --optimize-autoloader
+            # 2) Sanity: PHP + intl
+            echo "🐘 PHP version:"
+            ${{ matrix.php_bin }} -v
+            echo "🌐 PHP intl extension:"
+            ${{ matrix.php_bin }} -m | grep -i '^intl$' >/dev/null
 
-            echo "🔧 Generating .env"
-            rm -f .env.new
-            {
-              echo "APP_NAME=${{ matrix.app_name }}"
-              if [ "${{ github.ref_name }}" = "main" ]; then
-                echo "APP_ENV=production"
-                echo "APP_DEBUG=false"
-                echo "REDIS_DB=0"
-                echo "REDIS_CACHE_DB=1"
-              else
-                echo "APP_ENV=staging"
-                echo "APP_DEBUG=true"
-                echo "REDIS_DB=2"
-                echo "REDIS_CACHE_DB=3"
-                echo "TELESCOPE_ENABLED=true"
-                echo "TELESCOPE_PATH=telescope"
-                echo "HORIZON_PATH=horizon"
-              fi
-              echo "APP_URL=${{ matrix.app_url }}"
-              echo
-              echo "APP_KEY=${{ secrets.APP_KEY }}"
-              echo "LOG_CHANNEL=stack"
-              echo "LOG_LEVEL=debug"
-              echo "FILESYSTEM_DISK=s3"
-              echo "AWS_DEFAULT_REGION=us-east-2"
-              echo "AWS_BUCKET=pixrup"
-              echo "AWS_USE_PATH_STYLE_ENDPOINT=true"
-              echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
-              echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-              echo
-              echo "QUEUE_CONNECTION=redis"
-              echo "BROADCAST_DRIVER=pusher"
-              echo "PUSHER_APP_ID=${{ secrets.PUSHER_APP_ID }}"
-              echo "PUSHER_HOST="
-              echo "PUSHER_PORT=${{ vars.PUSHER_PORT }}"
-              echo "PUSHER_APP_KEY=${{ secrets.PUSHER_APP_KEY }}"
-              echo "PUSHER_APP_SECRET=${{ secrets.PUSHER_APP_SECRET }}"
-              echo "PUSHER_SCHEME=${{ vars.PUSHER_SCHEME }}"
-              echo "PUSHER_APP_CLUSTER=${{ vars.PUSHER_APP_CLUSTER }}"
-              echo
-              echo "VITE_PUSHER_APP_ID=${{ secrets.PUSHER_APP_ID }}"
-              echo "VITE_PUSHER_APP_KEY=${{ secrets.PUSHER_APP_KEY }}"
-              echo "VITE_PUSHER_APP_SECRET=${{ secrets.PUSHER_APP_SECRET }}"
-              echo "VITE_PUSHER_APP_CLUSTER=${{ vars.PUSHER_APP_CLUSTER }}"
-              echo "VITE_PUSHER_HOST="
-              echo "VITE_PUSHER_PORT=${{ vars.PUSHER_PORT }}"
-              echo "VITE_PUSHER_SCHEME=${{ vars.PUSHER_SCHEME }}"
-              echo
-              echo "REPLICATE_WEBHOOK=${{ secrets.REPLICATE_WEBHOOK }}"
-              echo "REPLICATE_API_TOKEN=${{ secrets.REPLICATE_API_TOKEN }}"
-              echo "REPLICATE_API_BASE_URL=${{ vars.REPLICATE_API_BASE_URL }}"
-              echo "REPLICATE_MODEL=${{ vars.REPLICATE_MODEL }}"
-              echo "REPLICATE_IMAGE_SIZE=${{ vars.REPLICATE_IMAGE_SIZE }}"
-              echo "REPLICATE_ASPECT_RATIO=${{ vars.REPLICATE_ASPECT_RATIO }}"
-              echo "REPLICATE_MAX_IMAGES=${{ vars.REPLICATE_MAX_IMAGES }}"
-              echo "REPLICATE_WAIT_PREFERENCE=${{ vars.REPLICATE_WAIT_PREFERENCE }}"
-              echo "REPLICATE_MODEL_OWNER=${{ vars.REPLICATE_MODEL_OWNER }}"
-              echo
-              echo "GLOWUP_PROVIDER=${{ vars.GLOWUP_PROVIDER }}"
-              echo "DB_CONNECTION=mysql"
-              echo "DB_HOST=${{ secrets.DB_HOST }}"
-              echo "DB_PORT=3306"
-              echo "DB_DATABASE=${{ secrets.DB_DATABASE }}"
-              echo "DB_USERNAME=${{ secrets.DB_USERNAME }}"
-              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
-              echo
-              echo "GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}"
-              echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}"
-              echo "GOOGLE_REDIRECT_URI=${{ vars.GOOGLE_REDIRECT_URI }}"
-              echo "VITE_GOOGLE_MAPS_KEY=${{ secrets.VITE_GOOGLE_MAPS_KEY }}"
-              echo "APPRAISAL_PROVIDER=${{ vars.APPRAISAL_PROVIDER }}"
-              echo "RENT_CAST_API_KEY=${{ secrets.RENT_CAST_API_KEY }}"
-              echo "RENT_CAST_API_BASE_URL=https://api.rentcast.io/v1/"
-            } > .env.new
-
-            if [ -f .env ] && grep -q '^APP_KEY=' .env; then
-              grep '^APP_KEY=' .env >> .env.new
+            # 3) .env debe existir en el server (NO lo generamos desde GitHub)
+            if [ ! -f .env ]; then
+              echo "❌ Missing .env in ${{ matrix.deploy_path }}. Create it once on the server and re-run."
+              exit 1
             fi
-            mv .env.new .env
-          
+
+            # 4) Dependencias (lock debe calzar con el server)
+            echo "🧩 Updating dependencies"
+            ${{ matrix.php_bin }} ${{ matrix.composer_bin }} install --no-dev --prefer-dist --optimize-autoloader
+
+            # 5) Frontend
             echo "⚙️ Building frontend"
-          
             npm ci
             ${{ matrix.build_cmd }}
 
+            # 6) Laravel
             echo "🚀 Running migrations and caches"
-            php artisan migrate --force
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan storage:link 2>/dev/null || true
+            ${{ matrix.php_bin }} artisan migrate --force
+            ${{ matrix.php_bin }} artisan config:cache
+            ${{ matrix.php_bin }} artisan route:cache
+            ${{ matrix.php_bin }} artisan view:cache
+            ${{ matrix.php_bin }} artisan storage:link 2>/dev/null || true
 
+            # 7) Workers (Horizon)
             if [ "${{ github.ref_name }}" = "stg" ]; then
-              echo "🔍 Enabling Telescope and Horizon (staging)"
-              php artisan telescope:publish --ansi || true
+              echo "🔍 Staging: restarting Horizon"
               sudo systemctl restart horizon-stg
             else
-              echo "🧱 Production mode — Horizon worker active"
+              echo "🧱 Production: restarting Horizon"
               sudo systemctl restart horizon-prod
             fi
 
+            # 8) PHP-FPM
             sudo systemctl restart ${{ matrix.php_fpm }}
+
             echo "✅ Deploy completed successfully!"
           EOF

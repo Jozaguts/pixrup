@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\Facades\Socialite;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter;
+use Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath;
+use Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect;
 use Mockery as MockeryAlias;
 
 afterEach(function () {
@@ -23,7 +28,11 @@ test('google callback creates a new user and logs them in', function () {
 
     Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
 
-    $response = $this->get(route('auth.google.callback'));
+    $response = $this->withoutMiddleware([
+        LocaleSessionRedirect::class,
+        LaravelLocalizationRedirectFilter::class,
+        LaravelLocalizationViewPath::class,
+    ])->get(route('auth.google.callback'));
 
     $response->assertRedirect(route('dashboard', absolute: false));
     $this->assertAuthenticated();
@@ -55,7 +64,11 @@ test('google callback links existing user by email', function () {
 
     Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
 
-    $response = $this->get(route('auth.google.callback'));
+    $response = $this->withoutMiddleware([
+        LocaleSessionRedirect::class,
+        LaravelLocalizationRedirectFilter::class,
+        LaravelLocalizationViewPath::class,
+    ])->get(route('auth.google.callback'));
 
     $response->assertRedirect(route('dashboard', absolute: false));
     $this->assertAuthenticatedAs($user->fresh());
