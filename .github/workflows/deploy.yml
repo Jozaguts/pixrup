@@ -91,7 +91,13 @@ jobs:
             # 1) Código
             git fetch --prune origin
             git reset --hard origin/${{ github.ref_name }}
-            git clean -xfd
+            git clean -fd \
+              -e .env \
+              -e storage \
+              -e storage/** \
+              -e vendor \
+              -e vendor/** \
+              -e public/storage
 
             # 2) Sanity: PHP + intl
             echo "🐘 PHP version:"
