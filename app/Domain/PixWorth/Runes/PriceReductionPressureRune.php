@@ -25,9 +25,10 @@ class PriceReductionPressureRune
         return [
             'rune_value' => [
                 'average_reduction_percent' => $this->averageReductionPercent(),
-                'median_reduction_percent'  => $this->medianReductionPercent(),
-                'sample_size'               => $this->validReductionCount(),
-                'classification'            => $this->classification(),
+                'median_reduction_percent' => $this->medianReductionPercent(),
+                'sample_size' => $this->validReductionCount(),
+                'classification' => $this->classification(),
+                'summary' => $this->summary(),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -42,7 +43,7 @@ class PriceReductionPressureRune
     {
         return [
             'has_closed_comps' => $this->hasClosedComps(),
-            'sample_size'      => $this->validReductionCount(),
+            'sample_size' => $this->validReductionCount(),
         ];
     }
 
@@ -53,8 +54,8 @@ class PriceReductionPressureRune
     {
         return match ($signal) {
             'has_closed_comps' => $value ? 0.30 : -0.50,
-            'sample_size'      => $this->sampleSizeBoost($value),
-            default            => 0.0,
+            'sample_size' => $this->sampleSizeBoost($value),
+            default => 0.0,
         };
     }
 
@@ -62,9 +63,9 @@ class PriceReductionPressureRune
     {
         return match (true) {
             $count >= 12 => 0.30,
-            $count >= 8  => 0.20,
-            $count >= 4  => 0.10,
-            default      => -0.25,
+            $count >= 8 => 0.20,
+            $count >= 4 => 0.10,
+            default => -0.25,
         };
     }
 
@@ -80,10 +81,10 @@ class PriceReductionPressureRune
         }
 
         return match (true) {
-            $avg <= 2  => 'strong',
-            $avg <= 5  => 'balanced',
+            $avg <= 2 => 'strong',
+            $avg <= 5 => 'balanced',
             $avg <= 10 => 'soft',
-            default    => 'pressured',
+            default => 'pressured',
         };
     }
 
@@ -129,10 +130,10 @@ class PriceReductionPressureRune
         return array_values(
             array_filter(
                 array_map(
-                    fn ($comp) => $this->reductionFromComp($comp),
+                    fn($comp) => $this->reductionFromComp($comp),
                     $this->worth->comparables ?? []
                 ),
-                fn ($value) => $value !== null
+                fn($value) => $value !== null
             )
         );
     }
@@ -174,5 +175,28 @@ class PriceReductionPressureRune
     protected function validReductionCount(): int
     {
         return count($this->reductionPercentValues());
+    }
+
+    protected function summary(): string
+    {
+        $avg = $this->averageReductionPercent();
+        $count = $this->validReductionCount();
+
+        if ($avg === null) {
+            return 'There is insufficient closed sale data to assess price reduction pressure.';
+        }
+
+        return match ($this->classification()) {
+            'strong' =>
+            "Closed properties sold with minimal price reductions (avg {$avg}%), indicating strong seller leverage.",
+            'balanced' =>
+            "Closed properties experienced modest price reductions (avg {$avg}%), suggesting balanced market conditions.",
+            'soft' =>
+            "Closed properties required noticeable price reductions (avg {$avg}%), indicating softening demand.",
+            'pressured' =>
+            "Closed properties required significant price reductions (avg {$avg}%), signaling strong buyer pressure.",
+            default =>
+            "Price reduction behavior could not be clearly classified based on available data.",
+        };
     }
 }

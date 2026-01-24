@@ -28,6 +28,7 @@ class PriceVsMarketRune
                 'market_median' => $this->marketMedian(),
                 'deviation_pct' => $this->deviationPercent(),
                 'classification'=> $this->pricePosition(),
+                'summary' => $this->runeSummary(),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -155,5 +156,36 @@ class PriceVsMarketRune
             $absDeviation >= 10 => 0.10,
             default             => 0.0,
         };
+    }
+
+    public function runeSummary(): string
+    {
+        $subject = $this->subjectPrice();
+        $market  = $this->marketMedian();
+        $dev     = $this->deviationPercent();
+        $class   = $this->pricePosition();
+        $count   = $this->compsCount();
+        $confPct = (int) round($this->runePayload()['confidence'] * 100);
+
+        if (! is_numeric($subject) || ! is_numeric($market) || is_null($dev)) {
+            return "Insufficient market data to assess price positioning. | {$confPct}% Confidence";
+        }
+        $direction = match(true) {
+            $dev > 0  => 'above',
+            $dev < 0  => 'below',
+            default   => 'at',
+        };
+
+        $absDev    = abs($dev);
+
+        return sprintf(
+            "Subject is %s market pricing (%s) by %.2f%% based on %d comparable%s. | %d%% Confidence",
+            $direction,
+            str_replace('_', ' ', $class),
+            $absDev,
+            $count,
+            $count === 1 ? '' : 's',
+            $confPct
+        );
     }
 }

@@ -28,6 +28,7 @@ class PriceVsMarketRune
                 'market_low'   => $this->worth->value_low,
                 'market_high'  => $this->worth->value_high,
                 'deviation_pct'=> $this->priceDeviationPercent(),
+                'summary'      => $this->summary(),
             ],
             'confidence'  => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -104,6 +105,35 @@ class PriceVsMarketRune
             'has_market_data', 'has_property_price' => $value ? 0.15 : -0.25,
             'price_deviation_strength' => $this->normalizeDeviationBoost($value),
             default => 0.0,
+        };
+    }
+    protected function summary(): string
+    {
+        $price = $this->worth->value;
+        $low   = $this->worth->value_low;
+        $high  = $this->worth->value_high;
+        $dev   = $this->priceDeviationPercent();
+
+        if (
+            ! is_numeric($price) ||
+            ! is_numeric($low) ||
+            ! is_numeric($high) ||
+            $dev === null
+        ) {
+            return 'There is insufficient market data to assess how the property is priced.';
+        }
+
+        return match (true) {
+            $dev > 15 =>
+            "The property is priced significantly above market levels ({$dev}% above comparable values).",
+            $dev > 5 =>
+            "The property is priced moderately above market levels ({$dev}% above comparable values).",
+            $dev >= -5 && $dev <= 5 =>
+            "The property is priced in line with comparable market values.",
+            $dev >= -15 =>
+                "The property is priced moderately below market levels (" . abs($dev) . "% below comparable values).",
+            default =>
+                "The property is priced significantly below market levels (" . abs($dev) . "% below comparable values).",
         };
     }
 }

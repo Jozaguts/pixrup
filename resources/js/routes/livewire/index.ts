@@ -1,61 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:79
-* @route '/livewire/update'
-*/
-export const update = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: update.url(options),
-    method: 'post',
-})
-
-update.definition = {
-    methods: ["post"],
-    url: '/livewire/update',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:79
-* @route '/livewire/update'
-*/
-update.url = (options?: RouteQueryOptions) => {
-    return update.definition.url + queryParams(options)
-}
-
-/**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:79
-* @route '/livewire/update'
-*/
-update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: update.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:79
-* @route '/livewire/update'
-*/
-const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(options),
-    method: 'post',
-})
-
-/**
-* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
-* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:79
-* @route '/livewire/update'
-*/
-updateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update.url(options),
-    method: 'post',
-})
-
-update.form = updateForm
-
-/**
 * @see \Livewire\Features\SupportFileUploads\FileUploadController::uploadFile
 * @see vendor/livewire/livewire/src/Features/SupportFileUploads/FileUploadController.php:27
 * @route '/livewire/upload-file'
@@ -210,10 +154,66 @@ previewFileForm.head = (args: { filename: string | number } | [filename: string 
 
 previewFile.form = previewFileForm
 
+/**
+* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
+* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:81
+* @route '/livewire/update'
+*/
+export const update = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: update.url(options),
+    method: 'post',
+})
+
+update.definition = {
+    methods: ["post"],
+    url: '/livewire/update',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
+* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:81
+* @route '/livewire/update'
+*/
+update.url = (options?: RouteQueryOptions) => {
+    return update.definition.url + queryParams(options)
+}
+
+/**
+* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
+* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:81
+* @route '/livewire/update'
+*/
+update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: update.url(options),
+    method: 'post',
+})
+
+/**
+* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
+* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:81
+* @route '/livewire/update'
+*/
+const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(options),
+    method: 'post',
+})
+
+/**
+* @see \Livewire\Mechanisms\HandleRequests\HandleRequests::update
+* @see vendor/livewire/livewire/src/Mechanisms/HandleRequests/HandleRequests.php:81
+* @route '/livewire/update'
+*/
+updateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(options),
+    method: 'post',
+})
+
+update.form = updateForm
+
 const livewire = {
-    update: Object.assign(update, update),
     uploadFile: Object.assign(uploadFile, uploadFile),
     previewFile: Object.assign(previewFile, previewFile),
+    update: Object.assign(update, update),
 }
 
 export default livewire

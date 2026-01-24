@@ -26,6 +26,7 @@ class ComparablesDensityRune
             'rune_value' => [
                 'count'         => $this->comparablesCount(),
                 'classification'=> $this->densityClass(),
+                'summary'       => $this->summary($this->comparablesCount()),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -103,4 +104,21 @@ class ComparablesDensityRune
             default      => -0.40,
         };
     }
+    protected function summary(int $count): string
+    {
+        if ($count <= 3) {
+            return "Very light comparable density with only {$count} properties, significantly reducing valuation certainty.";
+        }
+
+        if ($count <= 6) {
+            return "Light comparable density with {$count} properties, reducing valuation certainty.";
+        }
+
+        if ($count <= 10) {
+            return "Moderate comparable density with {$count} properties, supporting a reasonable valuation.";
+        }
+
+        return "Strong comparable density with {$count} properties, supporting a high-confidence valuation.";
+    }
 }
+

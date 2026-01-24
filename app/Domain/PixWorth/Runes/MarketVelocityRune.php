@@ -32,6 +32,7 @@ class MarketVelocityRune
                 'median_days_on_market'  => $this->medianDaysOnMarket(),
                 'sample_size'            => $this->validCompsCount(),
                 'classification'         => $this->classification(),
+                'summary'                => $this->summary(),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -186,5 +187,25 @@ class MarketVelocityRune
     protected function validCompsCount(): int
     {
         return count($this->daysOnMarketValues());
+    }
+
+    protected function summary(): string
+    {
+        $classification = $this->classification();
+        $avg = $this->averageDaysOnMarket();
+        $median = $this->medianDaysOnMarket();
+        $count = $this->validCompsCount();
+
+        if ($classification === 'unknown') {
+            return 'There was insufficient closed sale data to evaluate how quickly properties are selling.';
+        }
+
+        return match ($classification) {
+                'very_fast' => 'Properties in this market are selling extremely quickly.',
+                'fast'      => 'Properties in this market are selling faster than average.',
+                'normal'    => 'Properties in this market are selling at a typical pace.',
+                'slow'      => 'Properties in this market are taking longer to sell.',
+                'very_slow' => 'Properties in this market are selling very slowly.',
+        };
     }
 }
