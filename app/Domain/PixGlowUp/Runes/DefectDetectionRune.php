@@ -20,7 +20,7 @@ class DefectDetectionRune
      */
     protected function runeName(): string
     {
-        return 'defect_detection_' . $this->predictionId;
+        return 'defect_detection_' . $this->propertyId();
     }
 
     protected function runeProvider(): string

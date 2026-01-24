@@ -170,19 +170,17 @@ class MarketSpreadRune
         $count   = $this->comparablesCount();
         $spread  = $this->spreadPercent();
         $class   = $this->classification();
-        $confPct = (int) round($this->runePayload()['confidence'] * 100);
 
         if ($count === 0 || is_null($spread)) {
-            return "No comparable sales available, market spread unavailable. | {$confPct}% Confidence";
+            return "No comparable sales available, market spread unavailable.";
         }
 
         return sprintf(
-            "%s market spread (%.2f%%) based on %d comparable%s. | %d%% Confidence",
+            "%s market spread (%.2f%%) based on %d comparable%s.",
             ucfirst($class),
             $spread,
             $count,
             $count === 1 ? '' : 's',
-            $confPct
         );
     }
 }

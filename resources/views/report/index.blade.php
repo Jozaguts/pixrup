@@ -179,8 +179,13 @@
         {{-- Sales History--}}
        <x-property-sales-history :sales="$sales_history"/>
 
+        <div class="page-break"></div>
+
+
 
         <x-sale-comparables-section :cache="$spy_hunt_cache"/>
+
+        <x-pix-vision-rune-report :items="$runes['pix_hunt']"/>
 
         <x-rent-comparables-section :cache="$spy_hunt_cache"/>
 {{--        Spy Hunt--}}

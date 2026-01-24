@@ -10,8 +10,12 @@
 
         @php
             $rune = $runes['pix_glow_up']['defect_detection_'.$glowUp->id] ?? null;
+            $items = $rune['items'] ?? [];
         @endphp
 
-        <x-pix-vision-rune-report :items="$rune['items']" description="Pix Vision Image inspected the before image and has detected visible issues in the property."/>
+        @if(count($items) > 0)
+            <x-pix-vision-rune-report :items="$items" description="Pix Vision Image inspected the before image and has detected visible issues in the property."/>
+        @endif
+        <div class="page-break"></div>
     @endforeach
 </section>

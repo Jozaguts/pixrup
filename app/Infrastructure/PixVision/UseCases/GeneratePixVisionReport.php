@@ -6,6 +6,7 @@ use App\Application\PixVision\Extractors\PropertyOverviewDataExtractor;
 use App\Application\PixVision\Extractors\RuneDataExtractor;
 use App\Infrastructure\Shared\LocalImageToBase64;
 use App\Infrastructure\Shared\S3ImageToBase64;
+use App\Models\GlowupJob;
 use App\Models\PixVisionPropertyRune;
 use App\Models\Property;
 use App\Models\PropertyOverview;

@@ -195,20 +195,18 @@ class PriceReductionPressureRune
         $class   = $this->pressureClass();
         $median  = $this->medianReduction();
         $avg     = $this->averageReduction();
-        $confPct = (int) round($this->runePayload()['confidence'] * 100);
 
         if ($count === 0 || is_null($median)) {
-            return "No price reductions observed in recent comparables. | {$confPct}% Confidence";
+            return "No price reductions observed in recent comparables.";
         }
 
         return sprintf(
-            "%s price reduction pressure with a median cut of %.2f%% (avg %.2f%%) across %d comparable%s. | %d%% Confidence",
+            "%s price reduction pressure with a median cut of %.2f%% (avg %.2f%%) across %d comparable%s.",
             ucfirst($class),
             $median,
             $avg,
             $count,
             $count === 1 ? '' : 's',
-            $confPct
         );
     }
 }

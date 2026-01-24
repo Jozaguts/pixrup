@@ -34,33 +34,26 @@ class RuneDataExtractor
         return $parsedRunes;
     }
 
+    /**
+     * @throws \JsonException
+     */
     protected static function parseRune(array $data): array {
         $data['key']  = $data['rune_key'];
         $data['name'] = Str::upper(str_replace('_', ' ',$data['rune_key']));
+        if(!is_array($data['rune_value'])) {
+            $data['rune_value'] = json_decode($data['rune_value'], true, 512, JSON_THROW_ON_ERROR) ?? [];
+        }
         $parsedRune = [
             'key' => $data['rune_key'],
             ...$data['rune_value'],
             ...$data
         ];
         if($parsedRune['provider'] === 'pix_glow_up') {
-            $parsedRune['key'] = self::generateGlowUpRuneKey($data);
             $parsedRune['items'] = self::generateGlowUpRuneSummary($data);
         }
         unset($data['rune_value'],$data['rune_key']); //remove unneeded keys
 
         return $parsedRune;
-    }
-
-    protected static function generateGlowUpRuneKey(array $rune): string {
-        $key = data_get($rune, 'rune_value.glow_up_job_id');
-        $runeName = explode('_', $rune['rune_key']);
-        array_pop($runeName);
-
-        $runeName[] = $key;
-
-
-
-        return implode('_', $runeName);
     }
 
     protected static function generateGlowUpRuneSummary(array $rune): array {
@@ -76,7 +69,7 @@ class RuneDataExtractor
             $runeKey = ucfirst(str_replace('_', ' ', $defectKey));
             $runeSeverity = strtoupper($defect['severity']);
             $summaryString = $runeKey .  ' detected. Damage type: ' . $runeSeverity;
-            $confidence =(int) (round($defect['confidence'], 2) * 100);
+            $confidence =(int) round($defect['confidence'], 2);
             $items[] = [
                 'summary' => $summaryString,
                 'confidence' => $confidence,

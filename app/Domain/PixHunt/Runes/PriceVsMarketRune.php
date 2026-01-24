@@ -165,10 +165,9 @@ class PriceVsMarketRune
         $dev     = $this->deviationPercent();
         $class   = $this->pricePosition();
         $count   = $this->compsCount();
-        $confPct = (int) round($this->runePayload()['confidence'] * 100);
 
         if (! is_numeric($subject) || ! is_numeric($market) || is_null($dev)) {
-            return "Insufficient market data to assess price positioning. | {$confPct}% Confidence";
+            return "Insufficient market data to assess price positioning.";
         }
         $direction = match(true) {
             $dev > 0  => 'above',
@@ -179,13 +178,12 @@ class PriceVsMarketRune
         $absDev    = abs($dev);
 
         return sprintf(
-            "Subject is %s market pricing (%s) by %.2f%% based on %d comparable%s. | %d%% Confidence",
+            "Subject is %s market pricing (%s) by %.2f%% based on %d comparable%s.",
             $direction,
             str_replace('_', ' ', $class),
             $absDev,
             $count,
             $count === 1 ? '' : 's',
-            $confPct
         );
     }
 }
