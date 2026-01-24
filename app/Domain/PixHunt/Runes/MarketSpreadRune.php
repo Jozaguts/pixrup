@@ -29,6 +29,7 @@ class MarketSpreadRune
                 'spread_percent' => $this->spreadPercent(),
                 'classification' => $this->classification(),
                 'comps_count'    => $this->comparablesCount(),
+                'summary'        => $this->runeSummary(),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -162,5 +163,24 @@ class MarketSpreadRune
             $spread <= 20 => 0.05,
             default       => -0.20,
         };
+    }
+
+    public function runeSummary(): string
+    {
+        $count   = $this->comparablesCount();
+        $spread  = $this->spreadPercent();
+        $class   = $this->classification();
+
+        if ($count === 0 || is_null($spread)) {
+            return "No comparable sales available, market spread unavailable.";
+        }
+
+        return sprintf(
+            "%s market spread (%.2f%%) based on %d comparable%s.",
+            ucfirst($class),
+            $spread,
+            $count,
+            $count === 1 ? '' : 's',
+        );
     }
 }

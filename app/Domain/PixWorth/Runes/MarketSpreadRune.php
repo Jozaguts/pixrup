@@ -31,7 +31,8 @@ class MarketSpreadRune
                 'classification' => $this->classification(),
                 'value_low'      => $this->lowValue(),
                 'value_high'     => $this->highValue(),
-                'value' => $this->getValue()
+                'value' => $this->getValue(),
+                'summary'        => $this->summary(),
             ],
             'confidence'  => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -156,5 +157,34 @@ class MarketSpreadRune
     protected function getValue(): ?float
     {
         return $this->worth->value;
+    }
+
+    /**
+     * Human-readable interpretation of the market spread
+     */
+    protected function summary(): string
+    {
+        if (! $this->hasBounds()) {
+            return 'Insufficient market data to determine valuation spread.';
+        }
+
+        $spread = $this->spreadPercent();
+        $classification = $this->classification();
+
+        return match ($classification) {
+            'tight'  => sprintf(
+                'Market valuation is tight with a %.2f%% spread, indicating strong price agreement.',
+                $spread
+            ),
+            'normal' => sprintf(
+                'Market valuation shows a normal spread of %.2f%%, suggesting reasonable pricing variance.',
+                $spread
+            ),
+            'wide'   => sprintf(
+                'Market valuation is wide with a %.2f%% spread, indicating higher uncertainty or mixed signals.',
+                $spread
+            ),
+            default  => 'Market valuation spread could not be classified.',
+        };
     }
 }

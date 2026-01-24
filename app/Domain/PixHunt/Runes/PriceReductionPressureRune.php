@@ -28,6 +28,7 @@ class PriceReductionPressureRune
                 'median_reduction_percent'  => $this->medianReduction(),
                 'sample_size'               => $this->reductionCount(),
                 'classification'            => $this->pressureClass(),
+                'summary'                   => $this->runeSummary(),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -186,5 +187,26 @@ class PriceReductionPressureRune
             $variance <= 7  => 0.05,
             default         => -0.15,
         };
+    }
+
+    public function runeSummary(): string
+    {
+        $count   = $this->reductionCount();
+        $class   = $this->pressureClass();
+        $median  = $this->medianReduction();
+        $avg     = $this->averageReduction();
+
+        if ($count === 0 || is_null($median)) {
+            return "No price reductions observed in recent comparables.";
+        }
+
+        return sprintf(
+            "%s price reduction pressure with a median cut of %.2f%% (avg %.2f%%) across %d comparable%s.",
+            ucfirst($class),
+            $median,
+            $avg,
+            $count,
+            $count === 1 ? '' : 's',
+        );
     }
 }

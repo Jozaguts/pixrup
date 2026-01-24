@@ -3,8 +3,10 @@
 namespace App\Infrastructure\PixVision\UseCases;
 
 use App\Application\PixVision\Extractors\PropertyOverviewDataExtractor;
+use App\Application\PixVision\Extractors\RuneDataExtractor;
 use App\Infrastructure\Shared\LocalImageToBase64;
 use App\Infrastructure\Shared\S3ImageToBase64;
+use App\Models\GlowupJob;
 use App\Models\PixVisionPropertyRune;
 use App\Models\Property;
 use App\Models\PropertyOverview;
@@ -33,6 +35,7 @@ class GeneratePixVisionReport
             'runes' => $this->getPropertyRunes(),
             'property' => $this->property,
             'sales_history' => $this->getSalesHistory(),
+            'worth' => $this->property->latestWorth
         ];
     }
     protected function getPropertyImage(): string|null
@@ -77,9 +80,9 @@ class GeneratePixVisionReport
         return $this->property?->glowupJobs;
     }
 
-    protected function getPropertyRunes(): Collection
+    protected function getPropertyRunes(): array
     {
-       return PixVisionPropertyRune::where('property_id',$this->propertyId)->get();
+       return RuneDataExtractor::extract($this->property->id);
     }
 
     protected function getSalesHistory(): array {

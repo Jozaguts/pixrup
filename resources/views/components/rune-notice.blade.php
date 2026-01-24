@@ -3,9 +3,10 @@
 <div
     style="
         margin-top: 12px;
-        font-size: 10px;
+        font-size: 12px;
         line-height: 1.35;
-        color: #4D4D4D;
+        color: black;
+        font-weight: 600;
     "
 >
     <div

@@ -10,89 +10,40 @@
     ];
 @endphp
 
-    <div class="property-overview">
-        <div class="overview-title">PROPERTY OVERVIEW</div>
-        <table class="overview-table" width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-                <td class="label">Property Type</td>
-                <td class="value">{{ $property->property_type }}</td>
-            </tr>
-            <tr>
-                <td class="label">Bedrooms</td>
-                <td class="value">{{ $property->bedrooms }}</td>
-            </tr>
-            <tr>
-                <td class="label">Bathrooms</td>
-                <td class="value">{{ $property->bathrooms }}</td>
-            </tr>
-            <tr>
-                <td class="label">Square Footage</td>
-                <td class="value">{{ number_format($property->square_footage) }} sqft</td>
-            </tr>
-            <tr>
-                <td class="label">Status</td>
-                <td class="value">{{ ucfirst($property->status) }}</td>
-            </tr>
-        </table>
-    </div>
+<section>
+    <h2> Property Overview </h2>
 
-    <div class="property-overview">
-    <div class="overview-title">School Information</div>
-        <table class="overview-table" width="100%" cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0">
+        <thead>
         <tr>
-            <td class="label">Property Type</td>
-            <td class="value">{{ $property->property_type }}</td>
+            <th>
+                Key
+            </th>
+            <th>
+                Value
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Property Type</td>
+            <td>{{ $property->property_type }}</td>
         </tr>
         <tr>
-            <td class="label">Bedrooms</td>
-            <td class="value">{{ $property->bedrooms }}</td>
+            <td>Bedrooms</td>
+            <td>{{ $property->bedrooms }}</td>
+        <tr>
+            <td >Bathrooms</td>
+            <td >{{ $property->bathrooms }}</td>
         </tr>
         <tr>
-            <td class="label">Bathrooms</td>
-            <td class="value">{{ $property->bathrooms }}</td>
+            <td >Square Footage</td>
+            <td >{{ number_format($property->square_footage) }} sqft</td>
         </tr>
         <tr>
-            <td class="label">Square Footage</td>
-            <td class="value">{{ number_format($property->square_footage) }} sqft</td>
+            <td >Status</td>
+            <td >{{ ucfirst($property->status) }}</td>
         </tr>
-        <tr>
-            <td class="label">Status</td>
-            <td class="value">{{ ucfirst($property->status) }}</td>
-        </tr>
-        <tr>
-            <td class="label">Property Type</td>
-            <td class="value">{{ $property->property_type }}</td>
-        </tr>
-        <tr>
-            <td class="label">Bedrooms</td>
-            <td class="value">{{ $property->bedrooms }}</td>
-        </tr>
-        <tr>
-            <td class="label">Bathrooms</td>
-            <td class="value">{{ $property->bathrooms }}</td>
-        </tr>
-        <tr>
-            <td class="label">Square Footage</td>
-            <td class="value">{{ number_format($property->square_footage) }} sqft</td>
-        </tr>
-        <tr>
-            <td class="label">Status</td>
-            <td class="value">{{ ucfirst($property->status) }}</td>
-        </tr>
+        </tbody>
     </table>
-    </div>
-    <div class="property-overview">
-        <div class="overview-title">Key Investment Signal</div>
-        <table class="signals-table" width="100%" cellpadding="0" cellspacing="0">
-            @foreach($overview as $overviewSignal)
-            <tr>
-                <td class="signal-icon">
-                </td>
-                <td class="signal-label">{{ $overviewSignal['label'] }}</td>
-                <td class="signal-value">{{ $overviewSignal['value'] }}</td>
-                <td class="signal-detail">{{ $overviewSignal['detail'] }}</td>
-            </tr>
-            @endforeach
-        </table>
-    </div>
-
+</section>

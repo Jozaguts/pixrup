@@ -1,42 +1,39 @@
-@props(['data', 'icon'])
+@props(['rune', 'icon'])
 
-@php
-    $rune = $data->filter(function ($rune) {
-        return ($rune->rune_value['glow_up_job_id'] ?? false) === 1;
-    })->first();
-    $payload = $rune->rune_value;
-    $defects = collect($payload['defects'] ?? [])
-        ->filter(fn ($defect) => ($defect['detected'] ?? false));
-@endphp
+@if (count($rune['defects']) > 0)
 
-@if ($defects->isNotEmpty())
-    <div class="property-overview">
-        <div class="overview-title">PixVision Defect Detection Service</div>
+    <section>
+        <x-rune-notice>
+            The PixVision Defect Detection Service has identified defects in the property images.
+            Please review the details below for more information.
+        </x-rune-notice>
 
-        <table class="signals-table" width="100%" cellpadding="0" cellspacing="0">
-            @foreach ($defects as $defectName => $defect)
+        <h2>PixVision Defect Detection</h2>
+
+        <table cellpadding="0" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Severity</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach ($rune['defects'] as $defectName => $defect)
                 <tr>
-                    <td class="signal-icon">
-                        <img src="{{ $icon }}" alt="Defect Detected" width="16" height="16">
-                    </td>
-                    <td class="signal-label">
+                    <td>
                         {{ ucwords(str_replace('_', ' ', $defectName)) }}
                     </td>
-
-                    <td class="signal-value">
-                        DETECTED
+                    <td>
+                        {{ $defect['detected'] ? 'DETECTED' : 'CLEAR' }}
                     </td>
-
-                    <td class="signal-detail">
+                    <td>
                         {{ strtoupper($defect['severity'] ?? 'N/A') }}
                     </td>
                 </tr>
             @endforeach
+            </tbody>
         </table>
-
-        <x-rune-notice>
-            The PixVision Defect Detection Service has identified defects in the property images. Please review the
-            details above for more information.
-        </x-rune-notice>
-    </div>
+    </section>
 @endif

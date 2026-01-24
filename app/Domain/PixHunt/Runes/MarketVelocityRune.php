@@ -27,6 +27,7 @@ class MarketVelocityRune
                 'median_days_on_market' => $this->medianDaysOnMarket(),
                 'velocity'              => $this->velocityClass(),
                 'sample_size'           => $this->comparablesCount(),
+                'summary'               => $this->summary(),
             ],
             'confidence' => $this->computeConfidence(
                 $this->confidenceSignals()
@@ -172,6 +173,31 @@ class MarketVelocityRune
             $variance <= 15 => 0.15,
             $variance <= 30 => 0.05,
             default         => -0.15,
+        };
+    }
+
+    protected function summary(): string
+    {
+        $median = $this->medianDaysOnMarket();
+        $count  = $this->comparablesCount();
+        $class  = $this->velocityClass();
+
+        if ($median === null || $count === 0) {
+            return 'Insufficient sales data to determine market velocity.';
+        }
+
+        return match ($class) {
+            'fast' =>
+            "Fast-moving market with a median of {$median} days on market across {$count} comparable sales.",
+
+            'normal' =>
+            "Normal market pace with homes selling in a median of {$median} days based on {$count} comparables.",
+
+            'slow' =>
+            "Slow market conditions with a median of {$median} days on market from {$count} comparable sales.",
+
+            default =>
+            'Market velocity could not be determined from available data.',
         };
     }
 }
