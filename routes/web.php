@@ -13,35 +13,11 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/test/{property}', static function(\App\Models\Property $property) {
-    $useCase = new  \App\Infrastructure\PixVision\UseCases\GeneratePixVisionReport($property);
-    $data =   $useCase->execute();
-    $html = view('report.index', $data)->render();
-
-    $dompdf= \Barryvdh\DomPDF\Facade\Pdf::
-        loadHTML($html)->setOptions([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-        ])
-        ->setPaper('A4');
-    $dompdf->render();
-    $canvas = $dompdf->getCanvas();
-    $w = $canvas->get_width();
-    $h = $canvas->get_height();
-    $img = $data['logo'] ;// watermark image
-    $canvas->page_script(function($pageNumber, $pageCount, $canvas, $fontMetrics) use ($img, $w, $h) {
-        $canvas->save(); // save current state
-        $canvas->set_opacity(0.1);
-        $canvas->translate($w/2, $h/2);
-        $canvas->image($img, -($w/4), -($h/6), $w/2, $h/3);
-        $canvas->restore(); // restore state
-    });
-
-
-
-
-    return $dompdf->stream('document.pdf');
-});
+Route::get('test/{property}', [
+    DashboardController::class,
+    'generateReport'
+])
+    ->name('report.test');
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 

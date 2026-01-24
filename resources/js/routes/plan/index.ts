@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 export const upgrade = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ upgrade.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 upgrade.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ upgrade.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 upgrade.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -31,7 +31,7 @@ upgrade.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 upgrade.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -40,7 +40,7 @@ upgrade.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 const upgradeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -49,7 +49,7 @@ const upgradeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 })
 
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 upgradeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -58,7 +58,7 @@ upgradeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see routes/web.php:56
+* @see routes/web.php:32
 * @route '/plan/upgrade'
 */
 upgradeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

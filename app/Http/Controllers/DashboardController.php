@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GeneratePixVisionReport;
 use App\Models\Property;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -43,5 +45,13 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'properties' => $properties,
         ]);
+    }
+
+    public function generateReport(Request $request, Property $property): \Illuminate\Http\RedirectResponse
+    {
+        GeneratePixVisionReport::dispatchSync($property, $request->user());
+
+        return redirect('/properties')
+            ->with('success', 'Report generation started. You will be notified when it is ready.');
     }
 }

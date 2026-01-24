@@ -13,6 +13,9 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
 
+/**
+ * @property mixed $id
+ */
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
