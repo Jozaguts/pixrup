@@ -23,7 +23,7 @@ defineProps<{
                 </div>
                 <div class="navbar rounded-[12px] px-5 py-3">
                     <div class="mb-4 space-y-2 text-center">
-                        <h1 class="text-2xl font-semibold text-slate-600">{{ title }}</h1>
+                        <h1 class="text-2xl font-semibold text-accent">{{ title }}</h1>
                         <p class="text-muted-foreground text-center text-sm font-light">
                             {{ description }}
                         </p>

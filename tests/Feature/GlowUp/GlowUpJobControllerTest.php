@@ -79,6 +79,8 @@ test('glowup job creation respects plan limits', function (): void {
 });
 
 test('users can attach finished glowup jobs to the property', function (): void {
+    Bus::fake();
+
     $user = User::factory()->create();
     $property = Property::factory()->create([
         'user_id' => $user->id,
